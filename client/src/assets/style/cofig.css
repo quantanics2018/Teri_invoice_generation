@@ -1,0 +1,24 @@
+:root {
+  --THEME_COLOUR: rgba(241, 7, 7, 0.925);    /* SIDEBAR COLOUR                                        011D63 */
+  --INNER_COLOUR: #ffffff;    
+  --HOVER_COLOUR:#9f9595b4;     /* SIDEBAR HOVER COLOUR FOR BACKGROUND                       rgb(129, 222, 248)*/
+  --HOVER_COLOUR_FOR_ACTIVE:#757875e8;     /* SIDEBAR COLOUR FOR ACTIVE CONTENT                                    */
+  --SIDEBAR_HEADING_COLOUR:#042e9a; /*   SIDEBAR HEADING COLOUR                                                                      rgb(96, 164, 236)*/
+  --COLOR_BEFORE_HOVER: #fff;    /* COLOUR IN HOVERABLE CONTENT BEFORE HOVERING         154fdf*/
+  --COLOR_AFTER_HOVER: #042e9a;    /* COLOUR IN HOVERABLE CONTENT AFTER HOVERING         154fdf*/
+  --PAGE_TITTLE_COLOUR: #042e9a;     /*PAGE TITTLE COLOUR                             rgb(50, 12, 175)*/
+  --THEME_SEC_COLOR: #2E3191;
+  --TOP_NAVBAR_BTN_CLR: #2D065C;
+  --BOX-SHADOW: 2px 2px 10px rgba(0, 0, 0, 0.178);
+  --FONT_COLOR: black;
+  --LIGHT_GREY_COLOR: rgba(128, 128, 128, 0.829);
+  --BORDER_COLOUR_1PX:1px solid #E7E6E6;
+  --FONT_FAMILY:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --FONT_SIZE:15px;
+  --FONT_WEIGHT:400;
+  --WIDTH:100%;
+  /*.light-grey */
+  --ADD_DEVICE_DETIAL_CLR: #2E317D;
+  --CANCEL_BTN_CLR: #ff2a00;
+  --OUTLINE_BORDERS:1px solid gainsboro;
+}

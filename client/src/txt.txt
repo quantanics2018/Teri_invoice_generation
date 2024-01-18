@@ -1,0 +1,71 @@
+ {window.location.href !== 'http://localhost:3001/' ? (
+        <>
+          {userInfo.isLoggedIn && (
+            <div>
+              <TopNavbar />
+              <Sidebar handleLogout={handleLogout}>
+                {/* userInfo.staff */}
+                {userInfo.staff > 0 && (
+                  <div>
+                    <Routes>
+                      {/* Staff module */}
+                      <Route path='Staff_Detials' element={<Staff_Detials />}></Route>
+                      <Route path='Staff_Detials/Edit_Staff_Detials/:userid' element={<Edit_Distributer_Detials />}></Route>
+                      <Route path='Staff_Detials/Add_Staff_Detials' element={<Add_Distributer_Detials />}></Route>
+                    </Routes>
+                  </div>
+                )}
+                {userInfo.distributer > 0 && (
+                  <div>
+                    <Routes>
+                      {/* Distributer module */}
+                      <Route path='Distributer_Detials' element={<Distributer_Detials />}></Route>
+                      <Route path='Distributer_Detials/Edit_Distributer_Detials/:userid' element={<Edit_Distributer_Detials />}></Route>
+                      <Route path='Distributer_Detials/Add_Distributer_Detials' element={<Add_Distributer_Detials />}></Route>
+                    </Routes>
+                  </div>
+                )}
+                {userInfo.customer > 0 && (
+                  <div>
+                    <Routes>
+                      {/* Customer module */}
+                      <Route path='Customer_Detials' element={<Distributer_Detials />}></Route>
+                      <Route path='Add_Customer_Detials' element={<Add_Distributer_Detials />}></Route>
+                      <Route path='Edit_Distributer_Detials/:userid' element={<Edit_Distributer_Detials />}></Route>
+                    </Routes>
+                  </div>
+                )}
+                {userInfo.product > 0 && (
+                  <div>
+                    <Routes>
+                      {/* Products Module */}
+                      <Route path='Products' element={<Products />}></Route>
+                      <Route path='Products/Add_Products' element={<Add_Products />}></Route>
+                      <Route path='Products/Edit_Product_Detials/:productid' element={<EditProduct />}></Route>
+                    </Routes>
+                  </div>
+                )}
+                {userInfo.invoice > 0 && (
+                  <div>
+                    <Routes>
+                      {/* Invoice Module */}
+                      <Route path='Invoice' element={<Invoice />}></Route>
+                      <Route path='InvoiceGenerator' element={<InvoiceGenerator />}></Route>
+                      <Route path='ProfilePage' element={<ProfilePage />}></Route>
+                      <Route path='TransactionHistory' element={<TransactionHistory />}></Route>
+                    </Routes>
+                  </div>
+                )}
+              </Sidebar>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <Routes>
+            <Route path='/' element={<Login />}></Route>
+            <Route path='UpdatePassword' element={<UpdatePassword />}></Route>
+            <Route path='/*' element={<UpdatePassword />}></Route>
+          </Routes>
+        </>
+      )}
