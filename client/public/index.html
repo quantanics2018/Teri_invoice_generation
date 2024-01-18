@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <!-- style="
+overflow: hidden;" -->
+  <head>
+    <meta charset="utf-8" />
+    <!-- <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="icon" href="./invoiceLogo.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <meta
+      name="Tempo IoT"
+      content="Tempo IoT"
+    />
+    <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
+    <title id="appTitle">Terion</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    // Set the title using process.env.APP_NAME or a default value
+    document.getElementById('appTitle').innerText = process.env.REACT_APP_NAME || 'Default Title';
+  </script>
+</html>
