@@ -56,7 +56,7 @@ const App = () => {
     // http://localhost:3001/
     // https://terion.quantanics.in/
     <BrowserRouter>
-      {window.location.href !== 'http://localhost:3001/' && userInfo.isLoggedIn && (
+      {window.location.href !== 'https://terion.quantanics.in/' && userInfo.isLoggedIn && (
         <div>
           <TopNavbar />
           <Sidebar handleLogout={handleLogout}>
@@ -65,9 +65,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Staff module */}
-                <Route path='Staff_Detials' element={<StaffDetails position={4} />} />
-                <Route path='Staff_Detials/Edit_Staff_Detials/:userid' element={<EditDistributerDetails />} />
-                <Route path='Staff_Detials/Add_User_Detials' element={<AddUserDetails />} />
+                <Route path='/Staff_Detials' element={<StaffDetails position={4} />} />
+                <Route path='/Staff_Detials/Edit_Staff_Detials/:userid' element={<EditDistributerDetails />} />
+                <Route path='/Staff_Detials/Add_User_Detials' element={<AddUserDetails />} />
               </Routes>
             </div>
           )}
@@ -77,9 +77,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Distributer module */}
-                <Route path='Distributer_Detials' element={<StaffDetails position={2} />} />
-                <Route path='Distributer_Detials/Edit_Distributer_Detials/:userid' element={<EditDistributerDetails />} />
-                <Route path='Distributer_Detials/Add_User_Detials' element={<AddUserDetails />} />
+                <Route path='/Distributer_Detials' element={<StaffDetails position={2} />} />
+                <Route path='/Distributer_Detials/Edit_Distributer_Detials/:userid' element={<EditDistributerDetails />} />
+                <Route path='/Distributer_Detials/Add_User_Detials' element={<AddUserDetails />} />
               </Routes>
             </div>
           )}
@@ -88,9 +88,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Customer module */}
-                <Route path='Customer_Detials' element={<StaffDetails position={3} />} />
-                <Route path='Customer_Detials/Add_User_Detials' element={<AddUserDetails />} />
-                <Route path='Edit_Distributer_Detials/:userid' element={<EditDistributerDetails />} />
+                <Route path='/Customer_Detials' element={<StaffDetails position={3} />} />
+                <Route path='/Customer_Detials/Add_User_Detials' element={<AddUserDetails />} />
+                <Route path='/Edit_Distributer_Detials/:userid' element={<EditDistributerDetails />} />
               </Routes>
             </div>
           )}
@@ -99,9 +99,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Products Module */}
-                <Route path='Products' element={<Products />} />
-                <Route path='Products/Add_Products' element={<AddProducts />} />
-                <Route path='Products/Edit_Product_Detials/:productid' element={<EditProduct />} />
+                <Route path='/Products' element={<Products />} />
+                <Route path='/Products/Add_Products' element={<AddProducts />} />
+                <Route path='/Products/Edit_Product_Detials/:productid' element={<EditProduct />} />
               </Routes>
             </div>
 
@@ -111,10 +111,10 @@ const App = () => {
             <div style={{ marginLeft: '50px'}}>
               <Routes>
                 {/* Invoice Module */}
-                <Route path='Invoice' element={<Invoice />} />
-                <Route path='InvoiceGenerator' element={<InvoiceGenerator />} />
-                <Route path='ProfilePage' element={<ProfilePage />} />
-                <Route path='TransactionHistory' element={<TransactionHistory />} />
+                <Route path='/Invoice' element={<Invoice />} />
+                <Route path='/InvoiceGenerator' element={<InvoiceGenerator />} />
+                <Route path='/ProfilePage' element={<ProfilePage />} />
+                <Route path='/TransactionHistory' element={<TransactionHistory />} />
               </Routes>
             </div>
 
@@ -122,10 +122,10 @@ const App = () => {
         </div>
       )}
 
-      {window.location.href === 'http://localhost:3001/' && (
+      {window.location.href === 'https://terion.quantanics.in/' && (
         <Routes>
           <Route path='/' element={<Login />} />
-          <Route path='UpdatePassword' element={<UpdatePassword />} />
+          <Route path='/UpdatePassword' element={<UpdatePassword />} />
         </Routes>
       )}
     </BrowserRouter>
