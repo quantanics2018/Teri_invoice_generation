@@ -113,7 +113,7 @@ const Products = () => {
     const Products_edit_page = async () => {
         navigate(`Edit_Products`);
     }
-    const Product_edit_page = (data) =>{
+    const Product_edit_page = (data) => {
         navigate(`Edit_Product_Detials/${data}`);
     }
     const [alldata, setAlldate] = useState([]);
@@ -132,23 +132,30 @@ const Products = () => {
 
     const updateUserStatus = async (productid, currentstatus, index) => {
         try {
-            console.log(productid);
+            // console.log(productid);
             const response = await axios.put(`${API_URL}update/productremove`, {
                 productid: productid, status: currentstatus
             });
-            console.log(response.data.resStatus); // Assuming the API sends back a response
+            // console.log(response.data.resStatus); 
             if (response.data.qos === "success") {
                 setAlldate((prevData) => {
                     const newData = [...prevData];
                     newData[index].status = response.data.resStatus;
                     return newData;
                 });
-                console.log("success : ", alldata)
+                // console.log("success : ", alldata)
             }
         } catch (error) {
             console.error('Error updating user status:', error);
         }
     }
+    const [editableIndex, setEditableIndex] = useState(null);
+    const handleDoubleClick = (index) => {
+        setEditableIndex(index);
+    };
+    const handleQuantityChange = (event, index) => {
+        console.log(`Quantity changed for index ${index}: ${event.target.value}`);
+    };
 
     return (
         <div className='bar'>
@@ -264,7 +271,7 @@ const Products = () => {
                                 </div>
                             </div>
                         </div>
-                        <AddUserBtn adduserFun={handleclick} value={"Add Products"}/>
+                        <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
 
                         {/* <div className='filters2 display-flex' onClick={handleclick}>
                             <button className='btn btn-fill'>Add Products</button>
@@ -273,7 +280,7 @@ const Products = () => {
                     <div className='col-headings'>
                         <div className="col-head">Product ID</div>
                         <div className="col-head">Product Name</div>
-                        <div className="col-head">Product Count</div>
+                        <div className="col-head">Quantity</div>
                         <div className="col-head">Product Price</div>
                         <div className="col-head">Action</div>
                     </div>
@@ -311,10 +318,25 @@ const Products = () => {
                         </div> */}
                         {alldata.map((data, index) => (
                             <div className="datas skeleton-block">
-                                {/* {JSON.stringify(data)} */}
                                 <div className="col-head" key={index}>{data.productid}</div>
                                 <div className="col-head" key={index}>{data.productname}</div>
-                                <div className="col-head" key={index}>{data.quantity}</div>
+                                {/* <div className="col-head" key={index}>{data.quantity}</div> */}
+                                {editableIndex === index ? (
+                                    <input
+                                        type="number"
+                                        className='col-head'
+                                        value={data.quantity}
+                                        onChange={(event) => handleQuantityChange(event, index)}
+                                        onBlur={() => setEditableIndex(null)}
+                                    />
+                                ) : (
+                                    <div
+                                        className="col-head editable"
+                                        onDoubleClick={() => handleDoubleClick(index)}
+                                    >
+                                        {data.quantity}
+                                    </div>
+                                )}
                                 <div className="col-head" key={index}>{data.priceperitem}</div>
                                 <div className="col-head display-flex device_action_dropdown_parent">
                                     <div className="sts_icon"
@@ -322,33 +344,12 @@ const Products = () => {
                                     >
                                         <Icon icon={ic_label_important} style={{ transform: rotatedIndex === index ? 'rotate(90deg)' : 'rotate(0)', color: rotatedIndex === index ? '#08c6cd' : 'lightgray', }} className='device_content_arrow' size={25} />
                                     </div>
-                                    {/* <div key={index}>{(rotatedIndex === index) &&
-                                        (<div className='device_action_dropdown'>
-                                            <div className='display-flex device_action_dropdown1 dropdown_action'>
-                                                <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
-                                                <div className='device_content_dropdown display-flex'
-                                                // onClick={() => Device_edit_page(data)}
-                                                onClick={() => Product_edit_page(data.productid)}
-
-                                                >Edit Detials</div>
-                                            </div>
-                                            <div className='display-flex device_action_dropdown2 dropdown_action'>
-                                                <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
-                                                <div className='device_content_dropdown display-flex'
-                                                // onClick={() => { Editinactivedata(data, index) }}
-                                                >Remove Product</div>
-                                            </div>
-                                        </div>)}
-                                    </div> */}
                                     <div key={index}>{(rotatedIndex === index) &&
                                         (<div className='device_action_dropdown'>
                                             <div className='display-flex device_action_dropdown1 dropdown_action'>
                                                 <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
-                                                {/* <div className='device_content_dropdown display-flex' data-bs-toggle="modal" data-bs-target="#device_status_action"
-                                                onClick={() => Product_edit_page(data.productid)}
-                                                >Edit Product Details</div> */}
-                                                 <div className='device_content_dropdown display-flex'
-                                                   onClick={() => Product_edit_page(data.productid)}
+                                                <div className='device_content_dropdown display-flex'
+                                                    onClick={() => Product_edit_page(data.productid)}
                                                 >Edit Product Detials</div>
                                             </div>
                                             <div className='display-flex device_action_dropdown2 dropdown_action'>

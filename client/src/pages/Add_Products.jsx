@@ -118,7 +118,7 @@ const Add_Products = () => {
                     handleClear()
                     alert(response.data.message);
                 } else {
-                    alert("Product Dosn't inserted properly")
+                    alert(response.data.message)
                 }
             } catch (error) {
                 console.error('Error sending data:', error);

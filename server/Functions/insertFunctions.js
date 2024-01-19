@@ -125,7 +125,7 @@ async function addProduct(req, res) {
     // const { hsncode,quantity,priceperitem,userid } = req.body;
     const { hsncode, quantity, priceperitem, productname } = req.body.productdetial;
     const { updator } = req.body;
-    console.log(hsncode, quantity, priceperitem, productname, updator);
+    // console.log(hsncode, quantity, priceperitem, productname, updator);
 
     try {
         await userdbInstance.userdb.query('BEGIN');
@@ -134,7 +134,6 @@ async function addProduct(req, res) {
             VALUES ($1, $2, $3, $4,$5,$6,$7);`, [hsncode, quantity, priceperitem, updator, productname, updator, '1']);
         await userdbInstance.userdb.query('COMMIT');
         if (insertProductResult.rowCount === 1) {
-            // console.log(insertProductResult);
             res.json({ message: "Data inserted Successfully", status: true });
             // res.json({ message: "Successfully Updated" });
         } else {
@@ -143,12 +142,12 @@ async function addProduct(req, res) {
 
     } catch (error) {
         console.error('Error executing database query:', error);
-        // throw error; 
-        // if (error.message.includes('unique constraint')) {
-        //     return res.json({ message: "User Already Exist", status: false });
-        // } else {
-        //     return 'Failed to add user: ' + error.message;
-        // }
+        if (error.code === '23505') { // PostgreSQL error code for unique violation
+            res.json({ message: "Unique constraint violation: Duplicate entry", status: false });
+        } else {
+            // Handle other types of errors
+            res.status(500).json({ message: "Internal Server Error", status: false });
+        }
     }
 }
 

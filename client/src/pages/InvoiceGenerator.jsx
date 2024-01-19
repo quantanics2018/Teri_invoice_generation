@@ -59,7 +59,7 @@ const InvoiceGenerator = () => {
     };
 
     const [errorMessage, setErrorMessage] = useState('');
-    const suggestionsArray = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
+    const suggestionsArray = ['INK', 'Catterpiller', 'Printer', 'Pen', 'Paper'];
     const handleBlur = (rowId, fieldName, value) => {
         // alert(value)
         if (!suggestionsArray.includes(value)) {

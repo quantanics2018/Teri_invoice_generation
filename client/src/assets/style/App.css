@@ -2191,14 +2191,14 @@ td {
     color: black;
 }
 
-input[type='number'] {
+/* input[type='number'] {
     text-align: center;
     max-width: 50px;
     font-size: 15px;
     padding: 10px;
     border: none;
     outline: none;
-}
+} */
 
 /* input[type='text'] {
     max-width: 170px;
@@ -2228,9 +2228,9 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type='number'] {
+/* input[type='number'] {
     -moz-appearance: textfield;
-}
+} */
 
 .float {
     width: 40px;

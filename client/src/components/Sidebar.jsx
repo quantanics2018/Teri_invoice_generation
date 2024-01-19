@@ -11,7 +11,7 @@ import { useEffect, useRef } from "react";
 const Sidebar = ({ children, give_auth, handleLogout }) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
-    const [activelink, setactivelink] = useState(null);
+    const [activelink, setActiveLink] = useState(null);
     const [logoutdiv, setlogoutdiv] = useState(false);
     const storedData = sessionStorage.getItem('access_control');
     const parsedData = JSON.parse(storedData);
@@ -39,25 +39,32 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
         RI001: {
             menuItem: [
                 {
-                    icon: <FaUserAlt />,
+                    icon: <FaRegChartBar />,
                     head: 'Management',
                     links: [
                         { url: '/Staff_Detials', text: 'Staff Detials', condition: userInfo.staff > 0 },
                         { url: '/Distributer_Detials', text: 'Distributor Detials', condition: userInfo.distributer > 0 },
                         { url: '/Customer_Detials', text: 'Customer Detials', condition: userInfo.customer > 0 },
                         // { url: '/Products', text: 'Products' },
-                        { url: '/ProfilePage', text: 'Profile Info', condition: true },
-                        { url: '/Contact_us', text: 'Contact us', condition: true },
+                        // { url: '/Contact_us', text: 'Contact us', condition: true },
                     ],
                 },
                 {
-                    icon: <FaRegChartBar />,
-                    head: 'PaySlip',
+                    icon: <FaShoppingBag />,
+                    head: 'Products',
                     links: [
                         { url: '/Products', text: 'Products', condition: userInfo.product > 0 },
-                        { url: '/TransactionHistory', text: 'PaySlip Log', condition: true },
                         { url: '/InvoiceGenerator', text: 'Invoice Generator', condition: !(userInfo.position === "customer") },
                         { url: '/Invoice', text: 'Invoice', condition: userInfo.invoice > 0 },
+                        { url: '/TransactionHistory', text: 'PaySlip Log', condition: true },
+                    ],
+                },
+                {
+                    icon: <FaUserAlt />,
+                    head: 'Profile',
+                    links: [
+                        { url: '/ProfilePage', text: 'Profile Info', condition: true },
+                        { url: '/feedback', text: 'Feedback', condition: true },
                     ],
                 },
             ],
@@ -238,7 +245,8 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
     }, []);
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
     const handleLinkClick = (i, index) => {
-        setactivelink(i);
+        console.log(i, index);
+        setActiveLink(i);
         setActiveDropdownIndex(index)
     };
 
@@ -251,7 +259,7 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                             <NavLink
                                 key={index}
                                 to={item.links[0].url}
-                                className="link"
+                                className={`link ${activeDropdownIndex === index ? 'active-link' : ''}`}
                                 style={{ borderRadius: "7px" }}
                                 onMouseEnter={() => {
                                     const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
@@ -263,22 +271,23 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                                 }}
                             >
                                 <div className="individual_icon">
-                                    <div className="icon">{item.icon}</div>
+                                    <div className={`icon ${activeDropdownIndex === index ? 'active-icon' : ''}`}>{item.icon}</div>
                                 </div>
 
                                 <div className="dropdown-content" style={{ display: 'none' }}>
                                     <div className="sidebar_head">{item.head}</div>
+                                    {console.log("hai : ", item)}
                                     {item.links.map((link, i) => (
-                                        (link.condition !== false) && (
-                                            <React.Fragment key={i}>
+                                        (link.condition === true) && (
+                                            <div key={i}>
                                                 <div>
                                                     <Link to={link.url}
-                                                        // className={activelink === i ? 'active-link' : ''}
-                                                        onClick={() => handleLinkClick(i, index)}
-                                                    >{link.text}</Link>
+                                                        className={`link ${activelink === i ? 'active-link' : ''}`}
+                                                    onClick={() => handleLinkClick(i, index)}
+                                                    >{link.text}{console.log(i)}</Link>
                                                     {i !== item.links.length - 1 && <hr className="dropdown-hr" />}
                                                 </div>
-                                            </React.Fragment>
+                                            </div>
                                         )
                                     ))}
                                 </div>
@@ -317,7 +326,7 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                 </div>
             </div>
             <main>{children}</main>
-        </div>
+        </div >
 
 
     );

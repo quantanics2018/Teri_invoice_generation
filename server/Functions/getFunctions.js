@@ -21,7 +21,7 @@ async function getUserData(req, res) {
     try {
         const { adminid ,position} = req.body;
         // console.log(adminid,position);
-        const userDeleteResult = await userdbInstance.userdb.query('select * from public."user" where adminid=$1 and positionid=$2 order by rno DESC;', [adminid, position]);
+        const userDeleteResult = await userdbInstance.userdb.query('select * from public."user" where adminid=$1 and positionid=$2 and status=$3 order by rno DESC;', [adminid, position,'1']);
         res.json({ message: "Successfully Data Fetched", data: userDeleteResult.rows });
     } catch (error) {
         console.error('Error executing database query:', error);

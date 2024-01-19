@@ -26,6 +26,7 @@ import UpdatePassword from './pages/UpdatePassword.jsx';
 import StaffDetails from './pages/Staff_Detials.jsx';
 import AddProducts from './pages/Add_Products.jsx';
 import EditProduct from './pages/EditProduct.jsx';
+import FeedbackForm from './pages/FeedbackForm.jsx';
 
 const App = () => {
   const handleLogout = () => {
@@ -108,17 +109,18 @@ const App = () => {
           )}
 
           {userInfo.invoice > 0 && (
-            <div style={{ marginLeft: '50px'}}>
+            <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Invoice Module */}
                 <Route path='Invoice' element={<Invoice />} />
                 <Route path='InvoiceGenerator' element={<InvoiceGenerator />} />
-                <Route path='ProfilePage' element={<ProfilePage />} />
                 <Route path='TransactionHistory' element={<TransactionHistory />} />
               </Routes>
             </div>
-
           )}
+          <Routes>
+            <Route path='feedback' element={<FeedbackForm />} />
+          </Routes>
         </div>
       )}
 

@@ -12,11 +12,16 @@ import { useState, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../config';
-import { Button } from '@mui/material';
+// import { Button } from '@mui/material';
 import { UserActionBtn } from '../assets/style/cssInlineConfig';
 import { AddUserBtn } from '../components/AddUserBtn';
 import Example from '../components/Example';
 import EditDistributerDetails from './Edit_Distributer_Detials';
+import {
+    Snackbar,
+} from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
+
 
 const Staff_Detials = (props) => {
     // console.log(props.position);
@@ -25,7 +30,10 @@ const Staff_Detials = (props) => {
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState('1');
     const [selectedOption, setSelectedOption] = useState('All');
-
+    const [submitted, setSubmitted] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
 
     const [isOpen3, setIsOpen3] = useState(false);
     const [isDropdownOpen3, setIsDropdownOpen3] = useState(false);
@@ -65,12 +73,12 @@ const Staff_Detials = (props) => {
 
     // };
     const handleIconClick = (index) => {
-        if (userInfo.staff > 2) {
-            setRotatedIndex(!rotatedIndex);
-            setRotatedIndex(rotatedIndex === index ? null : index);
-        } else {
-            alert("Option Disabled")
-        }
+        // if (userInfo.staff > 2) {
+        setRotatedIndex(!rotatedIndex);
+        setRotatedIndex(rotatedIndex === index ? null : index);
+        // } else {
+        //     alert("Option Disabled")
+        // }
     };
 
     const handleDivClick = () => {
@@ -122,18 +130,27 @@ const Staff_Detials = (props) => {
                     console.log("success : ", alldata)
                 }
             }
-            if (currentstatus == 1) {
-                currentstatus = 0;
-                const confirmed = window.confirm("Are you sure?");
-                // setInactivateAlert(true)
-                if (confirmed) {
+            console.log(userInfo.distributer);
+            if (userInfo.distributer > 2) {
+                // alert("Can edit")
+                if (currentstatus == 1) {
+                    currentstatus = 0;
+                    const confirmed = window.confirm("Are you sure?");
+                    // setInactivateAlert(true)
+                    if (confirmed) {
+                        statusApiAction();
+                    }
+                }
+                else {
+                    currentstatus = 1
                     statusApiAction();
+                    setSubmitted(true);
                 }
             }
             else {
-                currentstatus = 1
-                statusApiAction();
+                alert("You don't have permission to do this action.")
             }
+
         } catch (error) {
             console.error('Error updating user status:', error);
         }
@@ -177,7 +194,7 @@ const Staff_Detials = (props) => {
 
                     <div className='filters display-flex' >
                         <div className="pagination_with_filters">
-                            <div class="pagination display-flex" onClick={handleDivClick}>
+                            {/* <div class="pagination display-flex" onClick={handleDivClick}>
                                 <div className="focus-page">
                                     <input
                                         // ref={inputRef}
@@ -193,7 +210,7 @@ const Staff_Detials = (props) => {
                                 <div className="upcomming-pages">
                                     of 20 pages
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* <div className='move_head'>
                                 <div className='filters1 display-flex'>
@@ -264,7 +281,14 @@ const Staff_Detials = (props) => {
 
                     <div className='col-headings'>
                         <div className="col-head">Registration ID</div>
-                        <div className="col-head">Distributer Name</div>
+                        <div className="col-head">
+                            {props.position === 4 && "Staff "
+                            }
+                            {props.position === 2 && "Distributor "
+                            }
+                            Name
+                        </div>
+
                         <div className="col-head">Aadhar Number</div>
                         <div className="col-head">PAN Number</div>
                         <div className="col-head">Postal Code </div>
@@ -299,8 +323,9 @@ const Staff_Detials = (props) => {
                                                 <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
                                                 <div className='device_content_dropdown display-flex'
 
-                                                >Edit {props.position === 4 &&
-                                                    "Staff "
+                                                >Edit
+                                                    {props.position === 4 &&
+                                                        "Staff "
                                                     }
                                                     {props.position === 2 &&
                                                         "Distibutor "
@@ -349,6 +374,11 @@ const Staff_Detials = (props) => {
                     </div>
                 </div>
             </div>
+            <Snackbar open={submitted} autoHideDuration={6000} autoHideDuration={2500} onClose={handleSnackbarClose}>
+                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    Successfully Activated
+                </MuiAlert>
+            </Snackbar>
         </div>
     );
 };

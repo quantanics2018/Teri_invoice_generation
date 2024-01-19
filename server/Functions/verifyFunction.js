@@ -11,7 +11,11 @@ async function checkCredentials(req, res) {
         console.log("password is empty : ");
         return res.json({ success: false, password: null, message: 'Set the password' });
       } else {
-        const data = await userdbInstance.userdb.query(`SELECT 
+        console.log(username);
+        const GetTheUserStatus = await userdbInstance.userdb.query('select status from public."user" where email=$1;', [username]);
+        console.log(GetTheUserStatus.rows[0].status === 1);
+        if (GetTheUserStatus.rows[0].status === '1') {
+          const data = await userdbInstance.userdb.query(`SELECT 
                 "user".userid,"user".email,"user".phno,"user".name,
                 (select position from position where positionid = "user".positionid),
                 "user".userprofile, "user".status ,accesscontroll.distributer,accesscontroll.product,
@@ -21,16 +25,21 @@ async function checkCredentials(req, res) {
                 JOIN public.accesscontroll on accesscontroll.userid = "user".userid
                 WHERE credentials.username=$1 and credentials.password = $2;
                 `, [username, password]);
-        const rowCount = data.rows.length;
-        console.log(rowCount);
-        if (rowCount === 1) {
-          const result = data.rows[0];
-          console.log(result);
-          console.log(username, password);
-          res.json({ success: true, data: result });
-        } else {
-          res.json({ success: false, message: 'Enter Valid Username and Password' });
+          const rowCount = data.rows.length;
+          console.log(rowCount);
+          if (rowCount === 1) {
+            const result = data.rows[0];
+            console.log(result);
+            console.log(username, password);
+            res.json({ success: true, data: result });
+          } else {
+            res.json({ success: false, message: 'Enter Valid Username and Password' });
+          }
         }
+        else {
+          res.json({ success: false, message: 'Your Access Restricted' });
+        }
+
       }
     }
     else {

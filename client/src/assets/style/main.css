@@ -174,7 +174,7 @@ main {
     border-style: solid;
 }
 /* .active-link{
-    color: #ffffff;
+    color: #2f1eeb;
 } */
 
 /* slidebar hover */
@@ -220,7 +220,7 @@ main {
 
 .sidebar_head {
     background-color: var(--THEME_COLOUR);
-    color: var(--SIDEBAR_HEADING_COLOUR);
+    /* color: var(--SIDEBAR_HEADING_COLOUR); */
     font-weight: 700;
     padding-left: 15px;
     border-radius: 7px 7px 0px 0px;
