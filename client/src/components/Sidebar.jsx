@@ -282,7 +282,7 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                                             <div key={i}>
                                                 <div>
                                                     <Link to={link.url}
-                                                        className={`link ${activelink === i ? 'active-link' : ''}`}
+                                                        className={`link ${activelink === i ? 'active-link' : ''} ${(i === item.links.length - 1 )? 'last-link' : ''}`}
                                                     onClick={() => handleLinkClick(i, index)}
                                                     >{link.text}{console.log(i)}</Link>
                                                     {i !== item.links.length - 1 && <hr className="dropdown-hr" />}

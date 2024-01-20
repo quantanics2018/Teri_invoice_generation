@@ -131,6 +131,23 @@ async function updateProducts(req, res) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+async function productQuantity(req, res) {
+    const { productid, Quantity } = req.body;
+    console.log(productid, Quantity);
+    // try {
+    //     const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
+    //     SET status=$1
+    //     WHERE productid=$2;`, [status, productid]);
+    //     if (userUpdateResult.rowCount === 1) {
+    //         res.json({ resStatus: status, qos: "success" });
+    //     } else {
+    //         res.status(404).json({ message: "User not found" });
+    //     }
+    // } catch (error) {
+    //     console.error('Error executing database query:', error);
+    //     res.status(500).json({ message: "Internal Server Error" });
+    // }
+}
 
 
-module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword };
+module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword , productQuantity};

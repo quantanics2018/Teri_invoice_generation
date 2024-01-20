@@ -203,14 +203,16 @@ main {
     text-decoration: none;
     display: block;
     background-color: var(--THEME_COLOUR);
-    border-radius: 0px 0px 7px 7px;
     cursor: pointer;
     color: var(--COLOR_BEFORE_HOVER);
+}
+.last-link{
+    /* border-radius: 0px 0px 7px 7px; */
 }
 
 .dropdown-content a:hover {
     color: var(--INNER_COLOUR);
-    background-color: var(--HOVER_COLOUR);    /*rgb(129, 222, 248)*/
+    background-color: var(--HOVER_COLOUR); 
 }
 
 /* .link:hover .dropdown-content,
@@ -223,7 +225,7 @@ main {
     /* color: var(--SIDEBAR_HEADING_COLOUR); */
     font-weight: 700;
     padding-left: 15px;
-    border-radius: 7px 7px 0px 0px;
+    /* border-radius: 7px 7px 0px 0px; */
 }
 
 .top_section {
@@ -269,7 +271,7 @@ main {
 }
 
 .dropdown-hr {
-    margin: -3px;
+    margin: 0px;
     color: rgb(255, 255, 255);
 }
 

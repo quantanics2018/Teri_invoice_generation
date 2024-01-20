@@ -7,9 +7,9 @@
 }
 
 /* skeleton loading */
-.skeleton-block {
+/* .skeleton-block {
     animation: loadingAnimation 0.2s;
-}
+} */
 
 @keyframes loadingAnimation {
     0% {
@@ -700,7 +700,8 @@
     display: flex;
     height: 50px;
     color: var(--FONT_COLOR);
-    user-select: none;
+    cursor: pointer;
+    /* user-select: none; */
 }
 
 .container-slidebar {

@@ -27,6 +27,7 @@ import StaffDetails from './pages/Staff_Detials.jsx';
 import AddProducts from './pages/Add_Products.jsx';
 import EditProduct from './pages/EditProduct.jsx';
 import FeedbackForm from './pages/FeedbackForm.jsx';
+import { API_URL_CLIENT } from './config.js';
 
 const App = () => {
   const handleLogout = () => {
@@ -57,7 +58,7 @@ const App = () => {
     // http://localhost:3001/
     // https://terion.quantanics.in/
     <BrowserRouter>
-      {window.location.href !== 'https://terion.quantanics.in/' && userInfo.isLoggedIn && (
+      {window.location.href !== `${API_URL_CLIENT}` && userInfo.isLoggedIn && (
         <div>
           <TopNavbar />
           <Sidebar handleLogout={handleLogout}>
@@ -124,8 +125,9 @@ const App = () => {
         </div>
       )}
 
-      {window.location.href === 'https://terion.quantanics.in/' && (
+      {window.location.href === `${API_URL_CLIENT}` && (
         <Routes>
+          hhhh
           <Route path='/' element={<Login />} />
           <Route path='/UpdatePassword' element={<UpdatePassword />} />
         </Routes>

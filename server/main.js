@@ -106,7 +106,7 @@ app.get('/get/:entity(user|product)/:id', async (req, res) => {
 
 
 // Update Data from DB
-app.put('/update/:entity(user|product|productremove|userremove|password)', async (req, res) => {
+app.put('/update/:entity(user|product|productremove|userremove|password|productQuantity)', async (req, res) => {
     const entity = req.params.entity;
     if (entity === 'user') {
         var userdata = await updateData.updateUserDataIndividual(req, res);
@@ -116,6 +116,9 @@ app.put('/update/:entity(user|product|productremove|userremove|password)', async
     }
     else if (entity === 'productremove') {
         var userdata = await updateData.updateProducts(req, res);
+    }
+    else if (entity === 'productQuantity') {
+        var userdata = await updateData.productQuantity(req, res);
     }
     else if (entity === 'userremove') {
         var userdata = await updateData.updateStatusToRemove(req, res);

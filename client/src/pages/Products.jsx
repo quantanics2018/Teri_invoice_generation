@@ -150,11 +150,47 @@ const Products = () => {
         }
     }
     const [editableIndex, setEditableIndex] = useState(null);
+    const updateInDb = async (id, quantity) => {
+        setEditableIndex(null)
+        // console.log(id, "call update api", quantity);
+        const UpdateProductQuantityApi = async () => {
+            try {
+                const response = await axios.put(`${API_URL}update/productQuantity`, {
+                    productid: id, Quantity: quantity
+                });
+                console.log(response);
+                if (response.data.qos === "success") {
+                    // setAlldate((prevData) => {
+                    //     const newData = [...prevData];
+                    //     newData[index].status = response.data.resStatus;
+                    //     return newData;
+                    // });
+                }
+            } catch (error) {
+                console.error('Error updating user status:', error);
+            }
+        }
+        const confirmation = window.confirm("Are you sure you want to update the quantity?");
+        
+        if (confirmation) {
+            UpdateProductQuantityApi()
+        }
+    }
     const handleDoubleClick = (index) => {
         setEditableIndex(index);
+        // const dataString = alldata.map(obj => JSON.stringify(obj)).join(',');
+        // console.log(`hai: ${dataString}`);
     };
+
+    const getTheValue = (event) => {
+        alert(event.target.value)
+    }
     const handleQuantityChange = (event, index) => {
-        console.log(`Quantity changed for index ${index}: ${event.target.value}`);
+        const newQuantity = event.target.value;
+        const newData = [...alldata];
+        newData[index].quantity = newQuantity;
+        setAlldate(newData);
+        // console.log(`Quantity changed for index ${index}: ${newQuantity}`);
     };
 
     return (
@@ -166,7 +202,7 @@ const Products = () => {
                     </div>
                     <div className='filters display-flex' >
                         <div className="pagination_with_filters">
-                            <div class="pagination display-flex" onClick={handleDivClick}>
+                            {/* <div class="pagination display-flex" onClick={handleDivClick}>
                                 <div className="focus-page">
                                     <input
                                         // ref={inputRef}
@@ -182,7 +218,7 @@ const Products = () => {
                                 <div className="upcomming-pages">
                                     of 20 pages
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className='move_head'>
                                 <div className='filters1 display-flex'>
@@ -285,49 +321,20 @@ const Products = () => {
                         <div className="col-head">Action</div>
                     </div>
                     <div className="scroll_div">
-                        {/* <div className="datas skeleton-block">
-                            <div className="col-head">84199090</div>
-                            <div className="col-head">Ink Machine</div>
-                            <div className="col-head">Education</div>
-                            <div className="col-head">Reuseability</div>
-                            <div className="col-head">507</div>
-                            <div className="col-head">$1500</div>
-                            <div className="col-head display-flex device_action_dropdown_parent">
-                                <div className="sts_icon"
-                                    onClick={() => true && handleIconClick()}
-                                >
-                                    <Icon icon={ic_label_important} style={{ transform: rotatedIndex == true ? 'rotate(90deg)' : 'rotate(0)', color: rotatedIndex == true ? '#08c6cd' : 'lightgray', }} className='device_content_arrow' size={25} />
-                                </div>
-                                <div>{(rotatedIndex) &&
-                                    (<div className='device_action_dropdown'>
-                                        <div className='display-flex device_action_dropdown1 dropdown_action'>
-                                            <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
-                                            <div className='device_content_dropdown display-flex'
-                                                onClick={() => Products_edit_page()}
-                                            >Edit Product Count</div>
-                                        </div>
-                                        <div className='display-flex device_action_dropdown2 dropdown_action'>
-                                            <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
-                                            <div className='device_content_dropdown display-flex'
-                                            // onClick={() => { Editinactivedata(data, index) }}
-                                            >Remove Product</div>
-                                        </div>
-                                    </div>)}
-                                </div>
-                            </div>
-                        </div> */}
                         {alldata.map((data, index) => (
                             <div className="datas skeleton-block">
                                 <div className="col-head" key={index}>{data.productid}</div>
                                 <div className="col-head" key={index}>{data.productname}</div>
                                 {/* <div className="col-head" key={index}>{data.quantity}</div> */}
+                                {/* {console.log(data.productid)} */}
                                 {editableIndex === index ? (
                                     <input
                                         type="number"
                                         className='col-head'
+                                        autoFocus
                                         value={data.quantity}
+                                        onBlur={() => updateInDb(data.productid, data.quantity)}
                                         onChange={(event) => handleQuantityChange(event, index)}
-                                        onBlur={() => setEditableIndex(null)}
                                     />
                                 ) : (
                                     <div
