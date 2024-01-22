@@ -150,7 +150,7 @@ const Products = () => {
         }
     }
     const [editableIndex, setEditableIndex] = useState(null);
-    const updateInDb = async (id, quantity) => {
+    const updateInDb = async (id, quantity, index) => {
         setEditableIndex(null)
         // console.log(id, "call update api", quantity);
         const UpdateProductQuantityApi = async () => {
@@ -165,19 +165,36 @@ const Products = () => {
                     //     newData[index].status = response.data.resStatus;
                     //     return newData;
                     // });
+                    alert(response.data.resStatus);
                 }
             } catch (error) {
                 console.error('Error updating user status:', error);
             }
         }
-        const confirmation = window.confirm("Are you sure you want to update the quantity?");
-        
-        if (confirmation) {
-            UpdateProductQuantityApi()
+
+
+        if (currectQuantity !== quantity) {
+            const confirmation = window.confirm("Are you sure you want to update the quantity?");
+            if (confirmation) {
+                UpdateProductQuantityApi()
+            } else {
+                setAlldate((prevData) => {
+                    const newData = [...prevData];
+                    console.log(newData[index]);
+                    newData[index].quantity = currectQuantity;
+                    return newData;
+                    // const newData = [...prevData];
+                    // console.log(newData[index]);
+                    // return newData;
+                });
+            }
         }
+
     }
-    const handleDoubleClick = (index) => {
+    const [currectQuantity, setcurrectQuantity] = useState(null)
+    const handleDoubleClick = (index, currectQuantity) => {
         setEditableIndex(index);
+        setcurrectQuantity(currectQuantity);
         // const dataString = alldata.map(obj => JSON.stringify(obj)).join(',');
         // console.log(`hai: ${dataString}`);
     };
@@ -333,13 +350,13 @@ const Products = () => {
                                         className='col-head'
                                         autoFocus
                                         value={data.quantity}
-                                        onBlur={() => updateInDb(data.productid, data.quantity)}
+                                        onBlur={() => updateInDb(data.productid, data.quantity, index)}
                                         onChange={(event) => handleQuantityChange(event, index)}
                                     />
                                 ) : (
                                     <div
                                         className="col-head editable"
-                                        onDoubleClick={() => handleDoubleClick(index)}
+                                        onDoubleClick={() => handleDoubleClick(index, data.quantity)}
                                     >
                                         {data.quantity}
                                     </div>

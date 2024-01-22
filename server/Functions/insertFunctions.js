@@ -2,7 +2,7 @@ const userdbInstance = require('../instances/dbInstance');
 
 async function addUser(req, res) {
     const {
-        // userid,
+        userid,
         OrganizationName,
         gstNumber,
         panNumber,
@@ -34,11 +34,11 @@ async function addUser(req, res) {
 
     try {
         await userdbInstance.userdb.query('BEGIN');
-        const ueserTable = await userdbInstance.userdb.query('INSERT INTO public."user" (email, phno, altphoneno, aadhar, pan, name, positionid, adminid, pstreetname, pdistrictid, pstateid, ppostalcode,status) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING userid',
-            [email, mobileNo, mobileNo, aadharNo, panNumber, fName, Positionid, adminid, streetAddress, City, State, pCode, status]);
+        const ueserTable = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, altphoneno, aadhar, pan, name, positionid, adminid, pstreetname, pdistrictid, pstateid, ppostalcode,status) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING userid',
+            [userid,email, mobileNo, mobileNo, aadharNo, panNumber, fName, Positionid, adminid, streetAddress, City, State, pCode, status]);
 
-        console.log(ueserTable.rows[0].userid);
-        const userid = ueserTable.rows[0].userid
+        // console.log(ueserTable.rows[0].userid);
+        // const userid = ueserTable.rows[0].userid
         const credentialTable = await userdbInstance.userdb.query('INSERT INTO credentials (userid,username) VALUES ($1,$2)',
             [userid, email]);
 

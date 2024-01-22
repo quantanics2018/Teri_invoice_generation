@@ -13,8 +13,8 @@ async function checkCredentials(req, res) {
       } else {
         console.log(username);
         const GetTheUserStatus = await userdbInstance.userdb.query('select status from public."user" where email=$1;', [username]);
-        console.log(GetTheUserStatus.rows[0].status === 1);
-        if (GetTheUserStatus.rows[0].status === '1') {
+        // console.log(GetTheUserStatus.rows[0].status === 1);
+        // if (GetTheUserStatus.rows[0].status === '1') {
           const data = await userdbInstance.userdb.query(`SELECT 
                 "user".userid,"user".email,"user".phno,"user".name,
                 (select position from position where positionid = "user".positionid),
@@ -35,10 +35,10 @@ async function checkCredentials(req, res) {
           } else {
             res.json({ success: false, message: 'Enter Valid Username and Password' });
           }
-        }
-        else {
-          res.json({ success: false, message: 'Your Access Restricted' });
-        }
+        // }
+        // else {
+        //   res.json({ success: false, message: 'Your Access Restricted' });
+        // }
 
       }
     }

@@ -110,6 +110,9 @@ const Add_User_Detials = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const isValidOrgName = postData.OrganizationName.trim() !== '';
+        const isValidbussinessType = postData.bussinessType.trim() !== '';
+        // alert(isValidOrgName);
         const isValidgstNumber = /^([A-Za-z]{2}[0-9]{2}[0-9]{4})$/.test(postData.gstNumber)
         const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber)
         const isValidaadharNo = /^\d{12}$/.test(postData.aadharNo)
@@ -121,7 +124,7 @@ const Add_User_Detials = () => {
         const isValidpostid = postData.Positionid !== undefined && postData.Positionid !== null;
 
         // console.log(postData.Positionid==undefined);
-        if (isValidgstNumber & isValidpanNumber & isValidaadharNo
+        if (isValidOrgName & isValidbussinessType &  isValidgstNumber & isValidpanNumber & isValidaadharNo
             & isValidfName & isValidemail & isValidupiPaymentNo & isValidaccName & isValidaccNo & isValidpostid
         ) {
             // console.log("Properly inserted",postData);
@@ -135,7 +138,13 @@ const Add_User_Detials = () => {
                 console.error('Error sending data:', error);
             }
         } else {
-            if (!isValidgstNumber) {
+            if (!isValidOrgName) {
+                alert("Organization Name Can't be Empty");
+            }
+            else if (!isValidbussinessType) {
+                alert("Select proper bussiness type");
+            }
+            else if (!isValidgstNumber) {
                 alert("enter valid GST Number");
             }
             else if (!isValidpanNumber) {
@@ -182,7 +191,7 @@ const Add_User_Detials = () => {
     };
 
     const inputFields = [
-        // { label: "User ID", name: "userid", value: postData.userid, icon: ic_home_work },
+        { label: "User ID", name: "userid", value: postData.userid, icon: ic_home_work },
         { label: "Organization Name", name: "OrganizationName", value: postData.OrganizationName, icon: person },
         { label: "Bussiness Type", name: "bussinessType", value: postData.bussinessType, icon: person },
         { label: "GST Number", name: "gstNumber", value: postData.gstNumber, icon: pen_3 },

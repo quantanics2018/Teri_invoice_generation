@@ -27,6 +27,8 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from 'axios';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
 import Example from '../components/Example';
+import TextField from '@mui/material/TextField';
+
 
 
 
@@ -176,10 +178,19 @@ const Add_Products = () => {
                                 {inputFields.slice(0, 4).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
-                                            <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label>
+                                            {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
                                             <div className="inputs-group display-flex">
                                                 <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
-                                                <input
+                                                {/* <input
+                                                    type="text"
+                                                    className="form-control-loc"
+                                                    value={field.value}
+                                                    onChange={handleInputChange}
+                                                    name={field.name}
+                                                    id={`input${index + 1}`}
+                                                /> */}
+                                                <TextField
+                                                    label={`${field.label} *`}
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
@@ -197,10 +208,19 @@ const Add_Products = () => {
                                 {inputFields.slice(4, 8).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
-                                            <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label>
+                                            {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
                                             <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
-                                                <input
+                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                {/* <input
+                                                    type="text"
+                                                    className="form-control-loc"
+                                                    value={field.value}
+                                                    onChange={handleInputChange}
+                                                    name={field.name}
+                                                    id={`input${index + 1}`}
+                                                /> */}
+                                                <TextField
+                                                    label={`${field.label} *`}
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}

@@ -120,6 +120,7 @@ const App = () => {
             </div>
           )}
           <Routes>
+            <Route path='ProfilePage' element={<ProfilePage />} />
             <Route path='feedback' element={<FeedbackForm />} />
           </Routes>
         </div>

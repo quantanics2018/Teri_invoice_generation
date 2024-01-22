@@ -26,7 +26,7 @@ const thead = {
 
 const InvoiceGenerator = () => {
     const theme = useTheme();
-    const customerNames = ['INVOICE', 'ORDER NUMBER', 'INVOICE DATE'];
+    const customerNames = ['UserId'];
     const [inputValues, setInputValues] = useState({});
 
     const handleInputChangeInvoice = (fieldName, value) => {
