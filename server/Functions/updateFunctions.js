@@ -139,7 +139,7 @@ async function productQuantity(req, res) {
         SET quantity=$1
         WHERE productid=$2;`, [Quantity,productid]);
         if (userUpdateResult.rowCount === 1) {
-            res.json({ resStatus: "UPDATED", qos: "success" });
+            res.json({ resStatus: "Updated successfully", qos: "success" });
         } else {
             res.status(404).json({ message: "User not found" });
         }
