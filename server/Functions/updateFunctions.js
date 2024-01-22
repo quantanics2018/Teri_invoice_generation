@@ -134,19 +134,19 @@ async function updateProducts(req, res) {
 async function productQuantity(req, res) {
     const { productid, Quantity } = req.body;
     console.log(productid, Quantity);
-    // try {
-    //     const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
-    //     SET status=$1
-    //     WHERE productid=$2;`, [status, productid]);
-    //     if (userUpdateResult.rowCount === 1) {
-    //         res.json({ resStatus: status, qos: "success" });
-    //     } else {
-    //         res.status(404).json({ message: "User not found" });
-    //     }
-    // } catch (error) {
-    //     console.error('Error executing database query:', error);
-    //     res.status(500).json({ message: "Internal Server Error" });
-    // }
+    try {
+        const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
+        SET quantity=$1
+        WHERE productid=$2;`, [Quantity,productid]);
+        if (userUpdateResult.rowCount === 1) {
+            res.json({ resStatus: "UPDATED", qos: "success" });
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }
 
 
