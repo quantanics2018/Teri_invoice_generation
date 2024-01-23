@@ -54,7 +54,8 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                     head: 'Products',
                     links: [
                         { url: '/Products', text: 'Products', condition: userInfo.product > 0 },
-                        { url: '/InvoiceGenerator', text: 'Invoice Generator', condition: !(userInfo.position === "customer") },
+                        { url: '/InvoiceGenerator', text: 'Invoice Generator', condition: true },
+                        // !(userInfo.position === "customer")
                         { url: '/Invoice', text: 'Invoice', condition: userInfo.invoice > 0 },
                         { url: '/TransactionHistory', text: 'PaySlip Log', condition: true },
                     ],
@@ -258,35 +259,44 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                         userSidebarConfig.RI001.menuItem.map((item, index) => (
                             <NavLink
                                 key={index}
-                                to={item.links[0].url}
+                                // to={item.links[0].url}
                                 className={`link ${activeDropdownIndex === index ? 'active-link' : ''}`}
                                 style={{ borderRadius: "7px" }}
                                 onMouseEnter={() => {
                                     const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
-                                    dropdownContent.style.display = 'block';
+                                    dropdownContent.style.display = 'flex';
+                                    dropdownContent.style.animation = 'slideInFromLeft 0.5s ease-in-out forwards';
                                 }}
                                 onMouseLeave={() => {
                                     const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
                                     dropdownContent.style.display = 'none';
+                                    // dropdownContent.style.animation = 'slideOutToLeft 0.5s ease-in-out forwards';
                                 }}
                             >
                                 <div className="individual_icon">
                                     <div className={`icon ${activeDropdownIndex === index ? 'active-icon' : ''}`}>{item.icon}</div>
                                 </div>
-
-                                <div className="dropdown-content" style={{ display: 'none' }}>
-                                    <div className="sidebar_head">{item.head}</div>
-                                    {console.log("hai : ", item)}
+                                <div className="dropdown-content" style={{ display: 'none' }}
+                                    onMouseLeave={() => {
+                                        const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
+                                        dropdownContent.style.display = 'none';
+                                        // dropdownContent.style.animation = 'slideOutToLeft 0.2s ease-in-out forwards';
+                                        // alert(index)
+                                    }}
+                                >
+                                    <div className="link_head sidebar_head">{item.head}</div>
+                                    {/* {<div className="dropdown-hr hr_for_head" />} */}
                                     {item.links.map((link, i) => (
                                         (link.condition === true) && (
                                             <div key={i}>
                                                 <div>
                                                     <Link to={link.url}
-                                                        className={`link ${activelink === i ? 'active-link' : ''} ${(i === item.links.length - 1 )? 'last-link' : ''}`}
-                                                    onClick={() => handleLinkClick(i, index)}
-                                                    >{link.text}{console.log(i)}</Link>
-                                                    {i !== item.links.length - 1 && <hr className="dropdown-hr" />}
+                                                        className={`link ${activelink === i ? 'active-link' : ''} ${(i === item.links.length - 1) ? 'last-link' : ''}`}
+                                                        onClick={() => handleLinkClick(i, index)}
+                                                    >{link.text}</Link>
+                                                    {/* {<div className="dropdown-hr" />} */}
                                                 </div>
+                                                {/* {i !== item.links.length - 1 && <div className="dropdown-hr" />} */}
                                             </div>
                                         )
                                     ))}

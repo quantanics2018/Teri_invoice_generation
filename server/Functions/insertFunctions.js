@@ -84,26 +84,28 @@ async function addUser(req, res) {
 async function addInvoice(req, res) {
     const invoice = req.body.invoice;
     const invoiceItem = req.body.invoiceitem;
-    console.log(invoice);
-    console.log(invoiceItem);
-    console.log(invoice['ORDER NUMBER']);
+    // console.log(invoice);
+    // console.log(invoiceItem);
+    // console.log(invoice['UserId']);
     try {
         await userdbInstance.userdb.query('BEGIN');
 
         const InvoiceTableResult = await userdbInstance.userdb.query(
             `INSERT INTO public.invoice(
-                invoiceid)
-                VALUES ($1);`, [invoice['ORDER NUMBER']]
+                receiverid)
+                VALUES ($1) RETURNING invoiceid;`, [invoice['UserId']]
         );
 
+        console.log(InvoiceTableResult.rows[0].invoiceid);
+        const invoiceid = InvoiceTableResult.rows[0].invoiceid;
 
         for (const item of invoiceItem) {
-            console.log(item.id);
+            // console.log(item.id);
 
             const InvoiceItemTableResult = await userdbInstance.userdb.query(
                 `INSERT INTO public.invoiceitem(
                     invoiceid,productid,quantity)
-                    VALUES ($1,$2,$3);`, [invoice['ORDER NUMBER'], item.productid, item.Quantity]
+                    VALUES ($1,$2,$3);`, [invoiceid, item.productid, item.Quantity]
             );
 
             // Do something with userTableResult if needed

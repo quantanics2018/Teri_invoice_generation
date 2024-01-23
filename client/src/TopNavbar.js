@@ -15,9 +15,9 @@ const TopNavbar = () => {
       <div className='navbar_mar mar-left d-flex'>
         <img src={companyLogo} alt="Terion" width="200" height="25" />
       </div>
-      <IconButton color="inherit" onClick={handleSidebarToggle}>
+      {/* <IconButton color="inherit" onClick={handleSidebarToggle}>
         <MenuIcon />
-      </IconButton>
+      </IconButton> */}
 
       {/* Site Dropdown */}
       <Drawer anchor="left" open={isSidebarOpen} onClose={handleSidebarToggle}>

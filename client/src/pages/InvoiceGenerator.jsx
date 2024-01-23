@@ -13,6 +13,8 @@ import {
 import { CancelBtnComp } from '../components/AddUserBtn';
 import axios from 'axios';
 import { API_URL } from '../config';
+// import Autocomplete from '@material-ui/lab/Autocomplete';
+
 
 const StyledPaper = styled(Paper)({
     padding: '20px',
@@ -147,7 +149,7 @@ const InvoiceGenerator = () => {
                                             onBlur={(e) => handleBlur(row.id, 'productName', e.target.value)}
                                         />
                                         <datalist id={`suggestions-${row.id}`}
-                                        style={{ position: 'absolute', zIndex: 1, border: '1px solid #ccc', background: '#fff' }}
+                                            style={{ position: 'absolute', zIndex: 1, border: '1px solid #ccc', background: '#fff' }}
                                         >
                                             {suggestionsArray.map((suggestion, index) => (
                                                 <option key={index} value={suggestion} />
@@ -155,6 +157,19 @@ const InvoiceGenerator = () => {
                                         </datalist>
                                         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                                     </TableCell>
+                                    {/* <TableCell>
+                                        <Autocomplete
+                                            freeSolo
+                                            options={suggestionsArray}
+                                            value={row.col2}
+                                            onChange={(event, newValue) => handleInputChange(row.id, 'productName', newValue)}
+                                            onBlur={(e) => handleBlur(row.id, 'productName', e.target.value)}
+                                            renderInput={(params) => (
+                                                <TextField {...params} label="Product Name" margin="normal" variant="outlined" />
+                                            )}
+                                        />
+                                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                                    </TableCell> */}
                                     <TableCell>
                                         <TextField
                                             value={row.col3}
@@ -175,7 +190,9 @@ const InvoiceGenerator = () => {
                                     </TableCell>
                                     <TableCell>
                                         <Button onClick={() => deleteRow(row.id)} color="secondary">
-                                            Delete Row
+                                            ❌
+                                            {/* ✔ */}
+                                            {/* <DeleteIcon /> */}
                                         </Button>
                                     </TableCell>
                                 </TableRow>
