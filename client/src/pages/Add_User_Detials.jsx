@@ -26,10 +26,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { API_URL } from '../config';
 import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { CancelBtn, SaveBtn } from '../assets/style/cssInlineConfig';
 import { AddUserBtn, SaveBtnComp } from '../components/AddUserBtn';
-import {CancelBtnComp} from '../components/AddUserBtn'
+import { CancelBtnComp } from '../components/AddUserBtn'
+import { FaTh, FaBars, FaUserAlt, FaRegChartBar, FaCommentAlt, FaShoppingBag } from "react-icons/fa";
+
 const Add_User_Detials = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
@@ -124,7 +126,7 @@ const Add_User_Detials = () => {
         const isValidpostid = postData.Positionid !== undefined && postData.Positionid !== null;
 
         // console.log(postData.Positionid==undefined);
-        if (isValidOrgName & isValidbussinessType &  isValidgstNumber & isValidpanNumber & isValidaadharNo
+        if (isValidOrgName & isValidbussinessType & isValidgstNumber & isValidpanNumber & isValidaadharNo
             & isValidfName & isValidemail & isValidupiPaymentNo & isValidaccName & isValidaccNo & isValidpostid
         ) {
             // console.log("Properly inserted",postData);
@@ -167,7 +169,7 @@ const Add_User_Detials = () => {
             }
             else if (!isValidaccNo) {
                 alert("enter valid Account Number");
-            } 
+            }
             else if (!isValidpostid) {
                 alert("Enter User Type");
             }
@@ -258,6 +260,7 @@ const Add_User_Detials = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     var Positionid_val;
     const handleUserChange = async (event) => {
+        alert("entering")
         setSelectedUser(event.target.value);
         // console.log(event.target.value);
         if (event.target.value == "select user") {
@@ -316,7 +319,7 @@ const Add_User_Detials = () => {
                     <div className="row_one display-flex">
                         <div className="adding_new_device uppercase bold">Add User Detials </div>
                         <select value={selectedUser} onChange={handleUserChange}>
-                            <option value={"select user"}>Select a User</option>
+                            <option value={"select user"}>Select User</option>
                             {userInfo.position === 'manifacture' && (
                                 <>
                                     <option value="Staff">Staff</option>
@@ -331,10 +334,37 @@ const Add_User_Detials = () => {
                             {userInfo.position === 'distributor' && (
                                 <option value="Customer" >Customer</option>
                             )}
-                            {/* Add more options as needed */}
                         </select>
-                        {/* {JSON.stringify()} */}
                     </div>
+                    {/* <FormControl style={{ width: '150px' }}>
+                        <InputLabel id="demo-simple-select-label">Select user</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={selectedUser}
+                            label="Select user"
+                            onChange={handleUserChange}
+                        >
+                            {userInfo.position === 'manifacture' && (
+                                <>
+                                    <MenuItem value={10}>Ten</MenuItem>
+                                    <MenuItem value="Staff">Staff</MenuItem>
+                                    <MenuItem value="Distributor">Distributor</MenuItem>
+                                </>
+                            )}
+                            {userInfo.position === 'staff' && (
+                                <>
+                                    <MenuItem value="Distributor">Distributor</MenuItem>
+                                </>
+                            )}
+                            {userInfo.position === 'distributor' && (
+                                <MenuItem value="Customer" >Customer</MenuItem>
+                            )}
+                            <MenuItem value={10}>Ten</MenuItem>
+                            <MenuItem value={20}>Twenty</MenuItem>
+                            <MenuItem value={30}>Thirty</MenuItem>
+                        </Select>
+                    </FormControl> */}
 
                     <div className="row_two display-flex padding-loc">
                         <div className="device_info uppercase light-grey mb-loc-5">
@@ -349,7 +379,10 @@ const Add_User_Detials = () => {
                                             <div className="inputs-group display-flex">
                                                 <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
                                                 <TextField
-                                                    label={`${field.label} *`}
+                                                    label={
+                                                        <span>{`${field.label} *`}</span>
+                                                    }
+                                                    // helperText="Please enter your name"
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
@@ -467,8 +500,8 @@ const Add_User_Detials = () => {
 
                     <div className="operating_buttons display-flex padding-loc">
                         <div className="save_cancel_btn display-flex site_button gap-4">
-                            <CancelBtnComp CancelBtnFun={handleCancel}/>
-                            <SaveBtnComp SaveBtnFun={(e) => handleSubmit(e)}/>
+                            <CancelBtnComp CancelBtnFun={handleCancel} />
+                            <SaveBtnComp SaveBtnFun={(e) => handleSubmit(e)} />
                             {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={(e) => handleSubmit(e)}>Save</button>
                             <button type="button" class="btn-loc inactive-loc btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                             <button className="btn-loc inactive-loc btn " style={cancel_btn} data-bs-toggle="modal" data-bs-target="#exampleModal">cancel</button> */}

@@ -5,8 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/system';
-import { Button } from '@mui/material';
-import {UserActionBtn} from '../assets/style/cssInlineConfig';
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { UserActionBtn } from '../assets/style/cssInlineConfig';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 const Login = (props) => {
     const theme = useTheme();
 
@@ -90,7 +92,13 @@ const Login = (props) => {
     //     validate_login();
     // }, []);
     // const btnStyle = { backgroundColor: 'red', color: 'white', borderRadius: '7px', width: '100px' }
+    const [showPassword, setShowPassword] = useState(false);
 
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     return (
         <>
@@ -103,31 +111,80 @@ const Login = (props) => {
                             <img src={invoiceLogo} alt="Logo" />
                         </div>
                         <div className="credentials" >
-                            <div className='login_input_div'>
-                                {/* <input type="text" placeholder='Email' className='login_inputs_individual' value={username} onChange={handleUserName} onBlur={LoginUsername} /> */}
-                                <TextField
-                                    label="Username"
-                                    type="text"
-                                    className="form-control-loc"
-                                    onBlur={LoginUsername}
-                                    value={username} onChange={handleUserName}
-                                // value={field.value}
-                                // onChange={(e) => handleInputChange(index, e.target.value)}
-                                />
-                                <div className="login_error-message">{username_empty && "Enter Valid Email"}</div>
-                            </div>
-                            <div className='login_input_div'>
-                                {/* <input type="password" placeholder='Password' className='login_inputs_individual' value={password} onChange={handlepassword} onBlur={LoginPassword} /> */}
+                            <FormControl sx={{ m: 1, width: '30ch' }} variant="outlined" className="credentials" >
+                                <div className='login_input_div'>
+                                    <TextField
+                                        label="Username"
+                                        type="text"
+                                        className="form-control-loc"
+                                        onBlur={LoginUsername}
+                                        value={username} onChange={handleUserName}
+                                        sx={{ m: 0, width: '30ch' }}
+                                    />
+                                    <div className="login_error-message">{username_empty && "Enter Valid Email"}</div>
+                                </div>
+                                <div className='login_input_div'>
+                                    <TextField
+                                        label="Password"
+                                        // type="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        className="form-control-loc"
+                                        value={password} onChange={handlepassword} onBlur={LoginPassword}
+                                        sx={{ m: 0, width: '30ch' }}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        onMouseDown={handleMouseDownPassword}
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                    <div className="login_error-message">{password_empty && "Enter Valid Password"}</div>
+                                </div>
+                            </FormControl>
+                            {/* <div className='login_input_div'>
                                 <TextField
                                     label="Password"
                                     type="password"
                                     className="form-control-loc"
                                     value={password} onChange={handlepassword} onBlur={LoginPassword}
-                                // value={field.value}
-                                // onChange={(e) => handleInputChange(index, e.target.value)}
                                 />
                                 <div className="login_error-message">{password_empty && "Enter Valid Password"}</div>
-                            </div>
+                            </div> */}
+                            {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <FormControl sx={{ m: 1, width: '30ch' }} variant="outlined">
+                                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                                    <OutlinedInput
+                                        id="outlined-adornment-password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        value={password}
+                                        onChange={handlepassword}
+                                        onBlur={LoginPassword}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                        label="Password"
+                                    />
+                                </FormControl>
+                                <div className="login_error-message">{password_empty && "Enter Valid Password"}</div>
+                            </div> */}
+
                         </div>
                         <div className='error_forgot display-flex'>
                             <div className=' error_msg_login'>

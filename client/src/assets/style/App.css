@@ -61,6 +61,28 @@
     }
 }
 
+.accessmodal {
+    margin-left: -105px;
+}
+
+.accessControlHeadwithVal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    /* background-color: #00B0F0; */
+}
+.acc_head{
+    width: 200px;
+    /* width: 100%; */
+
+}
+.acc_val{
+    /* width: 100%; */
+    display: flex;
+    justify-content: space-around;
+}
+
 /* row_with_count_status */
 .row_with_count_status {
     justify-content: space-between;
@@ -174,7 +196,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem
+    gap: 2rem;
 }
 
 .login_input_div {
@@ -188,6 +210,8 @@
     font-size: 10px;
     color: red;
     margin-left: 10px;
+    margin-top: 7px;
+
 }
 
 .login_inputs_individual {
@@ -1891,13 +1915,15 @@ input[type="checkbox"] {
 }
 
 /* Invoice css */
-.thead{
-   text-align:"center"
+.thead {
+    text-align: "center"
 }
-.innercontent{
+
+.innercontent {
     position: relative;
     z-index: 0;
 }
+
 .InvoiceContainer {
     height: 90vh;
     display: flex;

@@ -27,6 +27,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 
 
 const Edit_Distributer_Detials = () => {
@@ -304,6 +305,21 @@ const Edit_Distributer_Detials = () => {
         });
     };
 
+    // Access control
+    const [accessValues, setAccessValues] = useState({
+        Staff: 'No access', // Default values
+        Distributor: 'No access',
+        Customer: 'No access',
+    });
+
+    const handleRadioChange = (row, value) => {
+        setAccessValues((prevValues) => ({
+            ...prevValues,
+            [row]: value,
+        }));
+    };
+
+
     return (
         <div className='Add_device1 '>
             <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -323,6 +339,42 @@ const Edit_Distributer_Detials = () => {
                     </div>
                 </div>
             </div>
+            {/* Access controll start */}
+            <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Access Control</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <FormControl component="fieldset">
+                                {/* <FormLabel component="legend">Rows</FormLabel> */}
+                                {['Staff', 'Distributor', 'Customer'].map((row, rowIndex) => (
+                                    <div key={rowIndex} className='accessControlHeadwithVal'>
+                                        <FormLabel component="legend" className='acc_head'>{`${row}`}</FormLabel>
+                                        <RadioGroup row
+                                            className='acc_val'
+                                            value={accessValues[row]}
+                                            onChange={(e) => handleRadioChange(row, e.target.value)}
+                                        >
+                                            {['No accesss', 'View', 'Edit', 'All'].map((radio, radioIndex) => (
+                                                <FormControlLabel key={radioIndex} value={`row${row}-radio${radio}`} control={<Radio />} label={`${radio}`} />
+                                            ))}
+                                        </RadioGroup>
+                                    </div>
+                                ))}
+                                 Access values state: {JSON.stringify(accessValues)} 
+                            </FormControl>
+                        </div>
+                        <div class="modal-footer">
+                            {/* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> */}
+                            <button type="button" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* access controll end */}
             <div className="row_with_count_status">
                 <span className='module_tittle'>User Detials</span>
             </div>
@@ -465,6 +517,9 @@ const Edit_Distributer_Detials = () => {
                                         </div>
                                     </div>
                                 ))}
+                                {/* <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#accessControll">
+                                    Credentials
+                                </button> */}
                             </div>
                         </div>
                     </div>

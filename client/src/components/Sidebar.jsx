@@ -43,8 +43,9 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                     head: 'Management',
                     links: [
                         { url: '/Staff_Detials', text: 'Staff Detials', condition: userInfo.staff > 0 },
-                        { url: '/Distributer_Detials', text: 'Distributor Detials', condition: userInfo.distributer > 0 },
-                        { url: '/Customer_Detials', text: 'Customer Detials', condition: userInfo.customer > 0 },
+                        // { url: '/Distributer_Detials', text: 'Distributor Detials', condition: userInfo.distributer > 0 , classname:{userInfo.customer !> 0 ? 'last-link',''}},
+                        { url: '/Distributer_Detials', text: 'Distributor Details', condition: userInfo.distributer > 0, classname: userInfo.customer == 0 ? 'last-link' : '' },
+                        { url: '/Customer_Detials', text: 'Customer Detials', condition: userInfo.customer > 0, classname: 'last-link' },
                         // { url: '/Products', text: 'Products' },
                         // { url: '/Contact_us', text: 'Contact us', condition: true },
                     ],
@@ -232,6 +233,11 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
             dropdownContent.style.display = "none";
         }
     }
+    // const LogoutLeaveParrent = () => {
+    //     setTimeout(() => {
+    //         setlogoutdiv(false);
+    //     }, 5000);
+    // }
     const logout_empty_space = useRef(null);
     const logout_empty_space_fun = (event) => {
         if (!logout_empty_space.current.contains(event.target)) {
@@ -284,16 +290,16 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                                         // alert(index)
                                     }}
                                 >
-                                    <div className="link_head sidebar_head">{item.head}</div>
+                                    <div className="link_head sidebar_head bottomBorder">{item.head}</div>
                                     {/* {<div className="dropdown-hr hr_for_head" />} */}
                                     {item.links.map((link, i) => (
                                         (link.condition === true) && (
-                                            <div key={i}>
+                                            <div className={(i === item.links.length - 1) ? "" : "bottomBorder"} key={i}>
                                                 <div>
                                                     <Link to={link.url}
-                                                        className={`link ${activelink === i ? 'active-link' : ''} ${(i === item.links.length - 1) ? 'last-link' : ''}`}
+                                                        className={`innerLink ${activelink === i ? 'active-link' : ''} ${(i === item.links.length - 1 || item.links[1].classname === 'last-link') ? 'last-link' : ''}`}
                                                         onClick={() => handleLinkClick(i, index)}
-                                                    >{link.text}</Link>
+                                                    >{link.text}{console.log("hlo : ", item.links[1].classname)}</Link>
                                                     {/* {<div className="dropdown-hr" />} */}
                                                 </div>
                                                 {/* {i !== item.links.length - 1 && <div className="dropdown-hr" />} */}
@@ -311,25 +317,33 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                             icon={faCircleUser}
                             style={{ "--fa-primary-color": "#ffffff", "--fa-secondary-color": "#797a7c" }}
                             onClick={Logout}
+                        // onMouseLeave={LogoutLeaveParrent}
                         />
 
                     </div>
                     {logoutdiv &&
-                        <div className="your-div">
-                            <div className='display-flex logout1'>
-                                <FontAwesomeIcon
-                                    className="profile_pic"
-                                    icon={faCircleUser}
-                                    style={{ "--fa-primary-color": "#ffffff", "--fa-secondary-color": "#797a7c" }}
-                                    onClick={Logout}
-                                />
-                                <span style={{ fontWeight: "600" }} className='name'>{JSON.parse(sessionStorage.getItem("UserInfo")).name}</span>
+                        <div className="logoutDiv"
+                        // onMouseLeave={LogoutLeave}
+                        >
+                            <div className='logout1'
+                                onClick={Logout}
+                            >
+                                <div className="display-flex hoverColour1">
+                                    <FontAwesomeIcon
+                                        className="profile_pic"
+                                        icon={faCircleUser}
+                                        style={{ "--fa-primary-color": "#ffffff", "--fa-secondary-color": "#797a7c" }}
+                                    />
+                                    <span style={{ fontWeight: "600" }} className='name'>{JSON.parse(sessionStorage.getItem("UserInfo")).name}</span>
+                                </div>
                             </div>
-                            <div className='display-flex logout2'
+                            <div className='logout2'
                                 onClick={handleLogout1}
                             >
-                                <FontAwesomeIcon className="profile_pic1" icon={faArrowRightFromBracket} />
-                                <div style={{ fontWeight: "600" }} className='name'>Logout</div>
+                                <div className="display-flex hoverColour2">
+                                    <FontAwesomeIcon className="profile_pic1" icon={faArrowRightFromBracket} />
+                                    <div style={{ fontWeight: "600" }} className='name'>Logout</div>
+                                </div>
                             </div>
                         </div>
                     }

@@ -129,7 +129,7 @@ main {
     margin-bottom: 0.6rem;
 }
 
-.your-div {
+.logoutDiv {
     position: absolute;
     left: 45px;
     top: -80px;
@@ -148,23 +148,38 @@ main {
     gap: 0.5rem;
     background-color: var(--THEME_COLOUR);
     min-width: 150px;
-    padding: 0.5rem;
+    /* padding: 0.5rem; */
     border-radius: 15px 15px 0px 0px;
 }
 
 .logout2 {
     justify-content: start;
     align-items: start;
-    padding-left: 10px;
-    gap: 0.5rem;
+    /* padding-left: 10px; */
     background-color: var(--THEME_COLOUR);
     min-width: 150px;
-    padding: 0.5rem;
+    /* padding: 0.5rem; */
     border-radius: 0px 0px 15px 15px;
 }
 
+.hoverColour1{
+    padding: 0.5rem;
+    gap: 0.5rem;
+    border-radius: 15px 15px 0px 0px;
+}
+.hoverColour2{
+    padding: 0.5rem;
+    gap: 0.5rem;
+    border-radius: 0px 0px 15px 15px;
+}
 .logout1:hover,
 .logout2:hover {
+    /* background-color: var(--HOVER_COLOUR); */
+}
+.hoverColour1:hover{
+    background-color: var(--HOVER_COLOUR);
+}
+.hoverColour2:hover{
     background-color: var(--HOVER_COLOUR);
 }
 
@@ -229,7 +244,7 @@ main {
     min-width: 200px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    padding: 5px;
+    /* padding: 5px; */
     background-color: var(--THEME_COLOUR);
     border-radius: 10px;
     flex-direction: column;
@@ -251,12 +266,12 @@ main {
 }
 
 .last-link {
-    /* border-radius: 0px 0px 7px 7px; */
+    border-radius: 0px 0px 7px 7px;
 }
 
 .dropdown-content a:hover {
-    color: var(--INNER_COLOUR);
-    background-color: var(--HOVER_COLOUR);
+    /* color: var(--INNER_COLOUR); */
+    /* background-color: var(--HOVER_COLOUR); */
 }
 
 /* .link:hover .dropdown-content,
@@ -269,7 +284,10 @@ main {
     /* color: var(--SIDEBAR_HEADING_COLOUR); */
     font-weight: 700;
     padding-left: 15px;
-    /* border-radius: 7px 7px 0px 0px; */
+    border-radius: 7px 7px 0px 0px;
+}
+.bottomBorder{
+    border-bottom: 1px solid white;
 }
 
 .top_section {
@@ -293,6 +311,13 @@ main {
     padding: 10px 15px;
     gap: 15px;
     transition: all 0.5s;
+}
+.innerLink:hover{
+    background: var(--HOVER_COLOUR);
+    color: var(--INNER_COLOUR);
+    transition: all 0.5s;
+    /* width: 200px; */
+
 }
 
 .link:hover {
@@ -360,6 +385,7 @@ main {
 
 .top-nav {
     height: 10vh;
+    background-color: #ffffff;
     box-shadow: var(--BOX-SHADOW);
     border: var(--BORDER_COLOUR_1PX);
 }
