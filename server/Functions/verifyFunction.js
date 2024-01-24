@@ -13,14 +13,14 @@ async function checkCredentials(req, res) {
       } else {
         console.log(username);
         const GetTheUserStatus = await userdbInstance.userdb.query('select status from public."user" where email=$1;', [username]);
-        console.log(GetTheUserStatus.rows);
+        // console.log(GetTheUserStatus.rows);
         // console.log(GetTheUserStatus.rows[0].status === 1);
         if (GetTheUserStatus.rows[0].status === '1') {
           const data = await userdbInstance.userdb.query(`SELECT 
                 "user".userid,"user".email,"user".phno,"user".name,
                 (select position from position where positionid = "user".positionid),
                 "user".userprofile, "user".status ,accesscontroll.distributer,accesscontroll.product,
-                accesscontroll.invoice,accesscontroll.customer,accesscontroll.staff
+                accesscontroll.invoicegenerator,accesscontroll.customer,accesscontroll.staff,accesscontroll.invoicepayslip
                 FROM public.credentials
                 JOIN public."user" ON credentials.userid = "user".userid
                 JOIN public.accesscontroll on accesscontroll.userid = "user".userid

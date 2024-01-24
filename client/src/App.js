@@ -109,12 +109,18 @@ const App = () => {
 
           )}
 
-          {userInfo.invoice > 0 && (
+          {userInfo.invoicegenerator > 0 && (
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Invoice Module */}
-                <Route path='Invoice' element={<Invoice />} />
                 <Route path='InvoiceGenerator' element={<InvoiceGenerator />} />
+              </Routes>
+            </div>
+          )}
+          {userInfo.invoicepayslip > 0 && (
+            <div style={{ marginLeft: '50px' }}>
+              <Routes>
+                {/* Invoice Module */}
                 <Route path='TransactionHistory' element={<TransactionHistory />} />
               </Routes>
             </div>
@@ -122,6 +128,7 @@ const App = () => {
           <Routes>
             <Route path='ProfilePage' element={<ProfilePage />} />
             <Route path='feedback' element={<FeedbackForm />} />
+            <Route path='Invoice' element={<Invoice />} />
           </Routes>
         </div>
       )}

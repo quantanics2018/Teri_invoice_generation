@@ -27,10 +27,12 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { API_URL } from '../config';
 import TextField from '@mui/material/TextField';
 import { Box, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { CancelBtn, SaveBtn } from '../assets/style/cssInlineConfig';
+import { CancelBtn, SaveBtn, UserActionBtn } from '../assets/style/cssInlineConfig';
 import { AddUserBtn, SaveBtnComp } from '../components/AddUserBtn';
 import { CancelBtnComp } from '../components/AddUserBtn'
 import { FaTh, FaBars, FaUserAlt, FaRegChartBar, FaCommentAlt, FaShoppingBag } from "react-icons/fa";
+import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { LockClosedIcon } from '@heroicons/react/24/outline';
 
 const Add_User_Detials = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
@@ -115,7 +117,7 @@ const Add_User_Detials = () => {
         const isValidOrgName = postData.OrganizationName.trim() !== '';
         const isValidbussinessType = postData.bussinessType.trim() !== '';
         // alert(isValidOrgName);
-        const isValidgstNumber = /^([A-Za-z]{2}[0-9]{2}[0-9]{4})$/.test(postData.gstNumber)
+        const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(postData.gstNumber)
         const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber)
         const isValidaadharNo = /^\d{12}$/.test(postData.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(postData.fName)
@@ -129,9 +131,10 @@ const Add_User_Detials = () => {
         if (isValidOrgName & isValidbussinessType & isValidgstNumber & isValidpanNumber & isValidaadharNo
             & isValidfName & isValidemail & isValidupiPaymentNo & isValidaccName & isValidaccNo & isValidpostid
         ) {
-            // console.log("Properly inserted",postData);
+            console.log("Properly inserted", postData);
+            console.log("Properly inserted", accessValues);
             try {
-                const response = await axios.post(`${API_URL}add/user`, postData);
+                const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues });
                 alert(response.data.message);
                 if (response.data.status) {
                     handleClear()
@@ -142,6 +145,9 @@ const Add_User_Detials = () => {
         } else {
             if (!isValidOrgName) {
                 alert("Organization Name Can't be Empty");
+            }
+            else if (!isValidpostid) {
+                alert("Enter User Type");
             }
             else if (!isValidbussinessType) {
                 alert("Select proper bussiness type");
@@ -170,24 +176,6 @@ const Add_User_Detials = () => {
             else if (!isValidaccNo) {
                 alert("enter valid Account Number");
             }
-            else if (!isValidpostid) {
-                alert("Enter User Type");
-            }
-
-            // console.log(postData);
-            // if (postData.Positionid == undefined || postData.Positionid == null) {
-            //     alert("Select user");
-            // } else {
-            //     try {
-            //         const response = await axios.post(`${API_URL}add/user`, postData);
-            //         alert(response.data.message);
-            //         if (response.data.status) {
-            //             handleClear()
-            //         }
-            //     } catch (error) {
-            //         console.error('Error sending data:', error);
-            //     }
-            // }
         }
 
     };
@@ -260,7 +248,6 @@ const Add_User_Detials = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     var Positionid_val;
     const handleUserChange = async (event) => {
-        alert("entering")
         setSelectedUser(event.target.value);
         // console.log(event.target.value);
         if (event.target.value == "select user") {
@@ -289,6 +276,24 @@ const Add_User_Detials = () => {
     // }, [postData.Positionid]);
     // console.log("haiiii", userInfo.position);
 
+    // Access control
+    const [accessValues, setAccessValues] = useState({
+        Staff: 'No access', // Default values
+        Distributor: 'No access',
+        Customer: 'No access',
+        Products: 'No access',
+        'Invoice Generator': 'No access',
+        'Invoice PaySlip': 'No access'
+    });
+
+    const handleRadioChange = (row, value) => {
+        setAccessValues((prevValues) => ({
+            ...prevValues,
+            [row]: value,
+        }));
+        // console.log(row,value);
+    };
+
     return (
         <div className='Add_device1 '>
             {/* Exit Conformation */}
@@ -310,6 +315,42 @@ const Add_User_Detials = () => {
                 </div>
             </div>
             {/* User access model */}
+            {/* Access controll start */}
+            <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Access Control</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <FormControl component="fieldset">
+                                {/* <FormLabel component="legend">Rows</FormLabel> */}
+                                {['Staff', 'Distributor', 'Customer', 'Products', 'Invoice Generator', 'Invoice PaySlip'].map((row, rowIndex) => (
+                                    <div key={rowIndex} className='accessControlHeadwithVal'>
+                                        <FormLabel component="legend" className='acc_head'>{`${row}`}</FormLabel>
+                                        <RadioGroup row
+                                            className='acc_val'
+                                            value={accessValues[row]}
+                                            onChange={(e) => handleRadioChange(row, e.target.value)}
+                                        >
+                                            {['No access', 'View', 'Edit', 'All'].map((radio, radioIndex) => (
+                                                <FormControlLabel key={radioIndex} value={radio} control={<Radio />} label={`${radio}`} />
+                                            ))}
+                                        </RadioGroup>
+                                    </div>
+                                ))}
+                                {/* Access values state: {JSON.stringify(accessValues)} */}
+                            </FormControl>
+                        </div>
+                        <div class="modal-footer">
+                            {/* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> */}
+                            <Button variant="outlined" type="button" data-bs-dismiss="modal" style={SaveBtn}>Save</Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* access controll end */}
 
             <div className="row_with_count_status">
                 <span className='module_tittle'>User Detials</span>
@@ -494,6 +535,9 @@ const Add_User_Detials = () => {
                                     </div>
                                 </div>
                             ))}
+                            <Button variant="outlined " style={{ color: 'red', borderColor: 'red' }}  data-bs-toggle="modal" data-bs-target="#accessControll">
+                                <LockClosedIcon/>
+                            </Button>
                         </div>
 
                     </div>

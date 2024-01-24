@@ -1,0 +1,17 @@
+For Gst : 
+^[0-9]{2}: The first two digits represent the state code, and they must be numeric.
+[A-Z]{5}: The next five characters represent the PAN (Permanent Account Number) of the business, and they must be uppercase alphabets.
+[0-9]{4}: The next four digits represent a unique identification number for the business.
+[A-Z]{1}: The thirteenth character represents the entity type, and it must be an uppercase alphabet.
+[1-9A-Z]{1}: The fourteenth character is a default 'Z' but can also be any digit from 1 to 9 or an uppercase alphabet.
+Z: The fifteenth character is 'Z'.
+[0-9A-Z]{1}$: The last character is a check code, and it can be any digit from 0 to 9 or an uppercase alphabet.
+
+ex: 29ABCDE2000A1Z9
+
+Pan Number : 
+[A-Z]{5}: The first five characters are uppercase alphabets, representing the first five letters of the last name or entity name.
+[0-9]{4}: The next four characters are numeric, representing the four-digit unique number.
+[A-Z]{1}: The last character is an uppercase alphabet, which is usually an alphabetic check code.
+
+ex : pan_number = "ABCDE1234F"

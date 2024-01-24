@@ -22,6 +22,8 @@ async function getUserData(req, res) {
         const { adminid ,position} = req.body;
         // console.log(adminid,position);
         const userDeleteResult = await userdbInstance.userdb.query('select * from public."user" where adminid=$1 and positionid=$2 and status=$3 order by rno DESC;', [adminid, position,'1']);
+
+        
         res.json({ message: "Successfully Data Fetched", data: userDeleteResult.rows });
     } catch (error) {
         console.error('Error executing database query:', error);
@@ -59,8 +61,13 @@ async function getUserDataIndividual(req, res) {
         const {id} = req.params;
         console.log(id);
         const UserDataIndividualResult = await userdbInstance.userdb.query('select * from public."user" where userid=$1', [id]);
-        console.log(UserDataIndividualResult);
-        res.json({ message: "Successfully Data Fetched", data: UserDataIndividualResult.rows[0] });
+        // console.log(UserDataIndividualResult.rows);
+
+        const userAccessControl = await userdbInstance.userdb.query(`SELECT *
+        FROM public.accesscontroll where userid=$1;`, [id]);
+        console.log(userAccessControl.rows);
+
+        res.json({ message: "Successfully Data Fetched", data: UserDataIndividualResult.rows[0] ,getuserAccessControl: userAccessControl.rows[0]});
     } catch (error) {
         console.error('Error executing database query:', error);
         res.status(500).json({ message: "Internal Server Error" });

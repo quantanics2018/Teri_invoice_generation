@@ -27,7 +27,9 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { LockClosedIcon } from '@heroicons/react/24/outline';
+import { SaveBtn } from '../assets/style/cssInlineConfig';
 
 
 const Edit_Distributer_Detials = () => {
@@ -71,8 +73,9 @@ const Edit_Distributer_Detials = () => {
 
     const all_data_fun = (data) => {
         if (data) {
+            console.log(data);
             const item = data.data;
-            console.log(item);
+            const AccessItem = data.getuserAccessControl;
             setInputValues((prevValues) => ({
                 ...prevValues,
                 userid: item.userid,
@@ -99,6 +102,95 @@ const Edit_Distributer_Detials = () => {
                 City2: item.cdistrictid,
                 State2: item.cstateid,
                 PostalCode2: item.cpostalcode
+            }));
+            // For staff
+            if (AccessItem.staff == 0) {
+                AccessItem.staff = 'No access'
+            }
+            else if (AccessItem.staff == 1) {
+                AccessItem.staff = 'View'
+            }
+            else if (AccessItem.staff == 2) {
+                AccessItem.staff = 'Edit'
+            }
+            else if (AccessItem.staff == 3) {
+                AccessItem.staff = 'All'
+            }
+            // For Distributor
+            if (AccessItem.distributer == 0) {
+                AccessItem.distributer = 'No access'
+            }
+            else if (AccessItem.distributer == 1) {
+                AccessItem.distributer = 'View'
+            }
+            else if (AccessItem.distributer == 2) {
+                AccessItem.distributer = 'Edit'
+            }
+            else if (AccessItem.distributer == 3) {
+                AccessItem.distributer = 'All'
+            }
+            // For Customer
+            if (AccessItem.customer == 0) {
+                AccessItem.customer = 'No access'
+            }
+            else if (AccessItem.customer == 1) {
+                AccessItem.customer = 'View'
+            }
+            else if (AccessItem.customer == 2) {
+                AccessItem.customer = 'Edit'
+            }
+            else if (AccessItem.customer == 3) {
+                AccessItem.customer = 'All'
+            }
+            // For Products
+            if (AccessItem.product == 0) {
+                AccessItem.product = 'No access'
+            }
+            else if (AccessItem.product == 1) {
+                AccessItem.product = 'View'
+            }
+            else if (AccessItem.product == 2) {
+                AccessItem.product = 'Edit'
+            }
+            else if (AccessItem.product == 3) {
+                AccessItem.product = 'All'
+            }
+
+            // For Invoice Generator
+            if (AccessItem.invoicegenerator == 0) {
+                AccessItem['Invoice Generator'] = 'No access'
+            }
+            else if (AccessItem.invoicegenerator == 1) {
+                AccessItem['Invoice Generator'] = 'View'
+            }
+            else if (AccessItem.invoicegenerator == 2) {
+                AccessItem['Invoice Generator'] = 'Edit'
+            }
+            else if (AccessItem.invoicegenerator == 3) {
+                AccessItem['Invoice Generator'] = 'All'
+            }
+            // For Invoice payslip
+            if (AccessItem.invoicepayslip == 0) {
+                AccessItem['Invoice PaySlip'] = 'No access'
+            }
+            else if (AccessItem.invoicepayslip == 1) {
+                AccessItem['Invoice PaySlip'] = 'View'
+            }
+            else if (AccessItem.invoicepayslip == 2) {
+                AccessItem['Invoice PaySlip'] = 'Edit'
+            }
+            else if (AccessItem.invoicepayslip == 3) {
+                AccessItem['Invoice PaySlip'] = 'All'
+            }
+            // console.log("test :" ,AccessItem['Invoice PaySlip']);
+            setAccessValues((prevValues) => ({
+                ...prevValues,
+                Staff:AccessItem.staff, // Default values
+                Distributor: AccessItem.distributer,
+                Customer: AccessItem.customer,
+                Products: AccessItem.product,
+                'Invoice Generator': AccessItem['Invoice Generator'],
+                'Invoice PaySlip': AccessItem['Invoice PaySlip']
             }));
             // setlast_name(item.last_name);
             // setsiteid(item.site_id);
@@ -161,7 +253,7 @@ const Edit_Distributer_Detials = () => {
         if ((isValidemail)) {
             console.log("success", inputValues);
             try {
-                const response = await axios.put(`${API_URL}update/user`, { inputValues });
+                const response = await axios.put(`${API_URL}update/user`, { inputValues ,AccessOptions:accessValues});
                 alert(response.data.message);
             } catch (error) {
                 console.error('Error updating data:', error);
@@ -305,11 +397,16 @@ const Edit_Distributer_Detials = () => {
         });
     };
 
+   
+
     // Access control
     const [accessValues, setAccessValues] = useState({
         Staff: 'No access', // Default values
         Distributor: 'No access',
         Customer: 'No access',
+        Products: 'No access',
+        'Invoice Generator': 'No access',
+        'Invoice PaySlip': 'No access'
     });
 
     const handleRadioChange = (row, value) => {
@@ -350,7 +447,7 @@ const Edit_Distributer_Detials = () => {
                         <div class="modal-body">
                             <FormControl component="fieldset">
                                 {/* <FormLabel component="legend">Rows</FormLabel> */}
-                                {['Staff', 'Distributor', 'Customer'].map((row, rowIndex) => (
+                                {['Staff', 'Distributor', 'Customer', 'Products', 'Invoice Generator', 'Invoice PaySlip'].map((row, rowIndex) => (
                                     <div key={rowIndex} className='accessControlHeadwithVal'>
                                         <FormLabel component="legend" className='acc_head'>{`${row}`}</FormLabel>
                                         <RadioGroup row
@@ -358,18 +455,20 @@ const Edit_Distributer_Detials = () => {
                                             value={accessValues[row]}
                                             onChange={(e) => handleRadioChange(row, e.target.value)}
                                         >
-                                            {['No accesss', 'View', 'Edit', 'All'].map((radio, radioIndex) => (
-                                                <FormControlLabel key={radioIndex} value={`row${row}-radio${radio}`} control={<Radio />} label={`${radio}`} />
+                                            {['No access', 'View', 'Edit', 'All'].map((radio, radioIndex) => (
+                                                // <FormControlLabel key={radioIndex} value={`row${row}-radio${radio}`} control={<Radio />} label={`${radio}`} />
+                                                <FormControlLabel key={radioIndex} value={radio} control={<Radio />} label={`${radio}`} />
                                             ))}
                                         </RadioGroup>
                                     </div>
                                 ))}
-                                 Access values state: {JSON.stringify(accessValues)} 
+                                {/* Access values state: {JSON.stringify(accessValues)} */}
                             </FormControl>
                         </div>
                         <div class="modal-footer">
                             {/* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> */}
-                            <button type="button" class="btn btn-primary">Save</button>
+                            {/* <button type="button" class="btn btn-primary">Save</button> */}
+                            <Button variant="outlined" type="button" data-bs-dismiss="modal" style={SaveBtn}>Save</Button>
                         </div>
                     </div>
                 </div>
@@ -517,9 +616,9 @@ const Edit_Distributer_Detials = () => {
                                         </div>
                                     </div>
                                 ))}
-                                {/* <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#accessControll">
-                                    Credentials
-                                </button> */}
+                                <Button variant="outlined " style={{ color: 'red', borderColor: 'red' }} data-bs-toggle="modal" data-bs-target="#accessControll">
+                                    <LockClosedIcon />
+                                </Button>
                             </div>
                         </div>
                     </div>
