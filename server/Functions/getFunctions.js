@@ -43,13 +43,24 @@ async function getProducts(req, res) {
     }
 }
 async function getTransactionHistory(req, res) {
-
     try {
         const { userid} = req.body;
-        console.log(" userid : ",userid);
-        // const userDeleteResult = await userdbInstance.userdb.query(`SELECT rno, productid, quantity, priceperitem, "Lastupdatedby", productname,status
-        // FROM public.products where belongsto=$1 order by rno DESC;`, [userid]);
-        res.json({ message: "Successfully Data Fetched", data: 'userDeleteResult.rows' });
+        // console.log(" userid : ",userid);
+        const userTransactionResult = await userdbInstance.userdb.query(`select * from invoice where senderid = $1 or receiverid = $2 order by rno DESC;`, [userid,userid]);
+        res.json({ message: "Successfully Data Fetched", data: userTransactionResult.rows });
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+async function getProductList(req, res) {
+
+    try {
+        const {senderID} = req.body.inputValues;
+        console.log(" userid : ",senderID);
+        const getProductListResult = await userdbInstance.userdb.query(`SELECT productid
+        FROM public.products where belongsto=$1 order by rno DESC;`, [senderID]);
+        res.json({ message: "Successfully Data Fetched", data: getProductListResult.rows});
     } catch (error) {
         console.error('Error executing database query:', error);
         res.status(500).json({ message: "Internal Server Error" });
@@ -87,4 +98,4 @@ async function getProductDataIndividual(req, res) {
 }
 
 
-module.exports = {getUserData ,getProducts,getTransactionHistory, getUserDataIndividual,getProductDataIndividual};
+module.exports = {getUserData ,getProducts,getTransactionHistory, getProductList, getUserDataIndividual,getProductDataIndividual};

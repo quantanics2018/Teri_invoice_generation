@@ -266,7 +266,7 @@ const Sidebar = ({ children, give_auth, handleLogout }) => {
                             <NavLink
                                 key={index}
                                 // to={item.links[0].url}
-                                className={`link ${activeDropdownIndex === index ? 'active-link' : ''}`}
+                                className={`link sidebarIcon ${activeDropdownIndex === index ? 'active-link' : ''}`}
                                 style={{ borderRadius: "7px" }}
                                 onMouseEnter={() => {
                                     const dropdownContent = document.getElementsByClassName('dropdown-content')[index];

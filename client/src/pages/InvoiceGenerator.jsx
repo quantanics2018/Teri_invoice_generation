@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { styled, useTheme } from '@mui/system';
-import { Container, TextField, Button, Grid, Paper, Typography } from '@mui/material';
+import { Container, TextField, Button, Grid, Paper, Typography, Select, MenuItem, Autocomplete } from '@mui/material';
 import { useState } from "react";
 import {
     Table,
@@ -27,9 +27,14 @@ const thead = {
 }
 
 const InvoiceGenerator = () => {
+    const userInfoString = sessionStorage.getItem("UserInfo");
+    const userInfo = JSON.parse(userInfoString);
     const theme = useTheme();
     const customerNames = ['UserId'];
-    const [inputValues, setInputValues] = useState({});
+    const [inputValues, setInputValues] = useState({
+        recieverid: "",
+        senderID: userInfo.userid,
+    });
 
     const handleInputChangeInvoice = (fieldName, value) => {
         setInputValues((prevValues) => ({
@@ -82,6 +87,26 @@ const InvoiceGenerator = () => {
         }
     }
 
+    // input dropdown options
+    const [options, setOptions] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
+                // alert(JSON.stringify(dropDownResponse.data)); 
+                console.log(dropDownResponse.data.data);
+                const productIds = dropDownResponse.data.data.map(item => item.productid);
+                setOptions(productIds); 
+            } catch (error) {
+                console.error('Error in processing data:', error);
+            }
+        };
+
+        fetchData();
+    }, [inputValues]);
+    // console.log(options);
+
+
     return (
         <div className='innercontent'>
             <StyledPaper elevation={3}>
@@ -131,31 +156,42 @@ const InvoiceGenerator = () => {
                         <TableBody>
                             {rows.map((row) => (
                                 <TableRow key={row.id}>
-                                    <TableCell>
+                                    {/* <TableCell>
                                         <TextField
                                             value={row.col1}
                                             onChange={(e) => handleInputChange(row.id, 'productid', e.target.value)}
                                         />
+                                    </TableCell> */}
+                                    <TableCell>
+                                        <Autocomplete
+                                            options={options}
+                                            getOptionLabel={(option) => option}
+                                            onChange={(e, value) => handleInputChange(row.id, 'productid', value)}
+                                            renderInput={(params) => (
+                                                <TextField {...params} label="HSN" variant="outlined" />
+                                            )}
+                                        />
                                     </TableCell>
+
                                     <TableCell>
                                         {/* <TextField
                                             value={row.col2}
                                             onChange={(e) => handleInputChange(row.id, 'productName', e.target.value)}
                                         /> */}
-                                        <input
+                                        <TextField
                                             list={`suggestions-${row.id}`}
                                             value={row.col2}
                                             onChange={(e) => handleInputChange(row.id, 'productName', e.target.value)}
                                             onBlur={(e) => handleBlur(row.id, 'productName', e.target.value)}
                                         />
-                                        <datalist id={`suggestions-${row.id}`}
+                                        {/* <datalist id={`suggestions-${row.id}`}
                                             style={{ position: 'absolute', zIndex: 1, border: '1px solid #ccc', background: '#fff' }}
                                         >
                                             {suggestionsArray.map((suggestion, index) => (
                                                 <option key={index} value={suggestion} />
                                             ))}
                                         </datalist>
-                                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} */}
                                     </TableCell>
                                     {/* <TableCell>
                                         <Autocomplete
@@ -172,6 +208,7 @@ const InvoiceGenerator = () => {
                                     </TableCell> */}
                                     <TableCell>
                                         <TextField
+                                            type='number'
                                             value={row.col3}
                                             onChange={(e) => handleInputChange(row.id, 'Quantity', e.target.value)}
                                         />

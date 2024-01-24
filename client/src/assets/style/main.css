@@ -101,7 +101,7 @@ main {
     display: flex;
     background: var(--THEME_COLOUR);
     color: var(--INNER_COLOUR);
-    width: 50px;
+    width: 53px;
     min-height: 90vh;
     /* inherit */
     height: auto;
@@ -304,7 +304,9 @@ main {
 .bar {
     font-family: var(--FONT_FAMILY);
 }
-
+.sidebarIcon{
+    margin-top: 3px;
+}
 .link {
     display: flex;
     color: var(--INNER_COLOUR);

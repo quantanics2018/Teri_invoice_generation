@@ -54,7 +54,7 @@ app.post('/add/:entity(user|products|invoice)', async (req, res) => {
 })
 
 // Get Data From DB
-app.post('/get/:entity(user|credentials|products|state|district|access_control|transactionHistory)', async (req, res) => {
+app.post('/get/:entity(user|credentials|products|state|district|access_control|transactionHistory|productList)', async (req, res) => {
     const entity = req.params.entity;
     const requestData = req.body;
     if (entity === 'user') {
@@ -78,6 +78,15 @@ app.post('/get/:entity(user|credentials|products|state|district|access_control|t
     if (entity === 'transactionHistory') {
         try {
             var userdata = await getData.getTransactionHistory(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'productList') {
+        try {
+            var userdata = await getData.getProductList(req, res);
         }
         catch (error) {
             res.send("error");

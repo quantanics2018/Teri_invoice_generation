@@ -18,6 +18,8 @@ import axios from 'axios';
 import { AddUserBtn } from '../components/AddUserBtn';
 
 const Products = () => {
+    const userInfoString = sessionStorage.getItem("UserInfo");
+    const userInfo = JSON.parse(userInfoString);
     //states
     const [allnetdata, setnetwork] = useState([]);
     const [allupdatedata, setdevice_updated_on] = useState([]);
@@ -324,7 +326,11 @@ const Products = () => {
                                 </div>
                             </div>
                         </div>
-                        <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
+                        {/* manifacture */}
+                        {console.log("test",((userInfo.position === 'manifacture') || (userInfo.position === 'staff')))}
+                        {((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) &&
+                            <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
+                        }
 
                         {/* <div className='filters2 display-flex' onClick={handleclick}>
                             <button className='btn btn-fill'>Add Products</button>

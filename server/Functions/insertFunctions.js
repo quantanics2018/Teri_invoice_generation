@@ -37,7 +37,7 @@ async function addUser(req, res) {
     try {
         await userdbInstance.userdb.query('BEGIN');
         const ueserTable = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, altphoneno, aadhar, pan, name, positionid, adminid, pstreetname, pdistrictid, pstateid, ppostalcode,status) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING userid',
-            [userid,email, mobileNo, mobileNo, aadharNo, panNumber, fName, Positionid, adminid, streetAddress, City, State, pCode, status]);
+            [userid, email, mobileNo, mobileNo, aadharNo, panNumber, fName, Positionid, adminid, streetAddress, City, State, pCode, status]);
 
         // // console.log(ueserTable.rows[0].userid);
         // // const userid = ueserTable.rows[0].userid
@@ -66,10 +66,10 @@ async function addUser(req, res) {
         //     distributor_ac = '2';
         //     products_ac = Invoice_ac = '3';
         // }
-    // Staff Controls
+        // Staff Controls
         if (AccessControls['Staff'] === 'No access') {
             staff_ac = 0;
-        }else if (AccessControls['Staff'] === 'View') {
+        } else if (AccessControls['Staff'] === 'View') {
             staff_ac = 1;
         }
         else if (AccessControls['Staff'] === 'Edit') {
@@ -78,10 +78,10 @@ async function addUser(req, res) {
         else if (AccessControls['Staff'] === 'All') {
             staff_ac = 3;
         }
-    // Distributor Controls
+        // Distributor Controls
         if (AccessControls['Distributor'] === 'No access') {
             distributor_ac = 0;
-        }else if (AccessControls['Distributor'] === 'View') {
+        } else if (AccessControls['Distributor'] === 'View') {
             distributor_ac = 1;
         }
         else if (AccessControls['Distributor'] === 'Edit') {
@@ -90,10 +90,10 @@ async function addUser(req, res) {
         else if (AccessControls['Distributor'] === 'All') {
             distributor_ac = 3;
         }
-    // Customer Controls
+        // Customer Controls
         if (AccessControls['Customer'] === 'No access') {
             customer_ac = 0;
-        }else if (AccessControls['Customer'] === 'View') {
+        } else if (AccessControls['Customer'] === 'View') {
             customer_ac = 1;
         }
         else if (AccessControls['Customer'] === 'Edit') {
@@ -102,10 +102,10 @@ async function addUser(req, res) {
         else if (AccessControls['Customer'] === 'All') {
             customer_ac = 3;
         }
-    // Products Controls
+        // Products Controls
         if (AccessControls['Products'] === 'No access') {
             products_ac = 0;
-        }else if (AccessControls['Products'] === 'View') {
+        } else if (AccessControls['Products'] === 'View') {
             products_ac = 1;
         }
         else if (AccessControls['Products'] === 'Edit') {
@@ -114,10 +114,10 @@ async function addUser(req, res) {
         else if (AccessControls['Products'] === 'All') {
             products_ac = 3;
         }
-    // Invoice Generator Controls
+        // Invoice Generator Controls
         if (AccessControls['Invoice Generator'] === 'No access') {
             InvoiceGenerator_ac = 0;
-        }else if (AccessControls['Invoice Generator'] === 'View') {
+        } else if (AccessControls['Invoice Generator'] === 'View') {
             InvoiceGenerator_ac = 1;
         }
         else if (AccessControls['Invoice Generator'] === 'Edit') {
@@ -126,10 +126,10 @@ async function addUser(req, res) {
         else if (AccessControls['Invoice Generator'] === 'All') {
             InvoiceGenerator_ac = 3;
         }
-    // Invoice PaySlip Controls
+        // Invoice PaySlip Controls
         if (AccessControls['Invoice PaySlip'] === 'No access') {
             InvoicePaySlip_ac = 0;
-        }else if (AccessControls['Invoice PaySlip'] === 'View') {
+        } else if (AccessControls['Invoice PaySlip'] === 'View') {
             InvoicePaySlip_ac = 1;
         }
         else if (AccessControls['Invoice PaySlip'] === 'Edit') {
@@ -140,7 +140,7 @@ async function addUser(req, res) {
         }
         // console.log('test : ',staff_ac,Distributor_ac,Customer_ac,Products_ac,InvoiceGenerator_ac,InvoicePaySlip_ac);
         const access_controlTable = await userdbInstance.userdb.query('insert into accesscontroll (distributer,product,invoicegenerator,userid,customer,staff,invoicepayslip) values ($1,$2,$3,$4,$5,$6,$7)',
-            [distributor_ac, products_ac, InvoiceGenerator_ac, userid, customer_ac, staff_ac,InvoicePaySlip_ac]);
+            [distributor_ac, products_ac, InvoiceGenerator_ac, userid, customer_ac, staff_ac, InvoicePaySlip_ac]);
         await userdbInstance.userdb.query('COMMIT');
         return res.json({ message: "Data inserted Successfully", status: true });
     } catch (error) {
@@ -156,44 +156,55 @@ async function addUser(req, res) {
     }
 }
 async function addInvoice(req, res) {
-    const invoice = req.body.invoice;
+    const {UserId,senderID} = req.body.invoice;
+    const reciverID = UserId;
     const invoiceItem = req.body.invoiceitem;
     // console.log(invoice);
     // console.log(invoiceItem);
-    // console.log(invoice['UserId']);
+    // console.log("reciverID", reciverID);
+    // console.log("senderID", senderID);
     try {
-        await userdbInstance.userdb.query('BEGIN');
-
-        const InvoiceTableResult = await userdbInstance.userdb.query(
-            `INSERT INTO public.invoice(
-                receiverid)
-                VALUES ($1) RETURNING invoiceid;`, [invoice['UserId']]
-        );
-
-        console.log(InvoiceTableResult.rows[0].invoiceid);
-        const invoiceid = InvoiceTableResult.rows[0].invoiceid;
-
-        for (const item of invoiceItem) {
-            // console.log(item.id);
-
-            const InvoiceItemTableResult = await userdbInstance.userdb.query(
-                `INSERT INTO public.invoiceitem(
+        const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1;', [UserId]);
+        if (checkIsUsernameExist.rows != 0) {
+            await userdbInstance.userdb.query('BEGIN');
+            const InvoiceTableResult = await userdbInstance.userdb.query(
+                `INSERT INTO public.invoice(
+                    senderid,receiverid,status)
+                VALUES ($1,$2,$3) RETURNING invoiceid;`, [senderID,reciverID,0]
+            );
+            // console.log(InvoiceTableResult.rows[0].invoiceid);
+            const invoiceid = InvoiceTableResult.rows[0].invoiceid;
+            for (const item of invoiceItem) {
+                // console.log(item.id);
+                const ReduceFromSenderTable = await userdbInstance.userdb.query(
+                    `UPDATE products
+                    SET quantity = quantity - $1
+                    WHERE belongsto=$2 and productid = $3;`, [item.Quantity,senderID,item.productid]
+                );
+                const InvoiceItemTableResult = await userdbInstance.userdb.query(
+                    `INSERT INTO public.invoiceitem(
                     invoiceid,productid,quantity)
                     VALUES ($1,$2,$3);`, [invoiceid, item.productid, item.Quantity]
-            );
-
-            // Do something with userTableResult if needed
+                );
+                const AddToRecieverTable = await userdbInstance.userdb.query(
+                    `INSERT INTO public.products(
+                        productid, quantity,productname,belongsto, status)
+                        VALUES ($1, $2, $3, $4,$5);`, [item.productid, item.Quantity,item.productName,reciverID,0]
+                );
+            }
+            await userdbInstance.userdb.query('COMMIT');
+            return res.json({ message: "Successfully Invoice Added", status: true });
+        } else {
+            console.log("User ID doesn't exist");
+            res.send({ message: "User ID doesn't exist" });
         }
-
-        await userdbInstance.userdb.query('COMMIT');
-        return res.json({ message: "Successfully Invoice Added", status: true });
     } catch (error) {
         console.error('Error executing database query:', error);
-        if (error.message.includes('unique constraint')) {
-            return res.json({ message: "User Already Exists", status: false });
-        } else {
-            return res.json({ message: 'Failed to add Invoice', status: false, error: error.message });
-        }
+        return res.json({ message: 'Failed to add Invoice', status: false, error: error.message });
+        // if (error.message.includes('unique constraint')) {
+        //     return res.json({ message: "User Already Exists", status: false });
+        // } else {
+        // }
     }
 }
 

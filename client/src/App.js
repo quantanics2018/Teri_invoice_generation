@@ -106,7 +106,6 @@ const App = () => {
                 <Route path='/Products/Edit_Product_Detials/:productid' element={<EditProduct />} />
               </Routes>
             </div>
-
           )}
 
           {userInfo.invoicegenerator > 0 && (

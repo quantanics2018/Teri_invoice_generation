@@ -23,7 +23,7 @@ const ProfilePage = () => {
     ];
 
     return (
-        <Container>
+        <Container style={{ marginLeft: '53px' }}>
             <Grid container spacing={3} style={{ marginTop: '1rem' }}>
 
                 {/* Top Section */}
