@@ -216,21 +216,21 @@ async function addInvoice(req, res) {
 
 async function addProduct(req, res) {
     // const { hsncode,quantity,priceperitem,userid } = req.body;
-    const { hsncode, quantity, priceperitem, productname } = req.body.productdetial;
+    const { hsncode,productname, quantity, priceperitem, batchno , CGST ,SGCT } = req.body.productdetial;
     const { updator } = req.body;
     // console.log(hsncode, quantity, priceperitem, productname, updator);
 
     try {
         await userdbInstance.userdb.query('BEGIN');
         const insertProductResult = await userdbInstance.userdb.query(`INSERT INTO public.products(
-            productid, quantity, priceperitem, "Lastupdatedby",productname,belongsto,status)
-            VALUES ($1, $2, $3, $4,$5,$6,$7);`, [hsncode, quantity, priceperitem, updator, productname, updator, '1']);
+            productid, quantity, priceperitem, "Lastupdatedby",productname,belongsto,status,batchno,cgst,sgst)
+            VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10);`, [hsncode, quantity, priceperitem, updator, productname, updator, '1',batchno,CGST,SGCT]);
         await userdbInstance.userdb.query('COMMIT');
         if (insertProductResult.rowCount === 1) {
             res.json({ message: "Data inserted Successfully", status: true });
             // res.json({ message: "Successfully Updated" });
         } else {
-            res.status(404).json({ message: "User not found" });
+            res.status(404).json({ message: "User not found", status: false  });
         }
 
     } catch (error) {

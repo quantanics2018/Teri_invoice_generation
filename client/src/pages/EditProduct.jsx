@@ -79,14 +79,13 @@ const EditProduct = () => {
     //     productname: '',
     // });
     const [inputValues, setInputValues] = useState({
-        belongsto: "",
-        priceperitem: "",
-        productid: "",
-        productname: "",
-        quantity: "",
-        rno: "",
-        status: "",
-        updatedon: "",
+        productid: '',
+        productname: '',
+        quantity: '',
+        priceperitem: '',
+        batchno: '',
+        CGST: '',
+        SGCT: '',
     });
     useEffect(() => {
         const device_user_data = async () => {
@@ -97,16 +96,16 @@ const EditProduct = () => {
                 // console.log(data.data.productid);
                 // all_data_fun(data)
                 const item = data.data;
+                // console.log(item);
                 setInputValues((prevValues) => ({
                     ...prevValues,
-                    belongsto: "",
                     priceperitem: item.priceperitem,
                     productid: item.productid,
                     productname: item.productname,
                     quantity: item.quantity,
-                    rno: "",
-                    status: "",
-                    updatedon: ""
+                    batchno: item.batchno,
+                    CGST: item.cgst,
+                    SGCT: item.sgst
                 }));
                 // console.log(inputValues);
 
@@ -123,6 +122,9 @@ const EditProduct = () => {
         { label: "Product Name", name: "productname", value: inputValues.productname, icon: person },
         { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person },
         { label: "Price Per Item", name: "priceperitem", value: inputValues.priceperitem, icon: person },
+        { label: "Batch No", name: "batchno", value: inputValues.batchno, icon: person },
+        { label: "CGST", name: "CGST", value: inputValues.CGST, icon: person },
+        { label: "SGCT", name: "SGCT", value: inputValues.SGCT, icon: person }
     ]
 
     // const handleInputChange = (name, value) => {
@@ -140,11 +142,13 @@ const EditProduct = () => {
     //     }));
     //     console.log(fieldName, value);
     // };
-    const handleInputChange = (index, value) => {
-        const fieldName = inputFields[index].name;
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        // alert(name);
+        // const fieldName = inputFields[index].name;
         setInputValues((prevValues) => ({
             ...prevValues,
-            [fieldName]: value,
+            [name]: value,
         }));
     };
     // console.log(inputValues);
@@ -157,12 +161,14 @@ const EditProduct = () => {
         // console.log(isValidhsncode);
         if (isValidhsncode) {
             try {
-                console.log("hai", inputValues);
+                // console.log("hai", inputValues);
                 const response = await axios.put(`${API_URL}update/product`, { productdetial: inputValues, updator: userInfo.userid });
-                alert(response.data.message);
+                // alert("response.data.message");
+                console.log(response.data.message);
                 if (response.data.status) {
                     // handleClear()
                     alert(response.data.message);
+                    navigate(-1);
                 } else {
                     alert("Product Dosn't Updated properly")
                 }
@@ -212,7 +218,6 @@ const EditProduct = () => {
                         </div>
                         <div className="input-boxes">
                             <div className="cmpny_and_site_name display-flex">
-                                {/* {inputFields} */}
                                 {inputFields.slice(0, 4).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
@@ -224,39 +229,39 @@ const EditProduct = () => {
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
-                                                    // onChange={handleInputChange}
-                                                    onChange={(e) =>handleInputChange(index, e.target.value)}
+                                                    onChange={(e) => handleInputChange(index, e.target.value)}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
                                                     readOnly={field.readOnly || false}
-                                                // style={field.readOnly ? { cursor: "not-allowed" } : {}}
                                                 />
-                                                {/* Add error handling if needed */}
                                             </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            {/* <div className="cmpny_and_site_name display-flex">
+                            <div className="cmpny_and_site_name display-flex">
                                 {inputFields.slice(4, 8).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
-                                            <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label>
+                                            {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
                                             <div className="inputs-group display-flex">
                                                 <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
-                                                <input
+                                                <TextField
+                                                    label={`${field.label} *`}
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
+                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
                                                     onChange={handleInputChange}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
+                                                    readOnly={field.readOnly || false}
                                                 />
                                             </div>
                                         </div>
                                     </div>
                                 ))}
-                            </div> */}
+                            </div>
                         </div>
                     </div>
 

@@ -146,6 +146,7 @@ const InvoiceGenerator = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell style={thead}>HSN Code</TableCell>
+                                <TableCell style={thead}>Batch No</TableCell>
                                 <TableCell style={thead}>Product Name</TableCell>
                                 <TableCell style={thead}>Quantity</TableCell>
                                 <TableCell style={thead}>Discount</TableCell>

@@ -79,14 +79,17 @@ const Add_Products = () => {
     const navigate = useNavigate();
     const [postData, setPostData] = useState({
         hsncode: '',
+        productname: '',
         quantity: '',
         priceperitem: '',
-        productname: '',
+        batchno: '',
+        CGST: '',
+        SGCT: '',
     });
-    console.log(postData);
+    // console.log(postData);
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log(name);
+        // console.log(name);
         setPostData({
             ...postData,
             [name]: value,
@@ -98,16 +101,24 @@ const Add_Products = () => {
         // alert("alerting")
         setPostData({
             hsncode: '',
+            productname: '',
             quantity: '',
             priceperitem: '',
-            productname: '',
-            Addto: ''
+            batchno: '',
+            CGST: '',
+            SGCT: '',
+            // hsncode: '',
+            // quantity: '',
+            // priceperitem: '',
+            // productname: '',
+            // Addto: ''
         })
     }
     // validation
     const handleClick = async () => {
         const isValidhsncode = /^[0-9]+$/.test(postData.hsncode);
         // console.log(isValidhsncode, userInfo.userid);
+        // console.log(postData);
         if (isValidhsncode) {
             try {
                 const response = await axios.post(`${API_URL}add/products`, { productdetial: postData, updator: userInfo.userid });
@@ -132,9 +143,9 @@ const Add_Products = () => {
         { label: "Product Name", name: "productname", value: postData.productname, icon: person },
         { label: "Quantity", name: "quantity", value: postData.quantity, icon: person },
         { label: "Price Per Item", name: "priceperitem", value: postData.priceperitem, icon: person },
-        { label: "batch No", name: "batchno", value: postData.priceperitem, icon: person },
-        { label: "CGST", name: "CGST", value: postData.priceperitem, icon: person },
-        { label: "SGCT", name: "SGCT", value: postData.priceperitem, icon: person }
+        { label: "Batch No", name: "batchno", value: postData.batchno, icon: person },
+        { label: "CGST", name: "CGST", value: postData.CGST, icon: person },
+        { label: "SGCT", name: "SGCT", value: postData.SGCT, icon: person }
         // { label: "Add To", name: "Addto",value: postData.Addto, icon: person },
     ]
 

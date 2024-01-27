@@ -132,12 +132,18 @@ async function updateProductDataIndividual(req, res) {
     const { priceperitem,
         productid,
         productname,
-        quantity } = req.body.productdetial;
-    // console.log(quantity);
+        quantity ,
+        batchno,
+        CGST,
+        SGCT
+    } = req.body.productdetial;
+    // const batchnoInt = Number(batchno); 
+    // console.log(batchno,CGST,SGCT);
     try {
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
-        SET quantity=$1, priceperitem=$2,productname=$3
-        WHERE productid=$4;`, [quantity, priceperitem, productname, productid]);
+        SET quantity=$1, priceperitem=$2,productname=$3,batchno=$4,cgst=$5,sgst=$6
+        WHERE productid=$7;`, [quantity, priceperitem, productname,batchno,CGST,SGCT,productid]);
+        // console.log("sucess");
         if (userUpdateResult.rowCount === 1) {
             // The update was successful
             res.json({ message: "Successfully Updated", status: true });

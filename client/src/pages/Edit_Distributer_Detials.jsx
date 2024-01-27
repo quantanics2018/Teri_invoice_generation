@@ -31,7 +31,7 @@ import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Sn
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { SaveBtn } from '../assets/style/cssInlineConfig';
 import MuiAlert from '@mui/material/Alert';
-
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const Edit_Distributer_Detials = () => {
     const { userid } = useParams();
@@ -715,7 +715,7 @@ const Edit_Distributer_Detials = () => {
                                     </div>
                                 ))}
                                 <Button variant="outlined " style={{ color: 'red', borderColor: 'red' }} data-bs-toggle="modal" data-bs-target="#accessControll">
-                                    <LockClosedIcon />
+                                    <ErrorOutlineIcon />
                                 </Button>
                             </div>
                         </div>

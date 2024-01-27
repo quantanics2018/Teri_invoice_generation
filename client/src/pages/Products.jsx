@@ -127,6 +127,7 @@ const Products = () => {
         axios.post(`${API_URL}get/products`, { userid })
             .then(response => {
                 setAlldate(response.data.data);
+                // console.log(response.data.data);
             })
             .catch(error => {
                 console.error("Error fetching user data:", error);
@@ -370,6 +371,7 @@ const Products = () => {
                     </div>
                     <div className='col-headings'>
                         <div className="col-head">Product ID</div>
+                        <div className="col-head">Batch No</div>
                         <div className="col-head">Product Name</div>
                         <div className="col-head">Quantity</div>
                         <div className="col-head">Product Price</div>
@@ -379,6 +381,7 @@ const Products = () => {
                         {alldata.map((data, index) => (
                             <div className="datas skeleton-block">
                                 <div className="col-head" key={index}>{data.productid}</div>
+                                <div className="col-head" key={index}>{data.batchno}</div>
                                 <div className="col-head" key={index}>{data.productname}</div>
                                 {/* <div className="col-head" key={index}>{data.quantity}</div> */}
                                 {/* {console.log(data.productid)} */}
