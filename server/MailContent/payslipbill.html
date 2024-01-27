@@ -1,11 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>A4 Page with QR Code</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f0f0f0;
+        }
+
+        .a4-container {
+            width: 21cm;
+            height: 29.7cm;
+            margin: 1cm auto;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .qr-code {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 2cm auto;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+
 </head>
+
 <body>
-    hai
+    <div class="a4-container">
+
+        <div class="grid grid-cols-5 grid-rows-5 gap-4">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div class="row-start-2">5</div>
+            <div class="row-start-2">6</div>
+            <div class="row-start-2">7</div>
+        </div>
+
+        <img src="http://localhost:5001/generateQR" alt="QR Code" class="qr-code">
+        hai hello
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('http://localhost:5001/generateQR')
+                .then(response => response.url) // Assuming the response is a valid image URL
+                .then(imageUrl => {
+                    const qrCodeImage = document.querySelector('.qr-code');
+                    qrCodeImage.src = imageUrl;
+                })
+                .catch(error => console.error('Error fetching QR code:', error));
+        });
+    </script>
 </body>
+
 </html>

@@ -4,13 +4,11 @@ import { API_URL } from '../config'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
-import { styled, useTheme } from '@mui/system';
 import { Button, Snackbar } from '@mui/material';
 import { UserActionBtn } from '../assets/style/cssInlineConfig';
 import MuiAlert from '@mui/material/Alert';
 
 const UpdatePassword = (props) => {
-    const theme = useTheme();
 
     const [username, setUsername] = useState("");
     const [passwordInputval, setPasswordInputval] = useState("");

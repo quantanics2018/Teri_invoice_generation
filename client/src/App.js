@@ -136,7 +136,7 @@ const App = () => {
         <Routes>
           hhhh
           <Route path='/' element={<Login />} />
-          <Route path='/UpdatePassword' element={<UpdatePassword />} />
+          <Route path='/UpdatePassword/:encryptedtext' element={<UpdatePassword />} />
         </Routes>
       )}
     </BrowserRouter>
