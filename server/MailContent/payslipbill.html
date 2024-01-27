@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A4 Page with QR Code</title>
-    <style>
+    <!-- <style type="text/css">
         body {
             margin: 0;
             padding: 0;
@@ -23,30 +23,55 @@
             position: relative;
         }
 
-        .qr-code {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 2cm auto;
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "InrNumber InrNumber Qr"
+                "reciverAddress reciverAddress Invoicedetials"
+                "SenderAddress SenderAddress Invoicedetials";
         }
-    </style>
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"> -->
+
+        .Qr {
+            grid-area: Qr;
+        }
+
+        .InrNumber {
+            grid-area: InrNumber;
+        }
+
+        .reciverAddress {
+            grid-area: reciverAddress;
+        }
+
+        .Invoicedetials {
+            grid-area: Invoicedetials;
+        }
+
+        .SenderAddress {
+            grid-area: SenderAddress;
+        }
+    </style> -->
 </head>
 
-<body>
-    <div class="a4-container">
-
-        <div class="grid grid-cols-5 grid-rows-5 gap-4">
-            <div>1</div>
-            <div>2</div>
-            <div>3</div>
-            <div class="row-start-2">5</div>
-            <div class="row-start-2">6</div>
-            <div class="row-start-2">7</div>
+<body style="margin: 0; padding: 0; box-sizing: border-box; background-color: #f0f0f0;">
+    <div
+        style="width: 21cm; height: 29.7cm; margin: 1cm auto; background-color: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); overflow: hidden; position: relative;">
+        <div
+            style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 0px 0px; grid-auto-flow: row; grid-template-areas: 'InrNumber InrNumber Qr' 'reciverAddress reciverAddress Invoicedetials' 'SenderAddress SenderAddress Invoicedetials';">
+            <div style="grid-area: Qr;">Qr</div>
+            <div style="grid-area: InrNumber;">i</div>
+            <div style="grid-area: reciverAddress;">R</div>
+            <div style="grid-area: Invoicedetials;">I</div>
+            <div style="grid-area: SenderAddress;">S</div>
         </div>
 
-        <img src="http://localhost:5001/generateQR" alt="QR Code" class="qr-code">
-        hai hello
+        <img src="http://localhost:5001/generateQR" alt="QR Code"
+            style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+        <p>hai hello</p>
     </div>
 
     <script>
