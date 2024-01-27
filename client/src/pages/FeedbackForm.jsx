@@ -20,13 +20,8 @@ const FeedbackForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Simulate form submission (replace with actual submission logic)
-    // For demonstration purposes, just console.log the feedback and rating
     console.log('Feedback:', feedback);
     console.log('Rating:', rating);
-
-    // Reset form fields and show Thank You message
     setFeedback('');
     setRating('');
     setSubmitted(true);

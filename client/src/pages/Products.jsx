@@ -16,6 +16,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { AddUserBtn } from '../components/AddUserBtn';
+import { Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 const Products = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
@@ -150,6 +152,8 @@ const Products = () => {
         } catch (error) {
             console.error('Error updating user status:', error);
         }
+        const userInfoString = sessionStorage.getItem("UserInfo");
+        const userInfo = JSON.parse(userInfoString);
     }
     const [editableIndex, setEditableIndex] = useState(null);
     const updateInDb = async (id, quantity, index) => {
@@ -158,7 +162,7 @@ const Products = () => {
         const UpdateProductQuantityApi = async () => {
             try {
                 const response = await axios.put(`${API_URL}update/productQuantity`, {
-                    productid: id, Quantity: quantity
+                    productid: id, currentUserUserid: userInfo.userid, Quantity: quantity
                 });
                 console.log(response);
                 if (response.data.qos === "success") {
@@ -167,9 +171,13 @@ const Products = () => {
                     //     newData[index].status = response.data.resStatus;
                     //     return newData;
                     // });
-                    alert(response.data.resStatus);
+                    setsubmittedSuccess(true);
+                    setresAlert(response.data.resStatus);
+                    // alert(response.data.resStatus);
                 }
             } catch (error) {
+                setsubmitted(true);
+                setresAlert("Error updating user status ! Contact Developer");
                 console.error('Error updating user status:', error);
             }
         }
@@ -211,9 +219,33 @@ const Products = () => {
         setAlldate(newData);
         // console.log(`Quantity changed for index ${index}: ${newQuantity}`);
     };
+    const [resAlert, setresAlert] = useState(null);
+    const [submittedSuccess, setsubmittedSuccess] = useState(false);
+    const [setsubmitted, setsetsubmitted] = useState(false);
+    const handleSnackbarClose = () => {
+        setsubmittedSuccess(false);
+        setsetsubmitted(false);
+    };
 
     return (
         <div className='bar'>
+            {/* Snackbar start */}
+            <Snackbar open={submittedSuccess} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
+            <Snackbar open={setsubmitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
             <div className='status-bar'>
                 <div className="device_mangement_main_content">
                     <div className="row_with_count_status">
@@ -327,7 +359,7 @@ const Products = () => {
                             </div>
                         </div>
                         {/* manifacture */}
-                        {console.log("test",((userInfo.position === 'manifacture') || (userInfo.position === 'staff')))}
+                        {/* {console.log("test",((userInfo.position === 'manifacture') || (userInfo.position === 'staff')))} */}
                         {((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) &&
                             <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
                         }
@@ -354,15 +386,15 @@ const Products = () => {
                                     <input
                                         type="number"
                                         className='col-head'
-                                        autoFocus
+                                        autoFocus={((userInfo.position === 'manifacture') || (userInfo.position === 'staff'))}
                                         value={data.quantity}
-                                        onBlur={() => updateInDb(data.productid, data.quantity, index)}
-                                        onChange={(event) => handleQuantityChange(event, index)}
+                                        onBlur={() => (((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) && updateInDb(data.productid, data.quantity, index))}
+                                        onChange={(event) => (((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) && handleQuantityChange(event, index))}
                                     />
                                 ) : (
                                     <div
                                         className="col-head editable"
-                                        onDoubleClick={() => handleDoubleClick(index, data.quantity)}
+                                        onDoubleClick={() => (((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) && handleDoubleClick(index, data.quantity))}
                                     >
                                         {data.quantity}
                                     </div>

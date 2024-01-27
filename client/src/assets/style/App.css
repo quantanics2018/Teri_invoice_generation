@@ -734,8 +734,8 @@
 
 /* scroll bar */
 .scroll_div {
-    height: calc(100vh - 360px);
-    /* overflow-y: scroll; */
+    height: calc(100vh - 300px);
+    overflow-y: scroll;
     scroll-behavior: smooth;
 }
 

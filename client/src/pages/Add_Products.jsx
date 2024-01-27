@@ -30,9 +30,6 @@ import Example from '../components/Example';
 import TextField from '@mui/material/TextField';
 
 
-
-
-
 const Add_Products = () => {
     // set var
     const [company_name, setcompanyname] = useState("");
@@ -109,9 +106,7 @@ const Add_Products = () => {
     }
     // validation
     const handleClick = async () => {
-
         const isValidhsncode = /^[0-9]+$/.test(postData.hsncode);
-
         // console.log(isValidhsncode, userInfo.userid);
         if (isValidhsncode) {
             try {
@@ -132,16 +127,16 @@ const Add_Products = () => {
             }
         }
     }
-
-
     const inputFields = [
         { label: "HSN Code", name: "hsncode", value: postData.hsncode, icon: ic_home_work },
         { label: "Product Name", name: "productname", value: postData.productname, icon: person },
         { label: "Quantity", name: "quantity", value: postData.quantity, icon: person },
         { label: "Price Per Item", name: "priceperitem", value: postData.priceperitem, icon: person },
+        { label: "batch No", name: "batchno", value: postData.priceperitem, icon: person },
+        { label: "CGST", name: "CGST", value: postData.priceperitem, icon: person },
+        { label: "SGCT", name: "SGCT", value: postData.priceperitem, icon: person }
         // { label: "Add To", name: "Addto",value: postData.Addto, icon: person },
     ]
-
 
     return (
         <div className='Add_device1 '>
@@ -210,7 +205,7 @@ const Add_Products = () => {
                                         <div className="dsa_1st_input">
                                             {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
                                             <div className="inputs-group display-flex">
-                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
                                                 {/* <input
                                                     type="text"
                                                     className="form-control-loc"

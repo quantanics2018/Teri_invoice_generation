@@ -27,9 +27,10 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Snackbar } from '@mui/material';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { SaveBtn } from '../assets/style/cssInlineConfig';
+import MuiAlert from '@mui/material/Alert';
 
 
 const Edit_Distributer_Detials = () => {
@@ -185,7 +186,7 @@ const Edit_Distributer_Detials = () => {
             // console.log("test :" ,AccessItem['Invoice PaySlip']);
             setAccessValues((prevValues) => ({
                 ...prevValues,
-                Staff:AccessItem.staff, // Default values
+                Staff: AccessItem.staff, // Default values
                 Distributor: AccessItem.distributer,
                 Customer: AccessItem.customer,
                 Products: AccessItem.product,
@@ -241,27 +242,101 @@ const Edit_Distributer_Detials = () => {
 
     //redirect to device content page
     const navigate = useNavigate();
+    const [resAlert, setresAlert] = useState(null);
     // validation
-    const handle_save = async () => {
-        // const isValidfirst_name = /^[a-zA-Z]+$/.test(first_name)
-        // const isValidlast_name = /^[a-zA-Z]+$/.test(last_name)
-        // const isValidsiteid = /^[a-zA-Z0-9]+$/.test(siteid)
-        // const isValidroleid = /^[a-zA-Z0-9]+$/.test(roleid)
-        // const isValidcontact = /^[0-9]{10}$/.test(contact)
-        // const isValidDesignation = /^[a-zA-Z]+$/.test(Designation)
+    const handle_save = async (e) => {
+        e.preventDefault();
+        const isValidOrgName = inputValues.OrganizationName.trim() !== '';
+        const isValidbussinessType = inputValues.bussinessType.trim() !== '';
+        // alert(isValidOrgName);
+        const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(inputValues.gstNumber)
+        const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(inputValues.panNumber)
+        const isValidaadharNo = /^\d{12}$/.test(inputValues.aadharNo)
+        const isValidfName = /^[A-Za-z\s'-]+$/.test(inputValues.fName)
         const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(inputValues.email)
-        if ((isValidemail)) {
-            console.log("success", inputValues);
+        const isValidMobileNo = /^\d{10}$/.test(inputValues.mobileNo)
+        const isValidupiPaymentNo = /^\d{10}$/.test(inputValues.upiPaymentNo)
+        const isValidaccName = /^[A-Za-z\s'-]+$/.test(inputValues.accName)
+        const isValidaccNo = /^\d*$/.test(inputValues.accNo)
+        // const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(inputValues.email)
+        if (isValidOrgName & isValidbussinessType & isValidgstNumber & isValidpanNumber & isValidaadharNo
+            & isValidfName & isValidemail & isValidMobileNo & isValidupiPaymentNo & isValidaccName & isValidaccNo) {
+            // console.log("success", inputValues);
             try {
-                const response = await axios.put(`${API_URL}update/user`, { inputValues ,AccessOptions:accessValues});
-                alert(response.data.message);
+                const response = await axios.put(`${API_URL}update/user`, { inputValues, AccessOptions: accessValues });
+                // alert(response.data.status);
+                console.log(response.data);
+                if (response.data.status) {
+                    setresAlert(response.data.message)
+                    setSubmittedSucess(true);
+                    setTimeout(() => {
+                        navigate(-1);
+                    }, 2000);
+                }
             } catch (error) {
+                setresAlert("Error updating data! Contact Developer")
+                setSubmitted(true);
                 console.error('Error updating data:', error);
             }
         }
         else {
-            if (isValidemail === false) {
-                alert('Please enter a valid Email ID')
+            if (!isValidOrgName) {
+                setresAlert("Organization Name Can't be Empty")
+                setSubmitted(true);
+                // alert("Organization Name Can't be Empty");
+            }
+            // else if (!isValidpostid) {
+            //     alert("Enter User Type");
+            // }
+            else if (!isValidbussinessType) {
+                setresAlert("Select Proper Bussiness type")
+                setSubmitted(true);
+                // alert("Select proper bussiness type");
+            }
+            else if (!isValidgstNumber) {
+                setresAlert("Enter valid GST Number");
+                setSubmitted(true);
+                // alert("enter valid GST Number");
+            }
+            else if (!isValidpanNumber) {
+                setresAlert("Enter Valid PAN Number");
+                setSubmitted(true);
+                // alert("enter valid PAN Number");
+            }
+            else if (!isValidaadharNo) {
+                setresAlert("Enter Valid Aadhar Number");
+                setSubmitted(true);
+                // alert("enter valid Aadhar Number");
+            }
+            else if (!isValidfName) {
+                setresAlert("Enter Valid First Name");
+                setSubmitted(true);
+                // alert("enter valid First Name");
+            }
+            else if (!isValidemail) {
+                setresAlert("Enter Valid Email");
+                setSubmitted(true);
+                // alert("enter valid Email");
+            }
+            else if (!isValidMobileNo) {
+                setresAlert("Enter Valid Mobile Number");
+                setSubmitted(true);
+                // alert("enter valid UPI payment Number");
+            }
+            else if (!isValidupiPaymentNo) {
+                setresAlert("Enter Valid UPI Payment Number");
+                setSubmitted(true);
+                // alert("enter valid UPI payment Number");
+            }
+            else if (!isValidaccName) {
+                setresAlert("Enter Valid Account Name");
+                setSubmitted(true);
+                // alert("enter valid Account Name");
+            }
+            else if (!isValidaccNo) {
+                setresAlert("Enter Valid Account Number");
+                setSubmitted(true);
+                // alert("enter valid Account Number");
             }
 
         }
@@ -397,7 +472,7 @@ const Edit_Distributer_Detials = () => {
         });
     };
 
-   
+
 
     // Access control
     const [accessValues, setAccessValues] = useState({
@@ -416,9 +491,32 @@ const Edit_Distributer_Detials = () => {
         }));
     };
 
+    const [submitted, setSubmitted] = useState(false);
+    const [submittedSucess, setSubmittedSucess] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
+
 
     return (
         <div className='Add_device1 '>
+            {/* Snack bar */}
+            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
+            <Snackbar open={submittedSucess} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
             <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <div className="modal-content width_of_model height_of_modal_content">
@@ -626,7 +724,7 @@ const Edit_Distributer_Detials = () => {
                     <div className="operating_buttons display-flex padding-loc">
                         <div className="save_cancel_btn display-flex site_button gap-4">
                             <CancelBtnComp CancelBtnFun={handleCancel} />
-                            <SaveBtnComp SaveBtnFun={() => handle_save()} />
+                            <SaveBtnComp SaveBtnFun={(e) => handle_save(e)} />
                             {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={() => handle_save()}>Save</button>
                             <button className="btn-loc inactive-loc btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">cancel</button> */}
                         </div>

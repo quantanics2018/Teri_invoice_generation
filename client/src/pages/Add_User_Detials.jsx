@@ -26,15 +26,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { API_URL } from '../config';
 import TextField from '@mui/material/TextField';
-import { Box, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
 import { CancelBtn, SaveBtn, UserActionBtn } from '../assets/style/cssInlineConfig';
 import { AddUserBtn, SaveBtnComp } from '../components/AddUserBtn';
 import { CancelBtnComp } from '../components/AddUserBtn'
 import { FaTh, FaBars, FaUserAlt, FaRegChartBar, FaCommentAlt, FaShoppingBag } from "react-icons/fa";
 import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
+import MuiAlert from '@mui/material/Alert';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-const Add_User_Detials = () => {
+const Add_User_Detials = ({ Positionid_val }) => {
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     // for invoice
@@ -48,7 +50,7 @@ const Add_User_Detials = () => {
         aadharNo: '',
         fName: '',
         lName: '',
-        Positionid: null,
+        Positionid: Positionid_val,
         adminid: userInfo.userid,
         email: '',
         mobileNo: '',
@@ -79,7 +81,7 @@ const Add_User_Detials = () => {
             aadharNo: '',
             fName: '',
             lName: '',
-            Positionid: selectedUser,
+            Positionid: Positionid_val,
             adminid: userInfo.userid,
             email: '',
             mobileNo: '',
@@ -112,6 +114,7 @@ const Add_User_Detials = () => {
         });
     };
 
+    const [resAlert, setresAlert] = useState(null)
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValidOrgName = postData.OrganizationName.trim() !== '';
@@ -122,59 +125,90 @@ const Add_User_Detials = () => {
         const isValidaadharNo = /^\d{12}$/.test(postData.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(postData.fName)
         const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(postData.email)
+        const isValidMobileNo = /^\d{10}$/.test(postData.mobileNo)
         const isValidupiPaymentNo = /^\d{10}$/.test(postData.upiPaymentNo)
         const isValidaccName = /^[A-Za-z\s'-]+$/.test(postData.accName)
         const isValidaccNo = /^\d*$/.test(postData.accNo)
-        const isValidpostid = postData.Positionid !== undefined && postData.Positionid !== null;
+        // const isValidpostid = postData.Positionid !== undefined && postData.Positionid !== null;
 
         // console.log(postData.Positionid==undefined);
         if (isValidOrgName & isValidbussinessType & isValidgstNumber & isValidpanNumber & isValidaadharNo
-            & isValidfName & isValidemail & isValidupiPaymentNo & isValidaccName & isValidaccNo & isValidpostid
+            & isValidfName & isValidemail & isValidMobileNo & isValidupiPaymentNo & isValidaccName & isValidaccNo
         ) {
-            console.log("Properly inserted", postData);
-            console.log("Properly inserted", accessValues);
+            // console.log("Properly inserted", postData);
+            // console.log("Properly inserted", accessValues);
             try {
                 const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues });
-                alert(response.data.message);
+                // alert(response.data.message);
+                setresAlert(response.data.message)
+                setSubmitted(true);
                 if (response.data.status) {
-                    handleClear()
+                    setTimeout(() => {
+                        handleClear();
+                        navigate(-1);
+                    }, 3000);
                 }
             } catch (error) {
                 console.error('Error sending data:', error);
             }
         } else {
             if (!isValidOrgName) {
-                alert("Organization Name Can't be Empty");
+                setresAlert("Organization Name Can't be Empty")
+                setSubmitted(true);
+                // alert("Organization Name Can't be Empty");
             }
-            else if (!isValidpostid) {
-                alert("Enter User Type");
-            }
+            // else if (!isValidpostid) {
+            //     alert("Enter User Type");
+            // }
             else if (!isValidbussinessType) {
-                alert("Select proper bussiness type");
+                setresAlert("Select Proper Bussiness type")
+                setSubmitted(true);
+                // alert("Select proper bussiness type");
             }
             else if (!isValidgstNumber) {
-                alert("enter valid GST Number");
+                setresAlert("Enter valid GST Number");
+                setSubmitted(true);
+                // alert("enter valid GST Number");
             }
             else if (!isValidpanNumber) {
-                alert("enter valid PAN Number");
+                setresAlert("Enter Valid PAN Number");
+                setSubmitted(true);
+                // alert("enter valid PAN Number");
             }
             else if (!isValidaadharNo) {
-                alert("enter valid Aadhar Number");
+                setresAlert("Enter Valid Aadhar Number");
+                setSubmitted(true);
+                // alert("enter valid Aadhar Number");
             }
             else if (!isValidfName) {
-                alert("enter valid First Name");
+                setresAlert("Enter Valid First Name");
+                setSubmitted(true);
+                // alert("enter valid First Name");
             }
             else if (!isValidemail) {
-                alert("enter valid Email");
+                setresAlert("Enter Valid Email");
+                setSubmitted(true);
+                // alert("enter valid Email");
+            }
+            else if (!isValidMobileNo) {
+                setresAlert("Enter Valid Mobile Number");
+                setSubmitted(true);
+                // alert("enter valid UPI payment Number");
             }
             else if (!isValidupiPaymentNo) {
-                alert("enter valid UPI payment Number");
+                setresAlert("Enter Valid UPI Payment Number");
+                setSubmitted(true);
+                // alert("enter valid UPI payment Number");
             }
             else if (!isValidaccName) {
-                alert("enter valid Account Name");
+                setresAlert("Enter Valid Account Name");
+                setSubmitted(true);
+                // alert("enter valid Account Name");
             }
             else if (!isValidaccNo) {
-                alert("enter valid Account Number");
+                setresAlert("Enter Valid Account Number");
+                setSubmitted(true);
+                // alert("enter valid Account Number");
             }
         }
 
@@ -246,29 +280,27 @@ const Add_User_Detials = () => {
     }
 
     const [selectedUser, setSelectedUser] = useState(null);
-    var Positionid_val;
-    const handleUserChange = async (event) => {
-        setSelectedUser(event.target.value);
-        // console.log(event.target.value);
-        if (event.target.value == "select user") {
-            // alert("Please Select user");
-            Positionid_val = null
-        }
-        else if (event.target.value === 'Staff') {
-            Positionid_val = 4;
-        } else if (event.target.value === 'Distributor') {
-            Positionid_val = 2;
-        }
-        else if (event.target.value === 'Customer') {
-            Positionid_val = 3;
-        }
-        // console.log("hello : ",Positionid_val);
-        setPostData(prevData => ({
-            ...prevData,
-            Positionid: Positionid_val,
-        }));
-        // console.log(postData);
-    };
+    // var Positionid_val;
+    console.log(Positionid_val);
+    // const handleUserChange = async (event) => {
+    //     setSelectedUser(event.target.value);
+    //     if (event.target.value == "select user") {
+    //         Positionid_val = null
+    //     }
+    //     else if (event.target.value === 'Staff') {
+    //         Positionid_val = 4;
+    //     } else if (event.target.value === 'Distributor') {
+    //         Positionid_val = 2;
+    //     }
+    //     else if (event.target.value === 'Customer') {
+    //         Positionid_val = 3;
+    //     }
+    //     // console.log("hello : ",Positionid_val);
+    //     setPostData(prevData => ({
+    //         ...prevData,
+    //         Positionid: Positionid_val,
+    //     }));
+    // };
 
 
     // useEffect(() => {
@@ -278,12 +310,12 @@ const Add_User_Detials = () => {
 
     // Access control
     const [accessValues, setAccessValues] = useState({
-        Staff: 'No access', // Default values
-        Distributor: 'No access',
-        Customer: 'No access',
-        Products: 'No access',
-        'Invoice Generator': 'No access',
-        'Invoice PaySlip': 'No access'
+        Staff: 'View', // Default values
+        Distributor: 'View',
+        Customer: 'View',
+        Products: 'View',
+        'Invoice Generator': 'View',
+        'Invoice PaySlip': 'View'
     });
 
     const handleRadioChange = (row, value) => {
@@ -293,9 +325,31 @@ const Add_User_Detials = () => {
         }));
         // console.log(row,value);
     };
+    const [submitted, setSubmitted] = useState(false);
+    const [submittedWarnning, setsubmittedWarnning] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
 
     return (
         <div className='Add_device1 '>
+            {/* Snack bar */}
+            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
+            {/* <Snackbar open={submittedWarnning} autoHideDuration={1000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar> */}
             {/* Exit Conformation */}
             <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -358,8 +412,13 @@ const Add_User_Detials = () => {
             <div className="add_device_container1">
                 <div className="new_device_content scroll_div">
                     <div className="row_one display-flex">
-                        <div className="adding_new_device uppercase bold">Add User Detials </div>
-                        <select value={selectedUser} onChange={handleUserChange}>
+                        <div className="adding_new_device uppercase bold">
+                            Add
+                            {(Positionid_val === 4) && " Staff "}
+                            {(Positionid_val === 2) && " Distributor "}
+                            {(Positionid_val === 3) && " Customer "}
+                            Detials </div>
+                        {/* <select value={selectedUser} onChange={handleUserChange}>
                             <option value={"select user"}>Select User</option>
                             {userInfo.position === 'manifacture' && (
                                 <>
@@ -375,7 +434,7 @@ const Add_User_Detials = () => {
                             {userInfo.position === 'distributor' && (
                                 <option value="Customer" >Customer</option>
                             )}
-                        </select>
+                        </select> */}
                     </div>
                     {/* <FormControl style={{ width: '150px' }}>
                         <InputLabel id="demo-simple-select-label">Select user</InputLabel>
@@ -535,8 +594,9 @@ const Add_User_Detials = () => {
                                     </div>
                                 </div>
                             ))}
-                            <Button variant="outlined " style={{ color: 'red', borderColor: 'red' }}  data-bs-toggle="modal" data-bs-target="#accessControll">
-                                <LockClosedIcon/>
+                            <Button variant="outlined " style={{ color: 'red', borderColor: 'red' }} data-bs-toggle="modal" data-bs-target="#accessControll">
+                                {/* <LockClosedIcon /> */}
+                                <ErrorOutlineIcon />
                             </Button>
                         </div>
 

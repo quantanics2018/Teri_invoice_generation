@@ -116,10 +116,10 @@ async function updateUserDataIndividual(req, res) {
         if (userUpdateResult.rowCount === 1) {
             // The update was successful
             console.log("updated successfully");
-            res.json({ message: "Successfully Updated" });
+            res.json({ message: "Successfully Updated", status: true });
         } else {
             // No rows were updated, handle accordingly
-            res.status(404).json({ message: "User not found" });
+            res.status(404).json({ message: "User not found", status: false });
         }
     } catch (error) {
         console.error('Error executing database query:', error);
@@ -180,7 +180,7 @@ async function updateUserPassword(req, res) {
             WHERE username=$2;`, [password, username]);
             if (userUpdateResult.rowCount === 1) {
                 // The update was successful
-                res.json({ resStatus: "Password Updated Successfully", qos: "success" });
+                res.json({ message: "Password Updated Successfully", qos: "success" });
             } else {
                 // No rows were updated, handle accordingly
                 res.status(404).json({ message: "Not Updated Properly" });
@@ -214,12 +214,12 @@ async function updateProducts(req, res) {
     }
 }
 async function productQuantity(req, res) {
-    const { productid, Quantity } = req.body;
-    console.log(productid, Quantity);
+    const { productid,currentUserUserid, Quantity } = req.body;
+    console.log(productid, currentUserUserid,Quantity);
     try {
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
         SET quantity=$1
-        WHERE productid=$2;`, [Quantity, productid]);
+        WHERE productid=$2 and belongsto=$3;`, [Quantity, productid,currentUserUserid]);
         if (userUpdateResult.rowCount === 1) {
             res.json({ resStatus: "Updated successfully", qos: "success" });
         } else {

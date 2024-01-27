@@ -1,5 +1,50 @@
 @import url("./cofig.css");
 
+/* sidebar start*/
+
+/* Sidebar.css */
+.container-slidebar {
+    position: absolute;
+}
+
+.sidebar_nw {
+    width: 50px;
+    background-color: red;
+    position: absolute;
+    transition: width 0.3s ease;
+    z-index: 2;
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* 
+    background: var(--THEME_COLOUR);
+    color: var(--INNER_COLOUR);
+    height: auto;
+    position: fixed;
+    transition: all 0.5s;
+    font-family: var(--FONT_FAMILY);
+    left: 0;
+    right: 0; */
+}
+
+.sidebar_nw.expanded {
+    width: 300px;
+}
+
+.dc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .top-bar{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+} */
+
+/* sidebar end */
 .page_top_box {
     height: 65px;
     width: var(--WIDTH);
@@ -102,16 +147,16 @@ main {
     background: var(--THEME_COLOUR);
     color: var(--INNER_COLOUR);
     width: 53px;
-    min-height: 90vh;
     /* inherit */
+    min-height: 90vh;
     height: auto;
+    position: fixed;
     transition: all 0.5s;
-    z-index: 2;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    z-index: 2;
     font-family: var(--FONT_FAMILY);
-    position: fixed;
     left: 0;
     right: 0;
 }
@@ -162,24 +207,28 @@ main {
     border-radius: 0px 0px 15px 15px;
 }
 
-.hoverColour1{
+.hoverColour1 {
     padding: 0.5rem;
     gap: 0.5rem;
     border-radius: 15px 15px 0px 0px;
 }
-.hoverColour2{
+
+.hoverColour2 {
     padding: 0.5rem;
     gap: 0.5rem;
     border-radius: 0px 0px 15px 15px;
 }
+
 .logout1:hover,
 .logout2:hover {
     /* background-color: var(--HOVER_COLOUR); */
 }
-.hoverColour1:hover{
+
+.hoverColour1:hover {
     background-color: var(--HOVER_COLOUR);
 }
-.hoverColour2:hover{
+
+.hoverColour2:hover {
     background-color: var(--HOVER_COLOUR);
 }
 
@@ -248,7 +297,7 @@ main {
     background-color: var(--THEME_COLOUR);
     border-radius: 10px;
     flex-direction: column;
-    margin-top: -8px;
+    margin-top: 260%;
     /* gap: 10px; */
 }
 
@@ -286,7 +335,8 @@ main {
     padding-left: 15px;
     border-radius: 7px 7px 0px 0px;
 }
-.bottomBorder{
+
+.bottomBorder {
     border-bottom: 1px solid white;
 }
 
@@ -304,17 +354,28 @@ main {
 .bar {
     font-family: var(--FONT_FAMILY);
 }
-.sidebarIcon{
+
+.sidebarIcon {
     margin-top: 3px;
+}
+.all_icon{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 .link {
     display: flex;
     color: var(--INNER_COLOUR);
-    padding: 10px 15px;
+    /* padding: 10px 15px; */
     gap: 15px;
-    transition: all 0.5s;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* transition: all 0.5s; */
 }
-.innerLink:hover{
+
+.innerLink:hover {
     background: var(--HOVER_COLOUR);
     color: var(--INNER_COLOUR);
     transition: all 0.5s;
@@ -322,8 +383,18 @@ main {
 
 }
 
-.link:hover {
+.mouseEntering {
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.mouseEntering:hover {
     background: var(--HOVER_COLOUR);
+    border-radius: 10px;
+}
+
+.link:hover {
+    /* background: var(--HOVER_COLOUR); */
     color: var(--INNER_COLOUR);
     transition: all 0.5s;
 }
@@ -386,10 +457,15 @@ main {
 }
 
 .top-nav {
+    position: sticky;
     height: 10vh;
     background-color: #ffffff;
     box-shadow: var(--BOX-SHADOW);
     border: var(--BORDER_COLOUR_1PX);
+}
+
+.listItems {
+    width: 100%;
 }
 
 .flex-class {

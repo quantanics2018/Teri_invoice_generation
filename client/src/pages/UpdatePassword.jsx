@@ -5,8 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/system';
-import { Button } from '@mui/material';
+import { Button, Snackbar } from '@mui/material';
 import { UserActionBtn } from '../assets/style/cssInlineConfig';
+import MuiAlert from '@mui/material/Alert';
+
 const UpdatePassword = (props) => {
     const theme = useTheme();
 
@@ -62,6 +64,13 @@ const UpdatePassword = (props) => {
             setpassword_empty(true)
         }
     }
+    const [resAlert, setresAlert] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [submittedSuccess, setsubmittedSuccess] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+        setsubmittedSuccess(false);
+    };
     const validate_login = async () => {
         const body = { username, passwordInputval, password };
         body.username = body.username.trim();
@@ -69,9 +78,13 @@ const UpdatePassword = (props) => {
         body.password = body.password.trim();
         // console.log(body);
         if (username === "" || !(/^$|@gmail\.com$/.test(username))) {
-            alert("Enter Valid Username")
+            setresAlert("Enter Valid Username")
+            setSubmitted(true);
+            // alert("Enter Valid Username")
         } else if (passwordInputval === "" || password === "") {
-            alert("Password can't be Null")
+            setresAlert("Password can't be Null")
+            setSubmitted(true);
+            // alert("Password can't be Null")
         }
         else {
             if (passwordInputval === password) {
@@ -79,10 +92,16 @@ const UpdatePassword = (props) => {
                     const response = await axios.put(`${API_URL}update/password`, body);
                     // console.log(response.data.status);
                     if (response.data.status === 'notExist') {
-                        alert(response.data.message);
-                    }else if (response.data.qos === 'success') {
-                        alert(response.data.resStatus);
-                        navigate('/');
+                        setresAlert(response.data.message);
+                        setSubmitted(true);
+                        // alert(response.data.message);
+                    } else if (response.data.qos === 'success') {
+                        setresAlert(response.data.message);
+                        setsubmittedSuccess(true);
+                        // alert(response.data.resStatus);
+                        setTimeout(() => {
+                            navigate('/');
+                        }, 1000);
                     }
 
                 } catch (error) {
@@ -90,7 +109,9 @@ const UpdatePassword = (props) => {
                 }
 
             } else {
-                alert("Password and Re-Password doesn't match")
+                setresAlert("Password and Re-Password doesn't match");
+                setSubmitted(true);
+                // alert("Password and Re-Password doesn't match")
             }
         }
 
@@ -105,6 +126,23 @@ const UpdatePassword = (props) => {
         <>
             <br />
             <br />
+            {/* Snack bar */}
+            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
+            <Snackbar open={submittedSuccess} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
             <div className='content'>
                 <div className='digital_scan'>
                     <div className="all_inputs">

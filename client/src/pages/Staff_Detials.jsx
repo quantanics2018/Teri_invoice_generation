@@ -18,6 +18,7 @@ import { AddUserBtn } from '../components/AddUserBtn';
 import Example from '../components/Example';
 import EditDistributerDetails from './Edit_Distributer_Detials';
 import {
+    Button,
     Snackbar,
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
@@ -50,19 +51,9 @@ const Staff_Detials = (props) => {
         navigate(`Add_User_Detials`);
     }
     const [alldata, setAlldate] = useState([]);
-    useEffect(() => {
-        const adminid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
-        axios.post(`${API_URL}get/user`, { adminid: adminid, position: props.position })
-            .then(response => {
-                console.log(response.data.data);
-                setAlldate(response.data.data)
-            })
-            .catch(error => {
-                console.error("Error fetching user data:", error);
-            });
-    }, []);
+
     const userInfo = JSON.parse(sessionStorage.getItem("UserInfo"));
-    console.log(userInfo);
+    // console.log(userInfo);
     // const handleIconClick = () => {
     //     // userInfo.staff
     //     if (userInfo.staff > 2) {
@@ -97,6 +88,9 @@ const Staff_Detials = (props) => {
         if (props.position === 2) {
             navigate(`Edit_Distributer_Detials/${data}`);
         }
+        if (props.position === 3) {
+            navigate(`Edit_Customer_Detials/${data}`);
+        }
 
     }
     const [inactivateAlert, setInactivateAlert] = useState(false);
@@ -115,6 +109,17 @@ const Staff_Detials = (props) => {
     }, [setInactivateAlert]);
 
     const updateUserStatus = async (userid, currentstatus, index) => {
+        const fetchAllUser = () => {
+            const adminid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
+            axios.post(`${API_URL}get/user`, { adminid: adminid, position: props.position })
+                .then(response => {
+                    // console.log(response.data.data);
+                    setAlldate(response.data.data)
+                })
+                .catch(error => {
+                    console.error("Error fetching user data:", error);
+                });
+        }
         try {
             const statusApiAction = async () => {
                 const response = await axios.put(`${API_URL}update/userremove`, {
@@ -122,6 +127,7 @@ const Staff_Detials = (props) => {
                 });
                 console.log(response.data.resStatus);
                 if (response.data.qos === "success") {
+                    fetchAllUser();
                     setAlldate((prevData) => {
                         const newData = [...prevData];
                         newData[index].status = response.data.resStatus;
@@ -130,12 +136,12 @@ const Staff_Detials = (props) => {
                     console.log("success : ", alldata)
                 }
             }
-            console.log(userInfo.distributer);
+            // console.log(userInfo.distributer);
             if (userInfo.distributer > 2) {
                 // alert("Can edit")
                 if (currentstatus == 1) {
                     currentstatus = 0;
-                    const confirmed = window.confirm("Are you sure?");
+                    const confirmed = window.confirm("Are You Sure! You Want to Inactivate the User?");
                     // setInactivateAlert(true)
                     if (confirmed) {
                         statusApiAction();
@@ -155,7 +161,23 @@ const Staff_Detials = (props) => {
             console.error('Error updating user status:', error);
         }
     }
+    useEffect(() => {
+        const fetchAllUser = () => {
+            const adminid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
+            axios.post(`${API_URL}get/user`, { adminid: adminid, position: props.position })
+                .then(response => {
+                    // console.log(response.data.data);
+                    setAlldate(response.data.data)
+                })
+                .catch(error => {
+                    console.error("Error fetching user data:", error);
+                });
+        }
+        fetchAllUser();
+    }, []);
+
     // alert(props.position===4)
+
     return (
         <div className='bar'>
             {/* Start Modal */}
@@ -188,6 +210,9 @@ const Staff_Detials = (props) => {
                             }
                             {props.position === 2 &&
                                 "Distibutor Detials"
+                            }
+                            {props.position === 3 &&
+                                "Customer Detials"
                             }
                         </span>
                     </div>
@@ -271,7 +296,15 @@ const Staff_Detials = (props) => {
                         >
                             Add User
                         </Button> */}
-                        <AddUserBtn adduserFun={handleclick} />
+                        {/* <AddUserBtn adduserFun={handleclick} /> */}
+                        <Button variant="contained"
+                            onClick={handleclick}
+                            style={UserActionBtn}
+                        >
+                            {(props.position === 4) && "Add Staff"}
+                            {(props.position === 2) && "Add Distributor"}
+                            {(props.position === 3) && "Add Customer"}
+                        </Button>
 
                         {/* <div className='filters2 display-flex' onClick={handleclick}>
                             <button className='btn btn-fill'>Add User</button>
@@ -286,6 +319,8 @@ const Staff_Detials = (props) => {
                             }
                             {props.position === 2 && "Distributor "
                             }
+                            {props.position === 3 && "Customer "
+                            }
                             Name
                         </div>
 
@@ -296,6 +331,7 @@ const Staff_Detials = (props) => {
                         <div className="col-head">Contact Number</div>
                         <div className="col-head">Action</div>
                     </div>
+
                     <div className="scroll_div">
                         {alldata.map((data, index) => (
                             <div className="datas skeleton-block">
@@ -304,7 +340,7 @@ const Staff_Detials = (props) => {
                                 <div className="col-head">{data.aadhar}</div>
                                 <div className="col-head">{data.pan}</div>
                                 <div className="col-head">{data.ppostalcode}</div>
-                                <div className="col-head" title="Quantanics@gmail.com">{data.email}</div>
+                                <div className="col-head" title={data.email}>{data.email}</div>
                                 <div className="col-head">
                                     {data.phno}
                                 </div>
@@ -314,7 +350,7 @@ const Staff_Detials = (props) => {
                                     >
                                         <Icon icon={ic_label_important} style={{ transform: rotatedIndex === index ? 'rotate(90deg)' : 'rotate(0)', color: rotatedIndex === index ? '#08c6cd' : 'lightgray', }} className='device_content_arrow' size={25} />
                                     </div>
-                                    <div>{(rotatedIndex === index) &&
+                                    <div className='dropdownAll'>{(rotatedIndex === index) &&
                                         (<div className='device_action_dropdown'>
                                             <div className='display-flex device_action_dropdown1 dropdown_action'
                                                 // data-bs-toggle="modal" data-bs-target="#EditDetials"
@@ -325,10 +361,13 @@ const Staff_Detials = (props) => {
 
                                                 >Edit
                                                     {props.position === 4 &&
-                                                        "Staff "
+                                                        " Staff "
                                                     }
                                                     {props.position === 2 &&
-                                                        "Distibutor "
+                                                        " Distibutor "
+                                                    }
+                                                    {props.position === 3 &&
+                                                        " Customer "
                                                     }
                                                     Detials</div>
                                             </div>
@@ -348,7 +387,14 @@ const Staff_Detials = (props) => {
                                                             "Distibutor "
                                                         }
                                                         {inactivateAlert && (
-                                                            <Example />
+                                                            <Example
+                                                                // ConformMsg={updateUserStatus(data.userid, data.status, index)}
+                                                                ConformMsg={() => {
+                                                                    alert("hai hu")
+                                                                    updateUserStatusInactivate(data.userid, data.status, index);
+                                                                }
+                                                                }
+                                                            />
                                                             // ConformMsg={() => updateUserStatus(data.userid, 1, index)}
                                                         )}
                                                     </div>
@@ -374,7 +420,7 @@ const Staff_Detials = (props) => {
                     </div>
                 </div>
             </div>
-            <Snackbar open={submitted} autoHideDuration={6000} autoHideDuration={2500} onClose={handleSnackbarClose}>
+            <Snackbar open={submitted} autoHideDuration={2500} onClose={handleSnackbarClose}>
                 <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
                     Successfully Activated
                 </MuiAlert>

@@ -45,7 +45,7 @@ async function checkCredentials(req, res) {
     }
     else {
       console.log("Email doesn't exist");
-      res.send({ message: "Email doesn't exist" });
+      res.send({ success: false,message: "Email doesn't exist" });
     }
   } catch (error) {
     console.error('Error executing database query:', error);

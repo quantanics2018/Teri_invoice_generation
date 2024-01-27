@@ -69,7 +69,7 @@ const App = () => {
                 {/* Staff module */}
                 <Route path='/Staff_Detials' element={<StaffDetails position={4} />} />
                 <Route path='/Staff_Detials/Edit_Staff_Detials/:userid' element={<EditDistributerDetails />} />
-                <Route path='/Staff_Detials/Add_User_Detials' element={<AddUserDetails />} />
+                <Route path='/Staff_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={4}/>} />
               </Routes>
             </div>
           )}
@@ -81,7 +81,7 @@ const App = () => {
                 {/* Distributer module */}
                 <Route path='/Distributer_Detials' element={<StaffDetails position={2} />} />
                 <Route path='/Distributer_Detials/Edit_Distributer_Detials/:userid' element={<EditDistributerDetails />} />
-                <Route path='/Distributer_Detials/Add_User_Detials' element={<AddUserDetails />} />
+                <Route path='/Distributer_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={2}/>} />
               </Routes>
             </div>
           )}
@@ -91,8 +91,8 @@ const App = () => {
               <Routes>
                 {/* Customer module */}
                 <Route path='/Customer_Detials' element={<StaffDetails position={3} />} />
-                <Route path='/Customer_Detials/Add_User_Detials' element={<AddUserDetails />} />
-                <Route path='/Edit_Distributer_Detials/:userid' element={<EditDistributerDetails />} />
+                <Route path='/Customer_Detials/Edit_Customer_Detials/:userid' element={<EditDistributerDetails />} />
+                <Route path='/Customer_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={3}/>} />
               </Routes>
             </div>
           )}

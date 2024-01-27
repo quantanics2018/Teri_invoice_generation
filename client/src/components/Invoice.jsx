@@ -3,7 +3,6 @@ import invoicePic from '../assets/logo/InvoicePic.png'
 import Qr from '../assets/logo/Qr.png'
 
 const Invoice = () => {
-    const a = "hello";
     return (
         <div className="InvoiceContainer">
             <div className="forScroll">

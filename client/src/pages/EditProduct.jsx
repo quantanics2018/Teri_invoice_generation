@@ -27,6 +27,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
+import { TextField } from '@mui/material';
 
 
 
@@ -158,6 +159,7 @@ const EditProduct = () => {
             try {
                 console.log("hai", inputValues);
                 const response = await axios.put(`${API_URL}update/product`, { productdetial: inputValues, updator: userInfo.userid });
+                alert(response.data.message);
                 if (response.data.status) {
                     // handleClear()
                     alert(response.data.message);
@@ -214,15 +216,16 @@ const EditProduct = () => {
                                 {inputFields.slice(0, 4).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
-                                            <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label>
+                                            {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
                                             <div className="inputs-group display-flex">
                                                 <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
-                                                <input
+                                                <TextField
+                                                    label={`${field.label} *`}
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
                                                     // onChange={handleInputChange}
-                                                    onChange={(e) => handleInputChange(index, e.target.value)}
+                                                    onChange={(e) =>handleInputChange(index, e.target.value)}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
                                                     readOnly={field.readOnly || false}

@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/system';
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar } from '@mui/material';
 import { UserActionBtn } from '../assets/style/cssInlineConfig';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
+import MuiAlert from '@mui/material/Alert';
 const Login = (props) => {
     const theme = useTheme();
 
@@ -49,6 +50,7 @@ const Login = (props) => {
             setpassword_empty(true)
         }
     }
+    const [resAlert, setresAlert] = useState(null)
     const validate_login = async () => {
         const body = { username, password };
         body.username = body.username.trim();
@@ -61,6 +63,9 @@ const Login = (props) => {
                 }
             );
             // console.log(response);
+            // console.log(response.data.message);
+            setresAlert(response.data.message)
+            setSubmitted(true);
             if (response.data.success) {
                 sessionStorage.setItem("UserInfo", JSON.stringify({ ...response.data.data, "isLoggedIn": true }));
                 console.log(response.data);
@@ -82,7 +87,7 @@ const Login = (props) => {
                 if (response.data.password === null) {
                     navigate('/UpdatePassword');
                 }
-                alert(response.data.message);
+                // alert(response.data.message);
             }
         } catch (error) {
             console.error('Login failed:', error.message);
@@ -100,6 +105,10 @@ const Login = (props) => {
         event.preventDefault();
     };
 
+    const [submitted, setSubmitted] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
     return (
         <>
             <br />
@@ -140,7 +149,7 @@ const Login = (props) => {
                                                         onMouseDown={handleMouseDownPassword}
                                                         edge="end"
                                                     >
-                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                        {showPassword ? <Visibility /> : <VisibilityOff />}
                                                     </IconButton>
                                                 </InputAdornment>
                                             ),
@@ -218,7 +227,16 @@ const Login = (props) => {
 
                 </div>
             </div>
+            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
         </>
     )
 }
 export default Login;
+

@@ -11,6 +11,7 @@ const verifyData = require('./Functions/verifyFunction');
 const deleteData = require('./Functions/deletefunctions');
 const getData = require('./Functions/getFunctions');
 const updateData = require('./Functions/updateFunctions');
+const { emailservice } = require('./services/emailservice');
 
 
 app.post('/verify/:entity(user|credentials)', async (req, res) => {
@@ -160,6 +161,8 @@ app.post('/delete/:entity(user|products)', async (req, res) => {
 
 app.post('/send-email', async (req, res) => {
     console.log("mail service");
+    // emailservice
+    console.log("mail service",emailservice);
     res.send("mail service")
 });
 

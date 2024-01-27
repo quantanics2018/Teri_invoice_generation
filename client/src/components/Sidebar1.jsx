@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from "react";
 
 
-const Sidebar = ({ children, handleLogout }) => {
+const Sidebar1 = ({ children, handleLogout }) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
     const [activelink, setActiveLink] = useState(null);
@@ -18,39 +18,58 @@ const Sidebar = ({ children, handleLogout }) => {
     const navigate = useNavigate();
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
+    // console.log(userInfo);
 
-    const userSidebarConfig =
-        [
-            {
-                icon: <FaRegChartBar />,
-                head: 'Management',
-                links: [
-                    { url: '/Staff_Detials', text: 'Staff Detials', condition: userInfo.staff > 0 },
-                    // { url: '/Distributer_Detials', text: 'Distributor Detials', condition: userInfo.distributer > 0 , classname:{userInfo.customer !> 0 ? 'last-link',''}},
-                    { url: '/Distributer_Detials', text: 'Distributor Details', condition: userInfo.distributer > 0, classname: userInfo.customer == 0 ? 'last-link' : '' },
-                    { url: '/Customer_Detials', text: 'Customer Detials', condition: userInfo.customer > 0, classname: 'last-link' },
-                ],
-            },
-            {
-                icon: <FaShoppingBag />,
-                head: 'Products',
-                links: [
-                    { url: '/Products', text: 'Products', condition: userInfo.product > 0 },
-                    { url: '/InvoiceGenerator', text: 'Invoice Generator', condition: userInfo.invoicegenerator > 0 },
-                    // !(userInfo.position === "customer")
-                    { url: '/TransactionHistory', text: 'PaySlip Log', condition: userInfo.invoicepayslip > 0 },
-                    { url: '/Invoice', text: 'Invoice', condition: userInfo.invoicegenerator > 0 },
-                ],
-            },
-            {
-                icon: <FaUserAlt />,
-                head: 'Profile',
-                links: [
-                    { url: '/ProfilePage', text: 'Profile Info', condition: true },
-                    { url: '/feedback', text: 'Feedback', condition: true },
-                ],
-            },
-        ]
+    // sample data
+    // const userInfo1 = {
+    //     customer: "0",
+    //     distributer: "3",
+    //     staff: "2",
+    //     email: "admin@gmail.com",
+    //     invoice: "3",
+    //     isLoggedIn: true,
+    //     name: "admin",
+    //     phno: "123456789",
+    //     position: "manifacture",
+    //     product: "3",
+    //     userid: "123",
+    //     userprofile: "1"
+    // };
+    const userSidebarConfig = {
+        RI001: {
+            menuItem: [
+                {
+                    icon: <FaRegChartBar />,
+                    head: 'Management',
+                    links: [
+                        { url: '/Staff_Detials', text: 'Staff Detials', condition: userInfo.staff > 0 },
+                        // { url: '/Distributer_Detials', text: 'Distributor Detials', condition: userInfo.distributer > 0 , classname:{userInfo.customer !> 0 ? 'last-link',''}},
+                        { url: '/Distributer_Detials', text: 'Distributor Details', condition: userInfo.distributer > 0, classname: userInfo.customer == 0 ? 'last-link' : '' },
+                        { url: '/Customer_Detials', text: 'Customer Detials', condition: userInfo.customer > 0, classname: 'last-link' },
+                    ],
+                },
+                {
+                    icon: <FaShoppingBag />,
+                    head: 'Products',
+                    links: [
+                        { url: '/Products', text: 'Products', condition: userInfo.product > 0 },
+                        { url: '/InvoiceGenerator', text: 'Invoice Generator', condition: true },
+                        // !(userInfo.position === "customer")
+                        { url: '/TransactionHistory', text: 'PaySlip Log', condition: userInfo.invoicepayslip > 0 },
+                        { url: '/Invoice', text: 'Invoice', condition: userInfo.invoicegenerator > 0 },
+                    ],
+                },
+                {
+                    icon: <FaUserAlt />,
+                    head: 'Profile',
+                    links: [
+                        { url: '/ProfilePage', text: 'Profile Info', condition: true },
+                        { url: '/feedback', text: 'Feedback', condition: true },
+                    ],
+                },
+            ],
+        },
+    };
     const handleLogout1 = () => {
         setlogoutdiv(!logoutdiv)
         sessionStorage.removeItem("UserInfo");
@@ -82,7 +101,7 @@ const Sidebar = ({ children, handleLogout }) => {
     const handleLinkClick = (i, index) => {
         console.log(i, index);
         setActiveLink(i);
-        setActiveDropdownIndex(index);
+        setActiveDropdownIndex(index)
     };
 
     return (
@@ -90,33 +109,27 @@ const Sidebar = ({ children, handleLogout }) => {
             <div className="sidebar">
                 <div className="all_icon">
                     {
-                        userSidebarConfig.map((item, index) => (
+                        userSidebarConfig.RI001.menuItem.map((item, index) => (
                             <NavLink
                                 key={index}
-                                className={`link`}
+                                // to={item.links[0].url}
+                                className={`link sidebarIcon ${activeDropdownIndex === index ? 'active-link' : ''}`}
                                 style={{ borderRadius: "7px" }}
+                                onMouseEnter={() => {
+                                    const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
+                                    dropdownContent.style.display = 'flex';
+                                    dropdownContent.style.animation = 'slideInFromLeft 0.5s ease-in-out forwards';
+                                }}
                                 onMouseLeave={() => {
                                     const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
                                     dropdownContent.style.display = 'none';
                                     // dropdownContent.style.animation = 'slideOutToLeft 0.5s ease-in-out forwards';
                                 }}
                             >
-                                <div 
-                                className={`mouseEntering ${activeDropdownIndex === index ? 'active-link' : ''}`}
-                                    onMouseEnter={() => {
-                                        const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
-                                        dropdownContent.style.display = 'flex';
-                                        dropdownContent.style.animation = 'slideInFromLeft 0.3s ease-in-out forwards';
-                                    }}
-                                // className={`link sidebarIcon ${activeDropdownIndex === index ? 'active-link' : ''}`}
-
-                                >
-                                    <div className="individual_icon">
-                                        <div className={`icon ${activeDropdownIndex === index ? 'active-icon' : ''}`}>{item.icon}</div>
-                                    </div>
+                                <div className="individual_icon">
+                                    <div className={`icon ${activeDropdownIndex === index ? 'active-icon' : ''}`}>{item.icon}</div>
                                 </div>
-                                <div className={`dropdown-content`} style={{ display: 'none' }}
-                               
+                                <div className="dropdown-content" style={{ display: 'none' }}
                                     onMouseLeave={() => {
                                         const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
                                         dropdownContent.style.display = 'none';
@@ -124,19 +137,19 @@ const Sidebar = ({ children, handleLogout }) => {
                                         // alert(index)
                                     }}
                                 >
-                                    <div className={`link_head sidebar_head bottomBorder`}>{item.head}</div>
+                                    <div className="link_head sidebar_head bottomBorder">{item.head}</div>
                                     {/* {<div className="dropdown-hr hr_for_head" />} */}
                                     {item.links.map((link, i) => (
                                         (link.condition === true) && (
                                             <div className={(i === item.links.length - 1) ? "" : "bottomBorder"} key={i}>
                                                 <div>
                                                     <Link to={link.url}
-                                                        className={`innerLink 
-                                                        ${(i === item.links.length - 1 || item.links[1].classname === 'last-link') ? 'last-link' : ''}`}
+                                                        className={`innerLink ${activelink === i ? 'active-link' : ''} ${(i === item.links.length - 1 || item.links[1].classname === 'last-link') ? 'last-link' : ''}`}
                                                         onClick={() => handleLinkClick(i, index)}
-                                                    >{link.text}
-                                                    </Link>
+                                                    >{link.text}{console.log("hlo : ", item.links[1].classname)}</Link>
+                                                    {/* {<div className="dropdown-hr" />} */}
                                                 </div>
+                                                {/* {i !== item.links.length - 1 && <div className="dropdown-hr" />} */}
                                             </div>
                                         )
                                     ))}
@@ -190,4 +203,4 @@ const Sidebar = ({ children, handleLogout }) => {
     );
 };
 
-export default Sidebar;
+export default Sidebar1;

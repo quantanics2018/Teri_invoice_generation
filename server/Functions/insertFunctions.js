@@ -157,16 +157,22 @@ async function addUser(req, res) {
 }
 async function addInvoice(req, res) {
     const {UserId,senderID} = req.body.invoice;
-    const reciverID = UserId;
+    const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
-    // console.log(invoice);
     // console.log(invoiceItem);
-    // console.log("reciverID", reciverID);
+    // console.log("recivermail : ", recivermail);
     // console.log("senderID", senderID);
     try {
-        const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1;', [UserId]);
+        const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1;', [recivermail]);
+        // console.log(checkIsUsernameExist);
         if (checkIsUsernameExist.rows != 0) {
             await userdbInstance.userdb.query('BEGIN');
+
+            const ForReciverId = await userdbInstance.userdb.query(
+                `select userid from public."user" where email=$1`, [recivermail]
+            );
+            const reciverID = ForReciverId.rows[0].userid
+            // console.log(reciverID);
             const InvoiceTableResult = await userdbInstance.userdb.query(
                 `INSERT INTO public.invoice(
                     senderid,receiverid,status)

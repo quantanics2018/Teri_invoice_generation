@@ -33,7 +33,7 @@ async function getUserData(req, res) {
 async function getProducts(req, res) {
     try {
         const { userid} = req.body;
-        // console.log(" userid : ",userid);
+        console.log(" userid : ",userid);
         const userDeleteResult = await userdbInstance.userdb.query(`SELECT rno, productid, quantity, priceperitem, "Lastupdatedby", productname,status
         FROM public.products where belongsto=$1 order by rno DESC;`, [userid]);
         res.json({ message: "Successfully Data Fetched", data: userDeleteResult.rows });
