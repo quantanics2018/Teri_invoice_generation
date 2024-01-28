@@ -17,7 +17,7 @@ async function checkCredentials(req, res) {
         // console.log(GetTheUserStatus.rows[0].status === 1);
         if (GetTheUserStatus.rows[0].status === '1') {
           const data = await userdbInstance.userdb.query(`SELECT 
-                "user".userid,"user".email,"user".phno,"user".name,
+                "user".userid,"user".email,"user".phno,"user".fname,"user".lname,
                 (select position from position where positionid = "user".positionid),
                 "user".userprofile, "user".status ,accesscontroll.distributer,accesscontroll.product,
                 accesscontroll.invoicegenerator,accesscontroll.customer,accesscontroll.staff,accesscontroll.invoicepayslip

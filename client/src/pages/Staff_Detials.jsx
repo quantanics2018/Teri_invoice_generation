@@ -336,7 +336,7 @@ const Staff_Detials = (props) => {
                         {alldata.map((data, index) => (
                             <div className="datas skeleton-block">
                                 <div className="col-head">{data.userid}</div>
-                                <div className="col-head">{data.name}</div>
+                                <div className="col-head">{data.fname}</div>
                                 <div className="col-head">{data.aadhar}</div>
                                 <div className="col-head">{data.pan}</div>
                                 <div className="col-head">{data.ppostalcode}</div>

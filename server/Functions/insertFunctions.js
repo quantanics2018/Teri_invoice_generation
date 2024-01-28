@@ -4,6 +4,7 @@ async function addUser(req, res) {
     const {
         userid,
         OrganizationName,
+        bussinessType,
         gstNumber,
         panNumber,
         aadharNo,
@@ -22,8 +23,8 @@ async function addUser(req, res) {
         streetAddress,
         City,
         State,
-
         pCode,
+
         CommunicationAddress,
         StreetAddress2,
         City2,
@@ -36,8 +37,10 @@ async function addUser(req, res) {
 
     try {
         await userdbInstance.userdb.query('BEGIN');
-        const ueserTable = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, altphoneno, aadhar, pan, name, positionid, adminid, pstreetname, pdistrictid, pstateid, ppostalcode,status) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING userid',
-            [userid, email, mobileNo, mobileNo, aadharNo, panNumber, fName, Positionid, adminid, streetAddress, City, State, pCode, status]);
+        // const ueserTable_old = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, altphoneno, aadhar, pan, name, positionid, adminid, pstreetname, pdistrictid, pstateid, ppostalcode,status) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING userid',
+        //     [userid, email, mobileNo, mobileNo, aadharNo, panNumber, fName, Positionid, adminid, streetAddress, City, State, pCode, status]);
+        const ueserTable = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, aadhar, pan, positionid, adminid,status, pstreetname, pdistrictid, pstateid, ppostalcode , cstreetname, cdistrictid,cstateid, cpostalcode,organizationname, gstnno, bussinesstype, fname, lname, upiid,bankname, bankaccno,passbookimg) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) RETURNING userid',
+            [userid, email, mobileNo, aadharNo, panNumber, Positionid, adminid, status, streetAddress, City, State, pCode, StreetAddress2, City2, State2, PostalCode2, OrganizationName, gstNumber, bussinessType, fName, lName, upiPaymentNo, accName, accNo, passbookImg]);
 
         // // console.log(ueserTable.rows[0].userid);
         // // const userid = ueserTable.rows[0].userid
@@ -156,7 +159,7 @@ async function addUser(req, res) {
     }
 }
 async function addInvoice(req, res) {
-    const {UserId,senderID} = req.body.invoice;
+    const { UserId, senderID } = req.body.invoice;
     const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
     // console.log(invoiceItem);
@@ -176,7 +179,7 @@ async function addInvoice(req, res) {
             const InvoiceTableResult = await userdbInstance.userdb.query(
                 `INSERT INTO public.invoice(
                     senderid,receiverid,status)
-                VALUES ($1,$2,$3) RETURNING invoiceid;`, [senderID,reciverID,0]
+                VALUES ($1,$2,$3) RETURNING invoiceid;`, [senderID, reciverID, 0]
             );
             // console.log(InvoiceTableResult.rows[0].invoiceid);
             const invoiceid = InvoiceTableResult.rows[0].invoiceid;
@@ -185,24 +188,36 @@ async function addInvoice(req, res) {
                 const ReduceFromSenderTable = await userdbInstance.userdb.query(
                     `UPDATE products
                     SET quantity = quantity - $1
-                    WHERE belongsto=$2 and productid = $3;`, [item.Quantity,senderID,item.productid]
+                    WHERE belongsto=$2 and productid = $3;`, [item.Quantity, senderID, item.productid]
                 );
                 const InvoiceItemTableResult = await userdbInstance.userdb.query(
                     `INSERT INTO public.invoiceitem(
                     invoiceid,productid,quantity)
                     VALUES ($1,$2,$3);`, [invoiceid, item.productid, item.Quantity]
                 );
-                const AddToRecieverTable = await userdbInstance.userdb.query(
-                    `INSERT INTO public.products(
-                        productid, quantity,productname,belongsto, status)
-                        VALUES ($1, $2, $3, $4,$5);`, [item.productid, item.Quantity,item.productName,reciverID,0]
+                const checkProductAlreadyExist = await userdbInstance.userdb.query(
+                    `select productid from public.products WHERE belongsto=$1 and productid=$2`, [reciverID, item.productid]
                 );
+                // console.log(checkProductAlreadyExist);
+                if (checkProductAlreadyExist.rows.length > 0) {
+                    // console.log("Yes");
+                    const UpdateToRecieverTable = await userdbInstance.userdb.query(
+                        `Update public.products SET quantity=quantity+$1 WHERE belongsto=$2 AND productid=$3;`, [item.Quantity,reciverID, item.productid]
+                    );
+                } else {
+                    // console.log("No");
+                    const AddToRecieverTable = await userdbInstance.userdb.query(
+                        `INSERT INTO public.products(
+                            productid, quantity,productname,belongsto, status)
+                            VALUES ($1, $2, $3, $4,$5);`, [item.productid, item.Quantity, item.productName, reciverID, 0]
+                    );
+                }
             }
             await userdbInstance.userdb.query('COMMIT');
-            return res.json({ message: "Successfully Invoice Added", status: true });
+            return res.json({ message: "Successfully Invoice Generated", status: true });
         } else {
             console.log("User ID doesn't exist");
-            res.send({ message: "User ID doesn't exist" });
+            res.json({ message: "User ID doesn't exist" });
         }
     } catch (error) {
         console.error('Error executing database query:', error);
@@ -216,7 +231,7 @@ async function addInvoice(req, res) {
 
 async function addProduct(req, res) {
     // const { hsncode,quantity,priceperitem,userid } = req.body;
-    const { hsncode,productname, quantity, priceperitem, batchno , CGST ,SGCT } = req.body.productdetial;
+    const { hsncode, productname, quantity, priceperitem, batchno, CGST, SGCT } = req.body.productdetial;
     const { updator } = req.body;
     // console.log(hsncode, quantity, priceperitem, productname, updator);
 
@@ -224,13 +239,13 @@ async function addProduct(req, res) {
         await userdbInstance.userdb.query('BEGIN');
         const insertProductResult = await userdbInstance.userdb.query(`INSERT INTO public.products(
             productid, quantity, priceperitem, "Lastupdatedby",productname,belongsto,status,batchno,cgst,sgst)
-            VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10);`, [hsncode, quantity, priceperitem, updator, productname, updator, '1',batchno,CGST,SGCT]);
+            VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10);`, [hsncode, quantity, priceperitem, updator, productname, updator, '1', batchno, CGST, SGCT]);
         await userdbInstance.userdb.query('COMMIT');
         if (insertProductResult.rowCount === 1) {
             res.json({ message: "Data inserted Successfully", status: true });
             // res.json({ message: "Successfully Updated" });
         } else {
-            res.status(404).json({ message: "User not found", status: false  });
+            res.status(404).json({ message: "User not found", status: false });
         }
 
     } catch (error) {

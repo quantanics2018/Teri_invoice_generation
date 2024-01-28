@@ -33,6 +33,8 @@ import { TextField } from '@mui/material';
 
 const EditProduct = () => {
     const { productid } = useParams();
+    const userInfoString = sessionStorage.getItem("UserInfo");
+    const userInfo = JSON.parse(userInfoString);
     // console.log(productid);
 
     // set var
@@ -116,11 +118,11 @@ const EditProduct = () => {
         device_user_data();
     }, [productid]);
 
-
+    console.log(!(userInfo.position === 'staff' || userInfo.position === 'manifacture'));
     const inputFields = [
-        { label: "HSN Code", name: "productid", value: inputValues.productid, icon: ic_home_work, readOnly: true },
+        { label: "HSN Code", name: "productid", value: inputValues.productid, icon: ic_home_work, disabled: true },
         { label: "Product Name", name: "productname", value: inputValues.productname, icon: person },
-        { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person },
+        { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person,disabled:!(userInfo.position === 'staff' || userInfo.position === 'manifacture') },
         { label: "Price Per Item", name: "priceperitem", value: inputValues.priceperitem, icon: person },
         { label: "Batch No", name: "batchno", value: inputValues.batchno, icon: person },
         { label: "CGST", name: "CGST", value: inputValues.CGST, icon: person },
@@ -152,8 +154,7 @@ const EditProduct = () => {
         }));
     };
     // console.log(inputValues);
-    const userInfoString = sessionStorage.getItem("UserInfo");
-    const userInfo = JSON.parse(userInfoString);
+    
 
     // validation
     const handleClick = async () => {
@@ -170,7 +171,7 @@ const EditProduct = () => {
                     alert(response.data.message);
                     navigate(-1);
                 } else {
-                    alert("Product Dosn't Updated properly")
+                    alert(response.data.message)
                 }
             } catch (error) {
                 console.error('Error sending data:', error);
@@ -229,10 +230,12 @@ const EditProduct = () => {
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
-                                                    onChange={(e) => handleInputChange(index, e.target.value)}
+                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                    onChange={handleInputChange}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
-                                                    readOnly={field.readOnly || false}
+                                                    disabled={field.disabled}
+                                                    // readOnly={field.readOnly || false}
                                                 />
                                             </div>
                                         </div>

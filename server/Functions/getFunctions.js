@@ -30,6 +30,17 @@ async function getUserData(req, res) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+async function getprofileInfo(req, res) {
+    try {
+        const {userid} = req.body;
+        // console.log(adminid,position);
+        const getprofileInfoResult = await userdbInstance.userdb.query('select * from public."user" where userid=$1;', [userid]);
+        res.json({ message: "Successfully Data Fetched", data: getprofileInfoResult.rows });
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
 async function getProducts(req, res) {
     try {
         const { userid} = req.body;
@@ -98,4 +109,4 @@ async function getProductDataIndividual(req, res) {
 }
 
 
-module.exports = {getUserData ,getProducts,getTransactionHistory, getProductList, getUserDataIndividual,getProductDataIndividual};
+module.exports = {getUserData,getprofileInfo ,getProducts,getTransactionHistory, getProductList, getUserDataIndividual,getProductDataIndividual};

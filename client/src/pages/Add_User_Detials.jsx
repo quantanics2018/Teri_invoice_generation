@@ -26,7 +26,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { API_URL } from '../config';
 import TextField from '@mui/material/TextField';
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
 import { CancelBtn, SaveBtn, UserActionBtn } from '../assets/style/cssInlineConfig';
 import { AddUserBtn, SaveBtnComp } from '../components/AddUserBtn';
 import { CancelBtnComp } from '../components/AddUserBtn'
@@ -35,6 +35,10 @@ import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import MuiAlert from '@mui/material/Alert';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import SelectTextFields from '../components/SelectTextFields';
+import InputFileUpload from '../components/SelectTextFields';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
 
 const Add_User_Detials = ({ Positionid_val }) => {
     const userInfoString = sessionStorage.getItem("UserInfo");
@@ -94,8 +98,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
             streetAddress: '',
             City: '',
             State: '',
-
             pCode: '',
+
             CommunicationAddress: '',
             StreetAddress2: '',
             City2: '',
@@ -126,14 +130,14 @@ const Add_User_Detials = ({ Positionid_val }) => {
         const isValidfName = /^[A-Za-z\s'-]+$/.test(postData.fName)
         const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(postData.email)
         const isValidMobileNo = /^\d{10}$/.test(postData.mobileNo)
-        const isValidupiPaymentNo = /^\d{10}$/.test(postData.upiPaymentNo)
+        // const isValidupiPaymentNo = /^\d{10}$/.test(postData.upiPaymentNo)
         const isValidaccName = /^[A-Za-z\s'-]+$/.test(postData.accName)
         const isValidaccNo = /^\d*$/.test(postData.accNo)
         // const isValidpostid = postData.Positionid !== undefined && postData.Positionid !== null;
 
         // console.log(postData.Positionid==undefined);
         if (isValidOrgName & isValidbussinessType & isValidgstNumber & isValidpanNumber & isValidaadharNo
-            & isValidfName & isValidemail & isValidMobileNo & isValidupiPaymentNo & isValidaccName & isValidaccNo
+            & isValidfName & isValidemail & isValidMobileNo & isValidaccName & isValidaccNo
         ) {
             // console.log("Properly inserted", postData);
             // console.log("Properly inserted", accessValues);
@@ -195,11 +199,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 setSubmitted(true);
                 // alert("enter valid UPI payment Number");
             }
-            else if (!isValidupiPaymentNo) {
-                setresAlert("Enter Valid UPI Payment Number");
-                setSubmitted(true);
-                // alert("enter valid UPI payment Number");
-            }
+            // else if (!isValidupiPaymentNo) {
+            //     setresAlert("Enter Valid UPI Payment Number");
+            //     setSubmitted(true);
+            // }
             else if (!isValidaccName) {
                 setresAlert("Enter Valid Account Name");
                 setSubmitted(true);
@@ -215,10 +218,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
     };
 
     const inputFields = [
-        { label: "User ID", name: "userid", value: postData.userid, icon: ic_home_work },
+        { label: "User ID", name: "userid", value: postData.userid, icon: ic_home_work},
         { label: "Organization Name", name: "OrganizationName", value: postData.OrganizationName, icon: person },
-        { label: "Bussiness Type", name: "bussinessType", value: postData.bussinessType, icon: person },
         { label: "GST Number", name: "gstNumber", value: postData.gstNumber, icon: pen_3 },
+        { label: "Bussiness Type", name: "bussinessType", value: postData.bussinessType, icon: person },
         { label: "PAN Number", name: "panNumber", value: postData.panNumber, icon: ic_wysiwyg },
         // Add more input field objects as needed
         { label: "Aadhar Number", name: "aadharNo", value: postData.aadharNo, icon: pen_3 },
@@ -229,20 +232,20 @@ const Add_User_Detials = ({ Positionid_val }) => {
         { label: "Email", name: "email", value: postData.email, icon: pen_3 },
         { label: "Mobile Number", name: "mobileNo", value: postData.mobileNo, icon: pen_3 },
         // 2. UPI Payment Details:
-        { label: "UPI Payment Mobile No", name: "upiPaymentNo", value: postData.upiPaymentNo, icon: pen_3 },
-        { label: "UPI - Bank Account Name", name: "accName", value: postData.accName, icon: pen_3 },
-        { label: "UPI - Bank Account Number", name: "accNo", value: postData.accNo, icon: pen_3 },
+        { label: "UPI ID", name: "upiPaymentNo", value: postData.upiPaymentNo, icon: pen_3 },
+        { label: "Bank Name", name: "accName", value: postData.accName, icon: pen_3 },
+        { label: "Bank Account Number", name: "accNo", value: postData.accNo, icon: pen_3 },
         { label: "Pass Book image", name: "passbookImg", value: postData.passbookImg, icon: pen_3, inputType: "file" },
         // 3. Address Details:
         { label: "Permanent Address", name: "pAddress", value: postData.pAddress, icon: pen_3 },
         { label: "Street Address", name: "streetAddress", value: postData.streetAddress, icon: pen_3 },
         { label: "City", name: "City", value: postData.City, icon: pen_3 },
         { label: "State", name: "State", value: postData.State, icon: pen_3 },
-
         { label: "Postal Code", name: "pCode", value: postData.pCode, icon: pen_3 },
+
         { label: "Communication Address", name: "CommunicationAddress", value: postData.CommunicationAddress, icon: pen_3 },
         { label: "Street Address", name: "StreetAddress2", value: postData.StreetAddress2, icon: pen_3 },
-        { label: "City", name: "City2", value: postData.City, icon: pen_3 },
+        { label: "City", name: "City2", value: postData.City2, icon: pen_3 },
         { label: "State", name: "State2", value: postData.State2, icon: pen_3 },
         { label: "Postal Code", name: "PostalCode2", value: postData.PostalCode2, icon: pen_3 },
     ];
@@ -331,6 +334,134 @@ const Add_User_Detials = ({ Positionid_val }) => {
         setSubmitted(false);
     };
 
+    const accessHead = [
+        { label: 'Staff', disableHead: false },
+        { label: 'Distributor', disableHead: false },
+        { label: 'Customer', disableHead: false },
+        { label: 'Products', disableHead: false },
+        { label: 'Invoice Generator', disableHead: false },
+        { label: 'Invoice PaySlip', disableHead: false },
+    ]
+    let updatedAccessHead = [...accessHead];
+    console.log(userInfo.position === 'manifacture');
+    if (userInfo.position === 'manifacture') {
+        updatedAccessHead = [...accessHead];
+    }
+    if (userInfo.position === 'staff') {
+        const labelsToUpdate = ['Staff', 'Customer'];
+        labelsToUpdate.forEach((label) => {
+            const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
+            if (indexToUpdate !== -1) {
+                updatedAccessHead = [...updatedAccessHead];
+                updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
+            }
+        });
+
+    }
+    if (userInfo.position === 'distributor') {
+        const labelsToUpdate = ['Staff', 'Distributor', 'Customer', 'Products', 'Invoice Generator'];
+        labelsToUpdate.forEach((label) => {
+            const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
+            if (indexToUpdate !== -1) {
+                updatedAccessHead = [...updatedAccessHead];
+                updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
+            }
+        });
+    }
+
+    useEffect(() => {
+        if (userInfo.position === 'staff') {
+            setAccessValues((prevValues) => ({
+                ...prevValues,
+                Staff: 'No access',
+                Customer: 'No access'
+            }));
+        }
+        else if (userInfo.position === 'distributor') {
+            setAccessValues((prevValues) => ({
+                ...prevValues,
+                Staff: 'No access',
+                Distributor: 'No access',
+                Customer: 'No access',
+                Products: 'No access',
+                'Invoice Generator': 'No access',
+            }));
+        }
+    }, []);
+
+    const limit = 1;
+    const accessOptions = [
+        { label: 'No access', disabled: true },
+        { label: 'View', disabled: true },
+        { label: 'Edit', disabled: true },
+        { label: 'All', disabled: true }
+    ];
+    const updatedAccessOptions = accessOptions.map((option, index) => ({
+        ...option,
+        disabled: index < limit ? false : true
+    }));
+
+    const currencies = [
+        {
+            value: 'Organization',
+            label: 'Organization',
+        },
+        {
+            value: 'Individual',
+            label: 'Individual',
+        }
+    ];
+
+    // File name set
+    const [fileName, setFileName] = useState('');
+
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            setFileName(selectedFile.name);
+            console.log("entering", selectedFile.name);
+            var imageName = selectedFile.name
+            setPostData({
+                ...postData,
+                passbookImg: imageName
+            });
+        } else {
+            setFileName('');
+        }
+    };
+
+    // for Same Address
+    const [sameAddress, setSameAddress] = useState(false);
+
+    const handleCheckboxChange = () => {
+        setSameAddress(!sameAddress);
+    };
+    useEffect(() => {
+        if (sameAddress) {
+            // console.log(postData);
+            setPostData({
+                ...postData,
+                CommunicationAddress: postData.pAddress,
+                StreetAddress2: postData.streetAddress,
+                City2: postData.City,
+                State2: postData.State,
+                PostalCode2: postData.pCode,
+            });
+        } else {
+            setPostData({
+                ...postData,
+                CommunicationAddress: '',
+                StreetAddress2: '',
+                City2: '',
+                State2: '',
+                PostalCode2: '',
+            });
+        }
+    }, [sameAddress])
+    // const handleInputChange = (e, name) => {
+    //     // Your input change logic here
+    // };
+
     return (
         <div className='Add_device1 '>
             {/* Snack bar */}
@@ -380,16 +511,16 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         <div class="modal-body">
                             <FormControl component="fieldset">
                                 {/* <FormLabel component="legend">Rows</FormLabel> */}
-                                {['Staff', 'Distributor', 'Customer', 'Products', 'Invoice Generator', 'Invoice PaySlip'].map((row, rowIndex) => (
+                                {updatedAccessHead.map((row, rowIndex) => (
                                     <div key={rowIndex} className='accessControlHeadwithVal'>
-                                        <FormLabel component="legend" className='acc_head'>{`${row}`}</FormLabel>
+                                        <FormLabel component="legend" className='acc_head'>{`${row.label}`}</FormLabel>
                                         <RadioGroup row
                                             className='acc_val'
-                                            value={accessValues[row]}
-                                            onChange={(e) => handleRadioChange(row, e.target.value)}
+                                            value={accessValues[row.label]}
+                                            onChange={(e) => handleRadioChange(row.label, e.target.value)}
                                         >
-                                            {['No access', 'View', 'Edit', 'All'].map((radio, radioIndex) => (
-                                                <FormControlLabel key={radioIndex} value={radio} control={<Radio />} label={`${radio}`} />
+                                            {accessOptions.map((radio, radioIndex) => (
+                                                <FormControlLabel key={radioIndex} value={radio.label} control={<Radio disabled={row.disableHead} />} label={`${radio.label}`} />
                                             ))}
                                         </RadioGroup>
                                     </div>
@@ -399,7 +530,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         </div>
                         <div class="modal-footer">
                             {/* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> */}
-                            <Button variant="outlined" type="button" data-bs-dismiss="modal" style={SaveBtn}>Save</Button>
+                            <Button variant="outlined" type="button" data-bs-dismiss="modal" style={SaveBtn}>Access</Button>
                         </div>
                     </div>
                 </div>
@@ -474,64 +605,95 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             <div className="cmpny_and_site_name display-flex">
                                 {inputFields.slice(0, 4).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
-                                        <div className="dsa_1st_input">
+                                        <Box className="dsa_1st_input"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '27ch' : '100%',
+                                                },
+                                            }}
+                                        >
                                             {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
-                                                <TextField
-                                                    label={
-                                                        <span>{`${field.label} *`}</span>
-                                                    }
-                                                    // helperText="Please enter your name"
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={handleInputChange}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                />
-                                                {/* Add error handling if needed */}
-                                            </div>
+
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                            <TextField
+                                                label={
+                                                    <span>{`${field.label} *`}</span>
+                                                }
+                                                // helperText="Please enter your name"
+                                                type="text"
+                                                className="form-control-loc"
+                                                value={field.value}
+                                                onChange={handleInputChange}
+                                                name={field.name}
+                                                id={`input${index + 1}`}
+                                                select={field.name === 'bussinessType' && true}
+                                                disabled={field.disabled}
+                                            >
+                                                {/* <SelectTextFields /> */}
+                                                {currencies.map((option) => (
+                                                    <MenuItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
                                             {/* <TextField label="Full name" fullWidth variant="outlined" margin="dense" /> */}
 
-                                        </div>
+                                        </Box>
                                     </div>
                                 ))}
                             </div>
 
 
                             <div className="dsa_row_3 display-flex">
-
                                 {inputFields.slice(4, 8).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
-                                        <div className="dsa_1st_input">
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
-                                                <TextField
-                                                    label={`${field.label} *`}
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={(e) => handleInputChange(e, field.name)}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                    labelClassName="required"
-                                                />
-                                                {field.error ? 'Error' : ''}`
+                                        <Box className="dsa_1st_input"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                },
+                                            }}
+                                        >
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                            <TextField
+                                                label={`${field.label} *`}
+                                                type="text"
+                                                className="form-control-loc"
+                                                value={field.value}
+                                                onChange={(e) => handleInputChange(e, field.name)}
+                                                name={field.name}
+                                                id={`input${index + 1}`}
+                                                labelClassName="required"
+                                            />
+                                            {field.error ? 'Error' : ''}`
 
-                                                {/* Add error handling if needed */}
-                                            </div>
-                                        </div>
+                                            {/* Add error handling if needed */}
+                                        </Box>
                                     </div>
                                 ))}
-
                             </div>
+
                             <div className="dsa_row_3 display-flex">
                                 {inputFields.slice(8, 9).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
+                                            <Box className="inputs-group display-flex"
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column', // Change the direction for small screens
+                                                    '& .MuiTextField-root': {
+                                                        m: 1,
+                                                        width: field.name === 'bussinessType' ? '27ch' : '100%',
+                                                    },
+                                                }}
+                                            >
+                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
                                                     label={`${field.label} *`}
                                                     className="form-control-loc"
@@ -541,12 +703,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     id={`input${index + 1}`}
                                                 />
                                                 {/* Add error handling if needed */}
-                                            </div>
+                                            </Box>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
+                        <br />
                         <div className="device_info uppercase light-grey mb-loc-5">
                             UPI Payment Details
                         </div>
@@ -554,8 +717,17 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             {inputFields.slice(9, 13).map((field, index) => (
                                 <div key={index} className="inputbox display-flex input">
                                     <div className="dsa_1st_input">
-                                        <div className="inputs-group display-flex">
-                                            <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
+                                        <Box className="inputs-group display-flex"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                },
+                                            }}
+                                        >
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                             <TextField
                                                 label={`${field.label} *`}
                                                 type={field.inputType || "text"}
@@ -566,20 +738,59 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                 id={`input${index + 1}`}
                                             />
                                             {/* Add error handling if needed */}
-                                        </div>
+                                        </Box>
                                     </div>
                                 </div>
                             ))}
                         </div>
+                        <div className="dsa_row_3 display-flex">
+                            {inputFields.slice(13, 14).map((field, index) => (
+                                <div key={index} className="inputbox display-flex input">
+                                    <div className="dsa_1st_input">
+                                        <Box className="inputs-group display-flex"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                },
+                                            }}
+                                            style={{ marginLeft: '10px', flexDirection: 'row' }}
+                                        >
+                                            <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
+                                                Passbook Image
+                                                <input
+                                                    type="file"
+                                                    style={{ display: 'none' }}
+                                                    onChange={handleFileChange}
+                                                />
+                                            </Button>
+                                            <span style={{ marginLeft: '10px' }}>{fileName && `${fileName}`}</span>
+                                        </Box>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <br />
                         <div className="device_info uppercase light-grey mb-loc-5">
                             Address Details
                         </div>
                         <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(13, 18).map((field, index) => (
+                            {inputFields.slice(14, 18).map((field, index) => (
                                 <div key={index} className="inputbox display-flex input">
                                     <div className="dsa_1st_input">
-                                        <div className="inputs-group display-flex">
-                                            <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
+                                        <Box className="inputs-group display-flex"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                },
+                                            }}
+                                        >
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                             <TextField
                                                 label={`${field.label} *`}
                                                 type="text"
@@ -590,11 +801,106 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                 id={`input${index + 1}`}
                                             />
                                             {/* Add error handling if needed */}
-                                        </div>
+                                        </Box>
                                     </div>
                                 </div>
                             ))}
-                            <Button variant="outlined " style={{ color: 'red', borderColor: 'red' }} data-bs-toggle="modal" data-bs-target="#accessControll">
+                        </div>
+                        <div className="dsa_row_3 display-flex">
+                            {inputFields.slice(18, 19).map((field, index) => (
+                                <div key={index} className="inputbox display-flex input">
+                                    <div className="dsa_1st_input">
+                                        <Box className="inputs-group display-flex"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                },
+                                            }}
+                                        >
+                                            <TextField
+                                                label={`${field.label} *`}
+                                                type="text"
+                                                className="form-control-loc"
+                                                value={field.value}
+                                                onChange={(e) => handleInputChange(e, field.name)}
+                                                name={field.name}
+                                                id={`input${index + 1}`}
+                                            />
+                                        </Box>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
+                        <div className="dsa_row_3 display-flex">
+                            {inputFields.slice(19, 23).map((field, index) => (
+                                <div key={index} className="inputbox display-flex input">
+                                    <div className="dsa_1st_input">
+                                        <Box className="inputs-group display-flex"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: '100%',
+                                                },
+                                            }}
+                                        >
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                            <TextField
+                                                label={`${field.label} *`}
+                                                type="text"
+                                                className="form-control-loc"
+                                                value={field.value}
+                                                onChange={(e) => handleInputChange(e, field.name)}
+                                                name={field.name}
+                                                id={`input${index + 1}`}
+                                                disabled={sameAddress}
+                                            />
+                                            {/* Add error handling if needed */}
+                                        </Box>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="dsa_row_3 display-flex">
+                            {inputFields.slice(23, 24).map((field, index) => (
+                                <div key={index} className="inputbox display-flex input">
+                                    <div className="dsa_1st_input">
+                                        <Box className="inputs-group display-flex"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                },
+                                            }}
+                                        >
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                            <TextField
+                                                label={`${field.label} *`}
+                                                type="text"
+                                                className="form-control-loc"
+                                                value={field.value}
+                                                onChange={(e) => handleInputChange(e, field.name)}
+                                                name={field.name}
+                                                id={`input${index + 1}`}
+                                                disabled={sameAddress}
+                                            />
+                                            {/* Add error handling if needed */}
+                                        </Box>
+                                    </div>
+                                </div>
+                            ))}
+                            <Button variant="outlined " style={{
+                                color: 'red', borderColor: 'red', width: '71px',
+                                height: '71px',
+                                borderRadius: '50px'
+                            }} data-bs-toggle="modal" data-bs-target="#accessControll">
                                 {/* <LockClosedIcon /> */}
                                 <ErrorOutlineIcon />
                             </Button>
@@ -602,14 +908,14 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
                     </div>
 
-                    <div className="operating_buttons display-flex padding-loc">
-                        <div className="save_cancel_btn display-flex site_button gap-4">
-                            <CancelBtnComp CancelBtnFun={handleCancel} />
-                            <SaveBtnComp SaveBtnFun={(e) => handleSubmit(e)} />
-                            {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={(e) => handleSubmit(e)}>Save</button>
+                </div>
+                <div className="operating_buttons display-flex padding-loc">
+                    <div className="save_cancel_btn display-flex site_button gap-4">
+                        <CancelBtnComp CancelBtnFun={handleCancel} />
+                        <SaveBtnComp SaveBtnFun={(e) => handleSubmit(e)} />
+                        {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={(e) => handleSubmit(e)}>Save</button>
                             <button type="button" class="btn-loc inactive-loc btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                             <button className="btn-loc inactive-loc btn " style={cancel_btn} data-bs-toggle="modal" data-bs-target="#exampleModal">cancel</button> */}
-                        </div>
                     </div>
                 </div>
             </div>

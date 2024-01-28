@@ -55,12 +55,21 @@ app.post('/add/:entity(user|products|invoice)', async (req, res) => {
 })
 
 // Get Data From DB
-app.post('/get/:entity(user|credentials|products|state|district|access_control|transactionHistory|productList)', async (req, res) => {
+app.post('/get/:entity(user|credentials|products|state|district|access_control|transactionHistory|productList|profileInfo)', async (req, res) => {
     const entity = req.params.entity;
     const requestData = req.body;
     if (entity === 'user') {
         try {
             var userdata = await getData.getUserData(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'profileInfo') {
+        try {
+            var userdata = await getData.getprofileInfo(req, res);
         }
         catch (error) {
             res.send("error");

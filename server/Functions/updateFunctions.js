@@ -9,22 +9,26 @@ async function updateUserDataIndividual(req, res) {
         aadharNo,
         fName,
         lName,
+        Positionid,
         email,
         mobileNo,
+        adminid,
         upiPaymentNo,
         accName,
         accNo,
         passbookImg,
+
         pAddress,
         streetAddress,
         City,
         State,
         pCode,
+
         CommunicationAddress,
         StreetAddress2,
         City2,
         State2,
-        PostalCode2
+        PostalCode2 
     } = req.body.inputValues;
     const hi = req.body.inputValues;
     const AccessOptions = req.body.AccessOptions;
@@ -32,8 +36,7 @@ async function updateUserDataIndividual(req, res) {
     try {
         await userdbInstance.userdb.query('BEGIN');
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public."user"
-        SET phno=$1, altphoneno=$2, aadhar=$3, pan=$4, name=$5, pstreetname=$6, pdistrictid=$7, pstateid=$8,ppostalcode=$9, cstreetname=$10, cdistrictid=$11, cstateid=$12, cpostalcode=$13
-        WHERE userid=$14;`, [mobileNo, mobileNo, aadharNo, panNumber, fName, streetAddress, City, State, pCode, StreetAddress2, City2, State2, PostalCode2, userid]);
+        SET email=$1, phno=$2, aadhar=$3, pan=$4, pstreetname=$5, pdistrictid=$6, pstateid=$7, ppostalcode=$8 , cstreetname=$9, cdistrictid=$10,cstateid=$11, cpostalcode=$12,organizationname=$13, gstnno=$14, bussinesstype=$15, fname=$16, lname=$17, upiid=$18,bankname=$19, bankaccno=$20,passbookimg=$21 WHERE userid=$22;`, [ email, mobileNo, aadharNo, panNumber, streetAddress, City, State, pCode, StreetAddress2,City2,State2,PostalCode2,OrganizationName,gstNumber,bussinessType,fName,lName,upiPaymentNo,accName,accNo,passbookImg,userid]);
 
         // Staff Controls
         if (AccessOptions['Staff'] === 'No access') {
@@ -137,23 +140,24 @@ async function updateProductDataIndividual(req, res) {
         CGST,
         SGCT
     } = req.body.productdetial;
+    const { updator } = req.body;
     // const batchnoInt = Number(batchno); 
     // console.log(batchno,CGST,SGCT);
     try {
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
         SET quantity=$1, priceperitem=$2,productname=$3,batchno=$4,cgst=$5,sgst=$6
-        WHERE productid=$7;`, [quantity, priceperitem, productname,batchno,CGST,SGCT,productid]);
-        // console.log("sucess");
+        WHERE productid=$7 and belongsto=$8; `, [quantity, priceperitem, productname,batchno,CGST,SGCT,productid,updator]);
+        console.log("sucess",userUpdateResult);
         if (userUpdateResult.rowCount === 1) {
             // The update was successful
             res.json({ message: "Successfully Updated", status: true });
         } else {
             // No rows were updated, handle accordingly
-            res.status(404).json({ message: "User not found", status: false });
+            res.json({ message: "Oops! Something Went Wrong", status: false });
         }
     } catch (error) {
         console.error('Error executing database query:', error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.json({ message: "Internal Server Error",status: false });
     }
 }
 async function updateStatusToRemove(req, res) {

@@ -35,6 +35,8 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const Edit_Distributer_Detials = () => {
     const { userid } = useParams();
+    const userInfoString = sessionStorage.getItem("UserInfo");
+    const userInfo = JSON.parse(userInfoString);
     // console.log(userid);
     const [admin_value, setadmin] = useState([]);
     const [loc_name, setlocationName] = useState([]);
@@ -80,23 +82,23 @@ const Edit_Distributer_Detials = () => {
             setInputValues((prevValues) => ({
                 ...prevValues,
                 userid: item.userid,
-                OrganizationName: "Quantanics",
-                bussinessType: "",
-                gstNumber: "",
+                OrganizationName: item.organizationname,
+                bussinessType: item.bussinesstype,
+                gstNumber: item.gstnno,
                 panNumber: item.pan,
                 aadharNo: item.aadhar,
-                fName: item.name,
-                lName: "",
+                fName: item.fname,
+                lName: item.lname,
                 email: item.email,
                 mobileNo: item.phno,
-                upiPaymentNo: "",
-                accName: "",
-                accNo: "",
-                passbookImg: "",
+                upiPaymentNo:item.upiid,
+                accName: item.bankname,
+                accNo: item.bankaccno,
+                passbookImg: item.passbookimg,
                 pAddress: "",
                 streetAddress: item.pstreetname,
                 City: item.pdistrictid,
-                State: "",
+                State: item.pstateid,
                 pCode: item.ppostalcode,
                 CommunicationAddress: "",
                 StreetAddress2: item.cstreetname,
@@ -246,8 +248,8 @@ const Edit_Distributer_Detials = () => {
     // validation
     const handle_save = async (e) => {
         e.preventDefault();
-        const isValidOrgName = inputValues.OrganizationName.trim() !== '';
-        const isValidbussinessType = inputValues.bussinessType.trim() !== '';
+        // const isValidOrgName = inputValues.OrganizationName.trim() !== '';
+        // const isValidbussinessType = inputValues.bussinessType.trim() !== '';
         // alert(isValidOrgName);
         const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(inputValues.gstNumber)
         const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(inputValues.panNumber)
@@ -255,13 +257,13 @@ const Edit_Distributer_Detials = () => {
         const isValidfName = /^[A-Za-z\s'-]+$/.test(inputValues.fName)
         const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(inputValues.email)
         const isValidMobileNo = /^\d{10}$/.test(inputValues.mobileNo)
-        const isValidupiPaymentNo = /^\d{10}$/.test(inputValues.upiPaymentNo)
+        // const isValidupiPaymentNo = /^\d{10}$/.test(inputValues.upiPaymentNo)
         const isValidaccName = /^[A-Za-z\s'-]+$/.test(inputValues.accName)
         const isValidaccNo = /^\d*$/.test(inputValues.accNo)
         // const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(inputValues.email)
-        if (isValidOrgName & isValidbussinessType & isValidgstNumber & isValidpanNumber & isValidaadharNo
-            & isValidfName & isValidemail & isValidMobileNo & isValidupiPaymentNo & isValidaccName & isValidaccNo) {
-            // console.log("success", inputValues);
+        if (isValidgstNumber & isValidpanNumber & isValidaadharNo
+            & isValidfName & isValidemail & isValidMobileNo & isValidaccName & isValidaccNo) {
+            console.log("success", inputValues);
             try {
                 const response = await axios.put(`${API_URL}update/user`, { inputValues, AccessOptions: accessValues });
                 // alert(response.data.status);
@@ -271,7 +273,7 @@ const Edit_Distributer_Detials = () => {
                     setSubmittedSucess(true);
                     setTimeout(() => {
                         navigate(-1);
-                    }, 2000);
+                    }, 1000);
                 }
             } catch (error) {
                 setresAlert("Error updating data! Contact Developer")
@@ -280,20 +282,20 @@ const Edit_Distributer_Detials = () => {
             }
         }
         else {
-            if (!isValidOrgName) {
-                setresAlert("Organization Name Can't be Empty")
-                setSubmitted(true);
-                // alert("Organization Name Can't be Empty");
-            }
+            // if (!isValidOrgName) {
+            //     setresAlert("Organization Name Can't be Empty")
+            //     setSubmitted(true);
+            //     // alert("Organization Name Can't be Empty");
+            // }
             // else if (!isValidpostid) {
             //     alert("Enter User Type");
             // }
-            else if (!isValidbussinessType) {
-                setresAlert("Select Proper Bussiness type")
-                setSubmitted(true);
-                // alert("Select proper bussiness type");
-            }
-            else if (!isValidgstNumber) {
+            // if (!isValidbussinessType) {
+            //     setresAlert("Select Proper Bussiness type")
+            //     setSubmitted(true);
+            //     // alert("Select proper bussiness type");
+            // }
+             if (!isValidgstNumber) {
                 setresAlert("Enter valid GST Number");
                 setSubmitted(true);
                 // alert("enter valid GST Number");
@@ -323,11 +325,10 @@ const Edit_Distributer_Detials = () => {
                 setSubmitted(true);
                 // alert("enter valid UPI payment Number");
             }
-            else if (!isValidupiPaymentNo) {
-                setresAlert("Enter Valid UPI Payment Number");
-                setSubmitted(true);
-                // alert("enter valid UPI payment Number");
-            }
+            // else if (!isValidupiPaymentNo) {
+            //     setresAlert("Enter Valid UPI Payment Number");
+            //     setSubmitted(true);
+            // }
             else if (!isValidaccName) {
                 setresAlert("Enter Valid Account Name");
                 setSubmitted(true);
@@ -399,32 +400,64 @@ const Edit_Distributer_Detials = () => {
     const set_value = (value) => {
         setSelected_value(value);
     }
+    // const inputFields = [
+    //     { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, readOnly: true },
+    //     { label: "Organization Name", name: "OrganizationName", value: inputValues.OrganizationName, icon: person },
+    //     { label: "GST Number", name: "gstNumber", value: inputValues.gstNumber, icon: pen_3 },
+    //     { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person },
+    //     { label: "PAN Number", name: "panNumber", value: inputValues.panNumber, icon: ic_wysiwyg },
+    //     // Add more input field objects as needed
+    //     { label: "Aadhar Number", name: "aadharNo", value: inputValues.aadharNo, icon: pen_3 },
+    //     { label: "First Name", name: "fName", value: inputValues.fName, icon: pen_3 },
+    //     { label: "Last Name", name: "lName", value: inputValues.lName, icon: pen_3 },
+    //     // { label: "Position", name: "Position", value: inputValues, icon: pen_3 },
+    //     // row 3
+    //     { label: "Email", name: "email", value: inputValues.email, icon: pen_3, readOnly: true },
+    //     { label: "Mobile Number", name: "mobileNo", value: inputValues.mobileNo, icon: pen_3 },
+    //     // 2. UPI Payment Details:
+    //     { label: "UPI Payment Mobile No", name: "upiPaymentNo", value: inputValues.upiPaymentNo, icon: pen_3 },
+    //     { label: "UPI - Bank Account Name", name: "accName", value: inputValues.accName, icon: pen_3 },
+    //     { label: "UPI - Bank Account Number", name: "accNo", value: inputValues.accNo, icon: pen_3 },
+    //     { label: "Pass Book image", name: "passbookImg", value: inputValues.passbookImg, icon: pen_3, inputType: "file" },
+    //     // 3. Address Details:
+    //     { label: "Permanent Address", name: "pAddress", value: inputValues.pAddress, icon: pen_3 },
+    //     { label: "Street Address", name: "streetAddress", value: inputValues.streetAddress, icon: pen_3 },
+    //     { label: "City", name: "City", value: inputValues.City, icon: pen_3 },
+    //     { label: "State", name: "State", value: inputValues.State, icon: pen_3 },
+
+    //     { label: "Postal Code", name: "pCode", value: inputValues.pCode, icon: pen_3 },
+    //     { label: "Communication Address", name: "CommunicationAddress", value: inputValues.CommunicationAddress, icon: pen_3 },
+    //     { label: "Street Address", name: "StreetAddress2", value: inputValues.StreetAddress2, icon: pen_3 },
+    //     { label: "City", name: "City2", value: inputValues.City2, icon: pen_3 },
+    //     { label: "State", name: "State2", value: inputValues.State2, icon: pen_3 },
+    //     { label: "Postal Code", name: "PostalCode2", value: inputValues.PostalCode2, icon: pen_3 },
+    // ];
     const inputFields = [
-        { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, readOnly: true },
+        { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, disabled:true },
         { label: "Organization Name", name: "OrganizationName", value: inputValues.OrganizationName, icon: person },
-        { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person },
         { label: "GST Number", name: "gstNumber", value: inputValues.gstNumber, icon: pen_3 },
+        { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person },
         { label: "PAN Number", name: "panNumber", value: inputValues.panNumber, icon: ic_wysiwyg },
         // Add more input field objects as needed
         { label: "Aadhar Number", name: "aadharNo", value: inputValues.aadharNo, icon: pen_3 },
         { label: "First Name", name: "fName", value: inputValues.fName, icon: pen_3 },
         { label: "Last Name", name: "lName", value: inputValues.lName, icon: pen_3 },
-        // { label: "Position", name: "Position", value: inputValues, icon: pen_3 },
+        // { label: "Position", name: "Position", value: inputValues.Position, icon: pen_3 },
         // row 3
-        { label: "Email", name: "email", value: inputValues.email, icon: pen_3, readOnly: true },
+        { label: "Email", name: "email", value: inputValues.email, icon: pen_3 },
         { label: "Mobile Number", name: "mobileNo", value: inputValues.mobileNo, icon: pen_3 },
         // 2. UPI Payment Details:
-        { label: "UPI Payment Mobile No", name: "upiPaymentNo", value: inputValues.upiPaymentNo, icon: pen_3 },
-        { label: "UPI - Bank Account Name", name: "accName", value: inputValues.accName, icon: pen_3 },
-        { label: "UPI - Bank Account Number", name: "accNo", value: inputValues.accNo, icon: pen_3 },
+        { label: "UPI ID", name: "upiPaymentNo", value: inputValues.upiPaymentNo, icon: pen_3 },
+        { label: "Bank Name", name: "accName", value: inputValues.accName, icon: pen_3 },
+        { label: "Bank Account Number", name: "accNo", value: inputValues.accNo, icon: pen_3 },
         { label: "Pass Book image", name: "passbookImg", value: inputValues.passbookImg, icon: pen_3, inputType: "file" },
         // 3. Address Details:
         { label: "Permanent Address", name: "pAddress", value: inputValues.pAddress, icon: pen_3 },
         { label: "Street Address", name: "streetAddress", value: inputValues.streetAddress, icon: pen_3 },
         { label: "City", name: "City", value: inputValues.City, icon: pen_3 },
         { label: "State", name: "State", value: inputValues.State, icon: pen_3 },
-
         { label: "Postal Code", name: "pCode", value: inputValues.pCode, icon: pen_3 },
+
         { label: "Communication Address", name: "CommunicationAddress", value: inputValues.CommunicationAddress, icon: pen_3 },
         { label: "Street Address", name: "StreetAddress2", value: inputValues.StreetAddress2, icon: pen_3 },
         { label: "City", name: "City2", value: inputValues.City2, icon: pen_3 },
@@ -497,6 +530,51 @@ const Edit_Distributer_Detials = () => {
         setSubmitted(false);
     };
 
+    const accessHead = [
+        { label: 'Staff', disableHead: false },
+        { label: 'Distributor', disableHead: false },
+        { label: 'Customer', disableHead: false },
+        { label: 'Products', disableHead: false },
+        { label: 'Invoice Generator', disableHead: false },
+        { label: 'Invoice PaySlip', disableHead: false },
+    ]
+    let updatedAccessHead = [...accessHead];
+    if (userInfo.position === 'manifacture') {
+        updatedAccessHead = [...accessHead];
+    }
+    if (userInfo.position === 'staff') {
+        const labelsToUpdate = ['Staff', 'Customer'];
+        labelsToUpdate.forEach((label) => {
+            const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
+            if (indexToUpdate !== -1) {
+                updatedAccessHead = [...updatedAccessHead];
+                updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
+            }
+        });
+
+    }
+    if (userInfo.position === 'distributor') {
+        const labelsToUpdate = ['Staff', 'Distributor','Customer','Products', 'Invoice Generator'];
+        labelsToUpdate.forEach((label) => {
+            const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
+            if (indexToUpdate !== -1) {
+                updatedAccessHead = [...updatedAccessHead];
+                updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
+            }
+        });
+    }
+
+    const accessOptions = [
+        { label: 'No access', disabled: true },
+        { label: 'View', disabled: true },
+        { label: 'Edit', disabled: true },
+        { label: 'All', disabled: true }
+    ];
+    // const updatedAccessOptions = accessOptions.map((option, index) => ({
+    //     ...option,
+    //     disabled: index < limit ? false : true
+    // }));
+
 
     return (
         <div className='Add_device1 '>
@@ -545,17 +623,17 @@ const Edit_Distributer_Detials = () => {
                         <div class="modal-body">
                             <FormControl component="fieldset">
                                 {/* <FormLabel component="legend">Rows</FormLabel> */}
-                                {['Staff', 'Distributor', 'Customer', 'Products', 'Invoice Generator', 'Invoice PaySlip'].map((row, rowIndex) => (
+                                {updatedAccessHead.map((row, rowIndex) => (
                                     <div key={rowIndex} className='accessControlHeadwithVal'>
-                                        <FormLabel component="legend" className='acc_head'>{`${row}`}</FormLabel>
+                                        <FormLabel component="legend" className='acc_head'>{`${row.label}`}</FormLabel>
                                         <RadioGroup row
                                             className='acc_val'
-                                            value={accessValues[row]}
-                                            onChange={(e) => handleRadioChange(row, e.target.value)}
+                                            value={accessValues[row.label]}
+                                            onChange={(e) => handleRadioChange(row.label, e.target.value)}
                                         >
-                                            {['No access', 'View', 'Edit', 'All'].map((radio, radioIndex) => (
+                                            {accessOptions.map((radio, radioIndex) => (
                                                 // <FormControlLabel key={radioIndex} value={`row${row}-radio${radio}`} control={<Radio />} label={`${radio}`} />
-                                                <FormControlLabel key={radioIndex} value={radio} control={<Radio />} label={`${radio}`} />
+                                                <FormControlLabel key={radioIndex} value={radio.label} control={<Radio disabled={row.disableHead} />} label={`${radio.label}`} />
                                             ))}
                                         </RadioGroup>
                                     </div>
@@ -601,7 +679,8 @@ const Edit_Distributer_Detials = () => {
                                                     id={`input${index + 1}`}
                                                     value={field.value}
                                                     onChange={(e) => handleInputChange(index, e.target.value)}
-                                                    inputProps={{ readOnly: field.readOnly || false }}
+                                                    // inputProps={{ readOnly: field.readOnly || false }}
+                                                    disabled={field.disabled}
                                                 />
                                                 <div className="error-message">
                                                     {/* Add error display logic here */}

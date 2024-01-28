@@ -49,7 +49,7 @@ const InvoiceGenerator = () => {
     ]);
 
     const addRow = () => {
-        const newRow = { id: rows.length + 1, productid: '', productName: '', Quantity: '', Discount: '', Total: '' };
+        const newRow = { id: rows.length + 1, productid: '',batchno:'', productName: '', Quantity: '', Discount: '', Total: '' };
         setRows([...rows, newRow]);
     };
 
@@ -171,6 +171,18 @@ const InvoiceGenerator = () => {
                                             renderInput={(params) => (
                                                 <TextField {...params} label="HSN" variant="outlined" />
                                             )}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        {/* <TextField
+                                            value={row.col2}
+                                            onChange={(e) => handleInputChange(row.id, 'productName', e.target.value)}
+                                        /> */}
+                                        <TextField
+                                            list={`suggestions-${row.id}`}
+                                            value={row.col2}
+                                            onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
+                                            onBlur={(e) => handleBlur(row.id, 'Batch No', e.target.value)}
                                         />
                                     </TableCell>
 
