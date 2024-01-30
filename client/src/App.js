@@ -53,12 +53,13 @@ const App = () => {
   const userInfoString = sessionStorage.getItem("UserInfo");
   const userInfo = JSON.parse(userInfoString);
   // console.log(userInfo.distributer);
+  const currentLoc = window.location.href;
 
   return (
     // http://localhost:3001/
     // https://terion.quantanics.in/
     <BrowserRouter>
-      {window.location.href !== `${API_URL_CLIENT}` && userInfo.isLoggedIn && (
+      {window.location.href !== `${API_URL_CLIENT}` && userInfo && (
         <div>
           <TopNavbar />
           <Sidebar handleLogout={handleLogout}>
@@ -131,15 +132,15 @@ const App = () => {
           </Routes>
         </div>
       )}
-
-      {window.location.href === `${API_URL_CLIENT}` && (
+      {/* {(currentLoc === `${API_URL_CLIENT}` || currentLoc === `${API_URL_CLIENT}/UpdatePassword`) && ( */}
         <Routes>
-          hhhh
           <Route path='/' element={<Login />} />
+          <Route path='/y' element={'yy'} />
+          {/* <Route path='/' element={'empty route'} /> */}
           <Route path='/UpdatePassword' element={<UpdatePassword />} />
           {/* <Route path='/UpdatePassword/:encryptedtext' element={<UpdatePassword />} /> */}
         </Routes>
-      )}
+       {/* )}  */}
     </BrowserRouter>
 
   );

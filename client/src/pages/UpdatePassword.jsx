@@ -109,7 +109,6 @@ const UpdatePassword = (props) => {
             } else {
                 setresAlert("Password and Re-Password doesn't match");
                 setSubmitted(true);
-                // alert("Password and Re-Password doesn't match")
             }
         }
 

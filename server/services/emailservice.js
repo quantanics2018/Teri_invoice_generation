@@ -3,8 +3,45 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const CryptoJS = require('crypto-js');
+const PDFDocument = require('pdfkit');
+const pdf = require('html-pdf');
+const puppeteer = require('puppeteer');
 // console.log(crypto);
 
+// async function generatePDF() {
+//     return new Promise((resolve, reject) => {
+//         const doc = new PDFDocument();
+//         doc.text('Hello, this is a PDF document!');
+//         // doc.html('<div style="background-color:green">Hello, this is a PDF document! from html</div>');
+//         const buffers = [];
+//         doc.on('data', buffers.push.bind(buffers));
+//         doc.on('end', () => {
+//             const pdfBuffer = Buffer.concat(buffers);
+//             resolve(pdfBuffer);
+//         });
+//         doc.end();
+//     });
+// }
+async function generatePDF(htmlContent) {
+    return new Promise((resolve, reject) => {
+        const options = { format: 'Letter' };
+        pdf.create(htmlContent, options).toBuffer((err, buffer) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(buffer);
+            }
+        });
+    });
+}
+// async function generatePDF(htmlContent) {
+//     const browser = await puppeteer.launch();
+//     const page = await browser.newPage();
+//     await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
+//     const pdfBuffer = await page.pdf({ format: 'A4' });
+//     await browser.close();
+//     return pdfBuffer;
+// }
 async function emailservice() {
     const to = 'nitheshwaran003@gmail.com';
     const transporter = nodemailer.createTransport({
@@ -15,12 +52,34 @@ async function emailservice() {
         },
     });
 
+    // var htmlContent = await fs.readFile(path.join(__dirname, '../MailContent/payslipbill.html'), 'utf-8');
+    // htmlString = htmlContent.toString();
+
+    // const pdfBuffer = await generatePDF();
+
+    // const pdfFilePath = path.join(__dirname, 'document.pdf');
+    // const pdfBuffer = await fs.readFile(pdfFilePath);
+
     const htmlContent = await fs.readFile(path.join(__dirname, '../MailContent/payslipbill.html'), 'utf-8');
+    const pdfBuffer = await generatePDF(htmlContent);
+
     const mailOptions = {
         from: 'terionorganization@gmail.com',
         to: to,
         subject: 'Official mail from Terion Organization',
         html: htmlContent,
+        attachments: [
+            // {
+            //     filename: 'payslipbill.html',
+            //     content: htmlContent,
+            //     encoding: 'utf-8',
+            // },
+            {
+                filename: 'Invoice.pdf',
+                content: pdfBuffer,
+                // encoding: 'base64',
+            },
+        ],
     };
 
     try {
