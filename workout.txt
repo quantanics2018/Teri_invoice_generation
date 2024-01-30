@@ -16,6 +16,8 @@ Pan Number :
 
 ex : pan_number = "ABCDE1234F"
 
+  "start": "nodemon ./services/QrGeneration.js",
+
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
