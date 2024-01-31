@@ -10,11 +10,12 @@ const AddUserBtn = ({ adduserFun, value }) => {
         </Button>
     )
 }
-const CancelBtnComp = ({ CancelBtnFun }) => {
+const CancelBtnComp = ({ CancelBtnFun ,dataBsDismiss}) => {
     return (
         <Button variant="outlined"
             onClick={CancelBtnFun}
             style={CancelBtn}
+            data-bs-dismiss={dataBsDismiss}
         >
             Cancel
         </Button>

@@ -11,7 +11,7 @@ async function checkCredentials(req, res) {
         console.log("password is empty : ");
         return res.json({ success: false, password: null, message: 'Set the password' });
       } else {
-        console.log(username);
+        // console.log(username);
         const GetTheUserStatus = await userdbInstance.userdb.query('select status from public."user" where email=$1;', [username]);
         // console.log(GetTheUserStatus.rows);
         // console.log(GetTheUserStatus.rows[0].status === 1);

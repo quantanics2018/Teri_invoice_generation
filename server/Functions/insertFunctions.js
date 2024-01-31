@@ -162,6 +162,7 @@ async function addInvoice(req, res) {
     const { UserId, senderID } = req.body.invoice;
     const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
+
     // console.log(invoiceItem);
     // console.log("recivermail : ", recivermail);
     // console.log("senderID", senderID);
@@ -183,26 +184,33 @@ async function addInvoice(req, res) {
             );
             // console.log(InvoiceTableResult.rows[0].invoiceid);
             const invoiceid = InvoiceTableResult.rows[0].invoiceid;
+            // console.log(invoiceid);
             for (const item of invoiceItem) {
                 // console.log(item.id);
+
+                const for_productid = await userdbInstance.userdb.query(
+                    `select productid from public.products WHERE belongsto=$1 and productname=$2`, [senderID, item.productName]
+                );
+                // console.log(for_productid.rows[0].productid);
+                const productIdByName = for_productid.rows[0].productid
+
+                if (productIdByName) {
+                    item.productid = productIdByName
+                }
                 const ReduceFromSenderTable = await userdbInstance.userdb.query(
                     `UPDATE products
                     SET quantity = quantity - $1
                     WHERE belongsto=$2 and productid = $3;`, [item.Quantity, senderID, item.productid]
                 );
-                const InvoiceItemTableResult = await userdbInstance.userdb.query(
-                    `INSERT INTO public.invoiceitem(
-                    invoiceid,productid,quantity)
-                    VALUES ($1,$2,$3);`, [invoiceid, item.productid, item.Quantity]
-                );
+
                 const checkProductAlreadyExist = await userdbInstance.userdb.query(
                     `select productid from public.products WHERE belongsto=$1 and productid=$2`, [reciverID, item.productid]
                 );
-                // console.log(checkProductAlreadyExist);
+                // console.log(checkProductAlreadyExist.rows);
                 if (checkProductAlreadyExist.rows.length > 0) {
                     // console.log("Yes");
                     const UpdateToRecieverTable = await userdbInstance.userdb.query(
-                        `Update public.products SET quantity=quantity+$1 WHERE belongsto=$2 AND productid=$3;`, [item.Quantity,reciverID, item.productid]
+                        `Update public.products SET quantity=quantity+$1 WHERE belongsto=$2 AND productid=$3;`, [item.Quantity, reciverID, item.productid]
                     );
                 } else {
                     // console.log("No");
@@ -212,6 +220,12 @@ async function addInvoice(req, res) {
                             VALUES ($1, $2, $3, $4,$5);`, [item.productid, item.Quantity, item.productName, reciverID, 0]
                     );
                 }
+
+                const InvoiceItemTableResult = await userdbInstance.userdb.query(
+                    `INSERT INTO public.invoiceitem(
+                    invoiceid,productid,quantity)
+                    VALUES ($1,$2,$3);`, [invoiceid, item.productid, item.Quantity]
+                );
             }
             await userdbInstance.userdb.query('COMMIT');
             return res.json({ message: "Successfully Invoice Generated", status: true });

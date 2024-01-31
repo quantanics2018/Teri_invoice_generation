@@ -5,11 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/system';
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar } from '@mui/material';
+import { Button, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar } from '@mui/material';
 import { UserActionBtn } from '../assets/style/cssInlineConfig';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import MuiAlert from '@mui/material/Alert';
+import Loader from '../components/Loader';
 const Login = (props) => {
     const theme = useTheme();
 
@@ -20,7 +21,7 @@ const Login = (props) => {
     const [inactive_site, setinactive_site] = useState(false);
     const [username_empty, setusername_empty] = useState(false);
     const [password_empty, setpassword_empty] = useState(false);
-
+    const [loading, setLoading] = useState(false);
 
     const handleUserName = (event) => {
         const Username = event.target.value;
@@ -85,7 +86,23 @@ const Login = (props) => {
             }
             else {
                 if (response.data.password === null) {
-                    navigate('/UpdatePassword');
+                    setLoading(true);
+                    const setPasswordMail = await axios.post(`${API_URL}send-email/updatePassword`, { username });
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    setLoading(false);
+                    console.log(setPasswordMail.data.success);
+                    if (setPasswordMail.data.success) {
+                        setresAlert(setPasswordMail.data.message)
+                        setSubmitted(true);
+                        alert("Check your mail");
+                        setUsername('');
+                        setPassword('');
+                    }else{
+                        setresAlert(setPasswordMail.data.message)
+                        setSubmitted(true);
+                        alert("Check Your Internet Connection");
+                    }
+                    // navigate('/UpdatePassword');
                 }
                 // alert(response.data.message);
             }
@@ -111,8 +128,7 @@ const Login = (props) => {
     };
     return (
         <>
-            <br />
-            <br />
+            {loading &&  <Loader />}
             <div className='content'>
                 <div className='digital_scan'>
                     <div className="all_inputs">

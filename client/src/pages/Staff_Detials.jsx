@@ -11,7 +11,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useState, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL } from '../config';
+import { API_URL, SECRET_KEY } from '../config';
 // import { Button } from '@mui/material';
 import { UserActionBtn } from '../assets/style/cssInlineConfig';
 import { AddUserBtn } from '../components/AddUserBtn';
@@ -22,7 +22,7 @@ import {
     Snackbar,
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
-
+import CryptoJS from 'crypto-js';
 
 const Staff_Detials = (props) => {
     // console.log(props.position);
@@ -82,14 +82,17 @@ const Staff_Detials = (props) => {
 
     //navigate to edit page
     const Staff_Detials_edit_page = async (data) => {
+        const secretKey = `${SECRET_KEY}`;
+        const encryptedText = CryptoJS.AES.encrypt(data, secretKey).toString();
+        // console.log(encryptedText);
         if (props.position === 4) {
-            navigate(`Edit_Staff_Detials/${data}`);
+            navigate(`Edit_Staff_Detials/${encryptedText}`);
         }
         if (props.position === 2) {
-            navigate(`Edit_Distributer_Detials/${data}`);
+            navigate(`Edit_Distributer_Detials/${encryptedText}`);
         }
         if (props.position === 3) {
-            navigate(`Edit_Customer_Detials/${data}`);
+            navigate(`Edit_Customer_Detials/${encryptedText}`);
         }
 
     }

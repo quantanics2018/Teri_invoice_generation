@@ -3,15 +3,20 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const fs = require('fs');  // Require the 'fs' module to read files
 const path = require('path');
+const bodyParser = require('body-parser');
 const app = express();
 app.use(cors());
+app.use(bodyParser.text({ type: 'text/html' }));
 app.use(express.json());
 const addData = require('./Functions/insertFunctions');
 const verifyData = require('./Functions/verifyFunction');
 const deleteData = require('./Functions/deletefunctions');
 const getData = require('./Functions/getFunctions');
 const updateData = require('./Functions/updateFunctions');
-const { emailservice } = require('./services/emailservice');
+// const { emailservice } = require('./services/emailservice');
+const { UpdatePasswordmailservice } = require('./services/emailservice');
+const { sendInvoice } = require('./services/emailservice');
+const { generateQR } = require('./services/QrGeneration');
 
 
 app.post('/verify/:entity(user|credentials)', async (req, res) => {
@@ -110,7 +115,7 @@ app.post('/get/:entity(user|credentials|products|state|district|access_control|t
 
 app.get('/get/:entity(user|product)/:id', async (req, res) => {
     const entity = req.params.entity;
-    const {id} = req.params;
+    const { id } = req.params;
     if (entity === 'user') {
         var userdata = await getData.getUserDataIndividual(req, res);
     }
@@ -168,11 +173,35 @@ app.post('/delete/:entity(user|products)', async (req, res) => {
     }
 })
 
-app.post('/send-email', async (req, res) => {
-    console.log("mail service");
+app.post('/send-email/:entity(updatePassword|generateQR|sendInvoice)', async (req, res) => {
     // emailservice
-    console.log("mail service",emailservice);
-    res.send("mail service")
+    const entity = req.params.entity;
+    if (entity === 'updatePassword') {
+        try {
+            const deleteUser = await UpdatePasswordmailservice(req, res);
+        } catch (error) {
+            console.error('Error retrieving user details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
+    if (entity === 'generateQR') {
+        try {
+            const generateQRResult = await generateQR(req, res);
+        } catch (error) {
+            console.error('Error retrieving user details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
+    if (entity === 'sendInvoice') {
+        try {
+            const htmlString = req.body;
+            // console.log('Received HTML string:', htmlString);
+            const generateQRResult = await sendInvoice(req, res,htmlString);
+        } catch (error) {
+            console.error('Error retrieving user details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
 });
 
 app.listen(4000, () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import '../assets/style/App.css';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from '../config'
+import { API_URL, SECRET_KEY } from '../config'
 import axios from 'axios';
 
 //import icons from fontawesome and react icon kit
@@ -32,9 +32,23 @@ import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { SaveBtn } from '../assets/style/cssInlineConfig';
 import MuiAlert from '@mui/material/Alert';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import CryptoJS from 'crypto-js';
 
 const Edit_Distributer_Detials = () => {
-    const { userid } = useParams();
+    var { userid } = useParams();
+    // console.log(userid);
+    const secretKey = `${SECRET_KEY}`;
+    try {
+        const decodedEncryptId = decodeURIComponent(userid);
+        const bytes = CryptoJS.AES.decrypt(decodedEncryptId, secretKey);
+        const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+        // console.log('Decrypted:', decryptedText);
+        userid = decryptedText;
+        // console.log(userid);
+    } catch (error) {
+        console.error('Error during decryption:', error);
+    }
+
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     // console.log(userid);
@@ -61,11 +75,11 @@ const Edit_Distributer_Detials = () => {
 
     useEffect(() => {
         const device_user_data = async () => {
-            console.log(userid);
+            // console.log(userid);
             try {
                 const response = await fetch(`${API_URL}get/user/${userid}`);
                 const data = await response.json();
-                console.log(data);
+                // console.log(data);
                 all_data_fun(data)
             } catch (error) {
                 console.error(error);
@@ -76,7 +90,7 @@ const Edit_Distributer_Detials = () => {
 
     const all_data_fun = (data) => {
         if (data) {
-            console.log(data);
+            // console.log(data);
             const item = data.data;
             const AccessItem = data.getuserAccessControl;
             setInputValues((prevValues) => ({
@@ -91,7 +105,7 @@ const Edit_Distributer_Detials = () => {
                 lName: item.lname,
                 email: item.email,
                 mobileNo: item.phno,
-                upiPaymentNo:item.upiid,
+                upiPaymentNo: item.upiid,
                 accName: item.bankname,
                 accNo: item.bankaccno,
                 passbookImg: item.passbookimg,
@@ -295,7 +309,7 @@ const Edit_Distributer_Detials = () => {
             //     setSubmitted(true);
             //     // alert("Select proper bussiness type");
             // }
-             if (!isValidgstNumber) {
+            if (!isValidgstNumber) {
                 setresAlert("Enter valid GST Number");
                 setSubmitted(true);
                 // alert("enter valid GST Number");
@@ -433,7 +447,7 @@ const Edit_Distributer_Detials = () => {
     //     { label: "Postal Code", name: "PostalCode2", value: inputValues.PostalCode2, icon: pen_3 },
     // ];
     const inputFields = [
-        { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, disabled:true },
+        { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, disabled: true },
         { label: "Organization Name", name: "OrganizationName", value: inputValues.OrganizationName, icon: person },
         { label: "GST Number", name: "gstNumber", value: inputValues.gstNumber, icon: pen_3 },
         { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person },
@@ -554,7 +568,7 @@ const Edit_Distributer_Detials = () => {
 
     }
     if (userInfo.position === 'distributor') {
-        const labelsToUpdate = ['Staff', 'Distributor','Customer','Products', 'Invoice Generator'];
+        const labelsToUpdate = ['Staff', 'Distributor', 'Customer', 'Products', 'Invoice Generator'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {

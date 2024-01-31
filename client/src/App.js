@@ -135,10 +135,9 @@ const App = () => {
       {/* {(currentLoc === `${API_URL_CLIENT}` || currentLoc === `${API_URL_CLIENT}/UpdatePassword`) && ( */}
         <Routes>
           <Route path='/' element={<Login />} />
-          <Route path='/y' element={'yy'} />
           {/* <Route path='/' element={'empty route'} /> */}
           <Route path='/UpdatePassword' element={<UpdatePassword />} />
-          {/* <Route path='/UpdatePassword/:encryptedtext' element={<UpdatePassword />} /> */}
+          <Route path='/UpdatePassword/:encryptedtext' element={<UpdatePassword />} />
         </Routes>
        {/* )}  */}
     </BrowserRouter>

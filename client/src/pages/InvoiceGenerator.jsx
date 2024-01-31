@@ -13,6 +13,9 @@ import {
 import { CancelBtnComp } from '../components/AddUserBtn';
 import axios from 'axios';
 import { API_URL } from '../config';
+import SplitButton from '../components/SplitButton';
+import Invoice from '../components/Invoice';
+import { CancelBtn } from '../assets/style/cssInlineConfig';
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
@@ -30,7 +33,7 @@ const InvoiceGenerator = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const theme = useTheme();
-    const customerNames = ['UserId'];
+    const customerNames = ['Date','UserId'];
     const [inputValues, setInputValues] = useState({
         recieverid: "",
         senderID: userInfo.userid,
@@ -49,7 +52,7 @@ const InvoiceGenerator = () => {
     ]);
 
     const addRow = () => {
-        const newRow = { id: rows.length + 1, productid: '',batchno:'', productName: '', Quantity: '', Discount: '', Total: '' };
+        const newRow = { id: rows.length + 1, productid: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' };
         setRows([...rows, newRow]);
     };
 
@@ -72,16 +75,23 @@ const InvoiceGenerator = () => {
         if (!suggestionsArray.includes(value)) {
             setErrorMessage('Invalid product name');
         } else {
-            setErrorMessage(''); // Clear the error message if the input is valid
+            setErrorMessage('');
         }
     };
-
+    const [previewInvoice, setPreviewInvoice] = useState([
+        { productid: '1', productname: 'printers' },
+        { productid: '85672', productname: 'Phone' },
+        { productid: '564321', productname: 'caterpiller' },
+        { productid: '4568091', productname: 'epsilon machine' },
+        { productid: '876231', productname: 'Inks' }
+    ]);
     const handleSubmit = async () => {
         console.log(rows);
         console.log(inputValues);
         try {
             const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows });
             alert(response.data.message);
+            setPreviewInvoice(response.data.message)
         } catch (error) {
             console.error('Error sending data:', error);
         }
@@ -89,14 +99,16 @@ const InvoiceGenerator = () => {
 
     // input dropdown options
     const [options, setOptions] = useState([]);
+    const [OptionsproductName, setOptionsproductName] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
-                // alert(JSON.stringify(dropDownResponse.data)); 
                 console.log(dropDownResponse.data.data);
                 const productIds = dropDownResponse.data.data.map(item => item.productid);
-                setOptions(productIds); 
+                const productName = dropDownResponse.data.data.map(item => item.productname);
+                setOptions(productIds);
+                setOptionsproductName(productName);
             } catch (error) {
                 console.error('Error in processing data:', error);
             }
@@ -108,105 +120,127 @@ const InvoiceGenerator = () => {
 
 
     return (
-        <div className='innercontent'>
-            <StyledPaper elevation={3}>
-                <Typography variant="h5" align="center" gutterBottom>
-                    Add Invoice
-                </Typography>
-                <form>
-                    <Grid container spacing={2} style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        {customerNames.map((customerName, index) => (
-                            <React.Fragment key={index}>
-                                <Grid item xs={4}>
-                                    <Typography variant="body1" align="left">
-                                        {customerName}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField fullWidth label={customerName}
-                                        onChange={(e) => handleInputChangeInvoice(customerName, e.target.value)}
-                                        value={inputValues[customerName] || ''}
-                                    />
-                                </Grid>
-                            </React.Fragment>
-                        ))}
-                    </Grid>
-
-                </form>
-            </StyledPaper>
-            {/* Table content */}
-            <StyledPaper>
-                <div className="addrow" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', padding: '0.5rem' }}>
-                    <Button onClick={addRow} variant="contained" color="primary">
-                        Add Row
-                    </Button>
+        <>
+            {/* Preview Modal Start */}
+            {/* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Launch static backdrop modal
+            </button> */}
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style={{ padding: '0px', marginLeft: '-110px' }}>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {console.log(previewInvoice)}
+                            <Invoice previewInvoiceprop={previewInvoice} />
+                        </div>
+                        <div class="modal-footer">
+                            <CancelBtnComp dataBsDismiss="modal" />
+                            {/* <button type="button" class="btn btn-primary">Understood</button> */}
+                        </div>
+                    </div>
                 </div>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell style={thead}>HSN Code</TableCell>
-                                <TableCell style={thead}>Batch No</TableCell>
-                                <TableCell style={thead}>Product Name</TableCell>
-                                <TableCell style={thead}>Quantity</TableCell>
-                                <TableCell style={thead}>Discount</TableCell>
-                                <TableCell style={thead}>Total</TableCell>
-                                <TableCell style={thead}>Action</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row) => (
-                                <TableRow key={row.id}>
-                                    {/* <TableCell>
-                                        <TextField
-                                            value={row.col1}
-                                            onChange={(e) => handleInputChange(row.id, 'productid', e.target.value)}
+            </div>
+            {/* Preview Modal End */}
+            <div className='innercontent'>
+                <StyledPaper elevation={3}>
+                    <Typography variant="h5" align="center" gutterBottom>
+                        Add Invoice
+                    </Typography>
+                    <form>
+                        <Grid container spacing={2} style={{ justifyContent: 'center', alignItems: 'center' }}>
+                            {customerNames.map((customerName, index) => (
+                                <React.Fragment key={index}>
+                                    <Grid item xs={4}>
+                                        <Typography variant="body1" align="left">
+                                            {customerName}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <TextField fullWidth label={customerName}
+                                            onChange={(e) => handleInputChangeInvoice(customerName, e.target.value)}
+                                            value={inputValues[customerName] || ''}
                                         />
-                                    </TableCell> */}
-                                    <TableCell>
-                                        <Autocomplete
+                                    </Grid>
+                                </React.Fragment>
+                            ))}
+                        </Grid>
+
+                    </form>
+                </StyledPaper>
+                {/* Table content */}
+                <StyledPaper>
+                    <div className="addrow" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', padding: '0.5rem' }}>
+                        <Button onClick={addRow} variant="contained" color="primary">
+                            Add Row
+                        </Button>
+                    </div>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    {/* <TableCell style={thead}>HSN Code</TableCell> */}
+                                    <TableCell style={thead}>Product Name</TableCell>
+                                    <TableCell style={thead}>Batch No</TableCell>
+                                    <TableCell style={thead}>Quantity</TableCell>
+                                    <TableCell style={thead}>Discount</TableCell>
+                                    <TableCell style={thead}>Total</TableCell>
+                                    <TableCell style={thead}>Action</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <TableRow key={row.id}>
+                                        <TableCell>
+                                            {/* <Autocomplete
                                             options={options}
-                                            getOptionLabel={(option) => option}
+                                            // getOptionLabel={(option) => option}
                                             onChange={(e, value) => handleInputChange(row.id, 'productid', value)}
                                             renderInput={(params) => (
-                                                <TextField {...params} label="HSN" variant="outlined" />
+                                                <TextField {...params}
+                                                    // label="HSN" 
+                                                    variant="outlined" />
                                             )}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        {/* <TextField
-                                            value={row.col2}
-                                            onChange={(e) => handleInputChange(row.id, 'productName', e.target.value)}
                                         /> */}
-                                        <TextField
-                                            list={`suggestions-${row.id}`}
-                                            value={row.col2}
-                                            onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
-                                            onBlur={(e) => handleBlur(row.id, 'Batch No', e.target.value)}
-                                        />
-                                    </TableCell>
+                                            <Autocomplete
+                                                options={OptionsproductName}
+                                                // getOptionLabel={(option) => option}
+                                                onChange={(e, value) => handleInputChange(row.id, 'productName', value)}
+                                                renderInput={(params) => (
+                                                    <TextField {...params}
+                                                        // label="HSN" 
+                                                        variant="outlined" />
+                                                )}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <TextField
+                                                list={`suggestions-${row.id}`}
+                                                value={row.col2}
+                                                onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
+                                                onBlur={(e) => handleBlur(row.id, 'Batch No', e.target.value)}
+                                            />
+                                        </TableCell>
 
-                                    <TableCell>
-                                        {/* <TextField
-                                            value={row.col2}
-                                            onChange={(e) => handleInputChange(row.id, 'productName', e.target.value)}
-                                        /> */}
+                                        {/* <TableCell>
                                         <TextField
                                             list={`suggestions-${row.id}`}
                                             value={row.col2}
                                             onChange={(e) => handleInputChange(row.id, 'productName', e.target.value)}
                                             onBlur={(e) => handleBlur(row.id, 'productName', e.target.value)}
                                         />
-                                        {/* <datalist id={`suggestions-${row.id}`}
+                                        <datalist id={`suggestions-${row.id}`}
                                             style={{ position: 'absolute', zIndex: 1, border: '1px solid #ccc', background: '#fff' }}
                                         >
                                             {suggestionsArray.map((suggestion, index) => (
                                                 <option key={index} value={suggestion} />
                                             ))}
                                         </datalist>
-                                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} */}
-                                    </TableCell>
-                                    {/* <TableCell>
+                                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                                    </TableCell> */}
+                                        {/* <TableCell>
                                         <Autocomplete
                                             freeSolo
                                             options={suggestionsArray}
@@ -219,69 +253,71 @@ const InvoiceGenerator = () => {
                                         />
                                         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                                     </TableCell> */}
-                                    <TableCell>
-                                        <TextField
-                                            type='number'
-                                            value={row.col3}
-                                            onChange={(e) => handleInputChange(row.id, 'Quantity', e.target.value)}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <TextField
-                                            value={row.col4}
-                                            onChange={(e) => handleInputChange(row.id, 'Discount', e.target.value)}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <TextField
-                                            value={row.col5}
-                                            onChange={(e) => handleInputChange(row.id, 'Total', e.target.value)}
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button onClick={() => deleteRow(row.id)} color="secondary">
-                                            ❌
-                                            {/* ✔ */}
-                                            {/* <DeleteIcon /> */}
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                        <TableCell>
+                                            <TextField
+                                                type='number'
+                                                value={row.col3}
+                                                onChange={(e) => handleInputChange(row.id, 'Quantity', e.target.value)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <TextField
+                                                value={row.col4}
+                                                onChange={(e) => handleInputChange(row.id, 'Discount', e.target.value)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <TextField
+                                                value={row.col5}
+                                                onChange={(e) => handleInputChange(row.id, 'Total', e.target.value)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button onClick={() => deleteRow(row.id)} color="secondary">
+                                                ❌
+                                                {/* ✔ */}
+                                                {/* <DeleteIcon /> */}
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 
-            </StyledPaper>
+                </StyledPaper>
 
-            <br /><br /><br /><br />
-
-
+                <br /><br /><br /><br />
 
 
-            <footer>
-                <Grid container justifyContent="space-between" alignItems="center" style={{ width: "80%" }}>
-                    <Grid item className='gap-4 d-flex'>
-                        <CancelBtnComp />
 
-                        <Button variant="outlined" color="primary" onClick={handleSubmit}>
-                            Generate Invoice
-                        </Button>
+
+                <footer>
+                    <Grid container justifyContent="space-between" alignItems="center" style={{ width: "80%" }}>
+                        <Grid item className='gap-4 d-flex'>
+                            <CancelBtnComp />
+
+                            {/* <Button variant="outlined" color="primary" onClick={handleSubmit}>
+                                Generate Invoice
+                            </Button> */}
+                            <SplitButton />
+                        </Grid>
+                        <Grid item>
+                            <div>
+                                <Typography variant="body1" display="inline" style={{ marginRight: theme.spacing(2) }}>
+                                    Total Amount: $1000
+                                </Typography>
+                                <Typography variant="body1" display="inline">
+                                    Total Quantity: 10
+                                </Typography>
+                            </div>
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <div>
-                            <Typography variant="body1" display="inline" style={{ marginRight: theme.spacing(2) }}>
-                                Total Amount: $1000
-                            </Typography>
-                            <Typography variant="body1" display="inline">
-                                Total Quantity: 10
-                            </Typography>
-                        </div>
-                    </Grid>
-                </Grid>
-            </footer>
+                </footer>
 
 
-        </div>
+            </div>
+        </>
     );
 };
 

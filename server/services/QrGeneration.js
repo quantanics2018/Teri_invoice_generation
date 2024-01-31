@@ -1,5 +1,5 @@
 // const express = require('express');
-// const QRCode = require('qrcode');
+const QRCode = require('qrcode');
 // const app = express();
 // const cors = require('cors');
 // app.use(cors());
@@ -22,19 +22,21 @@
 //         throw new Error('Error generating QR code');
 //     }
 // }
-// const generateQR = async () => {
-//     const amount = '1.00';
-//     const currency = 'INR';
-//     const upiId = 'nitheshwaran003@okicici';
-//     try {
-//         const razorpayLink = `upi://pay?pa=${upiId}&am=${amount}&cu=${currency}`;
-//         const qrCodeImage = await QRCode.toDataURL(razorpayLink);
-//         return `<img src="${qrCodeImage}" alt="Razorpay QR Code" />`;
-//     } catch (err) {
-//         console.error('Error generating QR code:', err);
-//         throw new Error('Error generating QR code');
-//     }
-// };
+const generateQR = async (req, res) => {
+    const amount = '1.00';
+    const currency = 'INR';
+    const upiId = 'nitheshwaran003@okicici';
+    console.log(upiId);
+    try {
+        const razorpayLink = `upi://pay?pa=${upiId}&am=${amount}&cu=${currency}`;
+        const qrCodeImage = await QRCode.toDataURL(razorpayLink);
+        res.send(qrCodeImage);
+        return `<img src="${qrCodeImage}" alt="Razorpay QR Code" />`;
+    } catch (err) {
+        console.error('Error generating QR code:', err);
+        throw new Error('Error generating QR code');
+    }
+};
 
 // app.get('/generateQR', async (req, res) => {
 //     try {
@@ -66,7 +68,4 @@
 //     }
 // });
 
-// const PORT = 5001;
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-// });
+module.exports = { generateQR};
