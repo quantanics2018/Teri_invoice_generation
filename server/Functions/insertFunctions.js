@@ -32,8 +32,9 @@ async function addUser(req, res) {
         PostalCode2 } = req.body.userDetials;
     const status = 1;
     const AccessControls = req.body.AccessControls;
-    // console.log(AccessControls);
-    // console.log(panNumber);
+    console.log(passbookImg);
+    console.log(AccessControls);
+    console.log(panNumber);
 
     try {
         await userdbInstance.userdb.query('BEGIN');

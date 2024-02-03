@@ -370,7 +370,7 @@ const Products = () => {
                         </div> */}
                     </div>
                     <div className='col-headings'>
-                        <div className="col-head">Product ID</div>
+                        <div className="col-head">HSN Code</div>
                         <div className="col-head">Batch No</div>
                         <div className="col-head">Product Name</div>
                         <div className="col-head">Quantity</div>

@@ -73,8 +73,8 @@ async function getProductList(req, res) {
 
     try {
         const {senderID} = req.body.inputValues;
-        console.log(" userid : ",senderID);
-        const getProductListResult = await userdbInstance.userdb.query(`SELECT productid,productname
+        // console.log(" userid : ",senderID);
+        const getProductListResult = await userdbInstance.userdb.query(`SELECT productid,batchno,productname,priceperitem
         FROM public.products where belongsto=$1 order by rno DESC;`, [senderID]);
         res.json({ message: "Successfully Data Fetched", data: getProductListResult.rows});
     } catch (error) {

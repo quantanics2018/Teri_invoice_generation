@@ -110,14 +110,33 @@ const Add_User_Detials = ({ Positionid_val }) => {
     }
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        // alert(`hai ${value}`);
-        // setfirst_name(value);
-        setPostData({
-            ...postData,
-            [name]: value,
-        });
+        const { name, value, type } = e.target;
+
+        // Check if the input is a file input
+        if (type === 'file') {
+            setPostData({
+                ...postData,
+                [name]: e.target.files[0], // Use the file from the input
+            });
+        } else {
+            setPostData({
+                ...postData,
+                [name]: value,
+            });
+        }
+        console.log(postData);
     };
+
+    // const [file, setFile] = useState(null);
+    // const handleFileChange = (e) => {
+    //     setFile(e.target.files[0]);
+    // };
+
+    // const formData = new FormData();
+    // formData.append('image', postData.passbookImg);
+    // for (const entry of formData.entries()) {
+    //     console.log(entry);
+    // }
 
     const [resAlert, setresAlert] = useState(null)
     const handleSubmit = async (e) => {
@@ -152,7 +171,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 const isValidState2 = postData.State2.trim() !== '';
                 const isValidPostalCode2 = postData.PostalCode2.trim() !== '';
                 // alert("hai da")
-                if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber 
+                if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
                     // & isValidupiPaymentNo & isValidaccName & isValidaccNo
                     & isValidpAddress & isValidstreetAddress & isValidCity & isValidState & isValidpCode
                     & isValidCommunicationAddress & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
@@ -385,7 +404,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
     const [accessValues, setAccessValues] = useState({
         Staff: 'View', // Default values
         Distributor: 'View',
-        D_Staff:'View',
+        D_Staff: 'View',
         Customer: 'View',
         Products: 'View',
         'Invoice Generator': 'View',
@@ -417,7 +436,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
     let updatedAccessHead = [...accessHead];
     console.log(userInfo.position === 'manifacture');
     if (userInfo.position === 'manifacture') {
-        const labelsToUpdate = ['D_Staff','Customer'];
+        const labelsToUpdate = ['D_Staff', 'Customer'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -437,7 +456,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         });
     }
     if (userInfo.position === 'staff') {
-        const labelsToUpdate = ['Staff','D_Staff', 'Customer'];
+        const labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -448,7 +467,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
     }
     if (userInfo.position === 'd_staff') {
-        const labelsToUpdate = ['Staff', 'Distributor', 'D_Staff','Customer'];
+        const labelsToUpdate = ['Staff', 'Distributor', 'D_Staff', 'Customer'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -464,7 +483,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 ...prevValues,
                 Staff: 'No access',
                 Customer: 'No access',
-                D_Staff:'No access'
+                D_Staff: 'No access'
             }));
         }
         else if (userInfo.position === 'd_staff') {
@@ -482,7 +501,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 ...prevValues,
                 Staff: 'No access',
                 Distributor: 'No access',
-                D_Staff:'No access',
+                D_Staff: 'No access',
                 Customer: 'No access',
                 Products: 'No access',
                 'Invoice Generator': 'No access',
@@ -492,7 +511,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
             setAccessValues((prevValues) => ({
                 ...prevValues,
                 Customer: 'No access',
-                D_Staff:'No access'
+                D_Staff: 'No access'
             }));
         }
     }, []);
@@ -648,7 +667,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
             <div className="row_with_count_status">
                 <span className='module_tittle'>User Detials</span>
             </div>
-            <ImageUpload/>
+            {/* <ImageUpload /> */}
             <div className="add_device_container1">
                 <div className="new_device_content scroll_div">
                     <div className="row_one display-flex">
@@ -860,7 +879,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     type={field.inputType || "text"}
                                                     className="form-control-loc"
                                                     value={field.value}
-                                                    onChange={(e) => handleInputChange(e, field.name)}
+                                                    onChange={(e) => handleInputChange(e, field.name, field.inputType)}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
                                                 />

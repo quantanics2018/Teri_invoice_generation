@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { styled, useTheme } from '@mui/system';
-import { Container, TextField, Button, Grid, Paper, Typography, Select, MenuItem, Autocomplete } from '@mui/material';
+import { Container, TextField, Button, Grid, Paper, Typography, Select, MenuItem, Autocomplete, InputAdornment } from '@mui/material';
 import { useState } from "react";
 import {
     Table,
@@ -56,26 +56,77 @@ const InvoiceGenerator = () => {
     // content for table
     // , batchno: ''
     const [rows, setRows] = useState([
-        { id: 1, productName: '', Quantity: '', Discount: '', Total: '' },
+        { id: 1, hsncode: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' },
     ]);
 
+    const verifyKeysHaveValues = (array) => {
+        for (const obj of array) {
+            for (const key in obj) {
+                if (!obj[key]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+    const [currentRowId, setCurrentRowId] = useState(null);
+
     const addRow = () => {
-        const newRow = { id: rows.length + 1, productName: '', Quantity: '', Discount: '', Total: '' };
-        setRows([...rows, newRow]);
+        const result = verifyKeysHaveValues(rows);
+        console.log(result);
+        if (result) {
+            const newRow = { id: rows.length + 1, hsncode: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' };
+            setRows([...rows, newRow]);
+            sethsncodestate('')
+            setbatchnostate('')
+            setquantitystate('')
+            setdiscountstate('')
+            setCurrentRowId(newRow.id)
+            // alert(currentRowId)
+        }
+        else {
+            alert("Please fill all fields");
+        }
+        console.log(rows);
     };
 
+    // const currentRowid = useRef();
+
+    // useEffect(()=>{
+    //     if (currentRowid.current) {
+    //         console.log(currentRowid.current);
+    //     }
+    // },[currentRowid])
     const deleteRow = (id) => {
         const updatedRows = rows.filter((row) => row.id !== id);
+        setCurrentRowId((prevRowId) => prevRowId - 1);
         setRows(updatedRows);
     };
-
-
+    // setCurrentRowId(id);
+    // sethsncodestate('')
+    // setbatchnostate('')
+    // setquantitystate('')
+    // setdiscountstate('')
+    
     const handleInputChange = (id, column, value) => {
         const updatedRows = rows.map((row) =>
             row.id === id ? { ...row, [column]: value } : row
         );
         setRows(updatedRows);
+        if (column === 'hsncode') {
+            sethsncodestate(value)
+        }
+        if (column === 'batchno') {
+            setbatchnostate(value)
+        }
+        if (column === 'Quantity') {
+            setquantitystate(value)
+        }
+        if (column === 'Discount') {
+            setdiscountstate(value)
+        }
     };
+
     const handleSubmit = async () => {
         console.log(rows);
         console.log(inputValues);
@@ -105,6 +156,7 @@ const InvoiceGenerator = () => {
     }
 
     // input dropdown options
+    const [productList, setproductList] = useState([]);
     const [userNameoptions, setuserNameoptions] = useState([]);
     const [OptionsproductName, setOptionsproductName] = useState([]);
     useEffect(() => {
@@ -114,10 +166,20 @@ const InvoiceGenerator = () => {
                 const users = dropDownUserResponse.data.data.map(item => item.email);
                 setuserNameoptions(users);
                 const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
-                // console.log(dropDownResponse.data.data);
+                console.log(dropDownResponse.data.data);
+                const productList = dropDownResponse.data.data;
+                setproductList(productList)
                 const productName = dropDownResponse.data.data.map(item => item.productname);
                 // setOptions(productIds);
                 setOptionsproductName(productName);
+                // const data = {
+                //     1: { productid: '1', batchno: '2', productname: 'printers' },
+                //     2: { productid: '85672', batchno: '1', productname: 'Phone' },
+                //     3: { productid: '564321', batchno: '1', productname: 'caterpillar' },
+                //     4: { productid: '4568091', batchno: '1', productname: 'epsilon machine' },
+                //     5: { productid: '876231', batchno: '1', productname: 'Inks' },
+                // };
+
             } catch (error) {
                 console.error('Error in processing data:', error);
             }
@@ -125,6 +187,42 @@ const InvoiceGenerator = () => {
 
         fetchData();
     }, [inputValues]);
+
+    const [hsncodestate, sethsncodestate] = useState('');
+    const [batchnostate, setbatchnostate] = useState('');
+    const [quantitystate, setquantitystate] = useState('');
+    const [discountstate, setdiscountstate] = useState('');
+
+    const setthirdInput = (id, Enteredhsncode, Enteredbatchno) => {
+        console.log("Index:", productList);
+        // console.log("id and hsn", id, Enteredhsncode, Enteredbatchno);
+        const value = productList
+            .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
+            .map((product) => product.productname)[0] || '';
+
+        const updatedRows = rows.map((row) =>
+            row.id === id ? {
+                ...row, productName: value
+            } : row
+        );
+        setRows(updatedRows);
+        console.log(updatedRows);
+    }
+    const setTotalValue = (id, Enteredhsncode, Enteredbatchno, enteredQuantity = 0, enteredDiscount = 0) => {
+        const productPrice = productList
+            .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
+            .map((product) => product.priceperitem)[0] || '';
+        console.log("price : ", productPrice);
+        const updatedRows = rows.map((row) =>
+            row.id === id ? {
+                ...row, Total: (enteredQuantity * productPrice) - ((enteredQuantity * productPrice) * enteredDiscount / 100)
+            } : row
+        );
+        setRows(updatedRows);
+        console.log("fortotal :", updatedRows);
+    }
+
+
     return (
         <>
             {/* Preview Modal Start */}
@@ -194,8 +292,8 @@ const InvoiceGenerator = () => {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    {/* <TableCell style={thead}>HSN Code</TableCell> */}
-                                    {/* <TableCell style={thead}>Batch No</TableCell> */}
+                                    <TableCell style={thead}>HSN Code</TableCell>
+                                    <TableCell style={thead}>Batch No</TableCell>
                                     <TableCell style={{ ...thead, ...pName }} >Product Name</TableCell>
                                     <TableCell style={thead}>Quantity</TableCell>
                                     <TableCell style={thead}>Discount</TableCell>
@@ -205,51 +303,81 @@ const InvoiceGenerator = () => {
                             </TableHead>
                             <TableBody>
                                 {rows.map((row) => (
-                                    <TableRow key={row.id}>
+                                    <TableRow key={row.id} 
+                                    // ref={currentRowid}
+                                    >
                                         <TableCell>
-                                            <Autocomplete
+                                            <TextField
+                                                disabled={currentRowId !== null && row.id !== currentRowId}
+                                                list={`suggestions-${row.id}`}
+                                                value={row.col2}
+                                                onChange={(e) => handleInputChange(row.id, 'hsncode', e.target.value)}
+                                                onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <TextField
+                                                disabled={currentRowId !== null && row.id !== currentRowId}
+                                                list={`suggestions-${row.id}`}
+                                                value={row.col3}
+                                                onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
+                                                onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            {/* <Autocomplete
                                                 options={OptionsproductName}
                                                 // getOptionLabel={(option) => option}
-                                                onChange={(e, value) => handleInputChange(row.id, 'productName', value)}
+                                                // onChange={(e, value) => handleInputChange(row.id, 'productName', value)}
+                                                value={thirdInputValues[1]}
+                                                // readOnly
                                                 renderInput={(params) => (
                                                     <TextField {...params}
                                                         // label="HSN" 
                                                         variant="outlined"
+                                                        value={"hai"}
                                                     // error={isEmptyProductName} // Set error prop based on the empty status
                                                     // helperText={isEmptyProductName ? 'This field is required' : ''}
                                                     />
                                                 )}
+                                            /> */}
+                                            <TextField
+                                                disabled={currentRowId !== null && row.id !== currentRowId}
+                                                value={row.productName}
+                                            // onChange={(e) => handleInputChange(row.id, 'productName', e.target.value)}
                                             />
                                         </TableCell>
-                                        {/* <TableCell>
-                                            <TextField
-                                                list={`suggestions-${row.id}`}
-                                                value={row.col2}
-                                                onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
-                                            />
-                                        </TableCell> */}
 
                                         <TableCell>
                                             <TextField
                                                 type='number'
-                                                value={row.col3}
-                                                onChange={(e) => handleInputChange(row.id, 'Quantity', e.target.value)}
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            <TextField
-                                                value={row.col4}
-                                                onChange={(e) => handleInputChange(row.id, 'Discount', e.target.value)}
-                                            />
-                                        </TableCell>
-                                        <TableCell>
-                                            <TextField
+                                                disabled={currentRowId !== null && row.id !== currentRowId}
                                                 value={row.col5}
-                                                onChange={(e) => handleInputChange(row.id, 'Total', e.target.value)}
+                                                onChange={(e) => handleInputChange(row.id, 'Quantity', e.target.value)}
+                                                onBlur={() => setTotalValue(row.id, hsncodestate, batchnostate, quantitystate, discountstate)}
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <Button onClick={() => deleteRow(row.id)} color="secondary">
+                                            <TextField
+                                                type='number'
+                                                disabled={currentRowId !== null && row.id !== currentRowId}
+                                                value={row.col6}
+                                                onChange={(e) => handleInputChange(row.id, 'Discount', e.target.value)}
+                                                onBlur={() => setTotalValue(row.id, hsncodestate, batchnostate, quantitystate, discountstate)}
+                                                InputProps={{
+                                                    endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <TextField
+                                                disabled={currentRowId !== null && row.id !== currentRowId}
+                                                value={row.Total}
+                                            // onChange={(e) => handleInputChange(row.id, 'Total', e.target.value)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button disabled={currentRowId !== null && row.id !== currentRowId} onClick={() => { if (row.id !== 1) deleteRow(row.id); }} color="secondary">
                                                 ❌
                                                 {/* ✔ */}
                                                 {/* <DeleteIcon /> */}
