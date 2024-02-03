@@ -35,19 +35,30 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import CryptoJS from 'crypto-js';
 
 const Edit_Distributer_Detials = () => {
-    var { userid } = useParams();
-    // console.log(userid);
-    const secretKey = `${SECRET_KEY}`;
-    try {
-        const decodedEncryptId = decodeURIComponent(userid);
-        const bytes = CryptoJS.AES.decrypt(decodedEncryptId, secretKey);
-        const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
-        // console.log('Decrypted:', decryptedText);
-        userid = decryptedText;
-        // console.log(userid);
-    } catch (error) {
-        console.error('Error during decryption:', error);
-    }
+
+    // let useridEnc = useParams();
+    let useridEnc  = useParams();
+    console.log(useridEnc);
+    let userid;
+    // const [userid, setUserId] = useState(null);
+    useEffect(() => {
+        const decryptUserId = async () => {
+            try {
+                // await setUserId(userid);
+                console.log("userid : ",useridEnc.useridEnc);
+                const secretKey = `${SECRET_KEY}`;
+                const decodedEncryptId = decodeURIComponent(useridEnc.useridEnc);
+                const bytes = CryptoJS.AES.decrypt(decodedEncryptId, secretKey);
+                const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+                console.log('Decrypted:', decryptedText);
+                userid = decryptedText;
+            } catch (error) {
+                console.error('Error during decryption:', error);
+            }
+        };
+
+        decryptUserId();
+    }, [useridEnc.useridEnc]);
 
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
@@ -458,7 +469,7 @@ const Edit_Distributer_Detials = () => {
         { label: "Last Name", name: "lName", value: inputValues.lName, icon: pen_3 },
         // { label: "Position", name: "Position", value: inputValues.Position, icon: pen_3 },
         // row 3
-        { label: "Email", name: "email", value: inputValues.email, icon: pen_3 },
+        { label: "Email", name: "email", value: inputValues.email, icon: pen_3,disabled: true },
         { label: "Mobile Number", name: "mobileNo", value: inputValues.mobileNo, icon: pen_3 },
         // 2. UPI Payment Details:
         { label: "UPI ID", name: "upiPaymentNo", value: inputValues.upiPaymentNo, icon: pen_3 },
@@ -589,7 +600,10 @@ const Edit_Distributer_Detials = () => {
     //     disabled: index < limit ? false : true
     // }));
 
-
+    if (userid === null) {
+        // Render loading or placeholder while decryption is in progress
+        return <div>Loading...</div>;
+    }
     return (
         <div className='Add_device1 '>
             {/* Snack bar */}
@@ -719,7 +733,8 @@ const Edit_Distributer_Detials = () => {
                                                     id={`input${index + 1}`}
                                                     value={field.value}
                                                     onChange={(e) => handleInputChange2(index, e.target.value)}
-                                                    inputProps={{ readOnly: field.readOnly || false }}
+                                                    // inputProps={{ readOnly: field.readOnly || false }}
+                                                    disabled={field.disabled}
                                                 // Add value and onChange as needed
                                                 />
                                                 <div className="error-message">
@@ -746,6 +761,7 @@ const Edit_Distributer_Detials = () => {
                                                     value={field.value}
                                                     onChange={(e) => handleInputChange3(index, e.target.value)}
                                                     inputProps={{ readOnly: field.readOnly || false }}
+                                                    disabled={field.disabled}
                                                 // Add value and onChange as needed
                                                 />
                                                 <div className="error-message">

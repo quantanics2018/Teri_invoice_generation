@@ -85,14 +85,18 @@ const Staff_Detials = (props) => {
         const secretKey = `${SECRET_KEY}`;
         const encryptedText = CryptoJS.AES.encrypt(data, secretKey).toString();
         // console.log(encryptedText);
-        if (props.position === 4) {
-            navigate(`Edit_Staff_Detials/${encryptedText}`);
-        }
+        const encodedText = encodeURIComponent(encryptedText);
         if (props.position === 2) {
-            navigate(`Edit_Distributer_Detials/${encryptedText}`);
+            navigate(`Edit_Distributer_Detials/${encodedText}`);
         }
         if (props.position === 3) {
-            navigate(`Edit_Customer_Detials/${encryptedText}`);
+            navigate(`Edit_Customer_Detials/${encodedText}`);
+        }
+        if (props.position === 4) {
+            navigate(`Edit_Staff_Detials/${encodedText}`);
+        }
+        if (props.position === 5) {
+            navigate(`Edit_D_Staff_Detials/${encodedText}`);
         }
 
     }
@@ -208,14 +212,17 @@ const Staff_Detials = (props) => {
                 <div className="device_mangement_main_content">
                     <div className="row_with_count_status">
                         <span className='module_tittle'>
+                            {props.position === 5 &&
+                                "D_Staff Detials"
+                            }
                             {props.position === 4 &&
                                 "Staff Detials"
                             }
-                            {props.position === 2 &&
-                                "Distibutor Detials"
-                            }
                             {props.position === 3 &&
                                 "Customer Detials"
+                            }
+                            {props.position === 2 &&
+                                "Distibutor Detials"
                             }
                         </span>
                     </div>
@@ -304,9 +311,10 @@ const Staff_Detials = (props) => {
                             onClick={handleclick}
                             style={UserActionBtn}
                         >
-                            {(props.position === 4) && "Add Staff"}
                             {(props.position === 2) && "Add Distributor"}
                             {(props.position === 3) && "Add Customer"}
+                            {(props.position === 4) && "Add Staff"}
+                            {(props.position === 5) && "Add D_Staff"}
                         </Button>
 
                         {/* <div className='filters2 display-flex' onClick={handleclick}>
@@ -318,11 +326,13 @@ const Staff_Detials = (props) => {
                     <div className='col-headings'>
                         <div className="col-head">Registration ID</div>
                         <div className="col-head">
-                            {props.position === 4 && "Staff "
-                            }
                             {props.position === 2 && "Distributor "
                             }
                             {props.position === 3 && "Customer "
+                            }
+                            {props.position === 4 && "Staff "
+                            }
+                            {props.position === 5 && "D_Staff "
                             }
                             Name
                         </div>
@@ -363,14 +373,17 @@ const Staff_Detials = (props) => {
                                                 <div className='device_content_dropdown display-flex'
 
                                                 >Edit
-                                                    {props.position === 4 &&
-                                                        " Staff "
-                                                    }
                                                     {props.position === 2 &&
                                                         " Distibutor "
                                                     }
                                                     {props.position === 3 &&
                                                         " Customer "
+                                                    }
+                                                    {props.position === 4 &&
+                                                        " Staff "
+                                                    }
+                                                    {props.position === 5 &&
+                                                        " D_Staff "
                                                     }
                                                     Detials</div>
                                             </div>
@@ -383,18 +396,25 @@ const Staff_Detials = (props) => {
                                                     <div className='device_content_dropdown display-flex'
                                                     // onClick={() => setInactivateAlert(true)}
                                                     // updateUserStatus(data.userid, 0, index
-                                                    >Inactivate {props.position === 4 &&
-                                                        "Staff "
-                                                        }
+                                                    >Inactivate
                                                         {props.position === 2 &&
-                                                            "Distibutor "
+                                                            " Distibutor "
+                                                        }
+                                                        {props.position === 3 &&
+                                                            " Customer"
+                                                        }
+                                                        {props.position === 4 &&
+                                                            " Staff "
+                                                        }
+                                                        {props.position === 5 &&
+                                                            " D_Staff "
                                                         }
                                                         {inactivateAlert && (
                                                             <Example
                                                                 // ConformMsg={updateUserStatus(data.userid, data.status, index)}
                                                                 ConformMsg={() => {
                                                                     alert("hai hu")
-                                                                    updateUserStatusInactivate(data.userid, data.status, index);
+                                                                    // updateUserStatusInactivate(data.userid, data.status, index);
                                                                 }
                                                                 }
                                                             />

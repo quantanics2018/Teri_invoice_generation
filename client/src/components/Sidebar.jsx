@@ -28,6 +28,7 @@ const Sidebar = ({ children, handleLogout }) => {
                     { url: '/Staff_Detials', text: 'Staff Detials', condition: userInfo.staff > 0 },
                     // { url: '/Distributer_Detials', text: 'Distributor Detials', condition: userInfo.distributer > 0 , classname:{userInfo.customer !> 0 ? 'last-link',''}},
                     { url: '/Distributer_Detials', text: 'Distributor Details', condition: userInfo.distributer > 0, classname: userInfo.customer == 0 ? 'last-link' : '' },
+                    { url: '/D_Staff_Detials', text: 'D_Staff Detials', condition: userInfo.customer > 0, classname: userInfo.customer == 0 ? 'last-link' : '' },
                     { url: '/Customer_Detials', text: 'Customer Detials', condition: userInfo.customer > 0, classname: 'last-link' },
                 ],
             },
@@ -39,7 +40,7 @@ const Sidebar = ({ children, handleLogout }) => {
                     { url: '/InvoiceGenerator', text: 'Invoice Generator', condition: userInfo.invoicegenerator > 0 },
                     // !(userInfo.position === "customer")
                     { url: '/TransactionHistory', text: 'PaySlip Log', condition: userInfo.invoicepayslip > 0 },
-                    { url: '/Invoice', text: 'Invoice', condition: userInfo.invoicegenerator > 0 },
+                    // { url: '/Invoice', text: 'Invoice', condition: userInfo.invoicegenerator > 0 },
                 ],
             },
             {
@@ -168,7 +169,7 @@ const Sidebar = ({ children, handleLogout }) => {
                                         icon={faCircleUser}
                                         style={{ "--fa-primary-color": "#ffffff", "--fa-secondary-color": "#797a7c" }}
                                     />
-                                    <span style={{ fontWeight: "600" }} className='name'>{JSON.parse(sessionStorage.getItem("UserInfo")).name}</span>
+                                    <span style={{ fontWeight: "600" }} className='name'>{JSON.parse(sessionStorage.getItem("UserInfo")).fname}</span>
                                 </div>
                             </div>
                             <div className='logout2'

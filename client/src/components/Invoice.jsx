@@ -8,8 +8,8 @@ import ReactDOMServer from 'react-dom/server';
 import { API_URL } from '../config';
 
 const Invoice = ({ previewInvoiceprop }) => {
-    console.log(previewInvoiceprop);
-    console.log(previewInvoiceprop[0].productname);
+    // console.log(previewInvoiceprop);
+    // console.log(previewInvoiceprop[0].productname);
     const sendDataToServer = async () => {
         try {
             const htmlString = ReactDOMServer.renderToString(
@@ -117,11 +117,12 @@ const Invoice = ({ previewInvoiceprop }) => {
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {console.log(previewInvoiceprop)}
                                             {previewInvoiceprop.map((item, index) => (
                                                 <tr key={index}>
                                                     <td className='td'>{index + 1}</td>
                                                     <td className='td'>{item.productid || ''}</td>
-                                                    <td className='td'>{item.productname || ''}</td>
+                                                    <td className='td'>{item.productName || ''}</td>
                                                     <td className='td'>{item.qty || ''}</td>
                                                     <td className='td'>{item.rate ? `Rs. ${item.rate.toFixed(2)}` : ''}</td>
                                                     <td className='td'>{item.amount ? `Rs. ${item.amount.toFixed(2)}` : ''}</td>
@@ -158,7 +159,7 @@ const Invoice = ({ previewInvoiceprop }) => {
             });
 
             if (response.status === 200) {
-                console.log('Data sent successfully');
+                console.log('Mail sent successfully');
             } else {
                 console.error('Failed to send data');
             }
@@ -278,7 +279,7 @@ const Invoice = ({ previewInvoiceprop }) => {
                                         <tr key={index}>
                                             <td className='td'>{index + 1}</td>
                                             <td className='td'>{item.productid || ''}</td>
-                                            <td className='td'>{item.productname || ''}</td>
+                                            <td className='td'>{item.productName || ''}</td>
                                             <td className='td'>{item.qty || ''}</td>
                                             <td className='td'>{item.rate ? `Rs. ${item.rate.toFixed(2)}` : ''}</td>
                                             <td className='td'>{item.amount ? `Rs. ${item.amount.toFixed(2)}` : ''}</td>

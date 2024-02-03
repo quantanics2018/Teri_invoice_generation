@@ -159,7 +159,7 @@ async function addUser(req, res) {
     }
 }
 async function addInvoice(req, res) {
-    const { UserId, senderID } = req.body.invoice;
+    const { UserId, senderID,Date } = req.body.invoice;
     const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
 
@@ -167,8 +167,8 @@ async function addInvoice(req, res) {
     // console.log("recivermail : ", recivermail);
     // console.log("senderID", senderID);
     try {
-        const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1;', [recivermail]);
-        // console.log(checkIsUsernameExist);
+        const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1 and adminid=$2;', [recivermail,senderID]);
+        console.log(checkIsUsernameExist.rows);
         if (checkIsUsernameExist.rows != 0) {
             await userdbInstance.userdb.query('BEGIN');
 
@@ -179,8 +179,8 @@ async function addInvoice(req, res) {
             // console.log(reciverID);
             const InvoiceTableResult = await userdbInstance.userdb.query(
                 `INSERT INTO public.invoice(
-                    senderid,receiverid,status)
-                VALUES ($1,$2,$3) RETURNING invoiceid;`, [senderID, reciverID, 0]
+                    senderid,receiverid,status,date)
+                VALUES ($1,$2,$3,$4) RETURNING invoiceid;`, [senderID, reciverID, 0,Date]
             );
             // console.log(InvoiceTableResult.rows[0].invoiceid);
             const invoiceid = InvoiceTableResult.rows[0].invoiceid;
@@ -223,8 +223,8 @@ async function addInvoice(req, res) {
 
                 const InvoiceItemTableResult = await userdbInstance.userdb.query(
                     `INSERT INTO public.invoiceitem(
-                    invoiceid,productid,quantity)
-                    VALUES ($1,$2,$3);`, [invoiceid, item.productid, item.Quantity]
+                    invoiceid,productid,quantity,discountperitem,cost)
+                    VALUES ($1,$2,$3,$4,$5);`, [invoiceid, item.productid, item.Quantity,item.Discount,item.Total ]
                 );
             }
             await userdbInstance.userdb.query('COMMIT');
@@ -236,10 +236,6 @@ async function addInvoice(req, res) {
     } catch (error) {
         console.error('Error executing database query:', error);
         return res.json({ message: 'Failed to add Invoice', status: false, error: error.message });
-        // if (error.message.includes('unique constraint')) {
-        //     return res.json({ message: "User Already Exists", status: false });
-        // } else {
-        // }
     }
 }
 

@@ -45,10 +45,10 @@ const UpdatePassword = () => {
     //     const decryptedText = decryptedData.toString(CryptoJS.enc.Utf8);
     //     return decryptedText;
     // }
+    const params = new URLSearchParams(location.search);
+    const encryptedtext = params.get('email');
     useEffect(() => {
         try {
-            const params = new URLSearchParams(location.search);
-            const encryptedtext = params.get('email');
             console.log(encryptedtext);
             console.log(encryptedtext);
             const secretKey = 'edf6537e67f256578bbb90b2adb1617622d6cbe49702b832c99c6feb8cce817c';

@@ -17,7 +17,8 @@ const updateData = require('./Functions/updateFunctions');
 const { UpdatePasswordmailservice } = require('./services/emailservice');
 const { sendInvoice } = require('./services/emailservice');
 const { generateQR } = require('./services/QrGeneration');
-
+const multer = require('multer');
+// var upload = multer({ dest: './uploads/' });
 
 app.post('/verify/:entity(user|credentials)', async (req, res) => {
     const entity = req.params.entity;
@@ -60,7 +61,7 @@ app.post('/add/:entity(user|products|invoice)', async (req, res) => {
 })
 
 // Get Data From DB
-app.post('/get/:entity(user|credentials|products|state|district|access_control|transactionHistory|productList|profileInfo)', async (req, res) => {
+app.post('/get/:entity(user|credentials|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo)', async (req, res) => {
     const entity = req.params.entity;
     const requestData = req.body;
     if (entity === 'user') {
@@ -102,6 +103,15 @@ app.post('/get/:entity(user|credentials|products|state|district|access_control|t
     if (entity === 'productList') {
         try {
             var userdata = await getData.getProductList(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'getUserList') {
+        try {
+            var userdata = await getData.getUserList(req, res);
         }
         catch (error) {
             res.send("error");
@@ -195,13 +205,31 @@ app.post('/send-email/:entity(updatePassword|generateQR|sendInvoice)', async (re
     if (entity === 'sendInvoice') {
         try {
             const htmlString = req.body;
-            // console.log('Received HTML string:', htmlString);
-            const generateQRResult = await sendInvoice(req, res,htmlString);
+            const generateQRResult = await sendInvoice(req, res, htmlString);
         } catch (error) {
             console.error('Error retrieving user details:', error);
             res.status(500).send('Internal Server Error');
         }
     }
+});
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Specify the upload directory
+    },
+    filename: function (req, file, cb) {
+        cb(null, 'PassbookImg'+'userid' + path.extname(file.originalname)); // Set unique filename
+    },
+});
+const upload = multer({ storage: storage });
+app.use('/uploads', express.static('uploads'));
+// Example route to handle image upload
+app.post('/upload', upload.single('image'), (req, res) => {
+    const  file = req.file;
+    // console.log(file);
+    const { filename } = req.file;
+    res.json({ success: true, filename });
 });
 
 app.listen(4000, () => {

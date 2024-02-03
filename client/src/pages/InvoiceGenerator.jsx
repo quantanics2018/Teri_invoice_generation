@@ -16,6 +16,7 @@ import { API_URL } from '../config';
 import SplitButton from '../components/SplitButton';
 import Invoice from '../components/Invoice';
 import { CancelBtn } from '../assets/style/cssInlineConfig';
+
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
@@ -27,15 +28,21 @@ const StyledPaper = styled(Paper)({
 const thead = {
     textAlign: "center",
     color: "white"
+
+}
+const pName = {
+    minWidth: '250px'
 }
 
 const InvoiceGenerator = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const theme = useTheme();
-    const customerNames = ['Date','UserId'];
+    const [selectedDate, handleDateChange] = useState(new Date());
+    const customerNames = ['Date', 'UserId'];
     const [inputValues, setInputValues] = useState({
-        recieverid: "",
+        Date: "",
+        UserId: "",
         senderID: userInfo.userid,
     });
 
@@ -47,12 +54,13 @@ const InvoiceGenerator = () => {
     };
 
     // content for table
+    // , batchno: ''
     const [rows, setRows] = useState([
-        { id: 1, productid: '', productName: '', Quantity: '', Discount: '', Total: '' },
+        { id: 1, productName: '', Quantity: '', Discount: '', Total: '' },
     ]);
 
     const addRow = () => {
-        const newRow = { id: rows.length + 1, productid: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' };
+        const newRow = { id: rows.length + 1, productName: '', Quantity: '', Discount: '', Total: '' };
         setRows([...rows, newRow]);
     };
 
@@ -60,54 +68,55 @@ const InvoiceGenerator = () => {
         const updatedRows = rows.filter((row) => row.id !== id);
         setRows(updatedRows);
     };
+
+
     const handleInputChange = (id, column, value) => {
         const updatedRows = rows.map((row) =>
             row.id === id ? { ...row, [column]: value } : row
         );
         setRows(updatedRows);
-        // console.log(updatedRows);
     };
-
-    const [errorMessage, setErrorMessage] = useState('');
-    const suggestionsArray = ['INK', 'Catterpiller', 'Printer', 'Pen', 'Paper'];
-    const handleBlur = (rowId, fieldName, value) => {
-        // alert(value)
-        if (!suggestionsArray.includes(value)) {
-            setErrorMessage('Invalid product name');
-        } else {
-            setErrorMessage('');
-        }
-    };
-    const [previewInvoice, setPreviewInvoice] = useState([
-        { productid: '1', productname: 'printers' },
-        { productid: '85672', productname: 'Phone' },
-        { productid: '564321', productname: 'caterpiller' },
-        { productid: '4568091', productname: 'epsilon machine' },
-        { productid: '876231', productname: 'Inks' }
-    ]);
     const handleSubmit = async () => {
         console.log(rows);
         console.log(inputValues);
-        try {
-            const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows });
-            alert(response.data.message);
-            setPreviewInvoice(response.data.message)
-        } catch (error) {
-            console.error('Error sending data:', error);
+        const hasEmptyValue = rows.some(row =>
+            Object.values(row).some(value => value === '')
+        );
+        const hasEmptyReciverId =
+            // inputValues.some(inputValues =>
+            Object.values(inputValues).some(value => value === '')
+        // );
+        if (hasEmptyReciverId) {
+            alert("Reciver Details can't be Empty");
+        } else {
+            if (hasEmptyValue) {
+                alert('Please fill in all fields in each row before submitting.');
+            } else {
+                // alert('Success');
+                try {
+                    const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows });
+                    alert(response.data.message);
+                    // setPreviewInvoice(response.data.message)
+                } catch (error) {
+                    console.error('Error sending data:', error);
+                }
+            }
         }
     }
 
     // input dropdown options
-    const [options, setOptions] = useState([]);
+    const [userNameoptions, setuserNameoptions] = useState([]);
     const [OptionsproductName, setOptionsproductName] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const dropDownUserResponse = await axios.post(`${API_URL}get/getUserList`, { inputValues });
+                const users = dropDownUserResponse.data.data.map(item => item.email);
+                setuserNameoptions(users);
                 const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
-                console.log(dropDownResponse.data.data);
-                const productIds = dropDownResponse.data.data.map(item => item.productid);
+                // console.log(dropDownResponse.data.data);
                 const productName = dropDownResponse.data.data.map(item => item.productname);
-                setOptions(productIds);
+                // setOptions(productIds);
                 setOptionsproductName(productName);
             } catch (error) {
                 console.error('Error in processing data:', error);
@@ -116,15 +125,9 @@ const InvoiceGenerator = () => {
 
         fetchData();
     }, [inputValues]);
-    // console.log(options);
-
-
     return (
         <>
             {/* Preview Modal Start */}
-            {/* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                Launch static backdrop modal
-            </button> */}
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content" style={{ padding: '0px', marginLeft: '-110px' }}>
@@ -133,8 +136,8 @@ const InvoiceGenerator = () => {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            {console.log(previewInvoice)}
-                            <Invoice previewInvoiceprop={previewInvoice} />
+                            {/* {console.log(rows)} */}
+                            <Invoice previewInvoiceprop={rows} />
                         </div>
                         <div class="modal-footer">
                             <CancelBtnComp dataBsDismiss="modal" />
@@ -159,10 +162,20 @@ const InvoiceGenerator = () => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        <TextField fullWidth label={customerName}
-                                            onChange={(e) => handleInputChangeInvoice(customerName, e.target.value)}
-                                            value={inputValues[customerName] || ''}
-                                        />
+                                        {customerName === 'UserId' ? (
+                                            <Autocomplete
+                                                options={userNameoptions}
+                                                onChange={(e, value) => handleInputChangeInvoice(customerName, value)}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} label={customerName} variant="outlined" />
+                                                )}
+                                            />
+                                        ) : (
+                                            <TextField fullWidth label={customerName}
+                                                onChange={(e) => handleInputChangeInvoice(customerName, e.target.value)}
+                                                value={inputValues[customerName] || ''}
+                                            />
+                                        )}
                                     </Grid>
                                 </React.Fragment>
                             ))}
@@ -182,8 +195,8 @@ const InvoiceGenerator = () => {
                             <TableHead>
                                 <TableRow>
                                     {/* <TableCell style={thead}>HSN Code</TableCell> */}
-                                    <TableCell style={thead}>Product Name</TableCell>
-                                    <TableCell style={thead}>Batch No</TableCell>
+                                    {/* <TableCell style={thead}>Batch No</TableCell> */}
+                                    <TableCell style={{ ...thead, ...pName }} >Product Name</TableCell>
                                     <TableCell style={thead}>Quantity</TableCell>
                                     <TableCell style={thead}>Discount</TableCell>
                                     <TableCell style={thead}>Total</TableCell>
@@ -194,16 +207,6 @@ const InvoiceGenerator = () => {
                                 {rows.map((row) => (
                                     <TableRow key={row.id}>
                                         <TableCell>
-                                            {/* <Autocomplete
-                                            options={options}
-                                            // getOptionLabel={(option) => option}
-                                            onChange={(e, value) => handleInputChange(row.id, 'productid', value)}
-                                            renderInput={(params) => (
-                                                <TextField {...params}
-                                                    // label="HSN" 
-                                                    variant="outlined" />
-                                            )}
-                                        /> */}
                                             <Autocomplete
                                                 options={OptionsproductName}
                                                 // getOptionLabel={(option) => option}
@@ -211,48 +214,21 @@ const InvoiceGenerator = () => {
                                                 renderInput={(params) => (
                                                     <TextField {...params}
                                                         // label="HSN" 
-                                                        variant="outlined" />
+                                                        variant="outlined"
+                                                    // error={isEmptyProductName} // Set error prop based on the empty status
+                                                    // helperText={isEmptyProductName ? 'This field is required' : ''}
+                                                    />
                                                 )}
                                             />
                                         </TableCell>
-                                        <TableCell>
+                                        {/* <TableCell>
                                             <TextField
                                                 list={`suggestions-${row.id}`}
                                                 value={row.col2}
                                                 onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
-                                                onBlur={(e) => handleBlur(row.id, 'Batch No', e.target.value)}
                                             />
-                                        </TableCell>
+                                        </TableCell> */}
 
-                                        {/* <TableCell>
-                                        <TextField
-                                            list={`suggestions-${row.id}`}
-                                            value={row.col2}
-                                            onChange={(e) => handleInputChange(row.id, 'productName', e.target.value)}
-                                            onBlur={(e) => handleBlur(row.id, 'productName', e.target.value)}
-                                        />
-                                        <datalist id={`suggestions-${row.id}`}
-                                            style={{ position: 'absolute', zIndex: 1, border: '1px solid #ccc', background: '#fff' }}
-                                        >
-                                            {suggestionsArray.map((suggestion, index) => (
-                                                <option key={index} value={suggestion} />
-                                            ))}
-                                        </datalist>
-                                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                                    </TableCell> */}
-                                        {/* <TableCell>
-                                        <Autocomplete
-                                            freeSolo
-                                            options={suggestionsArray}
-                                            value={row.col2}
-                                            onChange={(event, newValue) => handleInputChange(row.id, 'productName', newValue)}
-                                            onBlur={(e) => handleBlur(row.id, 'productName', e.target.value)}
-                                            renderInput={(params) => (
-                                                <TextField {...params} label="Product Name" margin="normal" variant="outlined" />
-                                            )}
-                                        />
-                                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                                    </TableCell> */}
                                         <TableCell>
                                             <TextField
                                                 type='number'
@@ -297,9 +273,9 @@ const InvoiceGenerator = () => {
                         <Grid item className='gap-4 d-flex'>
                             <CancelBtnComp />
 
-                            {/* <Button variant="outlined" color="primary" onClick={handleSubmit}>
+                            <Button variant="outlined" color="primary" onClick={handleSubmit}>
                                 Generate Invoice
-                            </Button> */}
+                            </Button>
                             <SplitButton />
                         </Grid>
                         <Grid item>

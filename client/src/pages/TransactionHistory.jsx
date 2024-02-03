@@ -22,8 +22,8 @@ const TransactionHistory = () => {
                     userid: userInfo.userid,
                 });
                 // Handle the response here, for example, set it to state or dispatch an action
-                console.log('Transaction History:', response.data.data);
-                if (response.data && response.data.data) {
+                // console.log("test :",response.data.status);
+                if (response.data.status) {
                     console.log('Transaction History:', response.data.data);
                     setData(response.data.data);
                 } else {
@@ -75,7 +75,7 @@ const TransactionHistory = () => {
                                                 {/* <td>{item.id}</td> */}
                                                 <TextField variant="standard" />
                                                 <td className='text-center'>{item.invoicedate}</td>
-                                                <td className='text-center'>{item.client}</td>
+                                                <td className='text-center'>{item.email}</td>
                                                 <td className='text-center'>
                                                     {item.amount}
                                                 </td>

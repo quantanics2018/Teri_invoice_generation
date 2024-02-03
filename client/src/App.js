@@ -69,7 +69,7 @@ const App = () => {
               <Routes>
                 {/* Staff module */}
                 <Route path='/Staff_Detials' element={<StaffDetails position={4} />} />
-                <Route path='/Staff_Detials/Edit_Staff_Detials/:userid' element={<EditDistributerDetails />} />
+                <Route path='/Staff_Detials/Edit_Staff_Detials/:useridEnc' element={<EditDistributerDetails />} />
                 <Route path='/Staff_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={4}/>} />
               </Routes>
             </div>
@@ -81,8 +81,19 @@ const App = () => {
               <Routes>
                 {/* Distributer module */}
                 <Route path='/Distributer_Detials' element={<StaffDetails position={2} />} />
-                <Route path='/Distributer_Detials/Edit_Distributer_Detials/:userid' element={<EditDistributerDetails />} />
+                <Route path='/Distributer_Detials/Edit_Distributer_Detials/:useridEnc' element={<EditDistributerDetails />} />
                 <Route path='/Distributer_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={2}/>} />
+              </Routes>
+            </div>
+          )}
+
+          {userInfo.customer > 0 && (
+            <div style={{ marginLeft: '50px' }}>
+              <Routes>
+                {/* D_Staff_Detials module */}
+                <Route path='/D_Staff_Detials' element={<StaffDetails position={5} />} />
+                <Route path='/D_Staff_Detials/Edit_D_Staff_Detials/:useridEnc' element={<EditDistributerDetails />} />
+                <Route path='/D_Staff_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={5}/>} />
               </Routes>
             </div>
           )}
@@ -92,7 +103,7 @@ const App = () => {
               <Routes>
                 {/* Customer module */}
                 <Route path='/Customer_Detials' element={<StaffDetails position={3} />} />
-                <Route path='/Customer_Detials/Edit_Customer_Detials/:userid' element={<EditDistributerDetails />} />
+                <Route path='/Customer_Detials/Edit_Customer_Detials/:useridEnc' element={<EditDistributerDetails />} />
                 <Route path='/Customer_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={3}/>} />
               </Routes>
             </div>
@@ -128,7 +139,7 @@ const App = () => {
           <Routes>
             <Route path='ProfilePage' element={<ProfilePage />} />
             <Route path='feedback' element={<FeedbackForm />} />
-            <Route path='Invoice' element={<Invoice />} />
+            {/* <Route path='Invoice' element={<Invoice />} /> */}
           </Routes>
         </div>
       )}
@@ -137,7 +148,7 @@ const App = () => {
           <Route path='/' element={<Login />} />
           {/* <Route path='/' element={'empty route'} /> */}
           {/* <Route path='/UpdatePassword' element={<UpdatePassword />} /> */}
-          <Route path='/UpdatePassword/:encryptedtext' element={<UpdatePassword />} />
+          <Route path='/UpdatePassword' element={<UpdatePassword />} />
         </Routes>
        {/* )}  */}
     </BrowserRouter>
