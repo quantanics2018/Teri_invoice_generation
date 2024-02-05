@@ -102,12 +102,18 @@ const InvoiceGenerator = () => {
         setCurrentRowId((prevRowId) => prevRowId - 1);
         setRows(updatedRows);
     };
+    const deleteRowFirst = (id) => {
+        const updatedRows = rows.map((row) =>
+            row.id === id ? { ...row,hsncode: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' } : row
+        );
+        setRows(updatedRows);
+        sethsncodestate('')
+        setbatchnostate('')
+        setquantitystate('')
+        setdiscountstate('')
+    };
     // setCurrentRowId(id);
-    // sethsncodestate('')
-    // setbatchnostate('')
-    // setquantitystate('')
-    // setdiscountstate('')
-    
+
     const handleInputChange = (id, column, value) => {
         const updatedRows = rows.map((row) =>
             row.id === id ? { ...row, [column]: value } : row
@@ -128,7 +134,7 @@ const InvoiceGenerator = () => {
     };
 
     const handleSubmit = async () => {
-        console.log(rows);
+        // console.log(rows);
         console.log(inputValues);
         const hasEmptyValue = rows.some(row =>
             Object.values(row).some(value => value === '')
@@ -172,13 +178,6 @@ const InvoiceGenerator = () => {
                 const productName = dropDownResponse.data.data.map(item => item.productname);
                 // setOptions(productIds);
                 setOptionsproductName(productName);
-                // const data = {
-                //     1: { productid: '1', batchno: '2', productname: 'printers' },
-                //     2: { productid: '85672', batchno: '1', productname: 'Phone' },
-                //     3: { productid: '564321', batchno: '1', productname: 'caterpillar' },
-                //     4: { productid: '4568091', batchno: '1', productname: 'epsilon machine' },
-                //     5: { productid: '876231', batchno: '1', productname: 'Inks' },
-                // };
 
             } catch (error) {
                 console.error('Error in processing data:', error);
@@ -187,6 +186,18 @@ const InvoiceGenerator = () => {
 
         fetchData();
     }, [inputValues]);
+
+    const [totalSum, setTotalSum] = useState();
+    const [totalQuantity, settotalQuantity] = useState();
+
+    useEffect(() => {
+        const totalSumValue = rows.map(item => parseFloat(item.Total)).reduce((sum, value) => sum + value, 0);
+        setTotalSum(totalSumValue);
+        const totalQuantityValue = rows.map(item => parseFloat(item.Quantity)).reduce((sum, value) => sum + value, 0);
+        settotalQuantity(totalQuantityValue);
+        console.log("total value", totalSumValue);
+    }, [rows]); // Include 'rows' in the dependency array
+
 
     const [hsncodestate, sethsncodestate] = useState('');
     const [batchnostate, setbatchnostate] = useState('');
@@ -219,7 +230,7 @@ const InvoiceGenerator = () => {
             } : row
         );
         setRows(updatedRows);
-        console.log("fortotal :", updatedRows);
+        // console.log("fortotal :", updatedRows);
     }
 
 
@@ -303,14 +314,14 @@ const InvoiceGenerator = () => {
                             </TableHead>
                             <TableBody>
                                 {rows.map((row) => (
-                                    <TableRow key={row.id} 
+                                    <TableRow key={row.id}
                                     // ref={currentRowid}
                                     >
                                         <TableCell>
                                             <TextField
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
                                                 list={`suggestions-${row.id}`}
-                                                value={row.col2}
+                                                value={row.hsncode}
                                                 onChange={(e) => handleInputChange(row.id, 'hsncode', e.target.value)}
                                                 onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
                                             />
@@ -319,7 +330,7 @@ const InvoiceGenerator = () => {
                                             <TextField
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
                                                 list={`suggestions-${row.id}`}
-                                                value={row.col3}
+                                                value={row.batchno}
                                                 onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
                                                 onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
                                             />
@@ -352,7 +363,7 @@ const InvoiceGenerator = () => {
                                             <TextField
                                                 type='number'
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
-                                                value={row.col5}
+                                                value={row.Quantity}
                                                 onChange={(e) => handleInputChange(row.id, 'Quantity', e.target.value)}
                                                 onBlur={() => setTotalValue(row.id, hsncodestate, batchnostate, quantitystate, discountstate)}
                                             />
@@ -361,7 +372,7 @@ const InvoiceGenerator = () => {
                                             <TextField
                                                 type='number'
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
-                                                value={row.col6}
+                                                value={row.Discount}
                                                 onChange={(e) => handleInputChange(row.id, 'Discount', e.target.value)}
                                                 onBlur={() => setTotalValue(row.id, hsncodestate, batchnostate, quantitystate, discountstate)}
                                                 InputProps={{
@@ -377,7 +388,8 @@ const InvoiceGenerator = () => {
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <Button disabled={currentRowId !== null && row.id !== currentRowId} onClick={() => { if (row.id !== 1) deleteRow(row.id); }} color="secondary">
+                                            <Button disabled={currentRowId !== null && row.id !== currentRowId} onClick={() => (row.id !== 1 ? deleteRow(row.id) : deleteRowFirst(row.id))}
+                                                color="secondary">
                                                 ❌
                                                 {/* ✔ */}
                                                 {/* <DeleteIcon /> */}
@@ -409,10 +421,10 @@ const InvoiceGenerator = () => {
                         <Grid item>
                             <div>
                                 <Typography variant="body1" display="inline" style={{ marginRight: theme.spacing(2) }}>
-                                    Total Amount: $1000
+                                    Total Amount: {totalSum ? totalSum : 0}
                                 </Typography>
                                 <Typography variant="body1" display="inline">
-                                    Total Quantity: 10
+                                    Total Quantity: {totalQuantity ? totalQuantity : 0}
                                 </Typography>
                             </div>
                         </Grid>
