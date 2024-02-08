@@ -18,137 +18,77 @@ ex : pan_number = "ABCDE1234F"
 
   "start": "nodemon ./services/QrGeneration.js",
 
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+{/* <div className="col-head display-flex device_action_dropdown_parent">
+                                    <div className="sts_icon"
+                                        onClick={() => handleIconClick(index)}
+                                    >
+                                        <Icon icon={ic_label_important} style={{ transform: rotatedIndex === index ? 'rotate(90deg)' : 'rotate(0)', color: rotatedIndex === index ? '#08c6cd' : 'lightgray', }} className='device_content_arrow' size={25} />
+                                    </div>
+                                    <div className='dropdownAll'>{(rotatedIndex === index) &&
+                                        (<div className='device_action_dropdown'>
+                                            <div className='display-flex device_action_dropdown1 dropdown_action'
+                                                onClick={() => Staff_Detials_edit_page(data.userid)}
+                                            >
+                                                <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
+                                                <div className='device_content_dropdown display-flex'
 
-const currencies = [
-  {
-    value: 'USD',
-    label: '$',
-  },
-  {
-    value: 'EUR',
-    label: '€',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
-];
+                                                >Edit
+                                                    {props.position === 2 &&
+                                                        " Distibutor "
+                                                    }
+                                                    {props.position === 3 &&
+                                                        " Customer "
+                                                    }
+                                                    {props.position === 4 &&
+                                                        " Staff "
+                                                    }
+                                                    {props.position === 5 &&
+                                                        " D_Staff "
+                                                    }
+                                                    Detials</div>
+                                            </div>
 
-export default function SelectTextFields() {
-  return (
-    <Box
-      component="form"
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <div>
-        <TextField
-          id="outlined-select-currency"
-          select
-          label="Select"
-          defaultValue="EUR"
-          helperText="Please select your currency"
-        >
-          {currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          id="outlined-select-currency-native"
-          select
-          label="Native select"
-          defaultValue="EUR"
-          SelectProps={{
-            native: true,
-          }}
-          helperText="Please select your currency"
-        >
-          {currencies.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </TextField>
-      </div>
-      <div>
-        <TextField
-          id="filled-select-currency"
-          select
-          label="Select"
-          defaultValue="EUR"
-          helperText="Please select your currency"
-          variant="filled"
-        >
-          {currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          id="filled-select-currency-native"
-          select
-          label="Native select"
-          defaultValue="EUR"
-          SelectProps={{
-            native: true,
-          }}
-          helperText="Please select your currency"
-          variant="filled"
-        >
-          {currencies.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </TextField>
-      </div>
-      <div>
-        <TextField
-          id="standard-select-currency"
-          select
-          label="Select"
-          defaultValue="EUR"
-          helperText="Please select your currency"
-          variant="standard"
-        >
-          {currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          id="standard-select-currency-native"
-          select
-          label="Native select"
-          defaultValue="EUR"
-          SelectProps={{
-            native: true,
-          }}
-          helperText="Please select your currency"
-          variant="standard"
-        >
-          {currencies.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </TextField>
-      </div>
-    </Box>
-  );
-}
+                                            <div className='display-flex device_action_dropdown2 dropdown_action'
+                                                onClick={() => updateUserStatus(data.userid, data.status, index)}
+                                                ref={modalRef}>
+                                                <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
+                                                {data.status == 1 ? (
+                                                    <div className='device_content_dropdown display-flex'
+                                                    >Inactivate
+                                                        {props.position === 2 &&
+                                                            " Distibutor "
+                                                        }
+                                                        {props.position === 3 &&
+                                                            " Customer"
+                                                        }
+                                                        {props.position === 4 &&
+                                                            " Staff "
+                                                        }
+                                                        {props.position === 5 &&
+                                                            " D_Staff "
+                                                        }
+                                                        {inactivateAlert && (
+                                                            <Example
+                                                                ConformMsg={() => {
+                                                                    alert("Test")
+                                                                }
+                                                                }
+                                                            />
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <div className='device_content_dropdown display-flex'
+                                                    >Activate {props.position === 4 &&
+                                                        "Staff "
+                                                        }
+                                                        {props.position === 2 &&
+                                                            "Distibutor "
+                                                        }
+                                                    </div>
+                                                )}
+
+                                            </div>
+                                        </div>
+                                        )}
+                                    </div>
+                                </div> */}

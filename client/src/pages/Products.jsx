@@ -121,40 +121,43 @@ const Products = () => {
         navigate(`Edit_Product_Detials/${data}`);
     }
     const [alldata, setAlldate] = useState([]);
-    useEffect(() => {
-        const userid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
-        // console.log(userid);
-        axios.post(`${API_URL}get/products`, { userid })
-            .then(response => {
-                setAlldate(response.data.data);
-                // console.log(response.data.data);
-            })
-            .catch(error => {
-                console.error("Error fetching user data:", error);
-            });
-    }, []);
-    // console.log(alldata);
-
-    const updateUserStatus = async (productid, currentstatus, index) => {
+    const fetchData = async () => {
         try {
-            // console.log(productid);
-            const response = await axios.put(`${API_URL}update/productremove`, {
-                productid: productid, status: currentstatus
-            });
-            // console.log(response.data.resStatus); 
-            if (response.data.qos === "success") {
-                setAlldate((prevData) => {
-                    const newData = [...prevData];
-                    newData[index].status = response.data.resStatus;
-                    return newData;
-                });
-                // console.log("success : ", alldata)
-            }
+            const userid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
+            const response = await axios.post(`${API_URL}get/products`, { userid });
+            setAlldate(response.data.data);
         } catch (error) {
-            console.error('Error updating user status:', error);
+            console.error("Error fetching user data:", error);
         }
-        const userInfoString = sessionStorage.getItem("UserInfo");
-        const userInfo = JSON.parse(userInfoString);
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const currentUserid = userInfo.userid
+    const updateUserStatus = async (productdetial, currentstatus, index) => {
+        const conformation = window.confirm("Are You Sure  Want To Remove This Product?");
+        if (conformation) {
+            try {
+                // console.log(productid);
+                const response = await axios.put(`${API_URL}update/productremove`, {
+                    productDetial: productdetial, currentUserId: currentUserid, status: currentstatus
+                });
+                // console.log(response); 
+                if (response.data.qos === "success") {
+                    setAlldate((prevData) => {
+                        const newData = [...prevData];
+                        newData[index].status = response.data.resStatus;
+                        return newData;
+                    });
+                    fetchData();
+                }
+            } catch (error) {
+                console.error('Error updating user status:', error);
+            }
+        }
+        // const userInfoString = sessionStorage.getItem("UserInfo");
+        // const userInfo = JSON.parse(userInfoString);
     }
     const [editableIndex, setEditableIndex] = useState(null);
     const updateInDb = async (id, quantity, index) => {
@@ -421,12 +424,12 @@ const Products = () => {
                                                 <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
                                                 {data.status == 1 ? (
                                                     <div className='device_content_dropdown display-flex'
-                                                        onClick={() => updateUserStatus(data.productid, 0, index)}
+                                                        onClick={() => updateUserStatus(data, 0, index)}
                                                     >Inactivate Product
                                                     </div>
                                                 ) : (
                                                     <div className='device_content_dropdown display-flex'
-                                                        onClick={() => updateUserStatus(data.productid, 1, index)}
+                                                        onClick={() => updateUserStatus(data, 1, index)}
                                                     >Activate Product
                                                     </div>
                                                 )}

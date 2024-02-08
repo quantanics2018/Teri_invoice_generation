@@ -12,19 +12,45 @@ import {
   Snackbar,
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+import { API_URL } from '../config';
+import axios from 'axios';
 
 const FeedbackForm = () => {
   const [feedback, setFeedback] = useState('');
   const [rating, setRating] = useState('');
+  const [resAlert, setresAlert] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const userInfoString = sessionStorage.getItem("UserInfo");
+  const userInfo = JSON.parse(userInfoString);
+  const currentuserId = userInfo.userid;
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Feedback:', feedback);
-    console.log('Rating:', rating);
+    const isValidfeedback = feedback.trim() !== '';
+    if (isValidfeedback) {
+      try {
+        const response = await axios.post(`${API_URL}add/feedback`, {
+          feedback, currentuserId
+        });
+        if (response.data.status) {
+          console.log('Transaction History:', response.data.message);
+          setresAlert(response.data.message)
+          setSubmitted(true);
+          // setData(response.data.data);
+        } else {
+          setresAlert(response.data.message)
+          setSubmitted(true);
+        }
+      } catch (error) {
+        console.error('Failed to Fetch Transaction History:', error.message);
+      }
+    } else {
+      alert("Feedback form cant be empty")
+    }
+    // console.log('Feedback:', feedback);
+    // console.log('Rating:', rating);
     setFeedback('');
     setRating('');
-    setSubmitted(true);
   };
 
   const handleSnackbarClose = () => {
@@ -47,7 +73,7 @@ const FeedbackForm = () => {
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
         />
-        <FormControl component="fieldset" margin="normal">
+        {/* <FormControl component="fieldset" margin="normal">
           <Typography variant="subtitle1">Rating</Typography>
           <RadioGroup
             row
@@ -60,14 +86,14 @@ const FeedbackForm = () => {
               <FormControlLabel key={value} value={value.toString()} control={<Radio />} label={value.toString()} />
             ))}
           </RadioGroup>
-        </FormControl>
+        </FormControl> */}
         <Button type="submit" variant="contained" color="primary">
           Submit Feedback
         </Button>
       </form>
       <Snackbar open={submitted} autoHideDuration={3000} onClose={handleSnackbarClose}>
         <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-          Thank you for your feedback!
+          {resAlert}
         </MuiAlert>
       </Snackbar>
     </Container>

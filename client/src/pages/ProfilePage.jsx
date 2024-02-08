@@ -106,7 +106,7 @@ const ProfilePage = () => {
                         </CardContent>
                     </Card>
 
-                    <Card style={{ marginTop: 20 }}>
+                    {/* <Card style={{ marginTop: 20 }}>
                         <CardContent>
                             <Typography variant="h6" style={{ marginBottom: 20 }}>Additional Information</Typography>
                             <form>
@@ -126,7 +126,7 @@ const ProfilePage = () => {
                                 </Grid>
                             </form>
                         </CardContent>
-                    </Card>
+                    </Card> */}
                 </Grid>
             </Grid>
         </Container>

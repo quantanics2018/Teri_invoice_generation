@@ -28,6 +28,8 @@ import axios from 'axios';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
 import Example from '../components/Example';
 import TextField from '@mui/material/TextField';
+import { Box, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 
 const Add_Products = () => {
@@ -114,36 +116,76 @@ const Add_Products = () => {
             // Addto: ''
         })
     }
+    const [submitted, setSubmitted] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
+    const [resAlert, setresAlert] = useState(null)
+
     // validation
     const handleClick = async () => {
         const isValidhsncode = /^[0-9]+$/.test(postData.hsncode);
+        const isValidbatchno = /^[0-9]+$/.test(postData.batchno);
+        const isValidproductname = (postData.productname.trim() !== '');
+        const isValidQuantityNo = /^[0-9]+$/.test(postData.quantity);
+        const isValidpriceperitem = /^[0-9]+$/.test(postData.priceperitem);
+        const isValidCGST = /^[0-9]+$/.test(postData.CGST);
+        const isValidSGCT = /^[0-9]+$/.test(postData.SGCT);
         // console.log(isValidhsncode, userInfo.userid);
         // console.log(postData);
-        if (isValidhsncode) {
+        if (isValidhsncode & isValidbatchno & isValidproductname & isValidproductname & isValidQuantityNo & isValidpriceperitem & isValidCGST & isValidSGCT) {
             try {
                 const response = await axios.post(`${API_URL}add/products`, { productdetial: postData, updator: userInfo.userid });
                 if (response.data.status) {
-                    handleClear()
-                    alert(response.data.message);
+                    handleClear();
+                    // alert(response.data.message);
+                    setresAlert(response.data.message);
+                    setSubmitted(true);
+                    if (response.data.status) {
+                        setTimeout(() => {
+                            handleClear();
+                            navigate(-1);
+                        }, 2000);
+                    }
                 } else {
-                    alert(response.data.message)
+                    // alert(response.data.message);
+                    setresAlert(response.data.message);
+                    setSubmitted(true);
                 }
             } catch (error) {
                 console.error('Error sending data:', error);
             }
         }
         else {
-            if (isValidhsncode == false) {
+            if (isValidhsncode === false) {
                 alert("Enter a valid HSN Code")
+            }
+            else if (isValidbatchno === false) {
+                alert("Enter a valid Batch Number")
+            }
+            else if (isValidproductname === false) {
+                alert("Enter a valid Product Name")
+            }
+            else if (isValidQuantityNo === false) {
+                alert("Enter a valid Quantity Number")
+            }
+            else if (isValidpriceperitem === false) {
+                alert("Enter a valid Price Detail")
+            }
+            else if (isValidCGST === false) {
+                alert("Enter a valid CGST")
+            }
+            else if (isValidSGCT === false) {
+                alert("Enter a valid SGST")
             }
         }
     }
     const inputFields = [
         { label: "HSN Code", name: "hsncode", value: postData.hsncode, icon: ic_home_work },
+        { label: "Batch No", name: "batchno", value: postData.batchno, icon: person },
         { label: "Product Name", name: "productname", value: postData.productname, icon: person },
         { label: "Quantity", name: "quantity", value: postData.quantity, icon: person },
         { label: "Price Per Item", name: "priceperitem", value: postData.priceperitem, icon: person },
-        { label: "Batch No", name: "batchno", value: postData.batchno, icon: person },
         { label: "CGST", name: "CGST", value: postData.CGST, icon: person },
         { label: "SGCT", name: "SGCT", value: postData.SGCT, icon: person }
         // { label: "Add To", name: "Addto",value: postData.Addto, icon: person },
@@ -151,6 +193,15 @@ const Add_Products = () => {
 
     return (
         <div className='Add_device1 '>
+            {/* Snack bar */}
+            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
             <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable custom-modal-dialog">
                     <div className="modal-content width_of_model height_of_modal_content">
@@ -185,8 +236,8 @@ const Add_Products = () => {
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
+                                            <Box className="inputs-group display-flex">
+                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 {/* <input
                                                     type="text"
                                                     className="form-control-loc"
@@ -205,7 +256,7 @@ const Add_Products = () => {
                                                     id={`input${index + 1}`}
                                                 />
                                                 {/* Add error handling if needed */}
-                                            </div>
+                                            </Box>
                                         </div>
                                     </div>
                                 ))}
@@ -215,8 +266,8 @@ const Add_Products = () => {
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
+                                            <Box className="inputs-group display-flex">
+                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 {/* <input
                                                     type="text"
                                                     className="form-control-loc"
@@ -235,7 +286,7 @@ const Add_Products = () => {
                                                     id={`input${index + 1}`}
                                                 />
                                                 {/* Add error handling if needed */}
-                                            </div>
+                                            </Box>
                                         </div>
                                     </div>
                                 ))}

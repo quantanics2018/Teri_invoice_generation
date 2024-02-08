@@ -1943,7 +1943,7 @@ input[type="checkbox"] {
     height: 90vh;
     display: flex;
     justify-content: center;
-    background-color: #f3fbff;
+    /* background-color: #f3fbff; */
     padding: 1rem;
     /* align-items: center; */
 }
@@ -1956,22 +1956,16 @@ input[type="checkbox"] {
 
 }
 
-.forScroll {
+.forScroll1 {
     overflow-y: scroll;
     scrollbar-width: thin;
-    /* For Firefox */
     scrollbar-color: transparent transparent;
-    /* For Firefox */
-
-    /* For WebKit browsers (Chrome, Safari) */
     &::-webkit-scrollbar {
         width: 12px;
     }
-
     &::-webkit-scrollbar-thumb {
         background-color: transparent;
     }
-
 }
 
 .invoicecontent {
@@ -2633,3 +2627,9 @@ footer {
 }
 
 /* End Invoice Generator */
+
+/* Start TransactionHistory */
+.actionTrans{
+    justify-content:space-between ;
+}
+/* End TransactionHistory */

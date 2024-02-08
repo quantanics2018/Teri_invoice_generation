@@ -23,8 +23,11 @@ import {
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import CryptoJS from 'crypto-js';
+import ActionButton from '../components/ActionButton';
 
 const Staff_Detials = (props) => {
+    const { Positionid_val , position} = props;
+    console.log(Positionid_val);
     // console.log(props.position);
     //states
     const [rotatedIndex, setRotatedIndex] = useState(null);
@@ -48,7 +51,7 @@ const Staff_Detials = (props) => {
     // //Navigate to Add Device Page
     const navigate = useNavigate();
     const handleclick = () => {
-        navigate(`Add_User_Detials`);
+        navigate(`Add_User_Details`);
     }
     const [alldata, setAlldate] = useState([]);
 
@@ -87,16 +90,16 @@ const Staff_Detials = (props) => {
         // console.log(encryptedText);
         const encodedText = encodeURIComponent(encryptedText);
         if (props.position === 2) {
-            navigate(`Edit_Distributer_Detials/${encodedText}`);
+            navigate(`Edit_Distributer_Details/${encodedText}`);
         }
         if (props.position === 3) {
-            navigate(`Edit_Customer_Detials/${encodedText}`);
+            navigate(`Edit_Customer_Details/${encodedText}`);
         }
         if (props.position === 4) {
-            navigate(`Edit_Staff_Detials/${encodedText}`);
+            navigate(`Edit_Staff_Details/${encodedText}`);
         }
         if (props.position === 5) {
-            navigate(`Edit_D_Staff_Detials/${encodedText}`);
+            navigate(`Edit_D_Staff_Details/${encodedText}`);
         }
 
     }
@@ -197,7 +200,6 @@ const Staff_Detials = (props) => {
                         </div>
                         <div class="modal-body">
                             {/* <EditDistributerDetails /> */}
-                            h
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -213,16 +215,16 @@ const Staff_Detials = (props) => {
                     <div className="row_with_count_status">
                         <span className='module_tittle'>
                             {props.position === 5 &&
-                                "D_Staff Detials"
+                                "D_Staff Details"
                             }
                             {props.position === 4 &&
-                                "Staff Detials"
+                                "Staff Details"
                             }
                             {props.position === 3 &&
-                                "Customer Detials"
+                                "Customer Details"
                             }
                             {props.position === 2 &&
-                                "Distibutor Detials"
+                                "Distibutor Details"
                             }
                         </span>
                     </div>
@@ -322,8 +324,8 @@ const Staff_Detials = (props) => {
                         </div> */}
                     </div>
 
-
-                    <div className='col-headings'>
+                    {(Positionid_val === 4 || Positionid_val === 5) ? (
+                        <div className='col-headings'>
                         <div className="col-head">Registration ID</div>
                         <div className="col-head">
                             {props.position === 2 && "Distributor "
@@ -336,109 +338,69 @@ const Staff_Detials = (props) => {
                             }
                             Name
                         </div>
-
                         <div className="col-head">Aadhar Number</div>
-                        <div className="col-head">PAN Number</div>
-                        <div className="col-head">Postal Code </div>
                         <div className="col-head">Email</div>
                         <div className="col-head">Contact Number</div>
                         <div className="col-head">Action</div>
                     </div>
+                    ) : (
+                        <div className='col-headings'>
+                            <div className="col-head">Registration ID</div>
+                            <div className="col-head">
+                                {props.position === 2 && "Distributor "
+                                }
+                                {props.position === 3 && "Customer "
+                                }
+                                {props.position === 4 && "Staff "
+                                }
+                                {props.position === 5 && "D_Staff "
+                                }
+                                Name
+                            </div>
+
+                            <div className="col-head">Aadhar Number</div>
+                            <div className="col-head">PAN Number</div>
+                            <div className="col-head">Postal Code </div>
+                            <div className="col-head">Email</div>
+                            <div className="col-head">Contact Number</div>
+                            <div className="col-head">Action</div>
+                        </div>
+                    )}
+
 
                     <div className="scroll_div">
                         {alldata.map((data, index) => (
-                            <div className="datas skeleton-block">
-                                <div className="col-head">{data.userid}</div>
-                                <div className="col-head">{data.fname}</div>
-                                <div className="col-head">{data.aadhar}</div>
-                                <div className="col-head">{data.pan}</div>
-                                <div className="col-head">{data.ppostalcode}</div>
-                                <div className="col-head" title={data.email}>{data.email}</div>
-                                <div className="col-head">
-                                    {data.phno}
-                                </div>
-                                <div className="col-head display-flex device_action_dropdown_parent">
-                                    <div className="sts_icon"
-                                        onClick={() => handleIconClick(index)}
-                                    >
-                                        <Icon icon={ic_label_important} style={{ transform: rotatedIndex === index ? 'rotate(90deg)' : 'rotate(0)', color: rotatedIndex === index ? '#08c6cd' : 'lightgray', }} className='device_content_arrow' size={25} />
-                                    </div>
-                                    <div className='dropdownAll'>{(rotatedIndex === index) &&
-                                        (<div className='device_action_dropdown'>
-                                            <div className='display-flex device_action_dropdown1 dropdown_action'
-                                                // data-bs-toggle="modal" data-bs-target="#EditDetials"
-                                                onClick={() => Staff_Detials_edit_page(data.userid)}
-                                            >
-                                                <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
-                                                <div className='device_content_dropdown display-flex'
-
-                                                >Edit
-                                                    {props.position === 2 &&
-                                                        " Distibutor "
-                                                    }
-                                                    {props.position === 3 &&
-                                                        " Customer "
-                                                    }
-                                                    {props.position === 4 &&
-                                                        " Staff "
-                                                    }
-                                                    {props.position === 5 &&
-                                                        " D_Staff "
-                                                    }
-                                                    Detials</div>
-                                            </div>
-
-                                            <div className='display-flex device_action_dropdown2 dropdown_action'
-                                                onClick={() => updateUserStatus(data.userid, data.status, index)}
-                                                ref={modalRef}>
-                                                <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
-                                                {data.status == 1 ? (
-                                                    <div className='device_content_dropdown display-flex'
-                                                    // onClick={() => setInactivateAlert(true)}
-                                                    // updateUserStatus(data.userid, 0, index
-                                                    >Inactivate
-                                                        {props.position === 2 &&
-                                                            " Distibutor "
-                                                        }
-                                                        {props.position === 3 &&
-                                                            " Customer"
-                                                        }
-                                                        {props.position === 4 &&
-                                                            " Staff "
-                                                        }
-                                                        {props.position === 5 &&
-                                                            " D_Staff "
-                                                        }
-                                                        {inactivateAlert && (
-                                                            <Example
-                                                                // ConformMsg={updateUserStatus(data.userid, data.status, index)}
-                                                                ConformMsg={() => {
-                                                                    alert("hai hu")
-                                                                    // updateUserStatusInactivate(data.userid, data.status, index);
-                                                                }
-                                                                }
-                                                            />
-                                                            // ConformMsg={() => updateUserStatus(data.userid, 1, index)}
-                                                        )}
-                                                    </div>
-                                                ) : (
-                                                    <div className='device_content_dropdown display-flex'
-                                                    // onClick={() => updateUserStatus(data.userid, 1, index)}
-                                                    >Activate {props.position === 4 &&
-                                                        "Staff "
-                                                        }
-                                                        {props.position === 2 &&
-                                                            "Distibutor "
-                                                        }
-                                                    </div>
-                                                )}
-
-                                            </div>
+                            (Positionid_val === 4 || Positionid_val === 5) ? (
+                                <div>
+                                    <div className="datas skeleton-block">
+                                        <div className="col-head">{data.userid}</div>
+                                        <div className="col-head">{data.fname}</div>
+                                        <div className="col-head">{data.aadhar}</div>
+                                        <div className="col-head" title={data.email}>{data.email}</div>
+                                        <div className="col-head">
+                                            {data.phno}
                                         </div>
-                                        )}
+                                        <ActionButton fun_to_rotate_btn={() => handleIconClick(index)} index={index} rotatedIndex={rotatedIndex} data={data} updateUserStatus={() => updateUserStatus(data.userid, data.status, index)} props={props} StaffDetialsEditPage={() => Staff_Detials_edit_page(data.userid)} />
                                     </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <div>
+                                    <div className="datas skeleton-block">
+                                        <div className="col-head">{data.userid}</div>
+                                        <div className="col-head">{data.fname}</div>
+                                        <div className="col-head">{data.aadhar}</div>
+                                        <div className="col-head">{data.pan}</div>
+                                        <div className="col-head">{data.ppostalcode}</div>
+                                        <div className="col-head" title={data.email}>{data.email}</div>
+                                        <div className="col-head">
+                                            {data.phno}
+                                        </div>
+                                        <ActionButton fun_to_rotate_btn={() => handleIconClick(index)} index={index} rotatedIndex={rotatedIndex} data={data} updateUserStatus={() => updateUserStatus(data.userid, data.status, index)} props={props} StaffDetialsEditPage={() => Staff_Detials_edit_page(data.userid)} />
+
+                                    </div>
+                                </div>
+                            )
+
                         ))}
                     </div>
                 </div>

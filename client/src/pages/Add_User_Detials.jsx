@@ -185,7 +185,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             setTimeout(() => {
                                 handleClear();
                                 navigate(-1);
-                            }, 3000);
+                            }, 1000);
                         }
                     } catch (error) {
                         console.error('Error sending data:', error);
@@ -433,10 +433,20 @@ const Add_User_Detials = ({ Positionid_val }) => {
         { label: 'Invoice Generator', disableHead: false },
         { label: 'Invoice PaySlip', disableHead: false },
     ]
+    console.log(Positionid_val);
     let updatedAccessHead = [...accessHead];
     console.log(userInfo.position === 'manifacture');
     if (userInfo.position === 'manifacture') {
-        const labelsToUpdate = ['D_Staff', 'Customer'];
+        let labelsToUpdate
+        if (Positionid_val === 4) {
+            labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
+        }
+        else if (Positionid_val === 2) {
+            labelsToUpdate = ['Staff', 'Distributor'];
+        }
+        else {
+            labelsToUpdate = ['D_Staff', 'Customer'];
+        }
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -508,11 +518,21 @@ const Add_User_Detials = ({ Positionid_val }) => {
             }));
         }
         else if (userInfo.position === 'manifacture') {
-            setAccessValues((prevValues) => ({
-                ...prevValues,
-                Customer: 'No access',
-                D_Staff: 'No access'
-            }));
+            if (Positionid_val === 4) {
+                setAccessValues((prevValues) => ({
+                    ...prevValues,
+                    Staff: 'No access',
+                    Customer: 'No access',
+                    D_Staff: 'No access'
+                }));
+            }
+            if (Positionid_val === 2) {
+                setAccessValues((prevValues) => ({
+                    ...prevValues,
+                    Staff: 'No access',
+                    Distributor: 'No access'
+                }));
+            }
         }
     }, []);
 
@@ -730,6 +750,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         <div className="device_info uppercase light-grey mb-loc-5">
                             User info
                         </div>
+
                         <div className="input-boxes">
                             <div className="cmpny_and_site_name display-flex">
                                 {inputFields.slice(0, 4).map((field, index) => (
@@ -775,7 +796,6 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                     </div>
                                 ))}
                             </div>
-
 
                             <div className="dsa_row_3 display-flex">
                                 {inputFields.slice(4, 8).map((field, index) => (
@@ -853,11 +873,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 ))}
                             </div>
                         </div>
+
                         {!(Positionid_val === 4 || Positionid_val === 5) && (
                             <div className="device_info uppercase light-grey mb-loc-5">
                                 UPI Payment Details
                             </div>
                         )}
+
                         <div className="dsa_row_3 display-flex">
                             {inputFields.slice(10, 13).map((field, index) => (
                                 <div key={index} className="inputbox display-flex input">
@@ -928,6 +950,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 Address Details
                             </div>
                         )}
+
                         <div className="dsa_row_3 display-flex">
                             {inputFields.slice(14, 18).map((field, index) => (
                                 <div key={index} className="inputbox display-flex input">

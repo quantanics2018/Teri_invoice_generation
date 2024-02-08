@@ -2,6 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { styled, useTheme } from '@mui/system';
 import { Container, TextField, Button, Grid, Paper, Typography, Select, MenuItem, Autocomplete, InputAdornment } from '@mui/material';
 import { useState } from "react";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js';
+import ReactDOMServer from 'react-dom/server'; 
 import {
     Table,
     TableBody,
@@ -15,7 +19,9 @@ import axios from 'axios';
 import { API_URL } from '../config';
 import SplitButton from '../components/SplitButton';
 import Invoice from '../components/Invoice';
-import { CancelBtn } from '../assets/style/cssInlineConfig';
+import { CancelBtn, SaveBtn } from '../assets/style/cssInlineConfig';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -38,7 +44,10 @@ const InvoiceGenerator = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const theme = useTheme();
+    const navigate = useNavigate();
+
     const [selectedDate, handleDateChange] = useState(new Date());
+    const [loading, setLoading] = useState(false);
     const customerNames = ['Date', 'UserId'];
     const [inputValues, setInputValues] = useState({
         Date: "",
@@ -104,7 +113,7 @@ const InvoiceGenerator = () => {
     };
     const deleteRowFirst = (id) => {
         const updatedRows = rows.map((row) =>
-            row.id === id ? { ...row,hsncode: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' } : row
+            row.id === id ? { ...row, hsncode: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' } : row
         );
         setRows(updatedRows);
         sethsncodestate('')
@@ -133,6 +142,31 @@ const InvoiceGenerator = () => {
         }
     };
 
+    // invoice htm send to server
+    const sendDataToServer = async () => {
+        try {
+            const htmlString = ReactDOMServer.renderToString(
+                <div className="InvoiceContainer">
+                    Replace with Invoice in Return
+                </div>
+            );
+
+            const response = await axios.post(`${API_URL}send-email/sendInvoice`, htmlString, {
+                headers: {
+                    'Content-Type': 'text/html',
+                },
+            });
+
+            if (response.status === 200) {
+                console.log('Mail sent successfully');
+            } else {
+                console.error('Failed to send data');
+            }
+        } catch (error) {
+            console.error('Error sending data:', error);
+        }
+    };
+
     const handleSubmit = async () => {
         // console.log(rows);
         console.log(inputValues);
@@ -140,7 +174,6 @@ const InvoiceGenerator = () => {
             Object.values(row).some(value => value === '')
         );
         const hasEmptyReciverId =
-            // inputValues.some(inputValues =>
             Object.values(inputValues).some(value => value === '')
         // );
         if (hasEmptyReciverId) {
@@ -151,9 +184,17 @@ const InvoiceGenerator = () => {
             } else {
                 // alert('Success');
                 try {
-                    const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows });
-                    alert(response.data.message);
+                    setLoading(true);
+                    const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows , totalValues:totalSum});
+                    if(response.data.status){
+                        await sendDataToServer();
+                        alert(response.data.message);
+                    }else{
+                        alert(response.data.message);
+                    }
+                    setLoading(false);
                     // setPreviewInvoice(response.data.message)
+                    navigate('/TransactionHistory');
                 } catch (error) {
                     console.error('Error sending data:', error);
                 }
@@ -211,6 +252,8 @@ const InvoiceGenerator = () => {
             .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
             .map((product) => product.productname)[0] || '';
 
+        console.log(value);
+
         const updatedRows = rows.map((row) =>
             row.id === id ? {
                 ...row, productName: value
@@ -220,10 +263,14 @@ const InvoiceGenerator = () => {
         console.log(updatedRows);
     }
     const setTotalValue = (id, Enteredhsncode, Enteredbatchno, enteredQuantity = 0, enteredDiscount = 0) => {
+        console.log("productList", id, Enteredhsncode, Enteredbatchno, enteredQuantity);
+
         const productPrice = productList
             .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
             .map((product) => product.priceperitem)[0] || '';
+
         console.log("price : ", productPrice);
+
         const updatedRows = rows.map((row) =>
             row.id === id ? {
                 ...row, Total: (enteredQuantity * productPrice) - ((enteredQuantity * productPrice) * enteredDiscount / 100)
@@ -234,23 +281,31 @@ const InvoiceGenerator = () => {
     }
 
 
+    // perform a invoice
+    const generatePDF = () => {
+        const input = document.getElementById('invoiceContent'); // Target the modal
+        html2pdf().from(input).save();
+    }
+
+
+
     return (
         <>
+         {loading &&  <Loader />}
             {/* Preview Modal Start */}
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style={{ padding: '0px', marginLeft: '-110px' }}>
+                    <div class="modal-content" style={{ padding: '0px', marginLeft: '-110px', height: '1300px' }}>
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            {/* {console.log(rows)} */}
+                        <div id="invoiceContent" class="modal-body">
                             <Invoice previewInvoiceprop={rows} />
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer gap-4">
                             <CancelBtnComp dataBsDismiss="modal" />
-                            {/* <button type="button" class="btn btn-primary">Understood</button> */}
+                            <Button variant="outlined" style={SaveBtn} onClick={generatePDF}>PDF</Button>
                         </div>
                     </div>
                 </div>
@@ -258,9 +313,9 @@ const InvoiceGenerator = () => {
             {/* Preview Modal End */}
             <div className='innercontent'>
                 <StyledPaper elevation={3}>
-                    <Typography variant="h5" align="center" gutterBottom>
+                    {/* <Typography variant="h5" align="center" gutterBottom>
                         Add Invoice
-                    </Typography>
+                    </Typography> */}
                     <form>
                         <Grid container spacing={2} style={{ justifyContent: 'center', alignItems: 'center' }}>
                             {customerNames.map((customerName, index) => (

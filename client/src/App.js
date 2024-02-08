@@ -68,9 +68,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Staff module */}
-                <Route path='/Staff_Detials' element={<StaffDetails position={4} />} />
-                <Route path='/Staff_Detials/Edit_Staff_Detials/:useridEnc' element={<EditDistributerDetails />} />
-                <Route path='/Staff_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={4}/>} />
+                <Route path='/Staff_Details' element={<StaffDetails position={4} Positionid_val={4} />} />
+                <Route path='/Staff_Details/Edit_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={4}/>} />
+                <Route path='/Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={4}/>} />
               </Routes>
             </div>
           )}
@@ -80,20 +80,20 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Distributer module */}
-                <Route path='/Distributer_Detials' element={<StaffDetails position={2} />} />
-                <Route path='/Distributer_Detials/Edit_Distributer_Detials/:useridEnc' element={<EditDistributerDetails />} />
-                <Route path='/Distributer_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={2}/>} />
+                <Route path='/Distributer_Details' element={<StaffDetails position={2} Positionid_val={2}/>} />
+                <Route path='/Distributer_Details/Edit_Distributer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={2}/>} />
+                <Route path='/Distributer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={2}/>} />
               </Routes>
             </div>
           )}
 
-          {userInfo.customer > 0 && (
+          {userInfo.d_staff > 0 && (
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* D_Staff_Detials module */}
-                <Route path='/D_Staff_Detials' element={<StaffDetails position={5} />} />
-                <Route path='/D_Staff_Detials/Edit_D_Staff_Detials/:useridEnc' element={<EditDistributerDetails />} />
-                <Route path='/D_Staff_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={5}/>} />
+                <Route path='/D_Staff_Details' element={<StaffDetails position={5} Positionid_val={5}/>} />
+                <Route path='/D_Staff_Details/Edit_D_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={5}/>} />
+                <Route path='/D_Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={5}/>} />
               </Routes>
             </div>
           )}
@@ -102,9 +102,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Customer module */}
-                <Route path='/Customer_Detials' element={<StaffDetails position={3} />} />
-                <Route path='/Customer_Detials/Edit_Customer_Detials/:useridEnc' element={<EditDistributerDetails />} />
-                <Route path='/Customer_Detials/Add_User_Detials' element={<AddUserDetails Positionid_val={3}/>} />
+                <Route path='/Customer_Details' element={<StaffDetails position={3} Positionid_val={3}/>} />
+                <Route path='/Customer_Details/Edit_Customer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={3}/>} />
+                <Route path='/Customer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={3}/>} />
               </Routes>
             </div>
           )}
@@ -146,8 +146,6 @@ const App = () => {
       {/* {(currentLoc === `${API_URL_CLIENT}` || currentLoc === `${API_URL_CLIENT}/UpdatePassword`) && ( */}
         <Routes>
           <Route path='/' element={<Login />} />
-          {/* <Route path='/' element={'empty route'} /> */}
-          {/* <Route path='/UpdatePassword' element={<UpdatePassword />} /> */}
           <Route path='/UpdatePassword' element={<UpdatePassword />} />
         </Routes>
        {/* )}  */}

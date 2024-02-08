@@ -160,15 +160,16 @@ async function addUser(req, res) {
     }
 }
 async function addInvoice(req, res) {
-    const { UserId, senderID,Date } = req.body.invoice;
+    const { UserId, senderID, Date } = req.body.invoice;
+    const totalSum = req.body.totalValues;
     const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
 
-    // console.log(invoiceItem);
-    // console.log("recivermail : ", recivermail);
-    // console.log("senderID", senderID);
+    console.log(totalSum);
+    console.log("recivermail : ", recivermail);
+    console.log("senderID", senderID);
     try {
-        const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1 and adminid=$2;', [recivermail,senderID]);
+        const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1 and adminid=$2;', [recivermail, senderID]);
         console.log(checkIsUsernameExist.rows);
         if (checkIsUsernameExist.rows != 0) {
             await userdbInstance.userdb.query('BEGIN');
@@ -180,8 +181,8 @@ async function addInvoice(req, res) {
             // console.log(reciverID);
             const InvoiceTableResult = await userdbInstance.userdb.query(
                 `INSERT INTO public.invoice(
-                    senderid,receiverid,status,date)
-                VALUES ($1,$2,$3,$4) RETURNING invoiceid;`, [senderID, reciverID, 0,Date]
+                    senderid,receiverid,senderstatus,date,total)
+                VALUES ($1,$2,$3,$4,$5) RETURNING invoiceid;`, [senderID, reciverID, 0, Date, totalSum]
             );
             // console.log(InvoiceTableResult.rows[0].invoiceid);
             const invoiceid = InvoiceTableResult.rows[0].invoiceid;
@@ -225,7 +226,7 @@ async function addInvoice(req, res) {
                 const InvoiceItemTableResult = await userdbInstance.userdb.query(
                     `INSERT INTO public.invoiceitem(
                     invoiceid,productid,quantity,discountperitem,cost)
-                    VALUES ($1,$2,$3,$4,$5);`, [invoiceid, item.productid, item.Quantity,item.Discount,item.Total ]
+                    VALUES ($1,$2,$3,$4,$5);`, [invoiceid, item.productid, item.Quantity, item.Discount, item.Total]
                 );
             }
             await userdbInstance.userdb.query('COMMIT');
@@ -244,30 +245,63 @@ async function addProduct(req, res) {
     // const { hsncode,quantity,priceperitem,userid } = req.body;
     const { hsncode, productname, quantity, priceperitem, batchno, CGST, SGCT } = req.body.productdetial;
     const { updator } = req.body;
-    // console.log(hsncode, quantity, priceperitem, productname, updator);
+    console.log(hsncode, quantity, priceperitem, productname, updator);
 
     try {
-        await userdbInstance.userdb.query('BEGIN');
-        const insertProductResult = await userdbInstance.userdb.query(`INSERT INTO public.products(
-            productid, quantity, priceperitem, "Lastupdatedby",productname,belongsto,status,batchno,cgst,sgst)
-            VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10);`, [hsncode, quantity, priceperitem, updator, productname, updator, '1', batchno, CGST, SGCT]);
-        await userdbInstance.userdb.query('COMMIT');
-        if (insertProductResult.rowCount === 1) {
-            res.json({ message: "Data inserted Successfully", status: true });
-            // res.json({ message: "Successfully Updated" });
-        } else {
-            res.status(404).json({ message: "User not found", status: false });
+        const CheckForProductExistance = await userdbInstance.userdb.query(`select * from products where productid=$1 and batchno=$2 and belongsto=$3;`, [hsncode, batchno, updator]);
+        console.log(CheckForProductExistance.rows.length);
+        if (CheckForProductExistance.rows.length > 0) {
+            res.json({ message: "Product Already Exist!", status: false })
+        }
+        else {
+            await userdbInstance.userdb.query('BEGIN');
+            const insertProductResult = await userdbInstance.userdb.query(`INSERT INTO public.products(
+                productid, quantity, priceperitem, "Lastupdatedby",productname,belongsto,status,batchno,cgst,sgst)
+                VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10);`, [hsncode, quantity, priceperitem, updator, productname, updator, '1', batchno, CGST, SGCT]);
+            await userdbInstance.userdb.query('COMMIT');
+            if (insertProductResult.rowCount === 1) {
+                res.json({ message: "Data inserted Successfully", status: true });
+            } else {
+                res.status(404).json({ message: "User not found", status: false });
+            }
         }
 
     } catch (error) {
         console.error('Error executing database query:', error);
-        if (error.code === '23505') { // PostgreSQL error code for unique violation
+        if (error.code === '23505') {
             res.json({ message: "Unique constraint violation: Duplicate entry", status: false });
         } else {
-            // Handle other types of errors
             res.status(500).json({ message: "Internal Server Error", status: false });
         }
     }
 }
 
-module.exports = { addUser, addInvoice, addProduct };
+async function addfeedback(req, res) {
+    // const { hsncode,quantity,priceperitem,userid } = req.body;
+    const feedback = req.body.feedback;
+    const currentuserId = req.body.currentuserId;
+    // currentuserId
+    console.log(feedback);
+
+    try {
+        await userdbInstance.userdb.query('BEGIN');
+        const insertProductResult = await userdbInstance.userdb.query(`INSERT INTO public.feedback(
+            userid, feedback)
+                VALUES ($1, $2);`, [feedback, currentuserId]);
+        await userdbInstance.userdb.query('COMMIT');
+        if (insertProductResult.rowCount === 1) {
+            res.json({ message: "Thank you! for your Feedback", status: true });
+        } else {
+            res.status(404).json({ message: "User not found", status: false });
+        }
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        if (error.code === '23505') {
+            res.json({ message: "Unique constraint violation: Duplicate entry", status: false });
+        } else {
+            res.status(500).json({ message: "Internal Server Error", status: false });
+        }
+    }
+}
+
+module.exports = { addUser, addInvoice, addProduct, addfeedback };

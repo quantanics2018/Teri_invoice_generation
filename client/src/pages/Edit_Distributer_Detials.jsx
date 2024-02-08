@@ -27,25 +27,22 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Snackbar } from '@mui/material';
+import { Box, Button, FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Snackbar } from '@mui/material';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { SaveBtn } from '../assets/style/cssInlineConfig';
 import MuiAlert from '@mui/material/Alert';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import CryptoJS from 'crypto-js';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-const Edit_Distributer_Detials = () => {
 
-    // let useridEnc = useParams();
-    let useridEnc  = useParams();
-    console.log(useridEnc);
+const Edit_Distributer_Detials = ({ Positionid_val }) => {
+    let useridEnc = useParams();
     let userid;
-    // const [userid, setUserId] = useState(null);
     useEffect(() => {
         const decryptUserId = async () => {
             try {
-                // await setUserId(userid);
-                console.log("userid : ",useridEnc.useridEnc);
+                console.log("userid : ", useridEnc.useridEnc);
                 const secretKey = `${SECRET_KEY}`;
                 const decodedEncryptId = decodeURIComponent(useridEnc.useridEnc);
                 const bytes = CryptoJS.AES.decrypt(decodedEncryptId, secretKey);
@@ -101,7 +98,7 @@ const Edit_Distributer_Detials = () => {
 
     const all_data_fun = (data) => {
         if (data) {
-            // console.log(data);
+            console.log(data);
             const item = data.data;
             const AccessItem = data.getuserAccessControl;
             setInputValues((prevValues) => ({
@@ -132,6 +129,7 @@ const Edit_Distributer_Detials = () => {
                 PostalCode2: item.cpostalcode
             }));
             // For staff
+            console.log(AccessItem.distributer);
             if (AccessItem.staff == 0) {
                 AccessItem.staff = 'No access'
             }
@@ -273,98 +271,145 @@ const Edit_Distributer_Detials = () => {
     // validation
     const handle_save = async (e) => {
         e.preventDefault();
-        // const isValidOrgName = inputValues.OrganizationName.trim() !== '';
-        // const isValidbussinessType = inputValues.bussinessType.trim() !== '';
-        // alert(isValidOrgName);
-        const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(inputValues.gstNumber)
-        const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(inputValues.panNumber)
+        // top level
+        const isValiduserid = inputValues.userid.trim() !== '';
         const isValidaadharNo = /^\d{12}$/.test(inputValues.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(inputValues.fName)
+        const isValidlName = /^[A-Za-z\s'-]+$/.test(inputValues.lName)
         const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(inputValues.email)
         const isValidMobileNo = /^\d{10}$/.test(inputValues.mobileNo)
-        // const isValidupiPaymentNo = /^\d{10}$/.test(inputValues.upiPaymentNo)
-        const isValidaccName = /^[A-Za-z\s'-]+$/.test(inputValues.accName)
-        const isValidaccNo = /^\d*$/.test(inputValues.accNo)
-        // const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(inputValues.email)
-        if (isValidgstNumber & isValidpanNumber & isValidaadharNo
-            & isValidfName & isValidemail & isValidMobileNo & isValidaccName & isValidaccNo) {
-            console.log("success", inputValues);
-            try {
-                const response = await axios.put(`${API_URL}update/user`, { inputValues, AccessOptions: accessValues });
-                // alert(response.data.status);
-                console.log(response.data);
-                if (response.data.status) {
-                    setresAlert(response.data.message)
-                    setSubmittedSucess(true);
-                    setTimeout(() => {
-                        navigate(-1);
-                    }, 1000);
+        if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
+            if (!(Positionid_val === 4 || Positionid_val === 5)) {
+                const isValidbussinessType = (inputValues.bussinessType === 'Organization' || inputValues.bussinessType === 'Individual');
+                const isValidOrgName = inputValues.OrganizationName.trim() !== '';
+                const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(inputValues.gstNumber)
+                const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(inputValues.panNumber)
+                // Upi Bank Detials
+                // const isValidupiPaymentNo = inputValues.upiPaymentNo.trim() !== '';
+                // const isValidaccName = inputValues.accName.trim() !== '';
+                // const isValidaccNo = (/^\d*$/.test(inputValues.accNo) & inputValues.accNo.trim() !== '');
+                // alert(isValidaccNo)
+                // const isValidpAddress = inputValues.pAddress.trim() !== '';
+                // const isValidstreetAddress = inputValues.streetAddress.trim() !== '';
+                // const isValidCity = inputValues.City.trim() !== '';
+                // const isValidState = inputValues.State.trim() !== '';
+                // const isValidpCode = inputValues.pCode.trim() !== '';
+                // const isValidCommunicationAddress = inputValues.CommunicationAddress.trim() !== '';
+                const isValidStreetAddress2 = inputValues.StreetAddress2.trim() !== '';
+                const isValidCity2 = inputValues.City2.trim() !== '';
+                const isValidState2 = inputValues.State2.trim() !== '';
+                const isValidPostalCode2 = inputValues.PostalCode2.trim() !== '';
+                if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
+                    // & isValidupiPaymentNo & isValidaccName & isValidaccNo
+                    // & isValidpAddress & isValidstreetAddress & isValidCity & isValidState & isValidpCode & isValidCommunicationAddress
+                    & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
+                ) {
+                    try {
+                        const response = await axios.put(`${API_URL}update/user`, { inputValues, AccessOptions: accessValues });
+                        // alert(response.data.status);
+                        console.log(response.data);
+                        if (response.data.status) {
+                            setresAlert(response.data.message)
+                            setSubmittedSucess(true);
+                            setTimeout(() => {
+                                navigate(-1);
+                            }, 1000);
+                        }
+                    } catch (error) {
+                        setresAlert("Error updating data! Contact Developer")
+                        setSubmitted(true);
+                        console.error('Error updating data:', error);
+                    }
                 }
-            } catch (error) {
-                setresAlert("Error updating data! Contact Developer")
-                setSubmitted(true);
-                console.error('Error updating data:', error);
+                else {
+                    if (!isValidbussinessType) {
+                        setresAlert("Select Business Type");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidOrgName) {
+                        setresAlert("Enter Valid Organization Name");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidgstNumber) {
+                        setresAlert("Enter Valid GST Number");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidpanNumber) {
+                        setresAlert("Enter Valid PAN Number");
+                        setSubmitted(true);
+                    }
+                    // else if (!isValidupiPaymentNo) {
+                    //     setresAlert("Enter Valid UPI Payment ID");
+                    //     setSubmitted(true);
+                    // }
+                    // else if (!isValidaccName) {
+                    //     setresAlert("Enter Valid Account Name");
+                    //     setSubmitted(true);
+                    // }
+                    // else if (!isValidaccNo) {
+                    //     setresAlert("Enter Valid Account Number");
+                    //     setSubmitted(true);
+                    // }
+                    // else if (!isValidpAddress) {
+                    //     setresAlert("Enter Valid Permenant Address");
+                    //     setSubmitted(true);
+                    // }
+                    // else if (!isValidstreetAddress) {
+                    //     setresAlert("Enter Valid Street Adress");
+                    //     setSubmitted(true);
+                    // }
+                    // else if (!isValidCity) {
+                    //     setresAlert("Enter Valid City Name");
+                    //     setSubmitted(true);
+                    // }
+                    // else if (!isValidState) {
+                    //     setresAlert("Enter Valid State Name");
+                    //     setSubmitted(true);
+                    // }
+                    // else if (!isValidpCode) {
+                    //     setresAlert("Enter Valid Postal code");
+                    //     setSubmitted(true);
+                    // }
+                    // else if (!isValidCommunicationAddress) {
+                    //     setresAlert("Enter Valid Communication Address");
+                    //     setSubmitted(true);
+                    // }
+                    else if (!isValidStreetAddress2) {
+                        setresAlert("Enter Valid Communication - Street Address");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidCity2) {
+                        setresAlert("Enter Valid Communication - City Name");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidState2) {
+                        setresAlert("Enter Valid Communication - State Name");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidPostalCode2) {
+                        setresAlert("Enter Valid Communication - Postal Code");
+                        setSubmitted(true);
+                    }
+                }
             }
-        }
-        else {
-            // if (!isValidOrgName) {
-            //     setresAlert("Organization Name Can't be Empty")
-            //     setSubmitted(true);
-            //     // alert("Organization Name Can't be Empty");
-            // }
-            // else if (!isValidpostid) {
-            //     alert("Enter User Type");
-            // }
-            // if (!isValidbussinessType) {
-            //     setresAlert("Select Proper Bussiness type")
-            //     setSubmitted(true);
-            //     // alert("Select proper bussiness type");
-            // }
-            if (!isValidgstNumber) {
-                setresAlert("Enter valid GST Number");
-                setSubmitted(true);
-                // alert("enter valid GST Number");
+            else {
+                try {
+                    const response = await axios.put(`${API_URL}update/user`, { inputValues, AccessOptions: accessValues });
+                    // alert(response.data.status);
+                    console.log(response.data);
+                    if (response.data.status) {
+                        setresAlert(response.data.message)
+                        setSubmittedSucess(true);
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 1000);
+                    }
+                } catch (error) {
+                    setresAlert("Error updating data! Contact Developer")
+                    setSubmitted(true);
+                    console.error('Error updating data:', error);
+                }
             }
-            else if (!isValidpanNumber) {
-                setresAlert("Enter Valid PAN Number");
-                setSubmitted(true);
-                // alert("enter valid PAN Number");
-            }
-            else if (!isValidaadharNo) {
-                setresAlert("Enter Valid Aadhar Number");
-                setSubmitted(true);
-                // alert("enter valid Aadhar Number");
-            }
-            else if (!isValidfName) {
-                setresAlert("Enter Valid First Name");
-                setSubmitted(true);
-                // alert("enter valid First Name");
-            }
-            else if (!isValidemail) {
-                setresAlert("Enter Valid Email");
-                setSubmitted(true);
-                // alert("enter valid Email");
-            }
-            else if (!isValidMobileNo) {
-                setresAlert("Enter Valid Mobile Number");
-                setSubmitted(true);
-                // alert("enter valid UPI payment Number");
-            }
-            // else if (!isValidupiPaymentNo) {
-            //     setresAlert("Enter Valid UPI Payment Number");
-            //     setSubmitted(true);
-            // }
-            else if (!isValidaccName) {
-                setresAlert("Enter Valid Account Name");
-                setSubmitted(true);
-                // alert("enter valid Account Name");
-            }
-            else if (!isValidaccNo) {
-                setresAlert("Enter Valid Account Number");
-                setSubmitted(true);
-                // alert("enter valid Account Number");
-            }
-
         }
     }
 
@@ -425,52 +470,21 @@ const Edit_Distributer_Detials = () => {
     const set_value = (value) => {
         setSelected_value(value);
     }
-    // const inputFields = [
-    //     { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, readOnly: true },
-    //     { label: "Organization Name", name: "OrganizationName", value: inputValues.OrganizationName, icon: person },
-    //     { label: "GST Number", name: "gstNumber", value: inputValues.gstNumber, icon: pen_3 },
-    //     { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person },
-    //     { label: "PAN Number", name: "panNumber", value: inputValues.panNumber, icon: ic_wysiwyg },
-    //     // Add more input field objects as needed
-    //     { label: "Aadhar Number", name: "aadharNo", value: inputValues.aadharNo, icon: pen_3 },
-    //     { label: "First Name", name: "fName", value: inputValues.fName, icon: pen_3 },
-    //     { label: "Last Name", name: "lName", value: inputValues.lName, icon: pen_3 },
-    //     // { label: "Position", name: "Position", value: inputValues, icon: pen_3 },
-    //     // row 3
-    //     { label: "Email", name: "email", value: inputValues.email, icon: pen_3, readOnly: true },
-    //     { label: "Mobile Number", name: "mobileNo", value: inputValues.mobileNo, icon: pen_3 },
-    //     // 2. UPI Payment Details:
-    //     { label: "UPI Payment Mobile No", name: "upiPaymentNo", value: inputValues.upiPaymentNo, icon: pen_3 },
-    //     { label: "UPI - Bank Account Name", name: "accName", value: inputValues.accName, icon: pen_3 },
-    //     { label: "UPI - Bank Account Number", name: "accNo", value: inputValues.accNo, icon: pen_3 },
-    //     { label: "Pass Book image", name: "passbookImg", value: inputValues.passbookImg, icon: pen_3, inputType: "file" },
-    //     // 3. Address Details:
-    //     { label: "Permanent Address", name: "pAddress", value: inputValues.pAddress, icon: pen_3 },
-    //     { label: "Street Address", name: "streetAddress", value: inputValues.streetAddress, icon: pen_3 },
-    //     { label: "City", name: "City", value: inputValues.City, icon: pen_3 },
-    //     { label: "State", name: "State", value: inputValues.State, icon: pen_3 },
 
-    //     { label: "Postal Code", name: "pCode", value: inputValues.pCode, icon: pen_3 },
-    //     { label: "Communication Address", name: "CommunicationAddress", value: inputValues.CommunicationAddress, icon: pen_3 },
-    //     { label: "Street Address", name: "StreetAddress2", value: inputValues.StreetAddress2, icon: pen_3 },
-    //     { label: "City", name: "City2", value: inputValues.City2, icon: pen_3 },
-    //     { label: "State", name: "State2", value: inputValues.State2, icon: pen_3 },
-    //     { label: "Postal Code", name: "PostalCode2", value: inputValues.PostalCode2, icon: pen_3 },
-    // ];
-    const inputFields = [
+    const inputFields1 = [
         { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, disabled: true },
-        { label: "Organization Name", name: "OrganizationName", value: inputValues.OrganizationName, icon: person },
-        { label: "GST Number", name: "gstNumber", value: inputValues.gstNumber, icon: pen_3 },
-        { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person },
-        { label: "PAN Number", name: "panNumber", value: inputValues.panNumber, icon: ic_wysiwyg },
-        // Add more input field objects as needed
         { label: "Aadhar Number", name: "aadharNo", value: inputValues.aadharNo, icon: pen_3 },
         { label: "First Name", name: "fName", value: inputValues.fName, icon: pen_3 },
         { label: "Last Name", name: "lName", value: inputValues.lName, icon: pen_3 },
+        { label: "Email", name: "email", value: inputValues.email, icon: pen_3, disabled: true },
+        { label: "Mobile Number", name: "mobileNo", value: inputValues.mobileNo, icon: pen_3 },
+        { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person },
+        { label: "Organization Name", name: "OrganizationName", value: inputValues.OrganizationName, icon: person },
+        { label: "GST Number", name: "gstNumber", value: inputValues.gstNumber, icon: pen_3 },
+        { label: "PAN Number", name: "panNumber", value: inputValues.panNumber, icon: ic_wysiwyg },
+        // Add more input field objects as needed
         // { label: "Position", name: "Position", value: inputValues.Position, icon: pen_3 },
         // row 3
-        { label: "Email", name: "email", value: inputValues.email, icon: pen_3,disabled: true },
-        { label: "Mobile Number", name: "mobileNo", value: inputValues.mobileNo, icon: pen_3 },
         // 2. UPI Payment Details:
         { label: "UPI ID", name: "upiPaymentNo", value: inputValues.upiPaymentNo, icon: pen_3 },
         { label: "Bank Name", name: "accName", value: inputValues.accName, icon: pen_3 },
@@ -489,44 +503,45 @@ const Edit_Distributer_Detials = () => {
         { label: "State", name: "State2", value: inputValues.State2, icon: pen_3 },
         { label: "Postal Code", name: "PostalCode2", value: inputValues.PostalCode2, icon: pen_3 },
     ];
-    const handleInputChange = (index, value) => {
-        // Update the inputValues state based on the index
-        setInputValues((prevValues) => {
-            const updatedValues = { ...prevValues, [inputFields[index].name]: value };
-            return updatedValues;
-        });
-        // Add your custom logic here based on the input field
-    };
-    const handleInputChange2 = (index, value) => {
-        // Update the inputValues state based on the index
-        index = index + 4
-        setInputValues((prevValues) => {
-            const updatedValues = { ...prevValues, [inputFields[index].name]: value };
-            return updatedValues;
-        });
-    };
-    const handleInputChange3 = (index, value) => {
-        // Update the inputValues state based on the index
-        index = index + 8
-        setInputValues((prevValues) => {
-            const updatedValues = { ...prevValues, [inputFields[index].name]: value };
-            return updatedValues;
-        });
-    };
-    const handleInputChange4 = (index, value) => {
-        // Update the inputValues state based on the index
-        index = index + 12
-        setInputValues((prevValues) => {
-            const updatedValues = { ...prevValues, [inputFields[index].name]: value };
-            return updatedValues;
-        });
-    };
-    const handleInputChange5 = (index, value) => {
-        // Update the inputValues state based on the index
-        index = index + 16
-        setInputValues((prevValues) => {
-            const updatedValues = { ...prevValues, [inputFields[index].name]: value };
-            return updatedValues;
+
+    const inputFields = [
+        { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work },
+        { label: "Aadhar Number", name: "aadharNo", value: inputValues.aadharNo, icon: pen_3 },
+        { label: "First Name", name: "fName", value: inputValues.fName, icon: pen_3 },
+        { label: "Last Name", name: "lName", value: inputValues.lName, icon: pen_3 },
+        { label: "Email", name: "email", value: inputValues.email, icon: pen_3 },
+        { label: "Mobile Number", name: "mobileNo", value: inputValues.mobileNo, icon: pen_3 },
+        { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Organization Name", name: "OrganizationName", value: inputValues.OrganizationName, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "GST Number", name: "gstNumber", value: inputValues.gstNumber, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "PAN Number", name: "panNumber", value: inputValues.panNumber, icon: ic_wysiwyg, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        // Add more input field objects as needed
+        // { label: "Position", name: "Position", value: inputValues.Position, icon: pen_3 },
+        // row 3
+        // 2. UPI Payment Details:
+        { label: "UPI ID", name: "upiPaymentNo", value: inputValues.upiPaymentNo, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Bank Name", name: "accName", value: inputValues.accName, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Bank Account Number", name: "accNo", value: inputValues.accNo, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Pass Book image", name: "passbookImg", value: inputValues.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        // 3. Address Details:
+        { label: "Permanent Address", name: "pAddress", value: inputValues.pAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Street Address", name: "streetAddress", value: inputValues.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "City", name: "City", value: inputValues.City, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "State", name: "State", value: inputValues.State, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Postal Code", name: "pCode", value: inputValues.pCode, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+
+        // { label: "Communication Address", name: "CommunicationAddress", value: inputValues.CommunicationAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Street Address", name: "StreetAddress2", value: inputValues.StreetAddress2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "City", name: "City2", value: inputValues.City2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "State", name: "State2", value: inputValues.State2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Postal Code", name: "PostalCode2", value: inputValues.PostalCode2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+    ];
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setInputValues({
+            ...inputValues,
+            [name]: value,
         });
     };
 
@@ -565,10 +580,27 @@ const Edit_Distributer_Detials = () => {
     ]
     let updatedAccessHead = [...accessHead];
     if (userInfo.position === 'manifacture') {
-        updatedAccessHead = [...accessHead];
+        const labelsToUpdate = ['D_Staff', 'Customer'];
+        labelsToUpdate.forEach((label) => {
+            const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
+            if (indexToUpdate !== -1) {
+                updatedAccessHead = [...updatedAccessHead];
+                updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
+            }
+        });
+    }
+    if (userInfo.position === 'distributor') {
+        const labelsToUpdate = ['Staff', 'Distributor', 'D_Staff', 'Products', 'Invoice Generator'];
+        labelsToUpdate.forEach((label) => {
+            const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
+            if (indexToUpdate !== -1) {
+                updatedAccessHead = [...updatedAccessHead];
+                updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
+            }
+        });
     }
     if (userInfo.position === 'staff') {
-        const labelsToUpdate = ['Staff', 'Customer'];
+        const labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -578,8 +610,8 @@ const Edit_Distributer_Detials = () => {
         });
 
     }
-    if (userInfo.position === 'distributor') {
-        const labelsToUpdate = ['Staff', 'Distributor', 'Customer', 'Products', 'Invoice Generator'];
+    if (userInfo.position === 'd_staff') {
+        const labelsToUpdate = ['Staff', 'Distributor', 'D_Staff', 'Customer'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -588,6 +620,69 @@ const Edit_Distributer_Detials = () => {
             }
         });
     }
+
+    useEffect(() => {
+        if (userInfo.position === 'staff') {
+            setAccessValues((prevValues) => ({
+                ...prevValues,
+                Staff: 'No access',
+                Customer: 'No access',
+                D_Staff: 'No access'
+            }));
+        }
+        else if (userInfo.position === 'd_staff') {
+            setAccessValues((prevValues) => ({
+                ...prevValues,
+                Staff: 'No access',
+                Distributor: 'No access',
+                Customer: 'No access',
+                Products: 'No access',
+                'Invoice Generator': 'No access',
+            }));
+        }
+        else if (userInfo.position === 'distributor') {
+            setAccessValues((prevValues) => ({
+                ...prevValues,
+                Staff: 'No access',
+                Distributor: 'No access',
+                D_Staff: 'No access',
+                Customer: 'No access',
+                Products: 'No access',
+                'Invoice Generator': 'No access',
+            }));
+        }
+        else if (userInfo.position === 'manifacture') {
+            setAccessValues((prevValues) => ({
+                ...prevValues,
+                Customer: 'No access',
+                D_Staff: 'No access'
+            }));
+        }
+    }, []);
+    // if (userInfo.position === 'manifacture') {
+    //     updatedAccessHead = [...accessHead];
+    // }
+    // if (userInfo.position === 'staff') {
+    //     const labelsToUpdate = ['Staff', 'Customer'];
+    //     labelsToUpdate.forEach((label) => {
+    //         const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
+    //         if (indexToUpdate !== -1) {
+    //             updatedAccessHead = [...updatedAccessHead];
+    //             updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
+    //         }
+    //     });
+
+    // }
+    // if (userInfo.position === 'distributor') {
+    //     const labelsToUpdate = ['Staff', 'Distributor', 'Customer', 'Products', 'Invoice Generator'];
+    //     labelsToUpdate.forEach((label) => {
+    //         const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
+    //         if (indexToUpdate !== -1) {
+    //             updatedAccessHead = [...updatedAccessHead];
+    //             updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
+    //         }
+    //     });
+    // }
 
     const accessOptions = [
         { label: 'No access', disabled: true },
@@ -599,6 +694,18 @@ const Edit_Distributer_Detials = () => {
     //     ...option,
     //     disabled: index < limit ? false : true
     // }));
+
+    const currencies = [
+        {
+            value: 'Organization',
+            label: 'Organization',
+        },
+        {
+            value: 'Individual',
+            label: 'Individual',
+        }
+    ];
+
 
     if (userid === null) {
         // Render loading or placeholder while decryption is in progress
@@ -691,152 +798,319 @@ const Edit_Distributer_Detials = () => {
                             User info
                         </div>
                         <div className="input-boxes">
-                            <div className="cmpny_and_site_name display-flex">
+                            <div className="dsa_row_3 display-flex">
                                 {inputFields.slice(0, 4).map((field, index) => (
-                                    <div className="inputbox display-flex input" key={index}>
-                                        <div className="dsa_1st_input">
-                                            {/* <label htmlFor={`input${index + 1}`}>{field.label}</label> */}
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc">
-                                                    <Icon icon={field.icon} size={20} style={{ color: "lightgray" }} />
-                                                </span>
+                                    !(field.isStaff) && (
+                                        <div key={index} className="inputbox display-flex input">
+                                            <Box className="dsa_1st_input"
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column', // Change the direction for small screens
+                                                    '& .MuiTextField-root': {
+                                                        m: 1,
+                                                        width: field.name === 'bussinessType' ? '28ch' : '100%',
+                                                    },
+                                                }}
+                                            >
+                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
-                                                    label={field.label}
+                                                    label={
+                                                        <span>{`${field.label} *`}</span>
+                                                    }
                                                     type="text"
                                                     className="form-control-loc"
-                                                    id={`input${index + 1}`}
                                                     value={field.value}
-                                                    onChange={(e) => handleInputChange(index, e.target.value)}
-                                                    // inputProps={{ readOnly: field.readOnly || false }}
+                                                    // onChange={(e) => handleInputChange(e, field.name)}
+                                                    // onChange={handleInputChange}
+                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                    onChange={handleInputChange}
+                                                    name={field.name}
+                                                    id={`input${index + 1}`}
+                                                    select={field.name === 'bussinessType' && true}
                                                     disabled={field.disabled}
-                                                />
-                                                <div className="error-message">
-                                                    {/* Add error display logic here */}
-                                                </div>
-                                            </div>
+                                                    labelClassName="required"
+                                                >
+                                                    {currencies.map((option) => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </TextField>
+                                                {field.error ? 'Error' : ''}`
+
+                                                {/* Add error handling if needed */}
+                                            </Box>
                                         </div>
-                                    </div>
+                                    )
                                 ))}
                             </div>
-                            <div className="cmpny_and_site_name display-flex">
+
+                            <div className="dsa_row_3 display-flex">
                                 {inputFields.slice(4, 8).map((field, index) => (
-                                    <div className="inputbox display-flex input" key={index}>
-                                        <div className="dsa_1st_input">
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc">
-                                                    <Icon icon={field.icon} size={20} style={{ color: "lightgray" }} />
-                                                </span>
+                                    !(field.isStaff) && (
+                                        <div key={index} className="inputbox display-flex input">
+                                            <Box className="dsa_1st_input"
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column', // Change the direction for small screens
+                                                    '& .MuiTextField-root': {
+                                                        m: 1,
+                                                        width: field.name === 'bussinessType' ? '28ch' : '100%',
+                                                    },
+                                                }}
+                                            >
+                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
-                                                    label={field.label}
+                                                    label={
+                                                        <span>{`${field.label} *`}</span>
+                                                    }
                                                     type="text"
                                                     className="form-control-loc"
-                                                    id={`input${index + 1}`}
                                                     value={field.value}
-                                                    onChange={(e) => handleInputChange2(index, e.target.value)}
-                                                    // inputProps={{ readOnly: field.readOnly || false }}
+                                                    // onChange={(e) => handleInputChange(e, field.name)}
+                                                    // onChange={handleInputChange}
+                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                    onChange={handleInputChange}
+                                                    name={field.name}
+                                                    id={`input${index + 1}`}
+                                                    select={field.name === 'bussinessType' && true}
                                                     disabled={field.disabled}
-                                                // Add value and onChange as needed
-                                                />
-                                                <div className="error-message">
-                                                    {/* Add error display logic here */}
-                                                </div>
-                                            </div>
+                                                    labelClassName="required"
+                                                >
+                                                    {currencies.map((option) => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </TextField>
+                                                {field.error ? 'Error' : ''}`
+
+                                                {/* Add error handling if needed */}
+                                            </Box>
                                         </div>
-                                    </div>
+                                    )
                                 ))}
                             </div>
-                            <div className="cmpny_and_site_name display-flex">
-                                {inputFields.slice(8, 12).map((field, index) => (
-                                    <div className="inputbox display-flex input" key={index}>
-                                        <div className="dsa_1st_input">
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc">
-                                                    <Icon icon={field.icon} size={20} style={{ color: "lightgray" }} />
-                                                </span>
+
+                            <div className="dsa_row_3 display-flex">
+                                {inputFields.slice(8, 10).map((field, index) => (
+                                    !(field.isStaff) && (
+                                        <div key={index} className="inputbox display-flex input">
+                                            <Box className="dsa_1st_input"
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column', // Change the direction for small screens
+                                                    '& .MuiTextField-root': {
+                                                        m: 1,
+                                                        width: field.name === 'bussinessType' ? '28ch' : '100%',
+                                                    },
+                                                }}
+                                            >
+                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
-                                                    label={field.label}
+                                                    label={
+                                                        <span>{`${field.label} *`}</span>
+                                                    }
                                                     type="text"
                                                     className="form-control-loc"
-                                                    id={`input${index + 1}`}
                                                     value={field.value}
-                                                    onChange={(e) => handleInputChange3(index, e.target.value)}
-                                                    inputProps={{ readOnly: field.readOnly || false }}
+                                                    // onChange={(e) => handleInputChange(e, field.name)}
+                                                    // onChange={handleInputChange}
+                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                    onChange={handleInputChange}
+                                                    name={field.name}
+                                                    id={`input${index + 1}`}
+                                                    select={field.name === 'bussinessType' && true}
                                                     disabled={field.disabled}
-                                                // Add value and onChange as needed
-                                                />
-                                                <div className="error-message">
-                                                    {/* Add error display logic here */}
-                                                </div>
-                                            </div>
+                                                    labelClassName="required"
+                                                >
+                                                    {currencies.map((option) => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </TextField>
+                                                {field.error ? 'Error' : ''}`
+
+                                                {/* Add error handling if needed */}
+                                            </Box>
                                         </div>
-                                    </div>
+                                    )
                                 ))}
-                            </div>
-                            <div className="cmpny_and_site_name display-flex">
-                                {inputFields.slice(12, 16).map((field, index) => (
-                                    <div className="inputbox display-flex input" key={index}>
-                                        <div className="dsa_1st_input">
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc">
-                                                    <Icon icon={field.icon} size={20} style={{ color: "lightgray" }} />
-                                                </span>
-                                                <TextField
-                                                    label={field.label}
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    id={`input${index + 1}`}
-                                                    value={field.value}
-                                                    onChange={(e) => handleInputChange4(index, e.target.value)}
-                                                    inputProps={{ readOnly: field.readOnly || false }}
-                                                // Add value and onChange as needed
-                                                />
-                                                <div className="error-message">
-                                                    {/* Add error display logic here */}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="cmpny_and_site_name display-flex">
-                                {inputFields.slice(16, 20).map((field, index) => (
-                                    <div className="inputbox display-flex input" key={index}>
-                                        <div className="dsa_1st_input">
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc">
-                                                    <Icon icon={field.icon} size={20} style={{ color: "lightgray" }} />
-                                                </span>
-                                                <TextField
-                                                    label={field.label}
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    id={`input${index + 1}`}
-                                                    value={field.value}
-                                                    onChange={(e) => handleInputChange5(index, e.target.value)}
-                                                    inputProps={{ readOnly: field.readOnly || false }}
-                                                // Add value and onChange as needed
-                                                />
-                                                <div className="error-message">
-                                                    {/* Add error display logic here */}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                                <Button variant="outlined " style={{ color: 'red', borderColor: 'red' }} data-bs-toggle="modal" data-bs-target="#accessControll">
-                                    <ErrorOutlineIcon />
-                                </Button>
                             </div>
                         </div>
+
+                        {!(Positionid_val === 4 || Positionid_val === 5) && (
+                            <div className="device_info uppercase light-grey mb-loc-5">
+                                UPI Payment Details
+                            </div>
+                        )}
+
+                        <div className="dsa_row_3 display-flex">
+                            {inputFields.slice(10, 13).map((field, index) => (
+                                !(field.isStaff) && (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <Box className="dsa_1st_input"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '28ch' : '100%',
+                                                },
+                                            }}
+                                        >
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                            <TextField
+                                                label={
+                                                    <span>{`${field.label}`}</span>
+                                                }
+                                                type="text"
+                                                className="form-control-loc"
+                                                value={field.value}
+                                                // onChange={(e) => handleInputChange(e, field.name)}
+                                                // onChange={handleInputChange}
+                                                // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                onChange={handleInputChange}
+                                                name={field.name}
+                                                id={`input${index + 1}`}
+                                                select={field.name === 'bussinessType' && true}
+                                                disabled={field.disabled}
+                                                labelClassName="required"
+                                            >
+                                                {currencies.map((option) => (
+                                                    <MenuItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            {field.error ? 'Error' : ''}`
+
+                                            {/* Add error handling if needed */}
+                                        </Box>
+                                    </div>
+                                )
+                            ))}
+                        </div>
+
+                        {!(Positionid_val === 4 || Positionid_val === 5) && (
+                            <div className="device_info uppercase light-grey mb-loc-5">
+                                Address Details
+                            </div>
+                        )}
+
+                        <div className="dsa_row_3 display-flex">
+                            {inputFields.slice(19, 23).map((field, index) => (
+                                !(field.isStaff) && (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <Box className="dsa_1st_input"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '28ch' : '100%',
+                                                },
+                                            }}
+                                        >
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                            <TextField
+                                                label={
+                                                    <span>{`${field.label} *`}</span>
+                                                }
+                                                type="text"
+                                                className="form-control-loc"
+                                                value={field.value}
+                                                // onChange={(e) => handleInputChange(e, field.name)}
+                                                // onChange={handleInputChange}
+                                                // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                onChange={handleInputChange}
+                                                name={field.name}
+                                                id={`input${index + 1}`}
+                                                select={field.name === 'bussinessType' && true}
+                                                disabled={field.disabled}
+                                                labelClassName="required"
+                                            >
+                                                {currencies.map((option) => (
+                                                    <MenuItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            {field.error ? 'Error' : ''}`
+
+                                            {/* Add error handling if needed */}
+                                        </Box>
+                                    </div>
+                                )
+                            ))}
+                        </div>
+
+                        <div className="dsa_row_3 display-flex">
+                            {inputFields.slice(23, 24).map((field, index) => (
+                                !(field.isStaff) && (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <Box className="dsa_1st_input"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '28ch' : '100%',
+                                                },
+                                            }}
+                                        >
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                            <TextField
+                                                label={
+                                                    <span>{`${field.label} *`}</span>
+                                                }
+                                                type="text"
+                                                className="form-control-loc"
+                                                value={field.value}
+                                                // onChange={(e) => handleInputChange(e, field.name)}
+                                                // onChange={handleInputChange}
+                                                // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                onChange={handleInputChange}
+                                                name={field.name}
+                                                id={`input${index + 1}`}
+                                                select={field.name === 'bussinessType' && true}
+                                                disabled={field.disabled}
+                                                labelClassName="required"
+                                            >
+                                                {currencies.map((option) => (
+                                                    <MenuItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            {field.error ? 'Error' : ''}`
+
+                                            {/* Add error handling if needed */}
+                                        </Box>
+                                    </div>
+                                )
+                            ))}
+                        </div>
+
+                        <Button variant="outlined " style={{
+                            color: 'red', borderColor: 'red', width: '71px',
+                            height: '71px',
+                            borderRadius: '50px'
+                        }} data-bs-toggle="modal" data-bs-target="#accessControll">
+                            {/* <LockClosedIcon /> */}
+                            <ErrorOutlineIcon />
+                        </Button>
+
                     </div>
 
-                    <div className="operating_buttons display-flex padding-loc">
-                        <div className="save_cancel_btn display-flex site_button gap-4">
-                            <CancelBtnComp CancelBtnFun={handleCancel} />
-                            <SaveBtnComp SaveBtnFun={(e) => handle_save(e)} />
-                            {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={() => handle_save()}>Save</button>
+                </div>
+                <div className="operating_buttons display-flex padding-loc">
+                    <div className="save_cancel_btn display-flex site_button gap-4">
+                        <CancelBtnComp CancelBtnFun={handleCancel} />
+                        <SaveBtnComp SaveBtnFun={(e) => handle_save(e)} />
+                        {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={() => handle_save()}>Save</button>
                             <button className="btn-loc inactive-loc btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">cancel</button> */}
-                        </div>
                     </div>
                 </div>
             </div>

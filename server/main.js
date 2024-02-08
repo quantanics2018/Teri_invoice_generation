@@ -32,7 +32,7 @@ app.post('/verify/:entity(user|credentials)', async (req, res) => {
 });
 
 // add into DB
-app.post('/add/:entity(user|products|invoice)', async (req, res) => {
+app.post('/add/:entity(user|products|invoice|feedback)', async (req, res) => {
     const entity = req.params.entity;
     if (entity === 'user') {
         try {
@@ -50,6 +50,14 @@ app.post('/add/:entity(user|products|invoice)', async (req, res) => {
             res.status(500).send('Internal Server Error');
         }
     }
+    if (entity === 'feedback') {
+        try {
+            const addUser = await addData.addfeedback(req, res);
+        } catch (error) {
+            console.error('Error Adding feedback details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
     if (entity === 'invoice') {
         try {
             const addUser = await addData.addInvoice(req, res);
@@ -61,7 +69,7 @@ app.post('/add/:entity(user|products|invoice)', async (req, res) => {
 })
 
 // Get Data From DB
-app.post('/get/:entity(user|credentials|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo)', async (req, res) => {
+app.post('/get/:entity(user|credentials|product|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo)', async (req, res) => {
     const entity = req.params.entity;
     const requestData = req.body;
     if (entity === 'user') {
@@ -81,6 +89,9 @@ app.post('/get/:entity(user|credentials|products|state|district|access_control|t
             res.send("error");
             console.error("Error retrieving data");
         }
+    }
+    if (entity === 'product') {
+        var userdata = await getData.getProductDataIndividual(req, res);
     }
     if (entity === 'products') {
         try {
@@ -129,9 +140,9 @@ app.get('/get/:entity(user|product)/:id', async (req, res) => {
     if (entity === 'user') {
         var userdata = await getData.getUserDataIndividual(req, res);
     }
-    else if (entity === 'product') {
-        var userdata = await getData.getProductDataIndividual(req, res);
-    }
+    // else if (entity === 'product') {
+    //     var userdata = await getData.getProductDataIndividual(req, res);
+    // }
     else {
         res.status(400).send('Invalid elements value');
     }
@@ -140,7 +151,7 @@ app.get('/get/:entity(user|product)/:id', async (req, res) => {
 
 
 // Update Data from DB
-app.put('/update/:entity(user|product|productremove|userremove|password|productQuantity)', async (req, res) => {
+app.put('/update/:entity(user|product|productremove|userremove|password|productQuantity|reciverStatus|senderStatus)', async (req, res) => {
     const entity = req.params.entity;
     if (entity === 'user') {
         var userdata = await updateData.updateUserDataIndividual(req, res);
@@ -159,6 +170,12 @@ app.put('/update/:entity(user|product|productremove|userremove|password|productQ
     }
     else if (entity === 'password') {
         var userdata = await updateData.updateUserPassword(req, res);
+    }
+    else if (entity === 'reciverStatus') {
+        var userdata = await updateData.updatereciverStatus(req, res);
+    }
+    else if (entity === 'senderStatus') {
+        var userdata = await updateData.updatesenderStatus(req, res);
     }
 });
 

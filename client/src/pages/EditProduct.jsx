@@ -27,7 +27,8 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
-import { TextField } from '@mui/material';
+import { Box, Snackbar, TextField } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 
 
@@ -70,7 +71,7 @@ const EditProduct = () => {
 
     // cancel script
     function handleCancel() {
-        navigate('/Products');
+        navigate(-1);
     }
     //redirect to device content page
     const navigate = useNavigate();
@@ -89,12 +90,14 @@ const EditProduct = () => {
         CGST: '',
         SGCT: '',
     });
+    console.log(userInfo.userid);
+    const userid = userInfo.userid;
     useEffect(() => {
         const device_user_data = async () => {
             // console.log(API_URL);
             try {
-                const response = await fetch(`${API_URL}get/product/${productid}`);
-                const data = await response.json();
+                const response = await axios.post(`${API_URL}get/product`, {userid,  productid: productid});
+                const data =  response.data;
                 // console.log(data.data.productid);
                 // all_data_fun(data)
                 const item = data.data;
@@ -121,10 +124,10 @@ const EditProduct = () => {
     console.log(!(userInfo.position === 'staff' || userInfo.position === 'manifacture'));
     const inputFields = [
         { label: "HSN Code", name: "productid", value: inputValues.productid, icon: ic_home_work, disabled: true },
-        { label: "Product Name", name: "productname", value: inputValues.productname, icon: person },
-        { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person,disabled:!(userInfo.position === 'staff' || userInfo.position === 'manifacture') },
-        { label: "Price Per Item", name: "priceperitem", value: inputValues.priceperitem, icon: person },
         { label: "Batch No", name: "batchno", value: inputValues.batchno, icon: person },
+        { label: "Product Name", name: "productname", value: inputValues.productname, icon: person },
+        { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person, disabled: !(userInfo.position === 'staff' || userInfo.position === 'manifacture') },
+        { label: "Price Per Item", name: "priceperitem", value: inputValues.priceperitem, icon: person },
         { label: "CGST", name: "CGST", value: inputValues.CGST, icon: person },
         { label: "SGCT", name: "SGCT", value: inputValues.SGCT, icon: person }
     ]
@@ -154,22 +157,35 @@ const EditProduct = () => {
         }));
     };
     // console.log(inputValues);
-    
 
+    const [resAlert, setresAlert] = useState(null)
+    const [submitted, setSubmitted] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
     // validation
     const handleClick = async () => {
         const isValidhsncode = /^[0-9]+$/.test(inputValues.productid);
-        // console.log(isValidhsncode);
-        if (isValidhsncode) {
+        const isValidbatchno = /^[0-9]+$/.test(inputValues.batchno);
+        const isValidproductname = (inputValues.productname.trim() !== '');
+        const isValidQuantityNo = /^[0-9]+$/.test(inputValues.quantity);
+        const isValidpriceperitem = /^[0-9]+$/.test(inputValues.priceperitem);
+        const isValidCGST = /^[0-9]+$/.test(inputValues.CGST);
+        const isValidSGCT = /^[0-9]+$/.test(inputValues.SGCT);
+        if (isValidhsncode & isValidbatchno & isValidproductname & isValidQuantityNo & isValidpriceperitem & isValidCGST & isValidSGCT) {
             try {
                 // console.log("hai", inputValues);
                 const response = await axios.put(`${API_URL}update/product`, { productdetial: inputValues, updator: userInfo.userid });
                 // alert("response.data.message");
-                console.log(response.data.message);
+                // console.log(response.data.message);
                 if (response.data.status) {
-                    // handleClear()
-                    alert(response.data.message);
-                    navigate(-1);
+                    setresAlert(response.data.message);
+                    setSubmitted(true);
+                    if (response.data.status) {
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 2000);
+                    }
                 } else {
                     alert(response.data.message)
                 }
@@ -178,8 +194,26 @@ const EditProduct = () => {
             }
         }
         else {
-            if (isValidhsncode == false) {
+            if (isValidhsncode === false) {
                 alert("Enter a valid HSN Code")
+            }
+            else if (isValidbatchno === false) {
+                alert("Enter a valid Batch Number")
+            }
+            else if (isValidproductname === false) {
+                alert("Enter a valid Product Name")
+            }
+            else if (isValidQuantityNo === false) {
+                alert("Enter a valid Quantity Number")
+            }
+            else if (isValidpriceperitem === false) {
+                alert("Enter a valid Price Detail")
+            }
+            else if (isValidCGST === false) {
+                alert("Enter a valid CGST")
+            }
+            else if (isValidSGCT === false) {
+                alert("Enter a valid SGST")
             }
         }
     }
@@ -188,6 +222,15 @@ const EditProduct = () => {
 
     return (
         <div className='Add_device1 '>
+             {/* Snack bar */}
+             <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
             <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable custom-modal-dialog">
                     <div className="modal-content width_of_model height_of_modal_content">
@@ -223,8 +266,8 @@ const EditProduct = () => {
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
+                                            <Box className="inputs-group display-flex">
+                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
                                                     label={`${field.label} *`}
                                                     type="text"
@@ -235,9 +278,9 @@ const EditProduct = () => {
                                                     name={field.name}
                                                     id={`input${index + 1}`}
                                                     disabled={field.disabled}
-                                                    // readOnly={field.readOnly || false}
+                                                // readOnly={field.readOnly || false}
                                                 />
-                                            </div>
+                                            </Box>
                                         </div>
                                     </div>
                                 ))}
@@ -247,8 +290,8 @@ const EditProduct = () => {
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
+                                            <Box className="inputs-group display-flex">
+                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
                                                     label={`${field.label} *`}
                                                     type="text"
@@ -260,7 +303,7 @@ const EditProduct = () => {
                                                     id={`input${index + 1}`}
                                                     readOnly={field.readOnly || false}
                                                 />
-                                            </div>
+                                            </Box>
                                         </div>
                                     </div>
                                 ))}
