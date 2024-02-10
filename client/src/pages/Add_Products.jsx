@@ -145,7 +145,7 @@ const Add_Products = () => {
                         setTimeout(() => {
                             handleClear();
                             navigate(-1);
-                        }, 2000);
+                        }, 1000);
                     }
                 } else {
                     // alert(response.data.message);

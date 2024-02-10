@@ -69,7 +69,7 @@ const Login = (props) => {
             setSubmitted(true);
             if (response.data.success) {
                 sessionStorage.setItem("UserInfo", JSON.stringify({ ...response.data.data, "isLoggedIn": true }));
-                console.log(response.data);
+                // console.log(response.data);
                 if (response.data.data.position === "manifacture") {
                     navigate("/Staff_Details");
                 }

@@ -32,9 +32,9 @@ async function addUser(req, res) {
         PostalCode2 } = req.body.userDetials;
     const status = 1;
     const AccessControls = req.body.AccessControls;
-    console.log(passbookImg);
-    console.log(AccessControls);
-    console.log(panNumber);
+    // console.log(passbookImg);
+    // console.log(AccessControls);
+    // console.log(AccessControls);
 
     try {
         await userdbInstance.userdb.query('BEGIN');
@@ -83,6 +83,18 @@ async function addUser(req, res) {
             staff_ac = 3;
         }
         // Distributor Controls
+        if (AccessControls['D_Staff'] === 'No access') {
+            D_Staff_ac = 0;
+        } else if (AccessControls['D_Staff'] === 'View') {
+            D_Staff_ac = 1;
+        }
+        else if (AccessControls['D_Staff'] === 'Edit') {
+            D_Staff_ac = 2;
+        }
+        else if (AccessControls['D_Staff'] === 'All') {
+            D_Staff_ac = 3;
+        }
+        // D_staff Controls
         if (AccessControls['Distributor'] === 'No access') {
             distributor_ac = 0;
         } else if (AccessControls['Distributor'] === 'View') {
@@ -143,8 +155,8 @@ async function addUser(req, res) {
             InvoicePaySlip_ac = 3;
         }
         // console.log('test : ',staff_ac,Distributor_ac,Customer_ac,Products_ac,InvoiceGenerator_ac,InvoicePaySlip_ac);
-        const access_controlTable = await userdbInstance.userdb.query('insert into accesscontroll (distributer,product,invoicegenerator,userid,customer,staff,invoicepayslip) values ($1,$2,$3,$4,$5,$6,$7)',
-            [distributor_ac, products_ac, InvoiceGenerator_ac, userid, customer_ac, staff_ac, InvoicePaySlip_ac]);
+        const access_controlTable = await userdbInstance.userdb.query('insert into accesscontroll (distributer,product,invoicegenerator,userid,customer,staff,invoicepayslip,d_staff) values ($1,$2,$3,$4,$5,$6,$7,$8)',
+            [distributor_ac, products_ac, InvoiceGenerator_ac, userid, customer_ac, staff_ac, InvoicePaySlip_ac,D_Staff_ac]);
         await userdbInstance.userdb.query('COMMIT');
         return res.json({ message: "Data inserted Successfully", status: true });
     } catch (error) {

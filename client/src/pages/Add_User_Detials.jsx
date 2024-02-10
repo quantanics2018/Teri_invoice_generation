@@ -70,7 +70,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         State: '',
 
         pCode: '',
-        CommunicationAddress: '',
+        // CommunicationAddress: '',
         StreetAddress2: '',
         City2: '',
         State2: '',
@@ -95,13 +95,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
             accNo: '',
             passbookImg: '',
 
-            pAddress: '',
+            // pAddress: '',
             streetAddress: '',
             City: '',
             State: '',
             pCode: '',
 
-            CommunicationAddress: '',
+            // CommunicationAddress: '',
             StreetAddress2: '',
             City2: '',
             State2: '',
@@ -160,21 +160,22 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 // const isValidaccName = postData.accName.trim() !== '';
                 // const isValidaccNo = (/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
                 // alert(isValidaccNo)
-                const isValidpAddress = postData.pAddress.trim() !== '';
+                // const isValidpAddress = postData.pAddress.trim() !== '';
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
                 const isValidState = postData.State.trim() !== '';
                 const isValidpCode = postData.pCode.trim() !== '';
-                const isValidCommunicationAddress = postData.CommunicationAddress.trim() !== '';
+                // const isValidCommunicationAddress = postData.CommunicationAddress.trim() !== '';
                 const isValidStreetAddress2 = postData.StreetAddress2.trim() !== '';
                 const isValidCity2 = postData.City2.trim() !== '';
                 const isValidState2 = postData.State2.trim() !== '';
                 const isValidPostalCode2 = postData.PostalCode2.trim() !== '';
                 // alert("hai da")
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
-                    // & isValidupiPaymentNo & isValidaccName & isValidaccNo
-                    & isValidpAddress & isValidstreetAddress & isValidCity & isValidState & isValidpCode
-                    & isValidCommunicationAddress & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
+                    // & isValidupiPaymentNo & isValidaccName & isValidaccNo & isValidpAddress 
+                    & isValidstreetAddress & isValidCity & isValidState & isValidpCode
+                    // & isValidCommunicationAddress 
+                    & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
                 ) {
                     try {
                         const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues });
@@ -220,10 +221,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     //     setresAlert("Enter Valid Account Number");
                     //     setSubmitted(true);
                     // }
-                    else if (!isValidpAddress) {
-                        setresAlert("Enter Valid Permenant Address");
-                        setSubmitted(true);
-                    }
+                    // else if (!isValidpAddress) {
+                    //     setresAlert("Enter Valid Permenant Address");
+                    //     setSubmitted(true);
+                    // }
                     else if (!isValidstreetAddress) {
                         setresAlert("Enter Valid Street Adress");
                         setSubmitted(true);
@@ -240,10 +241,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setresAlert("Enter Valid Postal code");
                         setSubmitted(true);
                     }
-                    else if (!isValidCommunicationAddress) {
-                        setresAlert("Enter Valid Communication Address");
-                        setSubmitted(true);
-                    }
+                    // else if (!isValidCommunicationAddress) {
+                    //     setresAlert("Enter Valid Communication Address");
+                    //     setSubmitted(true);
+                    // }
                     else if (!isValidStreetAddress2) {
                         setresAlert("Enter Valid Communication - Street Address");
                         setSubmitted(true);
@@ -324,16 +325,16 @@ const Add_User_Detials = ({ Positionid_val }) => {
         { label: "UPI ID", name: "upiPaymentNo", value: postData.upiPaymentNo, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Bank Name", name: "accName", value: postData.accName, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Bank Account Number", name: "accNo", value: postData.accNo, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "Pass Book image", name: "passbookImg", value: postData.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        // { label: "Pass Book image vvv", name: "passbookImg", value: postData.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         // 3. Address Details:
         { label: "Permanent Address", name: "pAddress", value: postData.pAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "Street Address", name: "streetAddress", value: postData.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Permanent Street Address", name: "streetAddress", value: postData.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "City", name: "City", value: postData.City, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "State", name: "State", value: postData.State, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Postal Code", name: "pCode", value: postData.pCode, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
 
-        { label: "Communication Address", name: "CommunicationAddress", value: postData.CommunicationAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "Street Address", name: "StreetAddress2", value: postData.StreetAddress2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        // { label: "Communication Address", name: "CommunicationAddress", value: postData.CommunicationAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Communication Street Address", name: "StreetAddress2", value: postData.StreetAddress2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "City", name: "City2", value: postData.City2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "State", name: "State2", value: postData.State2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Postal Code", name: "PostalCode2", value: postData.PostalCode2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
@@ -588,7 +589,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
             // console.log(postData);
             setPostData({
                 ...postData,
-                CommunicationAddress: postData.pAddress,
+                // CommunicationAddress: postData.pAddress,
                 StreetAddress2: postData.streetAddress,
                 City2: postData.City,
                 State2: postData.State,
@@ -597,7 +598,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         } else {
             setPostData({
                 ...postData,
-                CommunicationAddress: '',
+                // CommunicationAddress: '',
                 StreetAddress2: '',
                 City2: '',
                 State2: '',
@@ -913,7 +914,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 </div>
                             ))}
                         </div>
-                        <div className="dsa_row_3 display-flex">
+
+                        {/* <div className="dsa_row_3 display-flex">
                             {inputFields.slice(13, 14).map((field, index) => (
                                 <div key={index} className="inputbox display-flex input">
                                     <div className="dsa_1st_input">
@@ -921,7 +923,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                             <Box className="inputs-group display-flex"
                                                 sx={{
                                                     display: 'flex',
-                                                    flexDirection: 'column', // Change the direction for small screens
+                                                    flexDirection: 'column',
                                                     '& .MuiTextField-root': {
                                                         m: 1,
                                                         width: field.name === 'bussinessType' ? '30ch' : '100%',
@@ -944,7 +946,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                     </div>
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
+
                         {!(Positionid_val === 4 || Positionid_val === 5) && (
                             <div className="device_info uppercase light-grey mb-loc-5">
                                 Address Details
@@ -984,8 +987,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 </div>
                             ))}
                         </div>
-                        <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(18, 19).map((field, index) => (
+                        {/* <div className="dsa_row_3 display-flex">
+                            {inputFields.slice(18, 18).map((field, index) => (
                                 <div key={index} className="inputbox display-flex input">
                                     <div className="dsa_1st_input">
                                         {!(field.isStaff) && (
@@ -1014,12 +1017,12 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                     </div>
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
                         {!(Positionid_val === 4 || Positionid_val === 5) && (
                             <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
                         )}
                         <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(19, 23).map((field, index) => (
+                            {inputFields.slice(18, 22).map((field, index) => (
                                 <div key={index} className="inputbox display-flex input">
                                     <div className="dsa_1st_input">
                                         {!(field.isStaff) && (

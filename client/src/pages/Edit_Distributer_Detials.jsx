@@ -42,12 +42,12 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     useEffect(() => {
         const decryptUserId = async () => {
             try {
-                console.log("userid : ", useridEnc.useridEnc);
+                // console.log("userid : ", useridEnc.useridEnc);
                 const secretKey = `${SECRET_KEY}`;
                 const decodedEncryptId = decodeURIComponent(useridEnc.useridEnc);
                 const bytes = CryptoJS.AES.decrypt(decodedEncryptId, secretKey);
                 const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
-                console.log('Decrypted:', decryptedText);
+                // console.log('Decrypted:', decryptedText);
                 userid = decryptedText;
             } catch (error) {
                 console.error('Error during decryption:', error);
@@ -117,19 +117,19 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 accName: item.bankname,
                 accNo: item.bankaccno,
                 passbookImg: item.passbookimg,
-                pAddress: "",
+                // pAddress: "",
                 streetAddress: item.pstreetname,
                 City: item.pdistrictid,
                 State: item.pstateid,
                 pCode: item.ppostalcode,
-                CommunicationAddress: "",
+                // CommunicationAddress: "",
                 StreetAddress2: item.cstreetname,
                 City2: item.cdistrictid,
                 State2: item.cstateid,
                 PostalCode2: item.cpostalcode
             }));
             // For staff
-            console.log(AccessItem.distributer);
+            // console.log(AccessItem.distributer);
             if (AccessItem.staff == 0) {
                 AccessItem.staff = 'No access'
             }
@@ -154,6 +154,19 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
             }
             else if (AccessItem.distributer == 3) {
                 AccessItem.distributer = 'All'
+            }
+            // For D_Distributor
+            if (AccessItem.d_staff == 0) {
+                AccessItem.d_staff = 'No access'
+            }
+            else if (AccessItem.d_staff == 1) {
+                AccessItem.d_staff = 'View'
+            }
+            else if (AccessItem.d_staff == 2) {
+                AccessItem.d_staff = 'Edit'
+            }
+            else if (AccessItem.d_staff == 3) {
+                AccessItem.d_staff = 'All'
             }
             // For Customer
             if (AccessItem.customer == 0) {
@@ -213,6 +226,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 ...prevValues,
                 Staff: AccessItem.staff, // Default values
                 Distributor: AccessItem.distributer,
+                D_Staff: AccessItem.d_staff,
                 Customer: AccessItem.customer,
                 Products: AccessItem.product,
                 'Invoice Generator': AccessItem['Invoice Generator'],
@@ -246,12 +260,12 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         accName: "",
         accNo: "",
         passbookImg: "",
-        pAddress: "",
+        // pAddress: "",
         streetAddress: "",
         City: "",
         State: "",
         pCode: "",
-        CommunicationAddress: "",
+        // CommunicationAddress: "",
         StreetAddress2: "",
         City2: "",
         State2: "",
@@ -275,13 +289,14 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         const isValiduserid = inputValues.userid.trim() !== '';
         const isValidaadharNo = /^\d{12}$/.test(inputValues.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(inputValues.fName)
-        const isValidlName = /^[A-Za-z\s'-]+$/.test(inputValues.lName)
+        const isValidlName = /^[A-Za-z\s'-]+$/.test(inputValues.lName) && (typeof inputValues.lName === 'string' && inputValues.lName.trim() !== '')
         const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(inputValues.email)
         const isValidMobileNo = /^\d{10}$/.test(inputValues.mobileNo)
+        // console.log(inputValues, isValidlName);
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
                 const isValidbussinessType = (inputValues.bussinessType === 'Organization' || inputValues.bussinessType === 'Individual');
-                const isValidOrgName = inputValues.OrganizationName.trim() !== '';
+                const isValidOrgName = typeof inputValues.OrganizationName === 'string' && inputValues.OrganizationName.trim() !== '';
                 const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(inputValues.gstNumber)
                 const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(inputValues.panNumber)
                 // Upi Bank Detials
@@ -295,15 +310,17 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 // const isValidState = inputValues.State.trim() !== '';
                 // const isValidpCode = inputValues.pCode.trim() !== '';
                 // const isValidCommunicationAddress = inputValues.CommunicationAddress.trim() !== '';
-                const isValidStreetAddress2 = inputValues.StreetAddress2.trim() !== '';
-                const isValidCity2 = inputValues.City2.trim() !== '';
-                const isValidState2 = inputValues.State2.trim() !== '';
-                const isValidPostalCode2 = inputValues.PostalCode2.trim() !== '';
+                const isValidStreetAddress2 = typeof inputValues.StreetAddress2 === 'string' && inputValues.StreetAddress2.trim() !== '';
+                const isValidCity2 = typeof inputValues.City2 === 'string' && inputValues.City2.trim() !== '';
+                const isValidState2 = typeof inputValues.State2 === 'string' && inputValues.State2.trim() !== '';
+                const isValidPostalCode2 = typeof inputValues.PostalCode2 === 'string' && inputValues.PostalCode2.trim() !== '';
+                // console.log(inputValues);
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
                     // & isValidupiPaymentNo & isValidaccName & isValidaccNo
                     // & isValidpAddress & isValidstreetAddress & isValidCity & isValidState & isValidpCode & isValidCommunicationAddress
                     & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
                 ) {
+                    console.log(accessValues);
                     try {
                         const response = await axios.put(`${API_URL}update/user`, { inputValues, AccessOptions: accessValues });
                         // alert(response.data.status);
@@ -411,6 +428,32 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 }
             }
         }
+        else {
+            if (!isValiduserid) {
+                setresAlert("Enter Valid User ID");
+                setSubmitted(true);
+            }
+            else if (!isValidaadharNo) {
+                setresAlert("Enter Valid Aadhar Number");
+                setSubmitted(true);
+            }
+            else if (!isValidfName) {
+                setresAlert("Enter Valid First Name");
+                setSubmitted(true);
+            }
+            else if (!isValidlName) {
+                setresAlert("Enter Valid Last Name");
+                setSubmitted(true);
+            }
+            else if (!isValidemail) {
+                setresAlert("Enter Valid Email");
+                setSubmitted(true);
+            }
+            else if (!isValidMobileNo) {
+                setresAlert("Enter Valid Mobile Number");
+                setSubmitted(true);
+            }
+        }
     }
 
 
@@ -505,11 +548,11 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     ];
 
     const inputFields = [
-        { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work },
+        { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, disabled: true },
         { label: "Aadhar Number", name: "aadharNo", value: inputValues.aadharNo, icon: pen_3 },
         { label: "First Name", name: "fName", value: inputValues.fName, icon: pen_3 },
         { label: "Last Name", name: "lName", value: inputValues.lName, icon: pen_3 },
-        { label: "Email", name: "email", value: inputValues.email, icon: pen_3 },
+        { label: "Email", name: "email", value: inputValues.email, icon: pen_3, disabled: true },
         { label: "Mobile Number", name: "mobileNo", value: inputValues.mobileNo, icon: pen_3 },
         { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Organization Name", name: "OrganizationName", value: inputValues.OrganizationName, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
@@ -522,7 +565,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         { label: "UPI ID", name: "upiPaymentNo", value: inputValues.upiPaymentNo, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Bank Name", name: "accName", value: inputValues.accName, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Bank Account Number", name: "accNo", value: inputValues.accNo, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "Pass Book image", name: "passbookImg", value: inputValues.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        // { label: "Pass Book image", name: "passbookImg", value: inputValues.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         // 3. Address Details:
         { label: "Permanent Address", name: "pAddress", value: inputValues.pAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Street Address", name: "streetAddress", value: inputValues.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
@@ -551,6 +594,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     const [accessValues, setAccessValues] = useState({
         Staff: 'No access', // Default values
         Distributor: 'No access',
+        D_Staff: 'No access',
         Customer: 'No access',
         Products: 'No access',
         'Invoice Generator': 'No access',
@@ -573,6 +617,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     const accessHead = [
         { label: 'Staff', disableHead: false },
         { label: 'Distributor', disableHead: false },
+        { label: 'D_Staff', disableHead: false },
         { label: 'Customer', disableHead: false },
         { label: 'Products', disableHead: false },
         { label: 'Invoice Generator', disableHead: false },
@@ -580,7 +625,17 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     ]
     let updatedAccessHead = [...accessHead];
     if (userInfo.position === 'manifacture') {
-        const labelsToUpdate = ['D_Staff', 'Customer'];
+        // const labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
+        let labelsToUpdate
+        if (Positionid_val === 4) {
+            labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
+        }
+        else if (Positionid_val === 2) {
+            labelsToUpdate = ['Staff', 'Distributor'];
+        }
+        else {
+            labelsToUpdate = ['D_Staff', 'Customer'];
+        }
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -654,6 +709,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         else if (userInfo.position === 'manifacture') {
             setAccessValues((prevValues) => ({
                 ...prevValues,
+                Staff: 'No access',
                 Customer: 'No access',
                 D_Staff: 'No access'
             }));
@@ -1000,7 +1056,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                         )}
 
                         <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(19, 23).map((field, index) => (
+                            {inputFields.slice(18, 23).map((field, index) => (
                                 !(field.isStaff) && (
                                     <div key={index} className="inputbox display-flex input">
                                         <Box className="dsa_1st_input"

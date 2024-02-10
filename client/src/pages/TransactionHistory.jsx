@@ -57,12 +57,12 @@ const TransactionHistory = () => {
             alert("Enter The Input  Field")
         }
     }
-    const SenderConformation = async (invoiceId, textVal) => {
+    const SenderConformation = async (invoiceId, textVal, belongsto) => {
         // console.log("hai", invoiceId, textVal)
         if (textVal) {
             try {
                 const response = await axios.put(`${API_URL}update/senderStatus`, {
-                    invoiceId: invoiceId,
+                    invoiceId: invoiceId, belongsto
                 });
                 console.log('Response from server:', response.data.qos);
                 if (response.data.qos === 'success') {
@@ -111,7 +111,7 @@ const TransactionHistory = () => {
 
 
     console.log(data);
-    
+
     const formatDate = (timestamp) => {
         var date = new Date(timestamp);
         var year = date.getFullYear();
@@ -178,11 +178,11 @@ const TransactionHistory = () => {
                                                 </td>
                                                 <td className='text-center actionTrans'>
                                                     {/* onClick={() => deleteRow(row.id)}  */}
-                                                    {console.log("values :",textFieldValues[index],index)}
+                                                    {console.log("values :", textFieldValues[index], index)}
                                                     <Button color="secondary">
                                                         {(item.transactionid && userInfo.userid === item.senderid) ? '🟢' : (userInfo.userid === item.senderid && '🔴')}
                                                     </Button>
-                                                    <Button color="secondary" onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
+                                                    <Button color="secondary" disabled={item.senderstatus === 1} onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
                                                         ✔
                                                     </Button>
                                                 </td>

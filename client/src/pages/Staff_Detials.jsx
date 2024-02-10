@@ -390,7 +390,7 @@ const Staff_Detials = (props) => {
                                         <div className="col-head">{data.fname}</div>
                                         <div className="col-head">{data.aadhar}</div>
                                         <div className="col-head">{data.pan}</div>
-                                        <div className="col-head">{data.ppostalcode}</div>
+                                        <div className="col-head">{data.cpostalcode}</div>
                                         <div className="col-head" title={data.email}>{data.email}</div>
                                         <div className="col-head">
                                             {data.phno}

@@ -60,7 +60,7 @@ const ProfilePage = () => {
                     {/* Left column for the image */}
                     <Grid item xs={12} md={6}>
                         <CardContent>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',filter: 'drop-shadow(0px 0px 3px red)'}}>
                                 <Avatar src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" sx={{ width: 150, height: 150 }} />
                             </div>
                         </CardContent>

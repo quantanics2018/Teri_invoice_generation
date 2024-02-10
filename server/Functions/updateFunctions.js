@@ -31,7 +31,7 @@ async function updateUserDataIndividual(req, res) {
         PostalCode2
     } = req.body.inputValues;
     const AccessOptions = req.body.AccessOptions;
-    // console.log(AccessOptions.Distributor);
+    console.log(AccessOptions.D_Staff);
     try {
         await userdbInstance.userdb.query('BEGIN');
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public."user"
@@ -60,6 +60,18 @@ async function updateUserDataIndividual(req, res) {
         }
         else if (AccessOptions['Distributor'] === 'All') {
             Distributor_uc = 3;
+        }
+        // D_Staff Controls
+        if (AccessOptions['D_Staff'] === 'No access') {
+            D_Staff_uc = 0;
+        } else if (AccessOptions['D_Staff'] === 'View') {
+            D_Staff_uc = 1;
+        }
+        else if (AccessOptions['D_Staff'] === 'Edit') {
+            D_Staff_uc = 2;
+        }
+        else if (AccessOptions['D_Staff'] === 'All') {
+            D_Staff_uc = 3;
         }
         // Customer Controls
         if (AccessOptions['Customer'] === 'No access') {
@@ -111,8 +123,8 @@ async function updateUserDataIndividual(req, res) {
         }
 
         const UpdateAccessControll = await userdbInstance.userdb.query(`UPDATE public.accesscontroll
-        SET  distributer=$1, product=$2, invoicegenerator=$3,customer=$4, staff=$5, invoicepayslip=$6
-        WHERE userid=$7;`, [Distributor_uc, Products_uc, InvoiceGenerator_uc, customer_uc, Staff_uc, InvoicePaySlip_uc, userid]);
+        SET  distributer=$1, product=$2, invoicegenerator=$3,customer=$4, staff=$5, invoicepayslip=$6 , d_staff=$7
+        WHERE userid=$8;`, [Distributor_uc, Products_uc, InvoiceGenerator_uc, customer_uc, Staff_uc, InvoicePaySlip_uc, D_Staff_uc, userid]);
         await userdbInstance.userdb.query('COMMIT');
 
         if (userUpdateResult.rowCount === 1) {
@@ -211,7 +223,7 @@ async function updatereciverStatus(req, res) {
     try {
         const reciverStatusResult = await userdbInstance.userdb.query(`UPDATE public.invoice
             SET reciverstatus=$1, transactionid=$2
-            WHERE invoiceid=$3;`, ['1',textVal, invoiceId]);
+            WHERE invoiceid=$3;`, ['1', textVal, invoiceId]);
         if (reciverStatusResult.rowCount === 1) {
             res.json({ message: "Status Updated Successfully", qos: "success" });
         } else {
@@ -223,13 +235,23 @@ async function updatereciverStatus(req, res) {
     }
 }
 async function updatesenderStatus(req, res) {
-    const { invoiceId} = req.body;
-    // console.log(invoiceId);
+    const { invoiceId, belongsto } = req.body;
+    // const {}  = req.body;
+    console.log(belongsto);
     try {
-        const reciverStatusResult = await userdbInstance.userdb.query(`UPDATE public.invoice
+        const senderStatusResult = await userdbInstance.userdb.query(`UPDATE public.invoice
             SET senderstatus=$1
-            WHERE invoiceid=$2;`, ['1',invoiceId]);
-        if (reciverStatusResult.rowCount === 1) {
+            WHERE invoiceid=$2;`, ['1', invoiceId]);
+
+        const getuserid = await userdbInstance.userdb.query(`SELECT userid from public."user" where email=$1;`, [belongsto]);
+        // console.log(getuserid.rows[0].userid);
+        const getuseridRes = getuserid.rows[0].userid;
+
+        const updateProductStatus = await userdbInstance.userdb.query(`UPDATE public.products
+        SET status=$1
+        WHERE belongsto=$2;`, ['1', getuseridRes]);
+        
+        if (senderStatusResult.rowCount === 1) {
             res.json({ message: "Status Updated Successfully", qos: "success" });
         } else {
             res.status(404).json({ message: "Not Updated Properly" });
@@ -280,4 +302,4 @@ async function productQuantity(req, res) {
 }
 
 
-module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword, updatereciverStatus,updatesenderStatus, productQuantity };
+module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword, updatereciverStatus, updatesenderStatus, productQuantity };
