@@ -133,7 +133,7 @@ const Login = (props) => {
                 <div className='digital_scan'>
                     <div className="all_inputs">
                         <div className="logo">
-                            <img src={invoiceLogo} alt="Logo" />
+                            Organiation Name
                         </div>
                         <div className="credentials" >
                             <FormControl sx={{ m: 1, width: '30ch' }} variant="outlined" className="credentials" >

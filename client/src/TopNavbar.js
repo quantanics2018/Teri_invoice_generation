@@ -13,7 +13,7 @@ const TopNavbar = () => {
     <nav className='top-nav flex-class align-center'>
       {/* Product Logo */}
       <div className='navbar_mar mar-left d-flex'>
-        <img src={companyLogo} alt="Terion" width="200" height="25" />
+        <h1>Organization Name</h1>
       </div>
       {/* <IconButton color="inherit" onClick={handleSidebarToggle}>
         <MenuIcon />
