@@ -193,8 +193,10 @@ const InvoiceGenerator = () => {
                         alert(response.data.message);
                     }
                     setLoading(false);
+                    if (response.data.status) {
+                        navigate('/TransactionHistory');
+                    }
                     // setPreviewInvoice(response.data.message)
-                    navigate('/TransactionHistory');
                 } catch (error) {
                     console.error('Error sending data:', error);
                 }

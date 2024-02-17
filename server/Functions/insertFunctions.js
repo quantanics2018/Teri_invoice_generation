@@ -177,9 +177,12 @@ async function addInvoice(req, res) {
     const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
 
-    console.log(totalSum);
-    console.log("recivermail : ", recivermail);
-    console.log("senderID", senderID);
+    // console.log(totalSum);
+    // console.log("recivermail : ", recivermail);
+    // console.log("senderID", senderID);
+    // console.log(invoiceItem);
+
+
     try {
         const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1 and adminid=$2;', [recivermail, senderID]);
         console.log(checkIsUsernameExist.rows);
@@ -201,37 +204,44 @@ async function addInvoice(req, res) {
             // console.log(invoiceid);
             for (const item of invoiceItem) {
                 // console.log(item.id);
+                // console.log(item.hsncode, " : next : " ,item.batchno );
+                // const for_productid = await userdbInstance.userdb.query(
+                //     `select productid from public.products WHERE belongsto=$1 and productname=$2`, [senderID, item.productName]
+                // );
+                // // console.log(for_productid.rows[0].productid);
+                // const productIdByName = for_productid.rows[0].productid
 
-                const for_productid = await userdbInstance.userdb.query(
-                    `select productid from public.products WHERE belongsto=$1 and productname=$2`, [senderID, item.productName]
-                );
-                // console.log(for_productid.rows[0].productid);
-                const productIdByName = for_productid.rows[0].productid
-
-                if (productIdByName) {
-                    item.productid = productIdByName
-                }
+                // if (productIdByName) {
+                //     item.productid = productIdByName
+                // }
                 const ReduceFromSenderTable = await userdbInstance.userdb.query(
                     `UPDATE products
                     SET quantity = quantity - $1
-                    WHERE belongsto=$2 and productid = $3;`, [item.Quantity, senderID, item.productid]
+                    WHERE belongsto=$2 and productid = $3 and batchno = $4;`, [item.Quantity, senderID, item.hsncode , item.batchno]
                 );
 
                 const checkProductAlreadyExist = await userdbInstance.userdb.query(
-                    `select productid from public.products WHERE belongsto=$1 and productid=$2`, [reciverID, item.productid]
+                    `select productid from public.products WHERE belongsto=$1 and productid=$2 and batchno = $3`, [reciverID, item.hsncode , item.batchno]
                 );
                 // console.log(checkProductAlreadyExist.rows);
                 if (checkProductAlreadyExist.rows.length > 0) {
                     // console.log("Yes");
                     const UpdateToRecieverTable = await userdbInstance.userdb.query(
-                        `Update public.products SET quantity=quantity+$1 WHERE belongsto=$2 AND productid=$3;`, [item.Quantity, reciverID, item.productid]
+                        `Update public.products SET quantity=quantity+$1 WHERE belongsto=$2 AND productid=$3 AND batchno = $4;`, [item.Quantity, reciverID, item.hsncode ,item.batchno]
                     );
                 } else {
                     // console.log("No");
+                    const getAllOtherDetails = await userdbInstance.userdb.query(
+                        `select priceperitem ,cgst , sgst from public.products WHERE belongsto=$1 and productid=$2 and batchno = $3`, [senderID, item.hsncode , item.batchno]
+                    );
+                    // const priceperitem = getAllOtherDetails.rows[0].priceperitem;
+                    // const cgst = getAllOtherDetails.rows[0].cgst;
+                    // const sgst = getAllOtherDetails.rows[0].sgst;
+                    // console.log("priceperitem : ",priceperitem , cgst,sgst);
                     const AddToRecieverTable = await userdbInstance.userdb.query(
                         `INSERT INTO public.products(
-                            productid, quantity,productname,belongsto, status)
-                            VALUES ($1, $2, $3, $4,$5);`, [item.productid, item.Quantity, item.productName, reciverID, 0]
+                            productid, quantity,productname,belongsto, status , batchno , priceperitem , cgst , sgst)
+                            VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9);`, [item.hsncode, item.Quantity, item.productName, reciverID, 0 ,item.batchno,priceperitem,cgst,sgst]
                     );
                 }
 

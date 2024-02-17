@@ -160,13 +160,13 @@ const Products = () => {
         // const userInfo = JSON.parse(userInfoString);
     }
     const [editableIndex, setEditableIndex] = useState(null);
-    const updateInDb = async (id, quantity, index) => {
+    const updateInDb = async (id, batchno,quantity, index) => {
         setEditableIndex(null)
         // console.log(id, "call update api", quantity);
         const UpdateProductQuantityApi = async () => {
             try {
                 const response = await axios.put(`${API_URL}update/productQuantity`, {
-                    productid: id, currentUserUserid: userInfo.userid, Quantity: quantity
+                    hsncode: id, batchno:batchno , currentUserUserid: userInfo.userid, Quantity: quantity
                 });
                 console.log(response);
                 if (response.data.qos === "success") {
@@ -394,7 +394,7 @@ const Products = () => {
                                         className='col-head'
                                         autoFocus={((userInfo.position === 'manifacture') || (userInfo.position === 'staff'))}
                                         value={data.quantity}
-                                        onBlur={() => (((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) && updateInDb(data.productid, data.quantity, index))}
+                                        onBlur={() => (((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) && updateInDb(data.productid, data.batchno,data.quantity, index))}
                                         onChange={(event) => (((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) && handleQuantityChange(event, index))}
                                     />
                                 ) : (

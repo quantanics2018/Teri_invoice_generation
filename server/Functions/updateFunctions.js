@@ -284,12 +284,12 @@ async function updateProducts(req, res) {
     }
 }
 async function productQuantity(req, res) {
-    const { productid, currentUserUserid, Quantity } = req.body;
-    console.log(productid, currentUserUserid, Quantity);
+    const { hsncode,batchno, currentUserUserid, Quantity } = req.body;
+    // console.log(hsncode,batchno, currentUserUserid, Quantity);
     try {
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
         SET quantity=$1
-        WHERE productid=$2 and belongsto=$3;`, [Quantity, productid, currentUserUserid]);
+        WHERE productid=$2 and belongsto=$3 and batchno=$4;`, [Quantity, hsncode, currentUserUserid,batchno]);
         if (userUpdateResult.rowCount === 1) {
             res.json({ resStatus: "Updated successfully", qos: "success" });
         } else {

@@ -87,7 +87,7 @@ async function getUserList(req, res) {
         const {senderID} = req.body.inputValues;
         console.log(" userid : ",senderID);
         const getUserList = await userdbInstance.userdb.query(`SELECT email
-        FROM public."user" where adminid=$1 order by rno DESC;`, [senderID]);
+        FROM public."user" where adminid=$1 and (positionid = $2 or positionid = $3 )order by rno DESC;`, [senderID,2,3]);
         res.json({ message: "Successfully Data Fetched", data: getUserList.rows});
     } catch (error) {
         console.error('Error executing database query:', error);
