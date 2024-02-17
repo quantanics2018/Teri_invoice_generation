@@ -89,16 +89,17 @@ const Sidebar = ({ children, handleLogout }) => {
     return (
         <div className="container-slidebar">
             <div className="sidebar">
-                <div className="all_icon">
+                <div className="all_icon" style={{alignItems:"center"}}>
                     {
                         userSidebarConfig.map((item, index) => (
                             <NavLink
                                 key={index}
                                 className={`link`}
-                                style={{ borderRadius: "7px" }}
+                                style={{ borderRadius: "7px",width:"max-content",position:"relative" }}
                                 onMouseLeave={() => {
                                     const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
                                     dropdownContent.style.display = 'none';
+
                                     // dropdownContent.style.animation = 'slideOutToLeft 0.5s ease-in-out forwards';
                                 }}
                             >
@@ -108,6 +109,7 @@ const Sidebar = ({ children, handleLogout }) => {
                                         const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
                                         dropdownContent.style.display = 'flex';
                                         dropdownContent.style.animation = 'slideInFromLeft 0.3s ease-in-out forwards';
+                                        
                                     }}
                                 // className={`link sidebarIcon ${activeDropdownIndex === index ? 'active-link' : ''}`}
 
@@ -116,7 +118,7 @@ const Sidebar = ({ children, handleLogout }) => {
                                         <div className={`icon ${activeDropdownIndex === index ? 'active-icon' : ''}`}>{item.icon}</div>
                                     </div>
                                 </div>
-                                <div className={`dropdown-content`} style={{ display: 'none' }}
+                                <div className={`dropdown-content`} style={{ display: 'none',marginTop:'0',top:'0rem'}}
                                
                                     onMouseLeave={() => {
                                         const dropdownContent = document.getElementsByClassName('dropdown-content')[index];

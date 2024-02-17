@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL, SECRET_KEY } from '../config';
 // import { Button } from '@mui/material';
-import { UserActionBtn } from '../assets/style/cssInlineConfig';
+import { UserActionBtn , padding_top } from '../assets/style/cssInlineConfig';
 import { AddUserBtn } from '../components/AddUserBtn';
 import Example from '../components/Example';
 import EditDistributerDetails from './Edit_Distributer_Detials';
@@ -368,7 +368,7 @@ const Staff_Detials = (props) => {
                     )}
 
 
-                    <div className="scroll_div">
+                    <div className="scroll_div" style={padding_top}>
                         {alldata.map((data, index) => (
                             (Positionid_val === 4 || Positionid_val === 5) ? (
                                 <div>
