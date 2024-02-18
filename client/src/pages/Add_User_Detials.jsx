@@ -442,6 +442,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
         if (Positionid_val === 4) {
             labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
         }
+        // else if (Positionid_val === 5) {
+        //     labelsToUpdate = ['Customer'];
+        // }
         else if (Positionid_val === 2) {
             labelsToUpdate = ['Staff', 'Distributor'];
         }
@@ -457,7 +460,17 @@ const Add_User_Detials = ({ Positionid_val }) => {
         });
     }
     if (userInfo.position === 'distributor') {
-        const labelsToUpdate = ['Staff', 'Distributor', 'D_Staff', 'Products', 'Invoice Generator'];
+        let labelsToUpdate
+        if (Positionid_val === 5) {
+            labelsToUpdate = ['Staff', 'Distributor', 'D_Staff'];
+        }
+        else if (Positionid_val === 3) {
+            labelsToUpdate = ['Staff', 'Distributor', 'D_Staff','Customer','Products','Invoice Generator'];
+        }
+        else {
+            labelsToUpdate = ['D_Staff', 'Customer'];
+        }
+        const labelsToUpdate1 = ['Staff', 'Distributor', 'D_Staff'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -467,7 +480,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         });
     }
     if (userInfo.position === 'staff') {
-        const labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
+        const labelsToUpdate = ['Staff', 'Distributor'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -478,7 +491,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
     }
     if (userInfo.position === 'd_staff') {
-        const labelsToUpdate = ['Staff', 'Distributor', 'D_Staff', 'Customer'];
+        const labelsToUpdate = ['Staff', 'Distributor', 'D_Staff', 'Customer','Products','Invoice Generator'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -493,21 +506,12 @@ const Add_User_Detials = ({ Positionid_val }) => {
             setAccessValues((prevValues) => ({
                 ...prevValues,
                 Staff: 'No access',
-                Customer: 'No access',
-                D_Staff: 'No access'
+                Distributor: 'No access',
+                // Customer: 'No access',
+                // D_Staff: 'No access'
             }));
         }
         else if (userInfo.position === 'd_staff') {
-            setAccessValues((prevValues) => ({
-                ...prevValues,
-                Staff: 'No access',
-                Distributor: 'No access',
-                Customer: 'No access',
-                Products: 'No access',
-                'Invoice Generator': 'No access',
-            }));
-        }
-        else if (userInfo.position === 'distributor') {
             setAccessValues((prevValues) => ({
                 ...prevValues,
                 Staff: 'No access',
@@ -517,6 +521,36 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 Products: 'No access',
                 'Invoice Generator': 'No access',
             }));
+        }
+        else if (userInfo.position === 'distributor') {
+            // setAccessValues((prevValues) => ({
+            //     ...prevValues,
+            //     Staff: 'No access',
+            //     Distributor: 'No access',
+            //     D_Staff: 'No access',
+            // }));
+            if (Positionid_val === 5) {
+                setAccessValues((prevValues) => ({
+                    ...prevValues,
+                    Staff: 'No access',
+                    Distributor: 'No access',
+                    D_Staff: 'No access',
+                    // Customer: 'No access',
+                    // Products: 'No access',
+                }));
+            }
+            if (Positionid_val === 3) {
+                setAccessValues((prevValues) => ({
+                    ...prevValues,
+                    Staff: 'No access',
+                    Distributor: 'No access',
+                    Customer: 'No access',
+                    D_Staff: 'No access',
+                    Products:'No access',
+                    'Invoice Generator': 'No access',
+
+                }));
+            }
         }
         else if (userInfo.position === 'manifacture') {
             if (Positionid_val === 4) {

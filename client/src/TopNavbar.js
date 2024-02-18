@@ -1,6 +1,6 @@
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import companyLogo from './assets/logo/invoiceLogo.png'
-import { Drawer, IconButton } from '@mui/material';
+import { Avatar, Badge, Button, Chip, Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu'
 const TopNavbar = () => {
 
@@ -9,6 +9,9 @@ const TopNavbar = () => {
   const handleSidebarToggle = () => {
     setisSidebarOpen(!isSidebarOpen);
   }
+  const userInfoString = sessionStorage.getItem("UserInfo");
+  const userInfo = JSON.parse(userInfoString);
+  console.log(userInfo.email);
   return (
     <nav className='top-nav flex-class align-center'>
       {/* Product Logo */}
@@ -18,6 +21,12 @@ const TopNavbar = () => {
       {/* <IconButton color="inherit" onClick={handleSidebarToggle}>
         <MenuIcon />
       </IconButton> */}
+      <div className='usernameProfile'>
+        <Chip label={userInfo.email} variant="outlined" />
+        <Badge color='success' variant='dot' overlap='circular' anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} >
+          <Avatar alt={userInfo.email} src="/static/images/avatar/1.jpg" />
+        </Badge>
+      </div>
 
       {/* Site Dropdown */}
       <Drawer anchor="left" open={isSidebarOpen} onClose={handleSidebarToggle}>

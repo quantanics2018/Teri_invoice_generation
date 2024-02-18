@@ -157,7 +157,12 @@
 .us-none {
     user-select: none;
 }
-
+.usernameProfile{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
 .status-bar {
     min-width: -webkit-fill-available;
     color: var(--COLOR_BEFORE_HOVER);

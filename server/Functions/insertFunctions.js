@@ -234,9 +234,9 @@ async function addInvoice(req, res) {
                     const getAllOtherDetails = await userdbInstance.userdb.query(
                         `select priceperitem ,cgst , sgst from public.products WHERE belongsto=$1 and productid=$2 and batchno = $3`, [senderID, item.hsncode , item.batchno]
                     );
-                    // const priceperitem = getAllOtherDetails.rows[0].priceperitem;
-                    // const cgst = getAllOtherDetails.rows[0].cgst;
-                    // const sgst = getAllOtherDetails.rows[0].sgst;
+                    const priceperitem = getAllOtherDetails.rows[0].priceperitem;
+                    const cgst = getAllOtherDetails.rows[0].cgst;
+                    const sgst = getAllOtherDetails.rows[0].sgst;
                     // console.log("priceperitem : ",priceperitem , cgst,sgst);
                     const AddToRecieverTable = await userdbInstance.userdb.query(
                         `INSERT INTO public.products(
@@ -269,17 +269,31 @@ async function addProduct(req, res) {
     const { updator } = req.body;
     console.log(hsncode, quantity, priceperitem, productname, updator);
 
+   
+
     try {
-        const CheckForProductExistance = await userdbInstance.userdb.query(`select * from products where productid=$1 and batchno=$2 and belongsto=$3;`, [hsncode, batchno, updator]);
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [updator]);
+        console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        let belongsto;
+        if ( res_positionId == 4 ||  res_positionId ==5 ) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [updator]);
+            belongsto = getBelongsto.rows[0].adminid
+        }else{
+            belongsto = updator
+        }
+        // console.log(belongsto);
+
+        const CheckForProductExistance = await userdbInstance.userdb.query(`select * from products where productid=$1 and batchno=$2 and belongsto=$3;`, [hsncode, batchno, belongsto]);
         console.log(CheckForProductExistance.rows.length);
         if (CheckForProductExistance.rows.length > 0) {
             res.json({ message: "Product Already Exist!", status: false })
         }
-        else {
+        else { 
             await userdbInstance.userdb.query('BEGIN');
             const insertProductResult = await userdbInstance.userdb.query(`INSERT INTO public.products(
                 productid, quantity, priceperitem, "Lastupdatedby",productname,belongsto,status,batchno,cgst,sgst)
-                VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10);`, [hsncode, quantity, priceperitem, updator, productname, updator, '1', batchno, CGST, SGCT]);
+                VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10);`, [hsncode, quantity, priceperitem, updator, productname, belongsto, '1', batchno, CGST, SGCT]);
             await userdbInstance.userdb.query('COMMIT');
             if (insertProductResult.rowCount === 1) {
                 res.json({ message: "Data inserted Successfully", status: true });
