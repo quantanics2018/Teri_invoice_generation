@@ -69,12 +69,30 @@ app.post('/add/:entity(user|products|invoice|feedback)', async (req, res) => {
 })
 
 // Get Data From DB
-app.post('/get/:entity(user|credentials|product|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo)', async (req, res) => {
+app.post('/get/:entity(user|credentials|product|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo|SenderDataInvoiceAddress|ReciverDataInvoiceAddress)', async (req, res) => {
     const entity = req.params.entity;
     const requestData = req.body;
     if (entity === 'user') {
         try {
             var userdata = await getData.getUserData(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'SenderDataInvoiceAddress') {
+        try {
+            var userdata = await getData.SenderDataInvoiceAddress(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'ReciverDataInvoiceAddress') {
+        try {
+            var userdata = await getData.ReciverDataInvoiceAddress(req, res);
         }
         catch (error) {
             res.send("error");

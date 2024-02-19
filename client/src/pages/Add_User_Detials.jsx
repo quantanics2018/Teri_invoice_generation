@@ -183,10 +183,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setresAlert(response.data.message)
                         setSubmitted(true);
                         if (response.data.status) {
-                            setTimeout(() => {
-                                handleClear();
-                                navigate(-1);
-                            }, 1000);
+                            handleClear();
+                            navigate(-1);
+                            // setTimeout(() => {
+                            // }, 1000);
                         }
                     } catch (error) {
                         console.error('Error sending data:', error);
@@ -601,7 +601,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         const selectedFile = event.target.files[0];
         if (selectedFile) {
             setFileName(selectedFile.name);
-            console.log("entering", selectedFile.name);
+            // console.log("entering", selectedFile.name);
             var imageName = selectedFile.name
             setPostData({
                 ...postData,

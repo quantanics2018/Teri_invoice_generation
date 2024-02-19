@@ -35,7 +35,6 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import CryptoJS from 'crypto-js';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-
 const Edit_Distributer_Detials = ({ Positionid_val }) => {
     let useridEnc = useParams();
     let userid;

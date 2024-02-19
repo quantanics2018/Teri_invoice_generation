@@ -5,7 +5,7 @@ import { useState } from "react";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import html2pdf from 'html2pdf.js';
-import ReactDOMServer from 'react-dom/server'; 
+import ReactDOMServer from 'react-dom/server';
 import {
     Table,
     TableBody,
@@ -22,6 +22,7 @@ import Invoice from '../components/Invoice';
 import { CancelBtn, SaveBtn } from '../assets/style/cssInlineConfig';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
+import QrCode from '../components/QrCode';
 
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -148,6 +149,7 @@ const InvoiceGenerator = () => {
             const htmlString = ReactDOMServer.renderToString(
                 <div className="InvoiceContainer">
                     Replace with Invoice in Return
+                    <Invoice previewInvoiceprop={rows} ReciverInvoiceProp={inputValues} />
                 </div>
             );
 
@@ -185,11 +187,11 @@ const InvoiceGenerator = () => {
                 // alert('Success');
                 try {
                     setLoading(true);
-                    const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows , totalValues:totalSum});
-                    if(response.data.status){
+                    const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows, totalValues: totalSum });
+                    if (response.data.status) {
                         await sendDataToServer();
                         alert(response.data.message);
-                    }else{
+                    } else {
                         alert(response.data.message);
                     }
                     setLoading(false);
@@ -203,6 +205,28 @@ const InvoiceGenerator = () => {
             }
         }
     }
+
+    const [senderIdRes, setsenderIdRes] = useState([{}]);
+    // const [ReciverIdRes, setReciverIdRes] = useState([{userid:'1'}]);
+    useEffect(() => {
+        const senderid = userInfo.userid;
+        const reciverid = inputValues.UserId;
+        const getSenderData = async () => {
+            const getSenderDataRequest = await axios.post(`${API_URL}get/SenderDataInvoiceAddress`, { senderid: senderid });
+            const senderidObj = getSenderDataRequest.data.data;
+            console.log("senderidObj : ", senderidObj);
+            setsenderIdRes(senderidObj);
+        }
+        // const getReciverData = async () => {
+        //     const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: reciverid });
+        //     console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
+        //     const reciveridObj = getReciverDataRequest.data.data;
+        //     console.log("reciveridObj : ", reciveridObj);
+        //     setReciverIdRes(reciveridObj);
+        // }
+        getSenderData();
+        // getReciverData();
+    }, [inputValues.UserId])
 
     // input dropdown options
     const [productList, setproductList] = useState([]);
@@ -290,10 +314,9 @@ const InvoiceGenerator = () => {
     }
 
 
-
     return (
         <>
-         {loading &&  <Loader />}
+            {loading && <Loader />}
             {/* Preview Modal Start */}
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
@@ -303,7 +326,10 @@ const InvoiceGenerator = () => {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div id="invoiceContent" class="modal-body">
-                            <Invoice previewInvoiceprop={rows} />
+                            <Invoice previewInvoiceprop={rows}
+                                // ReciverInvoiceProp={ReciverIdRes}
+                                SenderInvoiceProp={senderIdRes}
+                            />
                         </div>
                         <div class="modal-footer gap-4">
                             <CancelBtnComp dataBsDismiss="modal" />

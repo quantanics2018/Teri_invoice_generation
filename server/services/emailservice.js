@@ -6,6 +6,7 @@ const CryptoJS = require('crypto-js');
 const PDFDocument = require('pdfkit');
 const pdf = require('html-pdf');
 const puppeteer = require('puppeteer');
+const { API_URL_CLIENT } = require('../serversideConfig');
 
 // console.log(crypto);
 
@@ -62,8 +63,8 @@ async function emailservice(req, res, htmlString) {
 
     // // const pdfBuffer = await generatePDF();
 
-    // // const pdfFilePath = path.join(__dirname, 'document.pdf');
-    // // const pdfBuffer = await fs.readFile(pdfFilePath);
+    const pdfFilePath = path.join(__dirname, 'document.pdf');
+    const pdfBuffer = await fs.readFile(pdfFilePath);
 
     // const htmlContent = await fs.readFile(path.join(__dirname, '../MailContent/payslipbill.html'), 'utf-8');
     // const pdfBuffer = await generatePDF(htmlContent);
@@ -73,18 +74,18 @@ async function emailservice(req, res, htmlString) {
         to: to,
         subject: 'Official mail from Terion Organization',
         html: htmlString,
-        // attachments: [
-        //     // {
-        //     //     filename: 'payslipbill.html',
-        //     //     content: htmlContent,
-        //     //     encoding: 'utf-8',
-        //     // },
-        //     {
-        //         filename: 'Invoice.pdf',
-        //         content: pdfBuffer,
-        //         // encoding: 'base64',
-        //     },
-        // ],
+        attachments: [
+            // {
+            //     filename: 'payslipbill.html',
+            //     content: htmlContent,
+            //     encoding: 'utf-8',
+            // },
+            {
+                filename: 'Invoice.pdf',
+                content: pdfBuffer,
+                // encoding: 'base64',
+            },
+        ],
     };
 
     try {
@@ -92,6 +93,36 @@ async function emailservice(req, res, htmlString) {
         await transporter.sendMail(mailOptions);
         console.log("sucess");
         return { success: true, message: 'Email sent successfully' };
+    } catch (error) {
+        console.error(error);
+        console.log("fail");
+        throw new Error('Failed to send email');
+    }
+}
+async function UserAddedMailContent(req,res) {
+    const {email} = req.body.userDetials
+    console.log(email);
+    const to = 'nitheshwaran003@gmail.com';
+    const link = `${API_URL_CLIENT}`;
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587, // or 465
+        secure: false,
+        service: 'gmail',
+        auth: {
+            user: 'terionorganization@gmail.com',
+            pass: 'imkq rydg xtla lvmx',
+        },
+    });
+    const mailOptions = {
+        from: 'terionorganization@gmail.com',
+        to: to,
+        subject: 'Official mail from Terion Organization',
+        html: `<h1>You where added as one of the member of Terion <a href="${link}"> Click Here </a></h1>`,
+    };
+    try {
+        await transporter.sendMail(mailOptions);
+        res.json({ status: true, message: 'Email sent successfully' });
     } catch (error) {
         console.error(error);
         console.log("fail");
@@ -126,7 +157,7 @@ async function UpdatePasswordmailservice(req, res) {
     // const encryptedEmail = encryptEmail(to);
     const secretKey = 'edf6537e67f256578bbb90b2adb1617622d6cbe49702b832c99c6feb8cce817c';
     const encryptedEmail = encryptString(to, secretKey);
-    const link = `http://localhost:3001/UpdatePassword?email=${encodeURIComponent(encryptedEmail)}`;
+    const link = `${API_URL_CLIENT}/UpdatePassword?email=${encodeURIComponent(encryptedEmail)}`;
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -148,7 +179,7 @@ async function UpdatePasswordmailservice(req, res) {
         res.json({ success: true, message: 'Check Your Mail for further Steps' });
     } catch (error) {
         console.error(error);
-        res.json({ success: false, message: 'Failed to send email' });
+        res.json({ success: true, message: 'Failed to send email' });
         // throw new Error('Failed to send email');
     }
 }
@@ -159,4 +190,9 @@ const sendInvoice = async (req, res, htmlString) => {
     await emailservice(1,2,htmlString);
     res.json({ success: false, message: 'Failed to send email' });
 };
-module.exports = { emailservice, UpdatePasswordmailservice, sendInvoice };
+const UserAddedMail = async (req, res) => {
+    // const {htmlString} = req.body
+    await UserAddedMailContent(req,res);
+    res.json({ success: false, message: 'Failed to send email' });
+};
+module.exports = { emailservice, UpdatePasswordmailservice, sendInvoice,UserAddedMail };

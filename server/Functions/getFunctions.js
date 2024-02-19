@@ -30,6 +30,28 @@ async function getUserData(req, res) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+async function SenderDataInvoiceAddress(req, res) {
+    try {
+        const { senderid} = req.body;
+        console.log("senderid : ",senderid);
+        const SenderInvoiceAddressRes = await userdbInstance.userdb.query('select * from public."user" where userid=$1;', [senderid]);
+        res.json({ message: "Successfully Data Fetched", data: SenderInvoiceAddressRes.rows, status:true });
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" , status:false});
+    }
+}
+async function ReciverDataInvoiceAddress(req, res) {
+    try {
+        const {reciverid } = req.body;
+        console.log("reciverid : ",reciverid);
+        const ReciverInvoiceAddressRes = await userdbInstance.userdb.query('select * from public."user" where email=$1;', [reciverid]);
+        res.json({ message: "Successfully Data Fetched", data: ReciverInvoiceAddressRes.rows, status:true });
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error", status:false });
+    }
+}
 async function getprofileInfo(req, res) {
     try {
         const { userid } = req.body;
@@ -142,4 +164,4 @@ async function getProductDataIndividual(req, res) {
 }
 
 
-module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual };
+module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual,SenderDataInvoiceAddress,ReciverDataInvoiceAddress };
