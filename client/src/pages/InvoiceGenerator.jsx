@@ -55,12 +55,26 @@ const InvoiceGenerator = () => {
         UserId: "",
         senderID: userInfo.userid,
     });
+    const [ReciverIdRes, setReciverIdRes] = useState([{}]);
 
     const handleInputChangeInvoice = (fieldName, value) => {
         setInputValues((prevValues) => ({
             ...prevValues,
             [fieldName]: value,
         }));
+        // alert(inputValues.UserId)
+        // if (fieldName === "UserId") {
+        //     const getReciverData = async () => {
+        //         const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: inputValues.UserId });
+        //         console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
+        //         const reciveridObj = getReciverDataRequest.data.data;
+        //         console.log("reciveridObj : ",reciveridObj);
+        //         if (getReciverDataRequest.data.status) {
+        //             setReciverIdRes(reciveridObj);
+        //         }
+        //     }
+        //     getReciverData();
+        // }
     };
 
     // content for table
@@ -149,7 +163,7 @@ const InvoiceGenerator = () => {
             const htmlString = ReactDOMServer.renderToString(
                 <div className="InvoiceContainer">
                     Replace with Invoice in Return
-                    <Invoice previewInvoiceprop={rows} ReciverInvoiceProp={inputValues} />
+                    <Invoice previewInvoiceprop={rows}/>
                 </div>
             );
 
@@ -160,6 +174,7 @@ const InvoiceGenerator = () => {
             });
 
             if (response.status === 200) {
+                alert("success")
                 console.log('Mail sent successfully');
             } else {
                 console.error('Failed to send data');
@@ -207,7 +222,6 @@ const InvoiceGenerator = () => {
     }
 
     const [senderIdRes, setsenderIdRes] = useState([{}]);
-    // const [ReciverIdRes, setReciverIdRes] = useState([{userid:'1'}]);
     useEffect(() => {
         const senderid = userInfo.userid;
         const reciverid = inputValues.UserId;
@@ -327,7 +341,7 @@ const InvoiceGenerator = () => {
                         </div>
                         <div id="invoiceContent" class="modal-body">
                             <Invoice previewInvoiceprop={rows}
-                                // ReciverInvoiceProp={ReciverIdRes}
+                                ReciverInvoiceProp={ReciverIdRes}
                                 SenderInvoiceProp={senderIdRes}
                             />
                         </div>

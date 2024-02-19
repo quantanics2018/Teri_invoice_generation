@@ -14,8 +14,8 @@ import html2canvas from 'html2canvas';
 
 const Invoice = ({ previewInvoiceprop, ReciverInvoiceProp, SenderInvoiceProp }) => {
     // console.log(previewInvoiceprop);
-    // console.log("ReciverInvoiceProp", ReciverInvoiceProp);
-    console.log(SenderInvoiceProp[0]);
+    console.log("ReciverInvoiceProp", ReciverInvoiceProp);
+    // console.log(SenderInvoiceProp[0]);
     // console.log(previewInvoiceprop[0].hsncode);
     // console.log(previewInvoiceprop[0].productname);
     const userInfoString = sessionStorage.getItem("UserInfo");

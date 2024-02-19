@@ -45,6 +45,8 @@ async function generatePDF(htmlContent) {
 //     return pdfBuffer;
 // }
 async function emailservice(req, res, htmlString) {
+    const {email} = req.body;
+    console.log("email uh : ",email);
     const to = 'nitheshwaran003@gmail.com';
     console.log("innert test : ",htmlString);
     const transporter = nodemailer.createTransport({
@@ -102,7 +104,8 @@ async function emailservice(req, res, htmlString) {
 async function UserAddedMailContent(req,res) {
     const {email} = req.body.userDetials
     console.log(email);
-    const to = 'nitheshwaran003@gmail.com';
+    // const to = 'nitheshwaran003@gmail.com';
+    const to = email;
     const link = `${API_URL_CLIENT}`;
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
@@ -188,11 +191,11 @@ const sendInvoice = async (req, res, htmlString) => {
     // const {htmlString} = req.body
     console.log("test :", htmlString);
     await emailservice(1,2,htmlString);
-    res.json({ success: false, message: 'Failed to send email' });
+    res.json({ success: true, message: 'send email' });
 };
 const UserAddedMail = async (req, res) => {
     // const {htmlString} = req.body
     await UserAddedMailContent(req,res);
     res.json({ success: false, message: 'Failed to send email' });
 };
-module.exports = { emailservice, UpdatePasswordmailservice, sendInvoice,UserAddedMail };
+module.exports = { emailservice, UpdatePasswordmailservice, sendInvoice ,UserAddedMail };
