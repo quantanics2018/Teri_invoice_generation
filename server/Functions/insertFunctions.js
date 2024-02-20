@@ -49,28 +49,6 @@ async function addUser(req, res) {
         const credentialTable = await userdbInstance.userdb.query('INSERT INTO credentials (userid,username) VALUES ($1,$2)',
             [userid, email]);
 
-        // // console.log(Positionid);
-        // // manifacture
-        // if (Positionid == 1) {
-        //     distributor_ac = products_ac = Invoice_ac = staff_ac = '3';
-        //     customer_ac = '0';
-        // }
-        // // distributer
-        // else if (Positionid == 2) {
-        //     distributor_ac = staff_ac = '0';
-        //     products_ac = Invoice_ac = customer_ac = '3';
-        // }
-        // // customer
-        // else if (Positionid == 3) {
-        //     distributor_ac = products_ac = customer_ac = staff_ac = '0';
-        //     Invoice_ac = '3';
-        // }
-        // // staff
-        // else if (Positionid == 4) {
-        //     customer_ac = staff_ac = '0';
-        //     distributor_ac = '2';
-        //     products_ac = Invoice_ac = '3';
-        // }
         // Staff Controls
         if (AccessControls['Staff'] === 'No access') {
             staff_ac = 0;

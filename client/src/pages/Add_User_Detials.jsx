@@ -39,6 +39,7 @@ import SelectTextFields from '../components/SelectTextFields';
 import InputFileUpload from '../components/SelectTextFields';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ImageUpload from '../components/ImageUpload';
+import Loader from '../components/Loader';
 
 
 const Add_User_Detials = ({ Positionid_val }) => {
@@ -137,7 +138,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
     // for (const entry of formData.entries()) {
     //     console.log(entry);
     // }
-
+    const [loading, setLoading] = useState(false);
     const [resAlert, setresAlert] = useState(null)
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -178,11 +179,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
                 ) {
                     try {
+                        setLoading(true);
                         const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues });
                         // alert(response.data.message);
                         setresAlert(response.data.message)
                         setSubmitted(true);
                         if (response.data.status) {
+                            setLoading(false);
                             handleClear();
                             navigate(-1);
                             // setTimeout(() => {
@@ -465,7 +468,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
             labelsToUpdate = ['Staff', 'Distributor', 'D_Staff'];
         }
         else if (Positionid_val === 3) {
-            labelsToUpdate = ['Staff', 'Distributor', 'D_Staff','Customer','Products','Invoice Generator'];
+            labelsToUpdate = ['Staff', 'Distributor', 'D_Staff', 'Customer', 'Products', 'Invoice Generator'];
         }
         else {
             labelsToUpdate = ['D_Staff', 'Customer'];
@@ -491,7 +494,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
     }
     if (userInfo.position === 'd_staff') {
-        const labelsToUpdate = ['Staff', 'Distributor', 'D_Staff', 'Customer','Products','Invoice Generator'];
+        const labelsToUpdate = ['Staff', 'Distributor', 'D_Staff', 'Customer', 'Products', 'Invoice Generator'];
         labelsToUpdate.forEach((label) => {
             const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
             if (indexToUpdate !== -1) {
@@ -546,7 +549,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     Distributor: 'No access',
                     Customer: 'No access',
                     D_Staff: 'No access',
-                    Products:'No access',
+                    Products: 'No access',
                     'Invoice Generator': 'No access',
 
                 }));
@@ -645,17 +648,19 @@ const Add_User_Detials = ({ Positionid_val }) => {
     // };
 
     return (
-        <div className='Add_device1 '>
-            {/* Snack bar */}
-            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-            }}>
-                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-                    {resAlert}
-                </MuiAlert>
-            </Snackbar>
-            {/* <Snackbar open={submittedWarnning} autoHideDuration={1000} onClose={handleSnackbarClose} anchorOrigin={{
+        <>
+            {loading && <Loader />}
+            <div className='Add_device1 '>
+                {/* Snack bar */}
+                <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}>
+                    <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                        {resAlert}
+                    </MuiAlert>
+                </Snackbar>
+                {/* <Snackbar open={submittedWarnning} autoHideDuration={1000} onClose={handleSnackbarClose} anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right',
             }}>
@@ -663,77 +668,77 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     {resAlert}
                 </MuiAlert>
             </Snackbar> */}
-            {/* Exit Conformation */}
-            <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div className="modal-content width_of_model height_of_modal_content">
-                        <div className="modal-header-confirm">
-                            <h5 className="modal-title" id="exampleModalLabel">CONFIRMATION</h5>
-                        </div>
-                        <div className="modal-main-confirm">
-                            <h5 className="modal-title ">Are you sure you want Exit ?
-                            </h5>
-                        </div>
-                        <div className="modal-footer-confirm">
-                            <button type="button" className="btn-loc active-loc" data-bs-dismiss="modal" onClick={handleCancel} >YES</button>
-                            <button type="button" className="btn-loc inactive-loc" data-bs-dismiss="modal">NO</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* User access model */}
-            {/* Access controll start */}
-            <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Access Control</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <FormControl component="fieldset">
-                                {/* <FormLabel component="legend">Rows</FormLabel> */}
-                                {updatedAccessHead.map((row, rowIndex) => (
-                                    <div key={rowIndex} className='accessControlHeadwithVal'>
-                                        <FormLabel component="legend" className='acc_head'>{`${row.label}`}</FormLabel>
-                                        <RadioGroup row
-                                            className='acc_val'
-                                            value={accessValues[row.label]}
-                                            onChange={(e) => handleRadioChange(row.label, e.target.value)}
-                                        >
-                                            {accessOptions.map((radio, radioIndex) => (
-                                                <FormControlLabel key={radioIndex} value={radio.label} control={<Radio disabled={row.disableHead} />} label={`${radio.label}`} />
-                                            ))}
-                                        </RadioGroup>
-                                    </div>
-                                ))}
-                                {/* Access values state: {JSON.stringify(accessValues)} */}
-                            </FormControl>
-                        </div>
-                        <div class="modal-footer">
-                            {/* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> */}
-                            <Button variant="outlined" type="button" data-bs-dismiss="modal" style={SaveBtn}>Access</Button>
+                {/* Exit Conformation */}
+                <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div className="modal-content width_of_model height_of_modal_content">
+                            <div className="modal-header-confirm">
+                                <h5 className="modal-title" id="exampleModalLabel">CONFIRMATION</h5>
+                            </div>
+                            <div className="modal-main-confirm">
+                                <h5 className="modal-title ">Are you sure you want Exit ?
+                                </h5>
+                            </div>
+                            <div className="modal-footer-confirm">
+                                <button type="button" className="btn-loc active-loc" data-bs-dismiss="modal" onClick={handleCancel} >YES</button>
+                                <button type="button" className="btn-loc inactive-loc" data-bs-dismiss="modal">NO</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {/* access controll end */}
+                {/* User access model */}
+                {/* Access controll start */}
+                <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Access Control</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <FormControl component="fieldset">
+                                    {/* <FormLabel component="legend">Rows</FormLabel> */}
+                                    {updatedAccessHead.map((row, rowIndex) => (
+                                        <div key={rowIndex} className='accessControlHeadwithVal'>
+                                            <FormLabel component="legend" className='acc_head'>{`${row.label}`}</FormLabel>
+                                            <RadioGroup row
+                                                className='acc_val'
+                                                value={accessValues[row.label]}
+                                                onChange={(e) => handleRadioChange(row.label, e.target.value)}
+                                            >
+                                                {accessOptions.map((radio, radioIndex) => (
+                                                    <FormControlLabel key={radioIndex} value={radio.label} control={<Radio disabled={row.disableHead} />} label={`${radio.label}`} />
+                                                ))}
+                                            </RadioGroup>
+                                        </div>
+                                    ))}
+                                    {/* Access values state: {JSON.stringify(accessValues)} */}
+                                </FormControl>
+                            </div>
+                            <div class="modal-footer">
+                                {/* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> */}
+                                <Button variant="outlined" type="button" data-bs-dismiss="modal" style={SaveBtn}>Access</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* access controll end */}
 
-            <div className="row_with_count_status">
-                <span className='module_tittle'>User Detials</span>
-            </div>
-            {/* <ImageUpload /> */}
-            <div className="add_device_container1">
-                <div className="new_device_content scroll_div">
-                    <div className="row_one display-flex">
-                        <div className="adding_new_device uppercase bold">
-                            Add
-                            {(Positionid_val === 2) && " Distributor "}
-                            {(Positionid_val === 3) && " Customer "}
-                            {(Positionid_val === 4) && " Staff "}
-                            {(Positionid_val === 5) && " D_Staff "}
-                            Detials </div>
-                        {/* <select value={selectedUser} onChange={handleUserChange}>
+                <div className="row_with_count_status">
+                    <span className='module_tittle'>User Detials</span>
+                </div>
+                {/* <ImageUpload /> */}
+                <div className="add_device_container1">
+                    <div className="new_device_content scroll_div">
+                        <div className="row_one display-flex">
+                            <div className="adding_new_device uppercase bold">
+                                Add
+                                {(Positionid_val === 2) && " Distributor "}
+                                {(Positionid_val === 3) && " Customer "}
+                                {(Positionid_val === 4) && " Staff "}
+                                {(Positionid_val === 5) && " D_Staff "}
+                                Detials </div>
+                            {/* <select value={selectedUser} onChange={handleUserChange}>
                             <option value={"select user"}>Select User</option>
                             {userInfo.position === 'manifacture' && (
                                 <>
@@ -750,8 +755,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 <option value="Customer" >Customer</option>
                             )}
                         </select> */}
-                    </div>
-                    {/* <FormControl style={{ width: '150px' }}>
+                        </div>
+                        {/* <FormControl style={{ width: '150px' }}>
                         <InputLabel id="demo-simple-select-label">Select user</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -781,107 +786,18 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         </Select>
                     </FormControl> */}
 
-                    <div className="row_two display-flex padding-loc">
-                        <div className="device_info uppercase light-grey mb-loc-5">
-                            User info
-                        </div>
-
-                        <div className="input-boxes">
-                            <div className="cmpny_and_site_name display-flex">
-                                {inputFields.slice(0, 4).map((field, index) => (
-                                    !(field.isStaff) &&
-                                    <div key={index} className="inputbox display-flex input">
-                                        {!field.isStaff && (
-                                            <Box className="dsa_1st_input"
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column', // Change the direction for small screens
-                                                    '& .MuiTextField-root': {
-                                                        m: 1,
-                                                        width: field.name === 'bussinessType' ? '27ch' : '100%',
-                                                    },
-                                                }}
-                                            >
-                                                {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
-
-                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                <TextField
-                                                    label={
-                                                        <span>{`${field.label} *`}</span>
-                                                    }
-                                                    // helperText="Please enter your name"
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={handleInputChange}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                    select={field.name === 'bussinessType' && true}
-                                                    disabled={field.disabled}
-                                                >
-                                                    {currencies.map((option) => (
-                                                        <MenuItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </MenuItem>
-                                                    ))}
-                                                </TextField>
-
-                                            </Box>
-                                        )}
-                                    </div>
-                                ))}
+                        <div className="row_two display-flex padding-loc">
+                            <div className="device_info uppercase light-grey mb-loc-5">
+                                User info
                             </div>
 
-                            <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(4, 8).map((field, index) => (
-                                    !(field.isStaff) && (
+                            <div className="input-boxes">
+                                <div className="cmpny_and_site_name display-flex">
+                                    {inputFields.slice(0, 4).map((field, index) => (
+                                        !(field.isStaff) &&
                                         <div key={index} className="inputbox display-flex input">
-                                            <Box className="dsa_1st_input"
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column', // Change the direction for small screens
-                                                    '& .MuiTextField-root': {
-                                                        m: 1,
-                                                        width: field.name === 'bussinessType' ? '28ch' : '100%',
-                                                    },
-                                                }}
-                                            >
-                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                <TextField
-                                                    label={
-                                                        <span>{`${field.label} *`}</span>
-                                                    }
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    // onChange={(e) => handleInputChange(e, field.name)}
-                                                    onChange={handleInputChange}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                    select={field.name === 'bussinessType' && true}
-                                                    labelClassName="required"
-                                                >
-                                                    {currencies.map((option) => (
-                                                        <MenuItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </MenuItem>
-                                                    ))}
-                                                </TextField>
-                                                {field.error ? 'Error' : ''}`
-
-                                                {/* Add error handling if needed */}
-                                            </Box>
-                                        </div>
-                                    )
-                                ))}
-                            </div>
-
-                            <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(8, 10).map((field, index) => (
-                                    !(field.isStaff) && (
-                                        <div key={index} className="inputbox display-flex input">
-                                            <div className="dsa_1st_input">
-                                                <Box className="inputs-group display-flex"
+                                            {!field.isStaff && (
+                                                <Box className="dsa_1st_input"
                                                     sx={{
                                                         display: 'flex',
                                                         flexDirection: 'column', // Change the direction for small screens
@@ -891,65 +807,154 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         },
                                                     }}
                                                 >
+                                                    {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
+
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                     <TextField
-                                                        label={`${field.label} *`}
+                                                        label={
+                                                            <span>{`${field.label} *`}</span>
+                                                        }
+                                                        // helperText="Please enter your name"
+                                                        type="text"
                                                         className="form-control-loc"
                                                         value={field.value}
-                                                        onChange={(e) => handleInputChange(e, field.name)}
+                                                        onChange={handleInputChange}
+                                                        name={field.name}
+                                                        id={`input${index + 1}`}
+                                                        select={field.name === 'bussinessType' && true}
+                                                        disabled={field.disabled}
+                                                    >
+                                                        {currencies.map((option) => (
+                                                            <MenuItem key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </TextField>
+
+                                                </Box>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="dsa_row_3 display-flex">
+                                    {inputFields.slice(4, 8).map((field, index) => (
+                                        !(field.isStaff) && (
+                                            <div key={index} className="inputbox display-flex input">
+                                                <Box className="dsa_1st_input"
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column', // Change the direction for small screens
+                                                        '& .MuiTextField-root': {
+                                                            m: 1,
+                                                            width: field.name === 'bussinessType' ? '28ch' : '100%',
+                                                        },
+                                                    }}
+                                                >
+                                                    {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                    <TextField
+                                                        label={
+                                                            <span>{`${field.label} *`}</span>
+                                                        }
+                                                        type="text"
+                                                        className="form-control-loc"
+                                                        value={field.value}
+                                                        // onChange={(e) => handleInputChange(e, field.name)}
+                                                        onChange={handleInputChange}
+                                                        name={field.name}
+                                                        id={`input${index + 1}`}
+                                                        select={field.name === 'bussinessType' && true}
+                                                        labelClassName="required"
+                                                    >
+                                                        {currencies.map((option) => (
+                                                            <MenuItem key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </TextField>
+                                                    {field.error ? 'Error' : ''}`
+
+                                                    {/* Add error handling if needed */}
+                                                </Box>
+                                            </div>
+                                        )
+                                    ))}
+                                </div>
+
+                                <div className="dsa_row_3 display-flex">
+                                    {inputFields.slice(8, 10).map((field, index) => (
+                                        !(field.isStaff) && (
+                                            <div key={index} className="inputbox display-flex input">
+                                                <div className="dsa_1st_input">
+                                                    <Box className="inputs-group display-flex"
+                                                        sx={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column', // Change the direction for small screens
+                                                            '& .MuiTextField-root': {
+                                                                m: 1,
+                                                                width: field.name === 'bussinessType' ? '27ch' : '100%',
+                                                            },
+                                                        }}
+                                                    >
+                                                        {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                        <TextField
+                                                            label={`${field.label} *`}
+                                                            className="form-control-loc"
+                                                            value={field.value}
+                                                            onChange={(e) => handleInputChange(e, field.name)}
+                                                            name={field.name}
+                                                            id={`input${index + 1}`}
+                                                        />
+                                                        {/* Add error handling if needed */}
+                                                    </Box>
+                                                </div>
+                                            </div>
+                                        )
+                                    ))}
+                                </div>
+                            </div>
+
+                            {!(Positionid_val === 4 || Positionid_val === 5) && (
+                                <div className="device_info uppercase light-grey mb-loc-5">
+                                    UPI Payment Details
+                                </div>
+                            )}
+
+                            <div className="dsa_row_3 display-flex">
+                                {inputFields.slice(10, 13).map((field, index) => (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <div className="dsa_1st_input">
+                                            {!(field.isStaff) && (
+                                                <Box className="inputs-group display-flex"
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column', // Change the direction for small screens
+                                                        '& .MuiTextField-root': {
+                                                            m: 1,
+                                                            width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                        },
+                                                    }}
+                                                >
+                                                    {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                    <TextField
+                                                        label={`${field.label}`}
+                                                        type={field.inputType || "text"}
+                                                        className="form-control-loc"
+                                                        value={field.value}
+                                                        onChange={(e) => handleInputChange(e, field.name, field.inputType)}
                                                         name={field.name}
                                                         id={`input${index + 1}`}
                                                     />
                                                     {/* Add error handling if needed */}
                                                 </Box>
-                                            </div>
+                                            )}
+
                                         </div>
-                                    )
+                                    </div>
                                 ))}
                             </div>
-                        </div>
 
-                        {!(Positionid_val === 4 || Positionid_val === 5) && (
-                            <div className="device_info uppercase light-grey mb-loc-5">
-                                UPI Payment Details
-                            </div>
-                        )}
-
-                        <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(10, 13).map((field, index) => (
-                                <div key={index} className="inputbox display-flex input">
-                                    <div className="dsa_1st_input">
-                                        {!(field.isStaff) && (
-                                            <Box className="inputs-group display-flex"
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column', // Change the direction for small screens
-                                                    '& .MuiTextField-root': {
-                                                        m: 1,
-                                                        width: field.name === 'bussinessType' ? '30ch' : '100%',
-                                                    },
-                                                }}
-                                            >
-                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                <TextField
-                                                    label={`${field.label}`}
-                                                    type={field.inputType || "text"}
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={(e) => handleInputChange(e, field.name, field.inputType)}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                />
-                                                {/* Add error handling if needed */}
-                                            </Box>
-                                        )}
-
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* <div className="dsa_row_3 display-flex">
+                            {/* <div className="dsa_row_3 display-flex">
                             {inputFields.slice(13, 14).map((field, index) => (
                                 <div key={index} className="inputbox display-flex input">
                                     <div className="dsa_1st_input">
@@ -982,46 +987,46 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             ))}
                         </div> */}
 
-                        {!(Positionid_val === 4 || Positionid_val === 5) && (
-                            <div className="device_info uppercase light-grey mb-loc-5">
-                                Address Details
-                            </div>
-                        )}
-
-                        <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(14, 18).map((field, index) => (
-                                <div key={index} className="inputbox display-flex input">
-                                    <div className="dsa_1st_input">
-                                        {!(field.isStaff) && (
-                                            <Box className="inputs-group display-flex"
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column', // Change the direction for small screens
-                                                    '& .MuiTextField-root': {
-                                                        m: 1,
-                                                        width: field.name === 'bussinessType' ? '30ch' : '100%',
-                                                    },
-                                                }}
-                                            >
-                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                <TextField
-                                                    label={`${field.label} *`}
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={(e) => handleInputChange(e, field.name)}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                />
-                                                {/* Add error handling if needed */}
-                                            </Box>
-                                        )}
-
-                                    </div>
+                            {!(Positionid_val === 4 || Positionid_val === 5) && (
+                                <div className="device_info uppercase light-grey mb-loc-5">
+                                    Address Details
                                 </div>
-                            ))}
-                        </div>
-                        {/* <div className="dsa_row_3 display-flex">
+                            )}
+
+                            <div className="dsa_row_3 display-flex">
+                                {inputFields.slice(14, 18).map((field, index) => (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <div className="dsa_1st_input">
+                                            {!(field.isStaff) && (
+                                                <Box className="inputs-group display-flex"
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column', // Change the direction for small screens
+                                                        '& .MuiTextField-root': {
+                                                            m: 1,
+                                                            width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                        },
+                                                    }}
+                                                >
+                                                    {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                    <TextField
+                                                        label={`${field.label} *`}
+                                                        type="text"
+                                                        className="form-control-loc"
+                                                        value={field.value}
+                                                        onChange={(e) => handleInputChange(e, field.name)}
+                                                        name={field.name}
+                                                        id={`input${index + 1}`}
+                                                    />
+                                                    {/* Add error handling if needed */}
+                                                </Box>
+                                            )}
+
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            {/* <div className="dsa_row_3 display-flex">
                             {inputFields.slice(18, 18).map((field, index) => (
                                 <div key={index} className="inputbox display-flex input">
                                     <div className="dsa_1st_input">
@@ -1052,100 +1057,101 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 </div>
                             ))}
                         </div> */}
-                        {!(Positionid_val === 4 || Positionid_val === 5) && (
-                            <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
-                        )}
-                        <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(18, 22).map((field, index) => (
-                                <div key={index} className="inputbox display-flex input">
-                                    <div className="dsa_1st_input">
-                                        {!(field.isStaff) && (
-                                            <Box className="inputs-group display-flex"
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column', // Change the direction for small screens
-                                                    '& .MuiTextField-root': {
-                                                        m: 1,
-                                                        width: '100%',
-                                                    },
-                                                }}
-                                            >
-                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                <TextField
-                                                    label={`${field.label} *`}
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={(e) => handleInputChange(e, field.name)}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                    disabled={sameAddress}
-                                                />
-                                                {/* Add error handling if needed */}
-                                            </Box>
-                                        )}
+                            {!(Positionid_val === 4 || Positionid_val === 5) && (
+                                <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
+                            )}
+                            <div className="dsa_row_3 display-flex">
+                                {inputFields.slice(18, 22).map((field, index) => (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <div className="dsa_1st_input">
+                                            {!(field.isStaff) && (
+                                                <Box className="inputs-group display-flex"
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column', // Change the direction for small screens
+                                                        '& .MuiTextField-root': {
+                                                            m: 1,
+                                                            width: '100%',
+                                                        },
+                                                    }}
+                                                >
+                                                    {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                    <TextField
+                                                        label={`${field.label} *`}
+                                                        type="text"
+                                                        className="form-control-loc"
+                                                        value={field.value}
+                                                        onChange={(e) => handleInputChange(e, field.name)}
+                                                        name={field.name}
+                                                        id={`input${index + 1}`}
+                                                        disabled={sameAddress}
+                                                    />
+                                                    {/* Add error handling if needed */}
+                                                </Box>
+                                            )}
 
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(23, 24).map((field, index) => (
-                                <div key={index} className="inputbox display-flex input">
-                                    <div className="dsa_1st_input">
-                                        {!(field.isStaff) && (
-                                            <Box className="inputs-group display-flex"
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column', // Change the direction for small screens
-                                                    '& .MuiTextField-root': {
-                                                        m: 1,
-                                                        width: field.name === 'bussinessType' ? '30ch' : '100%',
-                                                    },
-                                                }}
-                                            >
-                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                <TextField
-                                                    label={`${field.label} *`}
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={(e) => handleInputChange(e, field.name)}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                    disabled={sameAddress}
-                                                />
-                                                {/* Add error handling if needed */}
-                                            </Box>
-                                        )}
+                                ))}
+                            </div>
+                            <div className="dsa_row_3 display-flex">
+                                {inputFields.slice(23, 24).map((field, index) => (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <div className="dsa_1st_input">
+                                            {!(field.isStaff) && (
+                                                <Box className="inputs-group display-flex"
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column', // Change the direction for small screens
+                                                        '& .MuiTextField-root': {
+                                                            m: 1,
+                                                            width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                        },
+                                                    }}
+                                                >
+                                                    {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                    <TextField
+                                                        label={`${field.label} *`}
+                                                        type="text"
+                                                        className="form-control-loc"
+                                                        value={field.value}
+                                                        onChange={(e) => handleInputChange(e, field.name)}
+                                                        name={field.name}
+                                                        id={`input${index + 1}`}
+                                                        disabled={sameAddress}
+                                                    />
+                                                    {/* Add error handling if needed */}
+                                                </Box>
+                                            )}
 
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                            <Button variant="outlined " style={{
-                                color: 'red', borderColor: 'red', width: '71px',
-                                height: '71px',
-                                borderRadius: '50px'
-                            }} data-bs-toggle="modal" data-bs-target="#accessControll">
-                                {/* <LockClosedIcon /> */}
-                                <ErrorOutlineIcon />
-                            </Button>
+                                ))}
+                                <Button variant="outlined " style={{
+                                    color: 'red', borderColor: 'red', width: '71px',
+                                    height: '71px',
+                                    borderRadius: '50px'
+                                }} data-bs-toggle="modal" data-bs-target="#accessControll">
+                                    {/* <LockClosedIcon /> */}
+                                    <ErrorOutlineIcon />
+                                </Button>
+                            </div>
+
                         </div>
 
                     </div>
-
-                </div>
-                <div className="operating_buttons display-flex padding-loc">
-                    <div className="save_cancel_btn display-flex site_button gap-4">
-                        <CancelBtnComp CancelBtnFun={handleCancel} />
-                        <SaveBtnComp SaveBtnFun={(e) => handleSubmit(e)} />
-                        {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={(e) => handleSubmit(e)}>Save</button>
+                    <div className="operating_buttons display-flex padding-loc">
+                        <div className="save_cancel_btn display-flex site_button gap-4">
+                            <CancelBtnComp CancelBtnFun={handleCancel} />
+                            <SaveBtnComp SaveBtnFun={(e) => handleSubmit(e)} />
+                            {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={(e) => handleSubmit(e)}>Save</button>
                             <button type="button" class="btn-loc inactive-loc btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                             <button className="btn-loc inactive-loc btn " style={cancel_btn} data-bs-toggle="modal" data-bs-target="#exampleModal">cancel</button> */}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div >
+            </div >
+        </>
 
     );
 };
