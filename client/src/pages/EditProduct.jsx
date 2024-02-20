@@ -33,7 +33,10 @@ import MuiAlert from '@mui/material/Alert';
 
 
 const EditProduct = () => {
-    const { productid } = useParams();
+    const { productid , productBatch} = useParams();
+    console.log(productBatch);
+    // const { productInfo } = useParams();
+    // console.log(productInfo.productid);
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     // console.log(productid);
@@ -90,14 +93,14 @@ const EditProduct = () => {
         CGST: '',
         SGCT: '',
     });
-    console.log(userInfo.userid);
+    // console.log(userInfo.userid);
     const userid = userInfo.userid;
     useEffect(() => {
         const device_user_data = async () => {
             // console.log(API_URL);
             try {
-                const response = await axios.post(`${API_URL}get/product`, {userid,  productid: productid});
-                const data =  response.data;
+                const response = await axios.post(`${API_URL}get/product`, { userid, productid: productid ,batchno: productBatch});
+                const data = response.data;
                 // console.log(data.data.productid);
                 // all_data_fun(data)
                 const item = data.data;
@@ -124,7 +127,7 @@ const EditProduct = () => {
     console.log(!(userInfo.position === 'staff' || userInfo.position === 'manifacture'));
     const inputFields = [
         { label: "HSN Code", name: "productid", value: inputValues.productid, icon: ic_home_work, disabled: true },
-        { label: "Batch No", name: "batchno", value: inputValues.batchno, icon: person },
+        { label: "Batch No", name: "batchno", value: inputValues.batchno, icon: person , disabled: true},
         { label: "Product Name", name: "productname", value: inputValues.productname, icon: person },
         { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person, disabled: !(userInfo.position === 'staff' || userInfo.position === 'manifacture') },
         { label: "Price Per Item", name: "priceperitem", value: inputValues.priceperitem, icon: person },
@@ -175,7 +178,7 @@ const EditProduct = () => {
         if (isValidhsncode & isValidbatchno & isValidproductname & isValidQuantityNo & isValidpriceperitem & isValidCGST & isValidSGCT) {
             try {
                 // console.log("hai", inputValues);
-                const response = await axios.put(`${API_URL}update/product`, { productdetial: inputValues, updator: userInfo.userid });
+                const response = await axios.put(`${API_URL}update/product`, { productdetial: inputValues, updator: userInfo.userid ,batchno: productBatch});
                 // alert("response.data.message");
                 // console.log(response.data.message);
                 if (response.data.status) {
@@ -184,7 +187,7 @@ const EditProduct = () => {
                     if (response.data.status) {
                         setTimeout(() => {
                             navigate(-1);
-                        }, 2000);
+                        }, 1000);
                     }
                 } else {
                     alert(response.data.message)
@@ -222,8 +225,8 @@ const EditProduct = () => {
 
     return (
         <div className='Add_device1 '>
-             {/* Snack bar */}
-             <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+            {/* Snack bar */}
+            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right',
             }}>
@@ -265,20 +268,20 @@ const EditProduct = () => {
                                 {inputFields.slice(0, 4).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
-                                            {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
                                             <Box className="inputs-group display-flex">
-                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
-                                                    label={`${field.label} *`}
+                                                    label={`${field.label}`}
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
-                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
                                                     onChange={handleInputChange}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
                                                     disabled={field.disabled}
-                                                // readOnly={field.readOnly || false}
+                                                    InputLabelProps={{
+                                                        className: 'required-label',
+                                                        required: true
+                                                    }}
                                                 />
                                             </Box>
                                         </div>
@@ -289,19 +292,20 @@ const EditProduct = () => {
                                 {inputFields.slice(4, 8).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
-                                            {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
                                             <Box className="inputs-group display-flex">
-                                                {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
-                                                    label={`${field.label} *`}
+                                                    label={`${field.label}`}
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
-                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
                                                     onChange={handleInputChange}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
                                                     readOnly={field.readOnly || false}
+                                                    InputLabelProps={{
+                                                        className: 'required-label', 
+                                                        required: true
+                                                    }}
                                                 />
                                             </Box>
                                         </div>

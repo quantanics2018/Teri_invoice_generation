@@ -44,11 +44,13 @@ async function generatePDF(htmlContent) {
 //     await browser.close();
 //     return pdfBuffer;
 // }
-async function emailservice(req, res, htmlString) {
-    const {email} = req.body;
-    console.log("email uh : ",email);
+
+
+async function emailservice(req, res) {
+    const mailcontent = req.body;
+    console.log("html content: ", mailcontent.htmlString);
+    console.log("mailcontent.email  : ", mailcontent.email);
     const to = 'nitheshwaran003@gmail.com';
-    console.log("innert test : ",htmlString);
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587, // or 465
@@ -61,7 +63,8 @@ async function emailservice(req, res, htmlString) {
     });
 
     // // var htmlContent = await fs.readFile(path.join(__dirname, '../MailContent/payslipbill.html'), 'utf-8');
-    // // htmlString = htmlContent.toString();
+    // htmlString = htmlContent.toString();
+    const htmlString = mailcontent.htmlString;
 
     // // const pdfBuffer = await generatePDF();
 
@@ -91,7 +94,7 @@ async function emailservice(req, res, htmlString) {
     };
 
     try {
-        console.log("try : ",htmlString);
+        console.log("try : ", htmlString);
         await transporter.sendMail(mailOptions);
         console.log("sucess");
         return { success: true, message: 'Email sent successfully' };
@@ -101,8 +104,8 @@ async function emailservice(req, res, htmlString) {
         throw new Error('Failed to send email');
     }
 }
-async function UserAddedMailContent(req,res) {
-    const {email} = req.body.userDetials
+async function UserAddedMailContent(req, res) {
+    const { email } = req.body.userDetials
     console.log(email);
     // const to = 'nitheshwaran003@gmail.com';
     const to = email;
@@ -186,16 +189,17 @@ async function UpdatePasswordmailservice(req, res) {
         // throw new Error('Failed to send email');
     }
 }
-const sendInvoice = async (req, res, htmlString) => {
-    const upiId = 'nitheshwaran003@okicici';
-    // const {htmlString} = req.body
-    console.log("test :", htmlString);
-    await emailservice(1,2,htmlString);
+const sendInvoice = async (req, res) => {
+    // const upiId = 'nitheshwaran003@okicici';
+    // const htmlString = req.body
+    // console.log("test :", htmlString);
+    // console.log("test :########################################");
+    await emailservice(req, res);
     res.json({ success: true, message: 'send email' });
 };
 const UserAddedMail = async (req, res) => {
     // const {htmlString} = req.body
-    await UserAddedMailContent(req,res);
+    await UserAddedMailContent(req, res);
     res.json({ success: false, message: 'Failed to send email' });
 };
-module.exports = { emailservice, UpdatePasswordmailservice, sendInvoice ,UserAddedMail };
+module.exports = { emailservice, UpdatePasswordmailservice, sendInvoice, UserAddedMail };

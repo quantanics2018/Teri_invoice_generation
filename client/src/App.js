@@ -115,7 +115,7 @@ const App = () => {
                 {/* Products Module */}
                 <Route path='/Products' element={<Products />} />
                 <Route path='/Products/Add_Products' element={<AddProducts />} />
-                <Route path='/Products/Edit_Product_Detials/:productid' element={<EditProduct />} />
+                <Route path='/Products/Edit_Product_Detials/:productid/:productBatch' element={<EditProduct />} />
               </Routes>
             </div>
           )}

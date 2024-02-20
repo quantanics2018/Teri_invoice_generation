@@ -870,8 +870,12 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                 {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
                                                     label={
-                                                        <span>{`${field.label} *`}</span>
+                                                        <span>{`${field.label}`}</span>
                                                     }
+                                                    InputLabelProps={{
+                                                        className: 'required-label', 
+                                                        required: true
+                                                    }}
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
@@ -891,7 +895,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                         </MenuItem>
                                                     ))}
                                                 </TextField>
-                                                {field.error ? 'Error' : ''}`
+                                                {field.error ? 'Error' : ''}
 
                                                 {/* Add error handling if needed */}
                                             </Box>
@@ -917,7 +921,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                 {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
                                                     label={
-                                                        <span>{`${field.label} *`}</span>
+                                                        <span>{`${field.label}`}</span>
                                                     }
                                                     type="text"
                                                     className="form-control-loc"
@@ -931,6 +935,10 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     select={field.name === 'bussinessType' && true}
                                                     disabled={field.disabled}
                                                     labelClassName="required"
+                                                    InputLabelProps={{
+                                                        className: 'required-label', 
+                                                        required: true
+                                                    }}
                                                 >
                                                     {currencies.map((option) => (
                                                         <MenuItem key={option.value} value={option.value}>
@@ -938,7 +946,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                         </MenuItem>
                                                     ))}
                                                 </TextField>
-                                                {field.error ? 'Error' : ''}`
+                                                {field.error ? 'Error' : ''}
 
                                                 {/* Add error handling if needed */}
                                             </Box>
@@ -964,7 +972,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                 {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                 <TextField
                                                     label={
-                                                        <span>{`${field.label} *`}</span>
+                                                        <span>{`${field.label}`}</span>
                                                     }
                                                     type="text"
                                                     className="form-control-loc"
@@ -978,6 +986,10 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     select={field.name === 'bussinessType' && true}
                                                     disabled={field.disabled}
                                                     labelClassName="required"
+                                                    InputLabelProps={{
+                                                        className: 'required-label', 
+                                                        required: true
+                                                    }}
                                                 >
                                                     {currencies.map((option) => (
                                                         <MenuItem key={option.value} value={option.value}>
@@ -985,7 +997,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                         </MenuItem>
                                                     ))}
                                                 </TextField>
-                                                {field.error ? 'Error' : ''}`
+                                                {field.error ? 'Error' : ''}
 
                                                 {/* Add error handling if needed */}
                                             </Box>
@@ -1039,7 +1051,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     </MenuItem>
                                                 ))}
                                             </TextField>
-                                            {field.error ? 'Error' : ''}`
+                                            {field.error ? 'Error' : ''}
 
                                             {/* Add error handling if needed */}
                                         </Box>
@@ -1071,7 +1083,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                             {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                             <TextField
                                                 label={
-                                                    <span>{`${field.label} *`}</span>
+                                                    <span>{`${field.label}`}</span>
                                                 }
                                                 type="text"
                                                 className="form-control-loc"
@@ -1085,6 +1097,10 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                 select={field.name === 'bussinessType' && true}
                                                 disabled={field.disabled}
                                                 labelClassName="required"
+                                                InputLabelProps={{
+                                                    className: 'required-label', 
+                                                    required: true
+                                                }}
                                             >
                                                 {currencies.map((option) => (
                                                     <MenuItem key={option.value} value={option.value}>
@@ -1092,7 +1108,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     </MenuItem>
                                                 ))}
                                             </TextField>
-                                            {field.error ? 'Error' : ''}`
+                                            {field.error ? 'Error' : ''}
 
                                             {/* Add error handling if needed */}
                                         </Box>
@@ -1139,7 +1155,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     </MenuItem>
                                                 ))}
                                             </TextField>
-                                            {field.error ? 'Error' : ''}`
+                                            {field.error ? 'Error' : ''}
 
                                             {/* Add error handling if needed */}
                                         </Box>

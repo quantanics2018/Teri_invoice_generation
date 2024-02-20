@@ -158,25 +158,39 @@ const Add_Products = () => {
         }
         else {
             if (isValidhsncode === false) {
-                alert("Enter a valid HSN Code")
+                setresAlert("Enter a valid HSN Code");
+                setSubmitted(true);
+                // alert("Enter a valid HSN Code")
             }
             else if (isValidbatchno === false) {
-                alert("Enter a valid Batch Number")
+                setresAlert("Enter a valid Batch Number");
+                setSubmitted(true);
+                // alert("Enter a valid Batch Number")
             }
             else if (isValidproductname === false) {
-                alert("Enter a valid Product Name")
+                setresAlert("Enter a valid Product Name");
+                setSubmitted(true);
+                // alert("Enter a valid Product Name")
             }
             else if (isValidQuantityNo === false) {
-                alert("Enter a valid Quantity Number")
+                setresAlert("Enter a valid Quantity Number");
+                setSubmitted(true);
+                // alert("Enter a valid Quantity Number")
             }
             else if (isValidpriceperitem === false) {
-                alert("Enter a valid Price Detail")
+                setresAlert("Enter a valid Price Detail");
+                setSubmitted(true);
+                // alert("Enter a valid Price Detail")
             }
             else if (isValidCGST === false) {
-                alert("Enter a valid CGST")
+                setresAlert("Enter a valid CGST");
+                setSubmitted(true);
+                // alert("Enter a valid CGST")
             }
             else if (isValidSGCT === false) {
-                alert("Enter a valid SGST")
+                setresAlert("Enter a valid SGST");
+                setSubmitted(true);
+                // alert("Enter a valid SGST")
             }
         }
     }
@@ -247,13 +261,17 @@ const Add_Products = () => {
                                                     id={`input${index + 1}`}
                                                 /> */}
                                                 <TextField
-                                                    label={`${field.label} *`}
+                                                    label={`${field.label}`}
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
                                                     onChange={handleInputChange}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
+                                                    InputLabelProps={{
+                                                        className: 'required-label',
+                                                        required: true
+                                                    }}
                                                 />
                                                 {/* Add error handling if needed */}
                                             </Box>
@@ -277,13 +295,17 @@ const Add_Products = () => {
                                                     id={`input${index + 1}`}
                                                 /> */}
                                                 <TextField
-                                                    label={`${field.label} *`}
+                                                    label={`${field.label}`}
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
                                                     onChange={handleInputChange}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
+                                                    InputLabelProps={{
+                                                        className: 'required-label',
+                                                        required: true
+                                                    }}
                                                 />
                                                 {/* Add error handling if needed */}
                                             </Box>

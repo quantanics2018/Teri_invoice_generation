@@ -153,11 +153,11 @@ async function updateProductDataIndividual(req, res) {
     } = req.body.productdetial;
     const { updator } = req.body;
     // const batchnoInt = Number(batchno); 
-    // console.log(batchno,CGST,SGCT);
+    console.log("Update the Apropriate Product : ", batchno,CGST,SGCT);
     try {
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
         SET quantity=$1, priceperitem=$2,productname=$3,batchno=$4,cgst=$5,sgst=$6
-        WHERE productid=$7 and belongsto=$8; `, [quantity, priceperitem, productname, batchno, CGST, SGCT, productid, updator]);
+        WHERE productid=$7 and belongsto=$8 and batchno=$9; `, [quantity, priceperitem, productname, batchno, CGST, SGCT, productid, updator,batchno]);
         console.log("sucess", userUpdateResult);
         if (userUpdateResult.rowCount === 1) {
             // The update was successful

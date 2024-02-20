@@ -812,7 +812,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                     <TextField
                                                         label={
-                                                            <span>{`${field.label} *`}</span>
+                                                            <span>{`${field.label}`}</span>
                                                         }
                                                         // helperText="Please enter your name"
                                                         type="text"
@@ -823,6 +823,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         id={`input${index + 1}`}
                                                         select={field.name === 'bussinessType' && true}
                                                         disabled={field.disabled}
+                                                        InputLabelProps={{
+                                                            className: 'required-label', 
+                                                            required: true
+                                                        }}
                                                     >
                                                         {currencies.map((option) => (
                                                             <MenuItem key={option.value} value={option.value}>
@@ -854,7 +858,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                     <TextField
                                                         label={
-                                                            <span>{`${field.label} *`}</span>
+                                                            <span>{`${field.label}`}</span>
                                                         }
                                                         type="text"
                                                         className="form-control-loc"
@@ -865,6 +869,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         id={`input${index + 1}`}
                                                         select={field.name === 'bussinessType' && true}
                                                         labelClassName="required"
+                                                        InputLabelProps={{
+                                                            className: 'required-label', 
+                                                            required: true
+                                                        }}
                                                     >
                                                         {currencies.map((option) => (
                                                             <MenuItem key={option.value} value={option.value}>
@@ -898,12 +906,16 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     >
                                                         {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                         <TextField
-                                                            label={`${field.label} *`}
+                                                            label={`${field.label}`}
                                                             className="form-control-loc"
                                                             value={field.value}
                                                             onChange={(e) => handleInputChange(e, field.name)}
                                                             name={field.name}
                                                             id={`input${index + 1}`}
+                                                            InputLabelProps={{
+                                                                className: 'required-label', 
+                                                                required: true
+                                                            }}
                                                         />
                                                         {/* Add error handling if needed */}
                                                     </Box>
@@ -1010,13 +1022,17 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                 >
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                     <TextField
-                                                        label={`${field.label} *`}
+                                                        label={`${field.label}`}
                                                         type="text"
                                                         className="form-control-loc"
                                                         value={field.value}
                                                         onChange={(e) => handleInputChange(e, field.name)}
                                                         name={field.name}
                                                         id={`input${index + 1}`}
+                                                        InputLabelProps={{
+                                                            className: 'required-label', 
+                                                            required: true
+                                                        }}
                                                     />
                                                     {/* Add error handling if needed */}
                                                 </Box>
@@ -1077,7 +1093,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                 >
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                     <TextField
-                                                        label={`${field.label} *`}
+                                                        label={`${field.label}`}
                                                         type="text"
                                                         className="form-control-loc"
                                                         value={field.value}
@@ -1085,6 +1101,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         name={field.name}
                                                         id={`input${index + 1}`}
                                                         disabled={sameAddress}
+                                                        InputLabelProps={{
+                                                            className: 'required-label', 
+                                                            required: true
+                                                        }}
                                                     />
                                                     {/* Add error handling if needed */}
                                                 </Box>
@@ -1111,7 +1131,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                 >
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                     <TextField
-                                                        label={`${field.label} *`}
+                                                        label={`${field.label}`}
                                                         type="text"
                                                         className="form-control-loc"
                                                         value={field.value}
@@ -1119,6 +1139,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         name={field.name}
                                                         id={`input${index + 1}`}
                                                         disabled={sameAddress}
+                                                        InputLabelProps={{
+                                                            className: 'required-label', 
+                                                            required: true
+                                                        }}
                                                     />
                                                     {/* Add error handling if needed */}
                                                 </Box>

@@ -118,7 +118,9 @@ const Products = () => {
         navigate(`Edit_Products`);
     }
     const Product_edit_page = (data) => {
-        navigate(`Edit_Product_Detials/${data}`);
+        // console.log(data);
+        // const dataString = encodeURIComponent(JSON.stringify(data));
+        navigate(`Edit_Product_Detials/${data.productid}/${data.batchno}`);
     }
     const [alldata, setAlldate] = useState([]);
     const fetchData = async () => {
@@ -412,12 +414,13 @@ const Products = () => {
                                     >
                                         <Icon icon={ic_label_important} style={{ transform: rotatedIndex === index ? 'rotate(90deg)' : 'rotate(0)', color: rotatedIndex === index ? '#08c6cd' : 'lightgray', }} className='device_content_arrow' size={25} />
                                     </div>
+                                    {/* {console.log(data)} */}
                                     <div key={index}>{(rotatedIndex === index) &&
                                         (<div className='device_action_dropdown'>
                                             <div className='display-flex device_action_dropdown1 dropdown_action'>
                                                 <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
                                                 <div className='device_content_dropdown display-flex'
-                                                    onClick={() => Product_edit_page(data.productid)}
+                                                    onClick={() => Product_edit_page(data)}
                                                 >Edit Product Detials</div>
                                             </div>
                                             <div className='display-flex device_action_dropdown2 dropdown_action'>

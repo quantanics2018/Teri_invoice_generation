@@ -148,14 +148,14 @@ async function getUserDataIndividual(req, res) {
     }
 }
 async function getProductDataIndividual(req, res) {
-    const { userid, productid } = req.body
-    console.log(userid, productid);
+    const { userid, productid , batchno} = req.body
+    console.log("Get the product detail : ",userid, productid, batchno);
     try {
         // const { adminid ,position} = req.body;
         // const { id } = req.params;
         // console.log(id);
-        const IndividualProductResult = await userdbInstance.userdb.query('select * from products where productid=$1 and belongsto =$2;', [productid, userid]);
-        console.log(IndividualProductResult.rows[0]);
+        const IndividualProductResult = await userdbInstance.userdb.query('select * from products where productid=$1 and belongsto =$2 and batchno=$3;', [productid, userid, batchno]);
+        // console.log(IndividualProductResult.rows[0]);
         res.json({ message: "Successfully Data Fetched", data: IndividualProductResult.rows[0] });
     } catch (error) {
         console.error('Error executing database query:', error);

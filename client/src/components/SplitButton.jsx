@@ -6,7 +6,7 @@ import Menu from '@mui/joy/Menu';
 import MenuItem from '@mui/joy/MenuItem';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-const options = [ 'Print and Generate Invoice' , 'Preview and Generate Invoice'];
+const options = ['Print and Generate Invoice', 'Perform Invoice'];
 
 export default function SplitButton() {
   const [open, setOpen] = React.useState(false);
@@ -32,17 +32,20 @@ export default function SplitButton() {
 
   return (
     <React.Fragment>
-      <ButtonGroup
+      {/* <ButtonGroup
         ref={anchorRef}
         variant="outlined"
         color="success"
         aria-label="split button"
-      >
-        <Button onClick={handleClick} style={{textTransform:'uppercase'}}
-         data-bs-toggle={options[selectedIndex] === 'Preview and Generate Invoice' ? 'modal' : undefined}
-         data-bs-target={options[selectedIndex] === 'Preview and Generate Invoice' ? '#staticBackdrop' : undefined}
-        >{options[selectedIndex]}</Button>
-        <IconButton
+      > */}
+      <Button
+        variant="outlined"
+        color="success"
+        onClick={handleClick} style={{ textTransform: 'uppercase' }}
+        data-bs-toggle={options[selectedIndex] === 'Perform Invoice' ? 'modal' : undefined}
+        data-bs-target={options[selectedIndex] === 'Perform Invoice' ? '#staticBackdrop' : undefined}
+      >{options[selectedIndex]}</Button>
+      {/* <IconButton
           aria-controls={open ? 'split-button-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-label="select merge strategy"
@@ -58,8 +61,8 @@ export default function SplitButton() {
           }}
         >
           <ArrowDropDownIcon />
-        </IconButton>
-      </ButtonGroup>
+        </IconButton> */}
+      {/* </ButtonGroup> */}
       <Menu open={open} onClose={() => setOpen(false)} anchorEl={anchorRef.current}>
         {options.map((option, index) => (
           <MenuItem

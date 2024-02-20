@@ -158,23 +158,26 @@ const InvoiceGenerator = () => {
     };
 
     // invoice htm send to server
+    // console.log(inputValues.UserId);
     const sendDataToServer = async () => {
         try {
             const htmlString = ReactDOMServer.renderToString(
                 <div className="InvoiceContainer">
                     Replace with Invoice in Return
-                    <Invoice previewInvoiceprop={rows}/>
+                    <Invoice previewInvoiceprop={rows} /> 
                 </div>
             );
-
-            const response = await axios.post(`${API_URL}send-email/sendInvoice`, htmlString, {
-                headers: {
-                    'Content-Type': 'text/html',
-                },
-            });
+            const response = await axios.post(`${API_URL}send-email/sendInvoice`
+                , {htmlString: htmlString, email:inputValues.UserId}
+                , {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
 
             if (response.status === 200) {
-                alert("success")
+                // alert("success")
                 console.log('Mail sent successfully');
             } else {
                 console.error('Failed to send data');
@@ -373,11 +376,19 @@ const InvoiceGenerator = () => {
                                                 options={userNameoptions}
                                                 onChange={(e, value) => handleInputChangeInvoice(customerName, value)}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} label={customerName} variant="outlined" />
+                                                    <TextField {...params} label={`${customerName}`} variant="outlined"
+                                                        InputLabelProps={{
+                                                            className: 'required-label',
+                                                            required: true
+                                                        }}
+                                                    />
                                                 )}
+
                                             />
                                         ) : (
-                                            <TextField fullWidth label={customerName}
+                                            <TextField fullWidth
+                                                // label={customerName}
+                                                type='date'
                                                 onChange={(e) => handleInputChangeInvoice(customerName, e.target.value)}
                                                 value={inputValues[customerName] || ''}
                                             />
@@ -481,6 +492,9 @@ const InvoiceGenerator = () => {
                                             <TextField
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
                                                 value={row.Total}
+                                                InputProps={{
+                                                    endAdornment: <InputAdornment position="end">₹</InputAdornment>,
+                                                }}
                                             // onChange={(e) => handleInputChange(row.id, 'Total', e.target.value)}
                                             />
                                         </TableCell>
@@ -509,11 +523,10 @@ const InvoiceGenerator = () => {
                     <Grid container justifyContent="space-between" alignItems="center" style={{ width: "80%" }}>
                         <Grid item className='gap-4 d-flex'>
                             <CancelBtnComp />
-
+                            <SplitButton />
                             <Button variant="outlined" color="primary" onClick={handleSubmit}>
                                 Generate Invoice
                             </Button>
-                            <SplitButton />
                         </Grid>
                         <Grid item>
                             <div>

@@ -12,9 +12,12 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 // import htmlPdf from 'html-pdf';
 
-const Invoice = ({ previewInvoiceprop, ReciverInvoiceProp, SenderInvoiceProp }) => {
+const Invoice = ({ previewInvoiceprop,
+    //  ReciverInvoiceProp, 
+    //  SenderInvoiceProp 
+    }) => {
     // console.log(previewInvoiceprop);
-    console.log("ReciverInvoiceProp", ReciverInvoiceProp);
+    // console.log("ReciverInvoiceProp", ReciverInvoiceProp);
     // console.log(SenderInvoiceProp[0]);
     // console.log(previewInvoiceprop[0].hsncode);
     // console.log(previewInvoiceprop[0].productname);
@@ -31,29 +34,31 @@ const Invoice = ({ previewInvoiceprop, ReciverInvoiceProp, SenderInvoiceProp }) 
     //     setReciverIdRes(reciveridObj);
     // }
 
-    const sendDataToServer = async () => {
-        try {
-            const htmlString = ReactDOMServer.renderToString(
-                <div className="InvoiceContainer">
-                    Replace with Invoice in Return
-                </div>
-            );
+    // const sendDataToServer = async () => {
+    //     try {
+    //         const htmlString = ReactDOMServer.renderToString(
+    //             <div className="InvoiceContainer">
+    //                 Replace with Invoice in Return
+    //             </div>
+    //         );
 
-            const response = await axios.post(`${API_URL}send-email/sendInvoice`, htmlString, {
-                headers: {
-                    'Content-Type': 'text/html',
-                },
-            });
+    //         const response = await axios.post(`${API_URL}send-email/sendInvoice`, htmlString, {
+    //             headers: {
+    //                 'Content-Type': 'text/html',
+    //             },
+    //         });
 
-            if (response.status === 200) {
-                console.log('Mail sent successfully');
-            } else {
-                console.error('Failed to send data');
-            }
-        } catch (error) {
-            console.error('Error sending data:', error);
-        }
-    };
+    //         if (response.status === 200) {
+    //             console.log('Mail sent successfully');
+    //         } else {
+    //             console.error('Failed to send data');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error sending data:', error);
+    //     }
+    // };
+
+
     // console.log("ReciverInvoiceProp : ",ReciverInvoiceProp);
     // const [senderIdRes,setsenderIdRes] = useState();
     // const [ReciverIdRes,setReciverIdRes] = useState();
@@ -108,12 +113,12 @@ const Invoice = ({ previewInvoiceprop, ReciverInvoiceProp, SenderInvoiceProp }) 
                                 <pre>
                                     <h1>INVOICE</h1>
                                     Terion Distributor <br />
-                                    {SenderInvoiceProp[0].fname}{SenderInvoiceProp[0].lname},<br />
+                                    {/* {SenderInvoiceProp[0].fname}{SenderInvoiceProp[0].lname},<br />
                                     {SenderInvoiceProp[0].organizationname},<br />
                                     {SenderInvoiceProp[0].cstreetname},<br />
                                     {SenderInvoiceProp[0].cdistrictid},<br />
                                     {SenderInvoiceProp[0].cstateid},<br />
-                                    {SenderInvoiceProp[0].cpostalcode}<br />
+                                    {SenderInvoiceProp[0].cpostalcode}<br /> */}
                                     {/* GSTIN 89898989898989 */}
                                 </pre>
                             </div>
