@@ -18,6 +18,7 @@ import axios from 'axios';
 import { AddUserBtn } from '../components/AddUserBtn';
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+import { overflow_visible, padding_top, position_initial } from '../assets/style/cssInlineConfig';
 
 const Products = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
@@ -183,7 +184,7 @@ const Products = () => {
                 }
             } catch (error) {
                 setsubmitted(true);
-                setresAlert("Error updating user status ! Contact Developer");
+                setresAlert("Error updating user status !");
                 console.error('Error updating user status:', error);
             }
         }
@@ -256,10 +257,14 @@ const Products = () => {
                 <div className="device_mangement_main_content">
                     <div className="row_with_count_status">
                         <span className='module_tittle'>Products</span>
+                        {((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) &&
+                            <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
+                        }
                     </div>
-                    <div className='filters display-flex' >
+                    
+                    {/* <div className='filters display-flex' >
                         <div className="pagination_with_filters">
-                            {/* <div class="pagination display-flex" onClick={handleDivClick}>
+                            <div class="pagination display-flex" onClick={handleDivClick}>
                                 <div className="focus-page">
                                     <input
                                         // ref={inputRef}
@@ -275,11 +280,11 @@ const Products = () => {
                                 <div className="upcomming-pages">
                                     of 20 pages
                                 </div>
-                            </div> */}
+                            </div>
 
                             <div className='move_head'>
                                 <div className='filters1 display-flex'>
-                                    {/* <div class="dropdown-filter"
+                                    <div class="dropdown-filter"
                                     // ref={dropdownRef1}
                                     >
                                         <div class="device_filters" onClick={dropdown1}>
@@ -312,8 +317,8 @@ const Products = () => {
                                                 ))}
                                             </div>
                                         )}
-                                    </div> */}
-                                    {/* <div class="dropdown-filter"
+                                    </div>
+                                    <div class="dropdown-filter"
                                         ref={dropdownRef3}
                                     >
                                         <div class="device_filters" onClick={dropdown3}>
@@ -360,20 +365,20 @@ const Products = () => {
                                                 </div>
                                             </div>
                                         )}
-                                    </div> */}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        {/* manifacture */}
-                        {/* {console.log("test",((userInfo.position === 'manifacture') || (userInfo.position === 'staff')))} */}
+                        manifacture
+                        {console.log("test",((userInfo.position === 'manifacture') || (userInfo.position === 'staff')))}
                         {((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) &&
                             <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
                         }
 
-                        {/* <div className='filters2 display-flex' onClick={handleclick}>
+                        <div className='filters2 display-flex' onClick={handleclick}>
                             <button className='btn btn-fill'>Add Products</button>
-                        </div> */}
-                    </div>
+                        </div>
+                    </div> */}
                     <div className='col-headings'>
                         <div className="col-head">HSN Code</div>
                         <div className="col-head">Batch No</div>
@@ -408,7 +413,7 @@ const Products = () => {
                                     </div>
                                 )}
                                 <div className="col-head" key={index}>{data.priceperitem}</div>
-                                <div className="col-head display-flex device_action_dropdown_parent">
+                                <div className="col-head display-flex device_action_dropdown_parent" style={overflow_visible}>
                                     <div className="sts_icon"
                                         onClick={() => handleIconClick(index)}
                                     >
@@ -416,7 +421,7 @@ const Products = () => {
                                     </div>
                                     {/* {console.log(data)} */}
                                     <div key={index}>{(rotatedIndex === index) &&
-                                        (<div className='device_action_dropdown'>
+                                        (<div className='device_action_dropdown' style={position_initial}>
                                             <div className='display-flex device_action_dropdown1 dropdown_action'>
                                                 <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
                                                 <div className='device_content_dropdown display-flex'

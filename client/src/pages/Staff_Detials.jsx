@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL, SECRET_KEY } from '../config';
 // import { Button } from '@mui/material';
-import { UserActionBtn , padding_top } from '../assets/style/cssInlineConfig';
+import { UserActionBtn, padding_top } from '../assets/style/cssInlineConfig';
 import { AddUserBtn } from '../components/AddUserBtn';
 import Example from '../components/Example';
 import EditDistributerDetails from './Edit_Distributer_Detials';
@@ -26,7 +26,7 @@ import CryptoJS from 'crypto-js';
 import ActionButton from '../components/ActionButton';
 
 const Staff_Detials = (props) => {
-    const { Positionid_val , position} = props;
+    const { Positionid_val, position } = props;
     console.log(Positionid_val);
     // console.log(props.position);
     //states
@@ -227,11 +227,22 @@ const Staff_Detials = (props) => {
                                 "Distibutor Details"
                             }
                         </span>
+                        <Button variant="contained"
+                            onClick={handleclick}
+                            // style={{...UserActionBtn,marginLeft: '100px'}}
+                            style={UserActionBtn}
+                            
+                        >
+                            {(props.position === 2) && "Add Distributor"}
+                            {(props.position === 3) && "Add Customer"}
+                            {(props.position === 4) && "Add Staff"}
+                            {(props.position === 5) && "Add D_Staff"}
+                        </Button>
                     </div>
 
-                    <div className='filters display-flex' >
+                    {/* <div className='filters display-flex' >
                         <div className="pagination_with_filters">
-                            {/* <div class="pagination display-flex" onClick={handleDivClick}>
+                            <div class="pagination display-flex" onClick={handleDivClick}>
                                 <div className="focus-page">
                                     <input
                                         // ref={inputRef}
@@ -247,9 +258,9 @@ const Staff_Detials = (props) => {
                                 <div className="upcomming-pages">
                                     of 20 pages
                                 </div>
-                            </div> */}
+                            </div>
 
-                            {/* <div className='move_head'>
+                            <div className='move_head'>
                                 <div className='filters1 display-flex'>
                                     <div class="dropdown-filter"
                                         ref={dropdownRef3}
@@ -300,15 +311,8 @@ const Staff_Detials = (props) => {
                                         )}
                                     </div>
                                 </div>
-                            </div> */}
+                            </div>
                         </div>
-                        {/* <Button variant="contained"
-                            onClick={handleclick}
-                            style={UserActionBtn}
-                        >
-                            Add User
-                        </Button> */}
-                        {/* <AddUserBtn adduserFun={handleclick} /> */}
                         <Button variant="contained"
                             onClick={handleclick}
                             style={UserActionBtn}
@@ -319,30 +323,30 @@ const Staff_Detials = (props) => {
                             {(props.position === 5) && "Add D_Staff"}
                         </Button>
 
-                        {/* <div className='filters2 display-flex' onClick={handleclick}>
+                        <div className='filters2 display-flex' onClick={handleclick}>
                             <button className='btn btn-fill'>Add User</button>
-                        </div> */}
-                    </div>
+                        </div>
+                    </div> */}
 
                     {(Positionid_val === 4 || Positionid_val === 5) ? (
                         <div className='col-headings'>
-                        <div className="col-head">Registration ID</div>
-                        <div className="col-head">
-                            {props.position === 2 && "Distributor "
-                            }
-                            {props.position === 3 && "Customer "
-                            }
-                            {props.position === 4 && "Staff "
-                            }
-                            {props.position === 5 && "D_Staff "
-                            }
-                            Name
+                            <div className="col-head">Registration ID</div>
+                            <div className="col-head">
+                                {props.position === 2 && "Distributor "
+                                }
+                                {props.position === 3 && "Customer "
+                                }
+                                {props.position === 4 && "Staff "
+                                }
+                                {props.position === 5 && "D_Staff "
+                                }
+                                Name
+                            </div>
+                            <div className="col-head">Aadhar Number</div>
+                            <div className="col-head">Email</div>
+                            <div className="col-head">Contact Number</div>
+                            <div className="col-head">Action</div>
                         </div>
-                        <div className="col-head">Aadhar Number</div>
-                        <div className="col-head">Email</div>
-                        <div className="col-head">Contact Number</div>
-                        <div className="col-head">Action</div>
-                    </div>
                     ) : (
                         <div className='col-headings'>
                             <div className="col-head">Registration ID</div>

@@ -10,17 +10,14 @@ import { API_URL } from '../config';
 import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { InvoiceHead, invoicecontent } from '../assets/style/mailInlineCss';
 // import htmlPdf from 'html-pdf';
 
 const Invoice = ({ previewInvoiceprop,
-    //  ReciverInvoiceProp, 
-    //  SenderInvoiceProp 
+     ReciverInvoiceProp, 
+     SenderInvoiceProp 
     }) => {
-    // console.log(previewInvoiceprop);
-    // console.log("ReciverInvoiceProp", ReciverInvoiceProp);
-    // console.log(SenderInvoiceProp[0]);
-    // console.log(previewInvoiceprop[0].hsncode);
-    // console.log(previewInvoiceprop[0].productname);
+    console.log("SenderInvoiceProp : ",SenderInvoiceProp[0]);
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const senderid = userInfo.userid;
@@ -107,18 +104,23 @@ const Invoice = ({ previewInvoiceprop,
                 <div className="A4SheetSize" id="invoice-content">
                     {/* <button onClick={downloadPdf}>Download PDF</button> */}
                     <button onClick={() => downloadPDF(previewInvoiceprop)}>Download PDF</button>
-                    <div className="invoicecontent">
-                        <div className="InvoiceHead">
+                    <div className="invoiceconten" 
+                    // style={invoicecontent}
+                    >
+                        <div className="InvoiceHea" 
+                        style={InvoiceHead}
+                        // style={{background:'red'}}
+                        >
                             <div className="invoiceDetial">
                                 <pre>
                                     <h1>INVOICE</h1>
                                     Terion Distributor <br />
-                                    {/* {SenderInvoiceProp[0].fname}{SenderInvoiceProp[0].lname},<br />
+                                    {SenderInvoiceProp[0].fname}{SenderInvoiceProp[0].lname},<br />
                                     {SenderInvoiceProp[0].organizationname},<br />
                                     {SenderInvoiceProp[0].cstreetname},<br />
                                     {SenderInvoiceProp[0].cdistrictid},<br />
                                     {SenderInvoiceProp[0].cstateid},<br />
-                                    {SenderInvoiceProp[0].cpostalcode}<br /> */}
+                                    {SenderInvoiceProp[0].cpostalcode}<br />
                                     {/* GSTIN 89898989898989 */}
                                 </pre>
                             </div>
@@ -161,9 +163,11 @@ const Invoice = ({ previewInvoiceprop,
                                         <div className="billToBody">
                                             <ul className='listData'>
                                                 <li>
-                                                    {/* {ReciverInvoiceProp[0].fname} */}
+                                                    {ReciverInvoiceProp[0].email}
                                                 </li>
                                                 <li>
+                                                    {ReciverInvoiceProp[0].fname} 
+                                                    <br />
                                                     Sector-100, Noida, U.P.
                                                 </li>
                                                 <li>

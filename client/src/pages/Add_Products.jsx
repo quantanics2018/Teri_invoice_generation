@@ -28,7 +28,7 @@ import axios from 'axios';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
 import Example from '../components/Example';
 import TextField from '@mui/material/TextField';
-import { Box, Snackbar } from '@mui/material';
+import { Box, InputAdornment, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 
 
@@ -306,7 +306,14 @@ const Add_Products = () => {
                                                         className: 'required-label',
                                                         required: true
                                                     }}
+                                                    InputProps={{
+                                                        endAdornment:
+                                                            (field.label === 'CGST' || field.label === 'SGCT') ? <InputAdornment position="end">%</InputAdornment> :
+                                                                (field.label === 'Price Per Item') ? <InputAdornment position="end">₹</InputAdornment> :
+                                                                    null
+                                                    }}
                                                 />
+                                                {console.log(field.label)}
                                                 {/* Add error handling if needed */}
                                             </Box>
                                         </div>

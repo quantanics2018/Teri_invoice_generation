@@ -163,12 +163,16 @@ const InvoiceGenerator = () => {
         try {
             const htmlString = ReactDOMServer.renderToString(
                 <div className="InvoiceContainer">
-                    Replace with Invoice in Return
-                    <Invoice previewInvoiceprop={rows} /> 
+                    {/* <Invoice previewInvoiceprop={rows} /> */}
+                    <Invoice
+                        previewInvoiceprop={rows}
+                        ReciverInvoiceProp={ReciverIdRes}
+                        SenderInvoiceProp={senderIdRes}
+                    />
                 </div>
             );
             const response = await axios.post(`${API_URL}send-email/sendInvoice`
-                , {htmlString: htmlString, email:inputValues.UserId}
+                , { htmlString: htmlString, email: inputValues.UserId }
                 , {
                     headers: {
                         'Content-Type': 'application/json',
@@ -207,7 +211,10 @@ const InvoiceGenerator = () => {
                     setLoading(true);
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows, totalValues: totalSum });
                     if (response.data.status) {
-                        await sendDataToServer();
+                        const sendMailConfirm = window.confirm("Do you want to Send Invoice?", "Send Email");
+                        if (sendMailConfirm) {
+                            await sendDataToServer();
+                        }
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
@@ -231,7 +238,7 @@ const InvoiceGenerator = () => {
         const getSenderData = async () => {
             const getSenderDataRequest = await axios.post(`${API_URL}get/SenderDataInvoiceAddress`, { senderid: senderid });
             const senderidObj = getSenderDataRequest.data.data;
-            console.log("senderidObj : ", senderidObj);
+            // console.log("senderidObj : ", senderidObj);
             setsenderIdRes(senderidObj);
         }
         // const getReciverData = async () => {
@@ -330,7 +337,19 @@ const InvoiceGenerator = () => {
         html2pdf().from(input).save();
     }
 
-
+    const getuserDetial = (customerName, value) => {
+        // console.log(inputValues.UserId);
+        const getReciverData = async () => {
+            const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: inputValues.UserId });
+            console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
+            const reciveridObj = getReciverDataRequest.data.data;
+            // console.log("reciveridObj  rich : ", reciveridObj);
+            if (getReciverDataRequest.data.status) {
+                setReciverIdRes(reciveridObj);
+            }
+        }
+        getReciverData();
+    }
     return (
         <>
             {loading && <Loader />}
@@ -343,7 +362,8 @@ const InvoiceGenerator = () => {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div id="invoiceContent" class="modal-body">
-                            <Invoice previewInvoiceprop={rows}
+                            <Invoice
+                                previewInvoiceprop={rows}
                                 ReciverInvoiceProp={ReciverIdRes}
                                 SenderInvoiceProp={senderIdRes}
                             />
@@ -383,6 +403,7 @@ const InvoiceGenerator = () => {
                                                         }}
                                                     />
                                                 )}
+                                                onBlur={(e, value) => getuserDetial(customerName, value)}
 
                                             />
                                         ) : (

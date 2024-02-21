@@ -240,7 +240,6 @@ app.post('/send-email/:entity(updatePassword|generateQR|sendInvoice)', async (re
     if (entity === 'sendInvoice') {
         try {
             // const htmlString = req.body;
-            // console.log("hi mathan");
             const generateQRResult = await sendInvoice(req, res);
         } catch (error) {
             console.error('Error retrieving user details:', error);

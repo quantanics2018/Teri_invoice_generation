@@ -193,7 +193,6 @@ const sendInvoice = async (req, res) => {
     // const upiId = 'nitheshwaran003@okicici';
     // const htmlString = req.body
     // console.log("test :", htmlString);
-    // console.log("test :########################################");
     await emailservice(req, res);
     res.json({ success: true, message: 'send email' });
 };
