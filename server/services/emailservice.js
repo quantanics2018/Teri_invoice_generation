@@ -41,12 +41,13 @@ async function emailservice(req, res) {
     const htmlString = mailcontent.htmlString;
     const pdfFilePath = path.join(__dirname, 'document.pdf');
     const pdfBuffer = await fs.readFile(pdfFilePath);
-    const qrCodeHtml = await generateQR();
+    // const qrCodeHtml = await generateQR();
     const mailOptions = {
         from: 'terionorganization@gmail.com',
         to: to,
         subject: 'Official mail from Terion Organization',
-        html: qrCodeHtml + htmlString,
+        // html: qrCodeHtml + htmlString,
+        html: htmlString,
         attachments: [
             {
                 filename: 'Invoice.pdf',

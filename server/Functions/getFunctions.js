@@ -31,10 +31,21 @@ async function getUserData(req, res) {
     }
 }
 async function SenderDataInvoiceAddress(req, res) {
+    const { senderid } = req.body;
+    console.log("senderid : ", senderid);
     try {
-        const { senderid } = req.body;
-        console.log("senderid : ", senderid);
-        const SenderInvoiceAddressRes = await userdbInstance.userdb.query('select * from public."user" where userid=$1;', [senderid]);
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [senderid]);
+        console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        let SenderInvoiceId;
+        if ( res_positionId == 4 ||  res_positionId ==5 ) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [senderid]);
+            SenderInvoiceId = getBelongsto.rows[0].adminid
+        }else{
+            SenderInvoiceId = senderid
+        }
+
+        const SenderInvoiceAddressRes = await userdbInstance.userdb.query('select * from public."user" where userid=$1;', [SenderInvoiceId]);
         res.json({ message: "Successfully Data Fetched", data: SenderInvoiceAddressRes.rows, status: true });
     } catch (error) {
         console.error('Error executing database query:', error);

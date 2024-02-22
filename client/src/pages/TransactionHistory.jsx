@@ -1,21 +1,27 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '../config';
-import { Button, Pagination, TableCell, TextField } from '@mui/material';
+import { Box, Button, Pagination, Skeleton, TableCell, TextField } from '@mui/material';
+import Loader from '../components/Loader';
 
 const TransactionHistory = () => {
     const [data, setData] = useState([])
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
+    const [loading, setLoading] = useState(false);
 
     const fetchData = async () => {
         try {
+            setLoading(true);
             const response = await axios.post(`${API_URL}get/transactionHistory`, {
                 userid: userInfo.userid,
             });
             if (response.data.status) {
                 console.log('Transaction History:', response.data.data);
-                setData(response.data.data);
+                setInterval(() => {
+                    setLoading(false);
+                    setData(response.data.data);
+                }, 1000);
             } else {
                 console.error('Invalid response format:', response.data);
             }
@@ -124,6 +130,7 @@ const TransactionHistory = () => {
 
     return (
         <>
+            {/* {loading && <Loader />} */}
             <div className="row_with_count_status">
                 <span className='module_tittle'>Transactions Detials</span>
             </div>
@@ -149,6 +156,15 @@ const TransactionHistory = () => {
                                             <th>Action</th>
                                         </tr>
                                     </thead>
+                                    {loading && <div>
+                                        <Box sx={{ width: 1100 }}>
+                                            <Skeleton />
+                                            <Skeleton animation="wave" />
+                                            <Skeleton animation="wave" />
+                                            <Skeleton animation="wave" />
+                                            <Skeleton animation="wave" />
+                                        </Box>
+                                    </div>}
                                     <tbody className='text-center'>
                                         {data.map((item, index) => (
                                             <tr key={index} className="align-middle text-center">

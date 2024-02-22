@@ -2002,11 +2002,13 @@ input[type="checkbox"] {
 
 .addressWithInvoice {
     display: flex;
+    justify-content: space-around;
+
 }
 
 .addressDetials,
 .invoiceNo {
-    /* display: flex; */
+    display: flex;
     flex-grow: 1;
 }
 
@@ -2044,7 +2046,7 @@ input[type="checkbox"] {
 .billTo,
 .invoiceNo,
 .shipTo {
-    /* width: 33.25%; */
+    width: 33.25%;
 }
 
 .listData {
@@ -2121,6 +2123,7 @@ thead {
     display: flex;
     align-items: center;
     height: 100%;
+    justify-content: space-between;
 }
 
 .even {

@@ -5,6 +5,7 @@ import ButtonGroup from '@mui/joy/ButtonGroup';
 import Menu from '@mui/joy/Menu';
 import MenuItem from '@mui/joy/MenuItem';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+// import fetchImage  from './QrCode';
 
 const options = ['Print and Generate Invoice', 'Perform Invoice'];
 

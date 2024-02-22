@@ -213,9 +213,6 @@ const InvoiceGenerator = () => {
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows, totalValues: totalSum });
                     if (response.data.status) {
                         await sendDataToServer();
-                        // const sendMailConfirm = window.confirm("Do you want to Send Invoice?");
-                        // if (sendMailConfirm) {
-                        // }
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
@@ -367,6 +364,8 @@ const InvoiceGenerator = () => {
                                 previewInvoiceprop={rows}
                                 ReciverInvoiceProp={ReciverIdRes}
                                 SenderInvoiceProp={senderIdRes}
+                                totalSum={totalSum}
+                                totalQuantity={totalQuantity}
                             />
                         </div>
                         <div class="modal-footer gap-4">
@@ -545,6 +544,7 @@ const InvoiceGenerator = () => {
                     <Grid container justifyContent="space-between" alignItems="center" style={{ width: "80%" }}>
                         <Grid item className='gap-4 d-flex'>
                             <CancelBtnComp />
+                            <Button onClick={()=>alert("hai")}>hai</Button>
                             <SplitButton />
                             <Button variant="outlined" color="primary" onClick={handleSubmit}>
                                 Generate Invoice

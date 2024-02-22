@@ -1,22 +1,22 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const QrCode = () => {
+const QrCode = ({totalSum}) => {
     const [imageSrc, setImageSrc] = useState('');
 
+    const fetchImage = async () => {
+        try {
+            console.log(totalSum);
+            const response = await axios.post('http://localhost:4000/send-email/generateQR',{totalSum:totalSum});
+            // console.log(response.data);
+            setImageSrc(response.data); // Replace 'image_url' with the actual property name
+        } catch (error) {
+            console.error('Error fetching image:', error);
+        }
+    };
     useEffect(() => {
-        const fetchImage = async () => {
-            try {
-                const response = await axios.post('http://localhost:4000/send-email/generateQR');
-                // console.log(response.data);
-                setImageSrc(response.data); // Replace 'image_url' with the actual property name
-            } catch (error) {
-                console.error('Error fetching image:', error);
-            }
-        };
-
         fetchImage();
-    }, []);
+    }, [totalSum]);
     return (
         <>
             <img src={imageSrc} alt="Qr Scanner" />

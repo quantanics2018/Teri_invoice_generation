@@ -23,7 +23,9 @@ const QRCode = require('qrcode');
 //     }
 // }
 const generateQR = async (req, res) => {
-    const amount = '1.00';
+    const amount = req.body.totalSum;
+    console.log("totalSum : ",amount);
+    // const amount = '1.00';
     const currency = 'INR';
     const upiId = 'nitheshwaran003@okicici';
     console.log(upiId);
