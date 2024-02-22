@@ -267,15 +267,17 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 }
             } else {
                 try {
+                    setLoading(true);
                     const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues });
                     // alert(response.data.message);
                     setresAlert(response.data.message)
                     setSubmitted(true);
                     if (response.data.status) {
                         setTimeout(() => {
+                            setLoading(false);
                             handleClear();
                             navigate(-1);
-                        }, 3000);
+                        }, 1000);
                     }
                 } catch (error) {
                     console.error('Error sending data:', error);
@@ -880,7 +882,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                             </MenuItem>
                                                         ))}
                                                     </TextField>
-                                                    {field.error ? 'Error' : ''}`
+                                                    {field.error ? 'Error' : ''}
 
                                                     {/* Add error handling if needed */}
                                                 </Box>

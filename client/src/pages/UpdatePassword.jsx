@@ -123,7 +123,7 @@ const UpdatePassword = () => {
                             </div>
                         </div>
                         <Button variant="contained" onClick={validate_login} style={UserActionBtn}>
-                            Login
+                            Update
                         </Button>
                     </div>
                 </div>

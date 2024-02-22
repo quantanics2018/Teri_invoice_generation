@@ -17,7 +17,7 @@ const Invoice = ({ previewInvoiceprop,
      ReciverInvoiceProp, 
      SenderInvoiceProp 
     }) => {
-    console.log("SenderInvoiceProp : ",SenderInvoiceProp[0]);
+    // console.log("SenderInvoiceProp : ",SenderInvoiceProp[0]);
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const senderid = userInfo.userid;
@@ -103,7 +103,7 @@ const Invoice = ({ previewInvoiceprop,
             <div className="forScroll">
                 <div className="A4SheetSize" id="invoice-content">
                     {/* <button onClick={downloadPdf}>Download PDF</button> */}
-                    <button onClick={() => downloadPDF(previewInvoiceprop)}>Download PDF</button>
+                    {/* <button onClick={() => downloadPDF(previewInvoiceprop)}>Download PDF</button> */}
                     <div className="invoiceconten" 
                     // style={invoicecontent}
                     >

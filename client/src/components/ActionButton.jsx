@@ -46,7 +46,7 @@ const ActionButton = ({fun_to_rotate_btn,index,rotatedIndex,data,updateUserStatu
                         <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
                         {data.status == 1 ? (
                             <div className='device_content_dropdown display-flex'
-                            >Inactivate
+                            >Delete
                                 {props.position === 2 &&
                                     " Distibutor "
                                 }

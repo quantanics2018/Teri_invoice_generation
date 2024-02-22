@@ -230,6 +230,7 @@ const Staff_Detials = (props) => {
                         <Button variant="contained"
                             onClick={handleclick}
                             // style={{...UserActionBtn,marginLeft: '100px'}}
+                            className='user_action_buttons'
                             style={UserActionBtn}
                             
                         >

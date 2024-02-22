@@ -32,24 +32,24 @@ async function getUserData(req, res) {
 }
 async function SenderDataInvoiceAddress(req, res) {
     try {
-        const { senderid} = req.body;
-        console.log("senderid : ",senderid);
+        const { senderid } = req.body;
+        console.log("senderid : ", senderid);
         const SenderInvoiceAddressRes = await userdbInstance.userdb.query('select * from public."user" where userid=$1;', [senderid]);
-        res.json({ message: "Successfully Data Fetched", data: SenderInvoiceAddressRes.rows, status:true });
+        res.json({ message: "Successfully Data Fetched", data: SenderInvoiceAddressRes.rows, status: true });
     } catch (error) {
         console.error('Error executing database query:', error);
-        res.status(500).json({ message: "Internal Server Error" , status:false});
+        res.status(500).json({ message: "Internal Server Error", status: false });
     }
 }
 async function ReciverDataInvoiceAddress(req, res) {
     try {
-        const {reciverid } = req.body;
-        console.log("reciverid : ",reciverid);
+        const { reciverid } = req.body;
+        console.log("reciverid : ", reciverid);
         const ReciverInvoiceAddressRes = await userdbInstance.userdb.query('select * from public."user" where email=$1;', [reciverid]);
-        res.json({ message: "Successfully Data Fetched", data: ReciverInvoiceAddressRes.rows, status:true });
+        res.json({ message: "Successfully Data Fetched", data: ReciverInvoiceAddressRes.rows, status: true });
     } catch (error) {
         console.error('Error executing database query:', error);
-        res.status(500).json({ message: "Internal Server Error", status:false });
+        res.status(500).json({ message: "Internal Server Error", status: false });
     }
 }
 async function getprofileInfo(req, res) {
@@ -105,12 +105,25 @@ async function getTransactionHistory(req, res) {
     }
 }
 async function getProductList(req, res) {
+    const { senderID } = req.body.inputValues;
 
     try {
-        const { senderID } = req.body.inputValues;
         // console.log(" userid : ",senderID);
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [senderID]);
+        // console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        // console.log("res_positionId : ",res_positionId);
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [senderID]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = senderID
+        }
+
         const getProductListResult = await userdbInstance.userdb.query(`SELECT productid,batchno,productname,priceperitem
-        FROM public.products where belongsto=$1 order by rno DESC;`, [senderID]);
+        FROM public.products where belongsto=$1 order by rno DESC;`, [belongsto]);
+        // console.log(getProductListResult.rows);
         res.json({ message: "Successfully Data Fetched", data: getProductListResult.rows });
     } catch (error) {
         console.error('Error executing database query:', error);
@@ -148,8 +161,8 @@ async function getUserDataIndividual(req, res) {
     }
 }
 async function getProductDataIndividual(req, res) {
-    const { userid, productid , batchno} = req.body
-    console.log("Get the product detail : ",userid, productid, batchno);
+    const { userid, productid, batchno } = req.body
+    console.log("Get the product detail : ", userid, productid, batchno);
     try {
         // const { adminid ,position} = req.body;
         // const { id } = req.params;
@@ -164,4 +177,4 @@ async function getProductDataIndividual(req, res) {
 }
 
 
-module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual,SenderDataInvoiceAddress,ReciverDataInvoiceAddress };
+module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, ReciverDataInvoiceAddress };

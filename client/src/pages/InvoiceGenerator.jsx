@@ -23,6 +23,7 @@ import { CancelBtn, SaveBtn } from '../assets/style/cssInlineConfig';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 import QrCode from '../components/QrCode';
+import { invoicecontent } from '../assets/style/mailInlineCss';
 
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -211,10 +212,10 @@ const InvoiceGenerator = () => {
                     setLoading(true);
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows, totalValues: totalSum });
                     if (response.data.status) {
-                        const sendMailConfirm = window.confirm("Do you want to Send Invoice?", "Send Email");
-                        if (sendMailConfirm) {
-                            await sendDataToServer();
-                        }
+                        await sendDataToServer();
+                        // const sendMailConfirm = window.confirm("Do you want to Send Invoice?");
+                        // if (sendMailConfirm) {
+                        // }
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
@@ -263,9 +264,9 @@ const InvoiceGenerator = () => {
                 const users = dropDownUserResponse.data.data.map(item => item.email);
                 setuserNameoptions(users);
                 const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
-                console.log(dropDownResponse.data.data);
                 const productList = dropDownResponse.data.data;
                 setproductList(productList)
+                console.log("productList : ", productList);
                 const productName = dropDownResponse.data.data.map(item => item.productname);
                 // setOptions(productIds);
                 setOptionsproductName(productName);
@@ -333,8 +334,8 @@ const InvoiceGenerator = () => {
 
     // perform a invoice
     const generatePDF = () => {
-        const input = document.getElementById('invoiceContent'); // Target the modal
-        html2pdf().from(input).save();
+        const invoicecontent = document.getElementById('invoiceContent');
+        html2pdf().from(invoicecontent).save();
     }
 
     const getuserDetial = (customerName, value) => {
