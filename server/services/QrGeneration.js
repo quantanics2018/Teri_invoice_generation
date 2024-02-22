@@ -24,7 +24,7 @@ const QRCode = require('qrcode');
 // }
 const generateQR = async (req, res) => {
     const amount = req.body.totalSum;
-    console.log("totalSum : ",amount);
+    console.log("totalSum : ", amount);
     // const amount = '1.00';
     const currency = 'INR';
     const upiId = 'nitheshwaran003@okicici';
@@ -44,6 +44,9 @@ const generateQR = async (req, res) => {
         throw new Error('Error generating QR code');
     }
 };
+
+
+
 
 // app.get('/generateQR', async (req, res) => {
 //     try {

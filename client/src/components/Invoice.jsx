@@ -10,7 +10,7 @@ import { API_URL } from '../config';
 import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd,even, paymentDetials, paymentQrSession, td, th, bussinessQuotes } from '../assets/style/mailInlineCss';
+import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd,even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo } from '../assets/style/mailInlineCss';
 import { TextField } from '@mui/material';
 // import htmlPdf from 'html-pdf';
 
@@ -174,13 +174,13 @@ const Invoice = ({
                                         </ul>
                                     </div>
                                 </div>
-                                <div className="shipTo">
+                                <div className="shipTo1" style={billTo}>
                                     <div className="billToTittle">
                                         Ship To:(Buyer)
                                     </div>
                                     <div className="billToBody">
-                                        {console.log(ReciverInvoiceProp[0])}
-                                        <ul className='listData'>
+                                        {/* {console.log(ReciverInvoiceProp[0])} */}
+                                        <ul className='listData1' style={listData}>
                                             <pre>
                                                 {ReciverInvoiceProp[0].fname}{ReciverInvoiceProp[0].lname}<br />
                                                 {ReciverInvoiceProp[0].organizationname}<br />
@@ -193,11 +193,11 @@ const Invoice = ({
                                         </ul>
                                     </div>
                                 </div>
-                                <div className="invoiceNo">
+                                <div className="invoiceNo1" style={invoiceNo}>
                                     {ReciverInvoiceProp[0].email}<br />
                                     {ReciverInvoiceProp[0].phno}<br />
-                                    Invoice Number : 4649845 <br />
-                                    Invoice Date : 08-03-2021
+                                    {/* Invoice Number : 4649845 <br /> */}
+                                    {/* Invoice Date : 08-03-2021 */}
                                 </div>
                             </div>
 

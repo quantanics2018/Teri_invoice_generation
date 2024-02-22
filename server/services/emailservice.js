@@ -39,7 +39,7 @@ async function emailservice(req, res) {
         },
     });
     const htmlString = mailcontent.htmlString;
-    const pdfFilePath = path.join(__dirname, 'document.pdf');
+    const pdfFilePath = path.join(__dirname, 'GooglePay_QR.pdf');
     const pdfBuffer = await fs.readFile(pdfFilePath);
     // const qrCodeHtml = await generateQR();
     const mailOptions = {
@@ -50,7 +50,7 @@ async function emailservice(req, res) {
         html: htmlString,
         attachments: [
             {
-                filename: 'Invoice.pdf',
+                filename: 'Scan and Pay.pdf',
                 content: pdfBuffer,
                 // encoding: 'base64',
             },

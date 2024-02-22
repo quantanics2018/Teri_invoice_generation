@@ -346,7 +346,12 @@ const InvoiceGenerator = () => {
                 setReciverIdRes(reciveridObj);
             }
         }
-        getReciverData();
+        if (inputValues.UserId === '' || undefined) {
+            alert("Enter Reciver ID")
+        } else {
+            getReciverData();
+        }
+
     }
     return (
         <>
@@ -355,7 +360,7 @@ const InvoiceGenerator = () => {
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content" style={{ padding: '0px', marginLeft: '-110px', height: '1300px' }}>
-                        <div class="modal-header">
+                        <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -544,7 +549,6 @@ const InvoiceGenerator = () => {
                     <Grid container justifyContent="space-between" alignItems="center" style={{ width: "80%" }}>
                         <Grid item className='gap-4 d-flex'>
                             <CancelBtnComp />
-                            <Button onClick={()=>alert("hai")}>hai</Button>
                             <SplitButton />
                             <Button variant="outlined" color="primary" onClick={handleSubmit}>
                                 Generate Invoice

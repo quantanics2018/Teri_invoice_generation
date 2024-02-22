@@ -75,5 +75,21 @@ const bussinessQuotes = {
     alignItems: 'center',
     justifyContent: 'center',
 }
+const listData = {
+    listStyle: 'none',
+    margin: 0,
+    padding: 0,
+}
 
-export { invoicecontent ,InvoiceHead,invoiceImg,invoicepic,invoiceHead,paymentDetials,th,td ,paymentQrSession,detialAboutPayment,invoiceRow,even,odd,bussinessQuotes};
+const billTo ={
+    width: '33.25%'
+}
+const invoiceNo={
+    width: '33.25%'
+}
+const shipTo ={
+    width: '33.25%'
+}
+
+
+export { invoicecontent ,InvoiceHead,invoiceImg,invoicepic,invoiceHead,paymentDetials,th,td ,paymentQrSession,detialAboutPayment,invoiceRow,even,odd,bussinessQuotes,listData,billTo,invoiceNo,shipTo};
