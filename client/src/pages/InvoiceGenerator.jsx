@@ -346,9 +346,7 @@ const InvoiceGenerator = () => {
                 setReciverIdRes(reciveridObj);
             }
         }
-        if (inputValues.UserId === '' || undefined) {
-            alert("Enter Reciver ID")
-        } else {
+        if (!inputValues.UserId === '' || undefined) {
             getReciverData();
         }
 
