@@ -223,9 +223,9 @@ const Login = (props) => {
                                     <span className='display-flex' style={{ justifyContent: "start" }}>Inactive Site</span>
                                 )}
                             </div>
-                            <Button color="secondary">
+                            {/* <Button color="secondary">
                                 Forgot Password
-                            </Button>
+                            </Button> */}
                             {/* <div className="forget">
                                 <span className='display-flex' style={{ justifyContent: "end" }}>Forgot Password</span>
                             </div> */}

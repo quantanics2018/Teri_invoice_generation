@@ -26,8 +26,8 @@ async function emailservice(req, res) {
     const mailcontent = req.body;
     console.log("html content: ", mailcontent.htmlString);
     console.log("mailcontent.email  : ", mailcontent.email);
-    // const to = mailcontent.email;
-    const to = 'nitheshwaran003@gmail.com';
+    const to = mailcontent.email;
+    // const to = 'nitheshwaran003@gmail.com';
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587, // or 465
@@ -138,8 +138,8 @@ async function UpdatePasswordmailservice(req, res) {
 
     const mailOptions = {
         from: 'terionorganization@gmail.com',
-        // to: to,
-        to: 'nitheshwaran003@gmail.com',
+        to: to,
+        // to: 'nitheshwaran003@gmail.com',
         subject: 'Official mail from Terion Organization',
         html: `Update Password<a href="${link}"> Click Here .. </a>`
     };
