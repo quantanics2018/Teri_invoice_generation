@@ -18,10 +18,11 @@ const TransactionHistory = () => {
             });
             if (response.data.status) {
                 console.log('Transaction History:', response.data.data);
-                setInterval(() => {
-                    setLoading(false);
-                    setData(response.data.data);
-                }, 1000);
+                setLoading(false);
+                setData(response.data.data);
+                console.log(response.data.data);
+                // setInterval(() => {
+                // }, 1000);
             } else {
                 console.error('Invalid response format:', response.data);
             }
@@ -50,6 +51,7 @@ const TransactionHistory = () => {
                 });
                 console.log('Response from server:', response.data.qos);
                 if (response.data.qos === 'success') {
+                    fetchData();
                     alert(response.data.message);
                 } else {
                     alert(response.data.message);
@@ -198,7 +200,8 @@ const TransactionHistory = () => {
                                                     <Button color="secondary">
                                                         {(item.transactionid && userInfo.userid === item.senderid) ? '🟢' : (userInfo.userid === item.senderid && '🔴')}
                                                     </Button>
-                                                    <Button color="secondary" disabled={item.senderstatus === 1} onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
+                                                    {console.log("hello", item)}
+                                                    <Button color="secondary" disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)} onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
                                                         ✔
                                                     </Button>
                                                 </td>
