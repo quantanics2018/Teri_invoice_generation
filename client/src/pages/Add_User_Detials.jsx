@@ -185,12 +185,12 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setresAlert(response.data.message)
                         setSubmitted(true);
                         if (response.data.status) {
-                            setLoading(false);
                             handleClear();
                             navigate(-1);
                             // setTimeout(() => {
                             // }, 1000);
                         }
+                        setLoading(false);
                     } catch (error) {
                         console.error('Error sending data:', error);
                     }
@@ -274,7 +274,6 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     setSubmitted(true);
                     if (response.data.status) {
                         setTimeout(() => {
-                            setLoading(false);
                             handleClear();
                             navigate(-1);
                         }, 1000);
@@ -282,6 +281,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 } catch (error) {
                     console.error('Error sending data:', error);
                 }
+                setLoading(false);
             }
         }
         else {
@@ -692,7 +692,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 {/* Access controll start */}
                 <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
+                        <div class="modal-content" style={{padding:'1rem'}}>
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Access Control</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -826,7 +826,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         select={field.name === 'bussinessType' && true}
                                                         disabled={field.disabled}
                                                         InputLabelProps={{
-                                                            className: 'required-label', 
+                                                            className: 'required-label',
                                                             required: true
                                                         }}
                                                     >
@@ -872,7 +872,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         select={field.name === 'bussinessType' && true}
                                                         labelClassName="required"
                                                         InputLabelProps={{
-                                                            className: 'required-label', 
+                                                            className: 'required-label',
                                                             required: true
                                                         }}
                                                     >
@@ -915,7 +915,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                             name={field.name}
                                                             id={`input${index + 1}`}
                                                             InputLabelProps={{
-                                                                className: 'required-label', 
+                                                                className: 'required-label',
                                                                 required: true
                                                             }}
                                                         />
@@ -1032,7 +1032,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         name={field.name}
                                                         id={`input${index + 1}`}
                                                         InputLabelProps={{
-                                                            className: 'required-label', 
+                                                            className: 'required-label',
                                                             required: true
                                                         }}
                                                     />
@@ -1104,7 +1104,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         id={`input${index + 1}`}
                                                         disabled={sameAddress}
                                                         InputLabelProps={{
-                                                            className: 'required-label', 
+                                                            className: 'required-label',
                                                             required: true
                                                         }}
                                                     />
@@ -1142,7 +1142,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         id={`input${index + 1}`}
                                                         disabled={sameAddress}
                                                         InputLabelProps={{
-                                                            className: 'required-label', 
+                                                            className: 'required-label',
                                                             required: true
                                                         }}
                                                     />

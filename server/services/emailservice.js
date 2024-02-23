@@ -60,7 +60,7 @@ async function emailservice(req, res) {
     try {
         await transporter.sendMail(mailOptions);
         console.log("sucess");
-        res.json( { success: true, message: 'Email sent successfully' });
+        res.json({ success: true, message: 'Email sent successfully' });
     } catch (error) {
         console.error(error);
         console.log("fail");
@@ -94,6 +94,7 @@ async function UserAddedMailContent(req, res) {
         await transporter.sendMail(mailOptions);
         res.json({ status: true, message: 'Email sent successfully' });
     } catch (error) {
+        res.json({ success: false, message: 'Failed to send email' });
         console.error(error);
         console.log("fail");
         throw new Error('Failed to send email');
@@ -164,6 +165,5 @@ const sendInvoice = async (req, res) => {
 const UserAddedMail = async (req, res) => {
     // const {htmlString} = req.body
     await UserAddedMailContent(req, res);
-    res.json({ success: false, message: 'Failed to send email' });
 };
 module.exports = { emailservice, UpdatePasswordmailservice, sendInvoice, UserAddedMail };
