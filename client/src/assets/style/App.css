@@ -435,7 +435,7 @@
 }
 
 .modal-dialog .modal-content {
-    padding: 3rem;
+    /* padding: 3rem; */
     width: 130%;
 }
 
