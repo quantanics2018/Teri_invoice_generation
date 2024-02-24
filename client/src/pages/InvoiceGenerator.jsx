@@ -52,10 +52,10 @@ const InvoiceGenerator = () => {
     const [loading, setLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
 
-  const handleDateSelect = (date) => {
-    setSelectedDate(date);
-    // Handle selected date, e.g., update state, send to parent component, etc.
-  };
+    const handleDateSelect = (date) => {
+        setSelectedDate(date);
+        // Handle selected date, e.g., update state, send to parent component, etc.
+    };
 
     const customerNames = ['Date', 'UserId'];
     const [inputValues, setInputValues] = useState({
@@ -119,7 +119,7 @@ const InvoiceGenerator = () => {
         else {
             alert("Please fill all fields");
         }
-        console.log(rows);
+        // console.log(rows);
     };
 
     // const currentRowid = useRef();
@@ -344,6 +344,7 @@ const InvoiceGenerator = () => {
 
     const getuserDetial = (customerName, value) => {
         // console.log(inputValues.UserId);
+        console.log(customerName, value);
         const getReciverData = async () => {
             const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: inputValues.UserId });
             console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
@@ -353,11 +354,17 @@ const InvoiceGenerator = () => {
                 setReciverIdRes(reciveridObj);
             }
         }
-        if (!inputValues.UserId === '' || undefined) {
+
+        if (value !== '') {
             getReciverData();
         }
-
+        else {
+            console.log("Enter data");
+        }
     }
+    // useEffect(()=>{
+    //     getuserDetial()
+    // },[inputValues.UserId])
     return (
         <>
             {loading && <Loader />}
@@ -413,8 +420,11 @@ const InvoiceGenerator = () => {
                                                         }}
                                                     />
                                                 )}
-                                                onBlur={(e, value) => getuserDetial(customerName, value)}
-
+                                                // onBlur={(e) => const value = e.target.value;getuserDetial(customerName, value)}
+                                                onBlur={(e) => {
+                                                    const value = e.target.value; // Accessing the value
+                                                    getuserDetial(customerName, value);
+                                                }}
                                             />
                                         ) : (
                                             <TextField fullWidth

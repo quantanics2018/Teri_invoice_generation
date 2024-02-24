@@ -156,9 +156,21 @@ async function getProductList(req, res) {
 async function getUserList(req, res) {
     try {
         const { senderID } = req.body.inputValues;
-        console.log(" userid : ", senderID);
+        // console.log(" userid : ", senderID);
+
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [senderID]);
+        // console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        // console.log("res_positionId : ",res_positionId);
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [senderID]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = senderID
+        }
         const getUserList = await userdbInstance.userdb.query(`SELECT email
-        FROM public."user" where adminid=$1 and (positionid = $2 or positionid = $3 )order by rno DESC;`, [senderID, 2, 3]);
+        FROM public."user" where adminid=$1 and (positionid = $2 or positionid = $3 )order by rno DESC;`, [belongsto, 2, 3]);
         res.json({ message: "Successfully Data Fetched", data: getUserList.rows });
     } catch (error) {
         console.error('Error executing database query:', error);
