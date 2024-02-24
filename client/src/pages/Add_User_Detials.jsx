@@ -693,7 +693,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 {/* Access controll start */}
                 <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
-                        <div class="modal-content" style={{ padding: '1rem' }}>
+                        <div class="modal-content" style={{padding:'1rem'}}>
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Access Control</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

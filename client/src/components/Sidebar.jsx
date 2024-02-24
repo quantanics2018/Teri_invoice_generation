@@ -11,14 +11,40 @@ import { useEffect, useRef } from "react";
 const Sidebar = ({ children, handleLogout }) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
-    const [activelink, setActiveLink] = useState(null);
+   
     const [logoutdiv, setlogoutdiv] = useState(false);
     const storedData = sessionStorage.getItem('access_control');
     const parsedData = JSON.parse(storedData);
     const navigate = useNavigate();
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
-console.log(userInfo.position);
+    const [activelink, setActiveLink] = useState(0);
+
+    // side menubar submenu 
+   
+    var tmp_position = userInfo.position;
+    console.log("first login state");
+    console.log(tmp_position);
+
+    /*
+    if (tmp_position==="distributor") {
+        setActiveLink(2);
+    }else if(tmp_position==="manifacture"){
+        setActiveLink(0);
+    }
+    else if(tmp_position==="customer"){
+        setActiveLink(3);
+    }
+    else if(tmp_position==="staff"){
+        setActiveLink(1);
+    }
+    else if(tmp_position==="d_staff"){
+        setActiveLink(3);
+    }else{
+        setActiveLink(0);
+    }
+    */
+    
     const userSidebarConfig =
         [
             {
@@ -82,19 +108,23 @@ console.log(userInfo.position);
             document.removeEventListener('click', logout_empty_space_fun);
         };
     }, []);
-    const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
+    const [activeDropdownIndex, setActiveDropdownIndex] = useState(0);
     const handleLinkClick = (i, index) => {
-        console.log(i, index);
         setActiveLink(i);
         setActiveDropdownIndex(index);
     };
 
+
+
     return (
         <div className="container-slidebar">
             <div className="sidebar">
-                <div className="all_icon" style={{ alignItems: "center" }}>
+               
+                <div className="all_icon" style={{alignItems:"center"}}>
                     {
+                        
                         userSidebarConfig.map((item, index) => (
+                         
                             <NavLink
                                 key={index}
                                 className={`link`}
@@ -136,16 +166,16 @@ console.log(userInfo.position);
                                     <div className={`link_head sidebar_head bottomBorder`}>{item.head}</div>
                                     {/* {<div className="dropdown-hr hr_for_head" />} */}
                                     {item.links.map((link, i) => (
+                                        
                                         (link.condition === true) && (
                                             <div className={(i === item.links.length - 1) ? "" : "bottomBorder"} key={i}>
-                                                <div>
+                                                
                                                     <Link to={link.url}
-                                                        className={`innerLink 
-                                                        ${(i === item.links.length - 1 || item.links[1].classname === 'last-link') ? 'last-link' : ''}`}
+                                                        className={`innerLink  ${(i === item.links.length - 1 || item.links[1].classname === 'last-link') ? 'last-link' : ''} ${(activelink === i && activeDropdownIndex===index) ? 'active-innerlink' : ''} ${i+'-'+index}`}
                                                         onClick={() => handleLinkClick(i, index)}
                                                     >{link.text}
                                                     </Link>
-                                                </div>
+                                              
                                             </div>
                                         )
                                     ))}
@@ -198,5 +228,6 @@ console.log(userInfo.position);
 
     );
 };
+
 
 export default Sidebar;

@@ -77,7 +77,7 @@ const Login = (props) => {
                     navigate('/Distributer_Details');
                 }
                 else if (response.data.data.position === "distributor") {
-                    navigate('/Customer_Details');
+                    navigate('/D_Staff_Details');
                 }
                 else {
                     navigate('/profilePage');

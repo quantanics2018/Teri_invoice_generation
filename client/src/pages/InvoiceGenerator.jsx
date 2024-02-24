@@ -24,8 +24,6 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 import QrCode from '../components/QrCode';
 import { invoicecontent } from '../assets/style/mailInlineCss';
-// import GoogleCalendarPicker from 'google-calendar-picker';
-// import { google } from 'googleapis';  
 
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 

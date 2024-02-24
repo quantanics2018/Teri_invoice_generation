@@ -50,10 +50,10 @@ async function SenderDataInvoiceAddress(req, res) {
         console.log(CheckForStaff.rows[0].positionid);
         const res_positionId = CheckForStaff.rows[0].positionid
         let SenderInvoiceId;
-        if (res_positionId == 4 || res_positionId == 5) {
+        if ( res_positionId == 4 ||  res_positionId ==5 ) {
             const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [senderid]);
             SenderInvoiceId = getBelongsto.rows[0].adminid
-        } else {
+        }else{
             SenderInvoiceId = senderid
         }
 
