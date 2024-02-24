@@ -54,7 +54,7 @@ const Sidebar = ({ children, handleLogout }) => {
                     { url: '/Staff_Details', text: 'Staff Details', condition: userInfo.staff > 0 },
                     // { url: '/Distributer_Detials', text: 'Distributor Detials', condition: userInfo.distributer > 0 , classname:{userInfo.customer !> 0 ? 'last-link',''}},
                     { url: '/Distributer_Details', text: 'Distributor Details', condition: userInfo.distributer > 0, classname: userInfo.customer == 0 ? 'last-link' : '' },
-                    { url: '/D_Staff_Details', text: 'D_Staff Details', condition: userInfo.d_staff > 0, classname: userInfo.d_staff == 0 ? 'last-link' : '' },
+                    { url: '/D_Staff_Details', text: 'Distributor Staff', condition: userInfo.d_staff > 0, classname: userInfo.d_staff == 0 ? 'last-link' : '' },
                     { url: '/Customer_Details', text: 'Customer Details', condition: userInfo.customer > 0, classname: 'last-link' },
                 ],
                 condition: !(userInfo.position === 'customer')

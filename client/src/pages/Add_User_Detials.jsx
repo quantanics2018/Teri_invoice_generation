@@ -543,6 +543,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     D_Staff: 'No access',
                     // Customer: 'No access',
                     // Products: 'No access',
+                    'Invoice Generator': 'All',
+                    'Invoice PaySlip': 'All',
                 }));
             }
             if (Positionid_val === 3) {
@@ -554,6 +556,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     D_Staff: 'No access',
                     Products: 'No access',
                     'Invoice Generator': 'No access',
+                    'Invoice PaySlip': 'Edit',
 
                 }));
             }
@@ -691,7 +694,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 </div>
                 {/* User access model */}
                 {/* Access controll start */}
-                <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{overflow:'hidden'}}>
+                <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{overflow:'hidden',margin:'auto'}}>
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content" style={{padding:'1rem'}}>
                             <div class="modal-header">
