@@ -143,7 +143,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         // top level
-        const isValiduserid = postData.userid.trim() !== '';
+        // const isValiduserid = postData.userid.trim() !== '';
+        const isValiduserid = /^.{1,20}$/.test(postData.userid.trim());
         const isValidaadharNo = /^\d{12}$/.test(postData.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(postData.fName)
         const isValidlName = /^[A-Za-z\s'-]+$/.test(postData.lName)
@@ -739,7 +740,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 {(Positionid_val === 3) && " Customer "}
                                 {(Positionid_val === 4) && " Staff "}
                                 {(Positionid_val === 5) && " D_Staff "}
-                                Detials </div>
+                                Details </div>
                             {/* <select value={selectedUser} onChange={handleUserChange}>
                             <option value={"select user"}>Select User</option>
                             {userInfo.position === 'manifacture' && (

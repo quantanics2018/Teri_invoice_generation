@@ -834,7 +834,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                         <div class="modal-footer">
                             {/* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> */}
                             {/* <button type="button" class="btn btn-primary">Save</button> */}
-                            <Button variant="outlined" type="button" data-bs-dismiss="modal" style={SaveBtn}>Save</Button>
+                            <Button variant="outlined" type="button" data-bs-dismiss="modal" style={SaveBtn}>ACCESS</Button>
                         </div>
                     </div>
                 </div>
@@ -846,7 +846,13 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
             <div className="add_device_container1">
                 <div className="new_device_content scroll_div">
                     <div className="row_one display-flex">
-                        <div className="adding_new_device uppercase bold">Edit User Detials </div>
+                        <div className="adding_new_device uppercase bold">Edit 
+                            {(Positionid_val === 2) && " Distributor "}
+                            {(Positionid_val === 3) && " Customer "}
+                            {(Positionid_val === 4) && " Staff "}
+                            {(Positionid_val === 5) && " D_Staff "}
+                            Details
+                        </div>
                     </div>
                     <div className="row_two display-flex padding-loc">
                         <div className="device_info uppercase light-grey mb-loc-5">
@@ -873,7 +879,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                         <span>{`${field.label}`}</span>
                                                     }
                                                     InputLabelProps={{
-                                                        className: 'required-label', 
+                                                        className: 'required-label',
                                                         required: true
                                                     }}
                                                     type="text"
@@ -936,7 +942,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     disabled={field.disabled}
                                                     labelClassName="required"
                                                     InputLabelProps={{
-                                                        className: 'required-label', 
+                                                        className: 'required-label',
                                                         required: true
                                                     }}
                                                 >
@@ -987,7 +993,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     disabled={field.disabled}
                                                     labelClassName="required"
                                                     InputLabelProps={{
-                                                        className: 'required-label', 
+                                                        className: 'required-label',
                                                         required: true
                                                     }}
                                                 >
@@ -1098,7 +1104,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                 disabled={field.disabled}
                                                 labelClassName="required"
                                                 InputLabelProps={{
-                                                    className: 'required-label', 
+                                                    className: 'required-label',
                                                     required: true
                                                 }}
                                             >
