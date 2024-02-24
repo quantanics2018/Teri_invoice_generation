@@ -691,7 +691,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 </div>
                 {/* User access model */}
                 {/* Access controll start */}
-                <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{overflow:'hidden'}}>
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content" style={{padding:'1rem'}}>
                             <div class="modal-header">
