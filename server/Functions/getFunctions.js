@@ -20,10 +20,22 @@ const userdbInstance = require('../instances/dbInstance');
 async function getUserData(req, res) {
     try {
         const { adminid, position } = req.body;
-        // console.log(adminid,position);
-        const userDeleteResult = await userdbInstance.userdb.query('select * from public."user" where adminid=$1 and positionid=$2 and status=$3 order by rno DESC;', [adminid, position, '1']);
+        console.log("adminid : ", adminid, "position : ", position);
 
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [adminid]);
+        console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [adminid]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = adminid
+        }
 
+        console.log("belongsto : ",belongsto);
+
+        const userDeleteResult = await userdbInstance.userdb.query('select * from public."user" where adminid=$1 and positionid=$2 and status=$3 order by rno DESC;', [belongsto, position, '1']);
         res.json({ message: "Successfully Data Fetched", data: userDeleteResult.rows });
     } catch (error) {
         console.error('Error executing database query:', error);
@@ -38,10 +50,10 @@ async function SenderDataInvoiceAddress(req, res) {
         console.log(CheckForStaff.rows[0].positionid);
         const res_positionId = CheckForStaff.rows[0].positionid
         let SenderInvoiceId;
-        if ( res_positionId == 4 ||  res_positionId ==5 ) {
+        if (res_positionId == 4 || res_positionId == 5) {
             const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [senderid]);
             SenderInvoiceId = getBelongsto.rows[0].adminid
-        }else{
+        } else {
             SenderInvoiceId = senderid
         }
 
@@ -89,7 +101,7 @@ async function getProducts(req, res) {
         } else {
             belongsto = userid
         }
-        console.log("belongsto : ", belongsto);
+        // console.log("belongsto : ", belongsto);
 
         const getAllProductsResult = await userdbInstance.userdb.query(`SELECT rno, productid, quantity, priceperitem, "Lastupdatedby", productname,status ,batchno, cgst, sgst
         FROM public.products where belongsto=$1 and status=$2 order by rno DESC;`, [belongsto, '1']);
@@ -178,7 +190,20 @@ async function getProductDataIndividual(req, res) {
         // const { adminid ,position} = req.body;
         // const { id } = req.params;
         // console.log(id);
-        const IndividualProductResult = await userdbInstance.userdb.query('select * from products where productid=$1 and belongsto =$2 and batchno=$3;', [productid, userid, batchno]);
+
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [userid]);
+        console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [userid]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = userid
+        }
+        // console.log("belongsto : ", belongsto);
+
+        const IndividualProductResult = await userdbInstance.userdb.query('select * from products where productid=$1 and belongsto =$2 and batchno=$3;', [productid, belongsto, batchno]);
         // console.log(IndividualProductResult.rows[0]);
         res.json({ message: "Successfully Data Fetched", data: IndividualProductResult.rows[0] });
     } catch (error) {

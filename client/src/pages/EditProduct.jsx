@@ -99,6 +99,7 @@ const EditProduct = () => {
         const device_user_data = async () => {
             // console.log(API_URL);
             try {
+                console.log(userid,productid,productBatch);
                 const response = await axios.post(`${API_URL}get/product`, { userid, productid: productid, batchno: productBatch });
                 const data = response.data;
                 // console.log(data.data.productid);

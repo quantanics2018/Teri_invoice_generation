@@ -24,6 +24,8 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 import QrCode from '../components/QrCode';
 import { invoicecontent } from '../assets/style/mailInlineCss';
+// import GoogleCalendarPicker from 'google-calendar-picker';
+// import { google } from 'googleapis';  
 
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -48,8 +50,15 @@ const InvoiceGenerator = () => {
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const [selectedDate, handleDateChange] = useState(new Date());
+    // const [selectedDate, handleDateChange] = useState(new Date());
     const [loading, setLoading] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+    // Handle selected date, e.g., update state, send to parent component, etc.
+  };
+
     const customerNames = ['Date', 'UserId'];
     const [inputValues, setInputValues] = useState({
         Date: "",
@@ -416,6 +425,13 @@ const InvoiceGenerator = () => {
                                                 onChange={(e) => handleInputChangeInvoice(customerName, e.target.value)}
                                                 value={inputValues[customerName] || ''}
                                             />
+                                            // <GoogleCalendarPicker
+                                            //     onDateSelect={handleDateSelect}
+                                            //     // Pass authentication details as props
+                                            //     clientId="YOUR_CLIENT_ID"
+                                            //     apiKey="YOUR_API_KEY"
+                                            //     scope={['https://www.googleapis.com/auth/calendar.events.readonly']}
+                                            // />
                                         )}
                                     </Grid>
                                 </React.Fragment>

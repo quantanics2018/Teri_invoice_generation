@@ -18,7 +18,7 @@ const Sidebar = ({ children, handleLogout }) => {
     const navigate = useNavigate();
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
-
+console.log(userInfo.position);
     const userSidebarConfig =
         [
             {
@@ -31,6 +31,7 @@ const Sidebar = ({ children, handleLogout }) => {
                     { url: '/D_Staff_Details', text: 'D_Staff Details', condition: userInfo.d_staff > 0, classname: userInfo.d_staff == 0 ? 'last-link' : '' },
                     { url: '/Customer_Details', text: 'Customer Details', condition: userInfo.customer > 0, classname: 'last-link' },
                 ],
+                condition: !(userInfo.position === 'customer')
             },
             {
                 icon: <FaShoppingBag />,
@@ -42,6 +43,7 @@ const Sidebar = ({ children, handleLogout }) => {
                     { url: '/TransactionHistory', text: 'PaySlip Log', condition: userInfo.invoicepayslip > 0 },
                     // { url: '/Invoice', text: 'Invoice', condition: userInfo.invoicegenerator > 0 },
                 ],
+                condition: true
             },
             {
                 icon: <FaUserAlt />,
@@ -50,6 +52,7 @@ const Sidebar = ({ children, handleLogout }) => {
                     { url: '/ProfilePage', text: 'Profile Info', condition: true },
                     { url: '/feedback', text: 'Feedback', condition: true },
                 ],
+                condition: true
             },
         ]
     const handleLogout1 = () => {
@@ -89,13 +92,13 @@ const Sidebar = ({ children, handleLogout }) => {
     return (
         <div className="container-slidebar">
             <div className="sidebar">
-                <div className="all_icon" style={{alignItems:"center"}}>
+                <div className="all_icon" style={{ alignItems: "center" }}>
                     {
                         userSidebarConfig.map((item, index) => (
                             <NavLink
                                 key={index}
                                 className={`link`}
-                                style={{ borderRadius: "7px",width:"max-content",position:"relative" }}
+                                style={{ borderRadius: "7px", width: "max-content", position: "relative" }}
                                 onMouseLeave={() => {
                                     const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
                                     dropdownContent.style.display = 'none';
@@ -103,23 +106,26 @@ const Sidebar = ({ children, handleLogout }) => {
                                     // dropdownContent.style.animation = 'slideOutToLeft 0.5s ease-in-out forwards';
                                 }}
                             >
-                                <div 
-                                className={`mouseEntering ${activeDropdownIndex === index ? 'active-link' : ''}`}
-                                    onMouseEnter={() => {
-                                        const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
-                                        dropdownContent.style.display = 'flex';
-                                        dropdownContent.style.animation = 'slideInFromLeft 0.3s ease-in-out forwards';
-                                        
-                                    }}
-                                // className={`link sidebarIcon ${activeDropdownIndex === index ? 'active-link' : ''}`}
+                                {(item.condition === true) &&
 
-                                >
-                                    <div className="individual_icon">
-                                        <div className={`icon ${activeDropdownIndex === index ? 'active-icon' : ''}`}>{item.icon}</div>
+                                    <div
+                                        className={`mouseEntering ${activeDropdownIndex === index ? 'active-link' : ''}`}
+                                        onMouseEnter={() => {
+                                            const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
+                                            dropdownContent.style.display = 'flex';
+                                            dropdownContent.style.animation = 'slideInFromLeft 0.3s ease-in-out forwards';
+
+                                        }}
+                                    // className={`link sidebarIcon ${activeDropdownIndex === index ? 'active-link' : ''}`}
+
+                                    >
+                                        <div className="individual_icon">
+                                            <div className={`icon ${activeDropdownIndex === index ? 'active-icon' : ''}`}>{item.icon}</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className={`dropdown-content`} style={{ display: 'none',marginTop:'0',top:'0rem'}}
-                               
+                                }
+                                <div className={`dropdown-content`} style={{ display: 'none', marginTop: '0', top: '0rem' }}
+
                                     onMouseLeave={() => {
                                         const dropdownContent = document.getElementsByClassName('dropdown-content')[index];
                                         dropdownContent.style.display = 'none';
@@ -144,8 +150,8 @@ const Sidebar = ({ children, handleLogout }) => {
                                         )
                                     ))}
                                 </div>
-                            </NavLink>
-                        ))}
+                            </NavLink>)
+                        )}
                 </div>
                 <div style={{ position: "relative" }} className='profile' ref={logout_empty_space}>
                     <div >

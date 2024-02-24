@@ -26,7 +26,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { API_URL } from '../config';
 import TextField from '@mui/material/TextField';
-import { Box, Button, Checkbox, FormControl, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, InputAdornment, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
 import { CancelBtn, SaveBtn, UserActionBtn } from '../assets/style/cssInlineConfig';
 import { AddUserBtn, SaveBtnComp } from '../components/AddUserBtn';
 import { CancelBtnComp } from '../components/AddUserBtn'
@@ -693,7 +693,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 {/* Access controll start */}
                 <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
-                        <div class="modal-content" style={{padding:'1rem'}}>
+                        <div class="modal-content" style={{ padding: '1rem' }}>
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Access Control</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -875,6 +875,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         InputLabelProps={{
                                                             className: 'required-label',
                                                             required: true
+                                                        }}
+                                                        InputProps={{
+                                                            startAdornment: field.name === 'mobileNo' ? <InputAdornment position="start">+91</InputAdornment> : null
                                                         }}
                                                     >
                                                         {currencies.map((option) => (

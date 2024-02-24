@@ -27,7 +27,7 @@ import ActionButton from '../components/ActionButton';
 
 const Staff_Detials = (props) => {
     const { Positionid_val, position } = props;
-    console.log(Positionid_val);
+    // console.log(Positionid_val);
     // console.log(props.position);
     //states
     const [rotatedIndex, setRotatedIndex] = useState(null);
@@ -124,6 +124,7 @@ const Staff_Detials = (props) => {
             axios.post(`${API_URL}get/user`, { adminid: adminid, position: props.position })
                 .then(response => {
                     // console.log(response.data.data);
+                    setRotatedIndex(rotatedIndex === index ? null : index);
                     setAlldate(response.data.data)
                 })
                 .catch(error => {

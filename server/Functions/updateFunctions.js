@@ -154,10 +154,24 @@ async function updateProductDataIndividual(req, res) {
     const { updator } = req.body;
     // const batchnoInt = Number(batchno); 
     console.log("Update the Apropriate Product : ", batchno,CGST,SGCT);
+
     try {
+
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [updator]);
+        console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [updator]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = updator
+        }
+        // console.log("belongsto : ", belongsto);
+
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
         SET quantity=$1, priceperitem=$2,productname=$3,batchno=$4,cgst=$5,sgst=$6
-        WHERE productid=$7 and belongsto=$8 and batchno=$9; `, [quantity, priceperitem, productname, batchno, CGST, SGCT, productid, updator,batchno]);
+        WHERE productid=$7 and belongsto=$8 and batchno=$9; `, [quantity, priceperitem, productname, batchno, CGST, SGCT, productid, belongsto,batchno]);
         console.log("sucess", userUpdateResult);
         if (userUpdateResult.rowCount === 1) {
             // The update was successful

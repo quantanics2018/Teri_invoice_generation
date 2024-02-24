@@ -118,9 +118,24 @@ const Products = () => {
     const Products_edit_page = async () => {
         navigate(`Edit_Products`);
     }
+    console.log(userInfo.position);
+
     const Product_edit_page = (data) => {
         // console.log(data);
         // const dataString = encodeURIComponent(JSON.stringify(data));
+        // if (props.position === 2) {
+        //     navigate(`Edit_Distributer_Details/${encodedText}`);
+        // }
+        // if (props.position === 3) {
+        //     navigate(`Edit_Customer_Details/${encodedText}`);
+        // }
+        // if (props.position === 4) {
+        //     navigate(`Edit_Staff_Details/${encodedText}`);
+        // }
+        // if (props.position === 5) {
+        //     navigate(`Edit_D_Staff_Details/${encodedText}`);
+        // }
+
         navigate(`Edit_Product_Detials/${data.productid}/${data.batchno}`);
     }
     const [alldata, setAlldate] = useState([]);
@@ -148,6 +163,7 @@ const Products = () => {
                 });
                 // console.log(response); 
                 if (response.data.qos === "success") {
+                    setRotatedIndex(rotatedIndex === index ? null : index);
                     setAlldate((prevData) => {
                         const newData = [...prevData];
                         newData[index].status = response.data.resStatus;
