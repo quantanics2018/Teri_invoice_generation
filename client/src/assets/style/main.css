@@ -38,6 +38,11 @@
     justify-content: center;
 }
 
+/* inner active link strategy */
+.active-innerlink{
+    background-color: var(--HOVER_COLOUR) !important;
+}
+
 /* .top-bar{
     display: flex;
     align-items: center;

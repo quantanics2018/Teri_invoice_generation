@@ -77,7 +77,7 @@ const Login = (props) => {
                     navigate('/Distributer_Details');
                 }
                 else if (response.data.data.position === "distributor") {
-                    navigate('/Customer_Details');
+                    navigate('/D_Staff_Details');
                 }
                 else {
                     navigate('/profilePage');
@@ -223,9 +223,9 @@ const Login = (props) => {
                                     <span className='display-flex' style={{ justifyContent: "start" }}>Inactive Site</span>
                                 )}
                             </div>
-                            <Button color="secondary">
+                            {/* <Button color="secondary">
                                 Forgot Password
-                            </Button>
+                            </Button> */}
                             {/* <div className="forget">
                                 <span className='display-flex' style={{ justifyContent: "end" }}>Forgot Password</span>
                             </div> */}

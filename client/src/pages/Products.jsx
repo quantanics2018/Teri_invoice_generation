@@ -433,7 +433,7 @@ const Products = () => {
                                                 {data.status == 1 ? (
                                                     <div className='device_content_dropdown display-flex'
                                                         onClick={() => updateUserStatus(data, 0, index)}
-                                                    >Inactivate Product
+                                                    >Delete Product
                                                     </div>
                                                 ) : (
                                                     <div className='device_content_dropdown display-flex'

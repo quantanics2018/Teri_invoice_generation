@@ -11,14 +11,40 @@ import { useEffect, useRef } from "react";
 const Sidebar = ({ children, handleLogout }) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
-    const [activelink, setActiveLink] = useState(null);
+   
     const [logoutdiv, setlogoutdiv] = useState(false);
     const storedData = sessionStorage.getItem('access_control');
     const parsedData = JSON.parse(storedData);
     const navigate = useNavigate();
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
+    const [activelink, setActiveLink] = useState(0);
 
+    // side menubar submenu 
+   
+    var tmp_position = userInfo.position;
+    console.log("first login state");
+    console.log(tmp_position);
+
+    /*
+    if (tmp_position==="distributor") {
+        setActiveLink(2);
+    }else if(tmp_position==="manifacture"){
+        setActiveLink(0);
+    }
+    else if(tmp_position==="customer"){
+        setActiveLink(3);
+    }
+    else if(tmp_position==="staff"){
+        setActiveLink(1);
+    }
+    else if(tmp_position==="d_staff"){
+        setActiveLink(3);
+    }else{
+        setActiveLink(0);
+    }
+    */
+    
     const userSidebarConfig =
         [
             {
@@ -79,19 +105,23 @@ const Sidebar = ({ children, handleLogout }) => {
             document.removeEventListener('click', logout_empty_space_fun);
         };
     }, []);
-    const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
+    const [activeDropdownIndex, setActiveDropdownIndex] = useState(0);
     const handleLinkClick = (i, index) => {
-        console.log(i, index);
         setActiveLink(i);
         setActiveDropdownIndex(index);
     };
 
+
+
     return (
         <div className="container-slidebar">
             <div className="sidebar">
+               
                 <div className="all_icon" style={{alignItems:"center"}}>
                     {
+                        
                         userSidebarConfig.map((item, index) => (
+                         
                             <NavLink
                                 key={index}
                                 className={`link`}
@@ -130,16 +160,16 @@ const Sidebar = ({ children, handleLogout }) => {
                                     <div className={`link_head sidebar_head bottomBorder`}>{item.head}</div>
                                     {/* {<div className="dropdown-hr hr_for_head" />} */}
                                     {item.links.map((link, i) => (
+                                        
                                         (link.condition === true) && (
                                             <div className={(i === item.links.length - 1) ? "" : "bottomBorder"} key={i}>
-                                                <div>
+                                                
                                                     <Link to={link.url}
-                                                        className={`innerLink 
-                                                        ${(i === item.links.length - 1 || item.links[1].classname === 'last-link') ? 'last-link' : ''}`}
+                                                        className={`innerLink  ${(i === item.links.length - 1 || item.links[1].classname === 'last-link') ? 'last-link' : ''} ${(activelink === i && activeDropdownIndex===index) ? 'active-innerlink' : ''} ${i+'-'+index}`}
                                                         onClick={() => handleLinkClick(i, index)}
                                                     >{link.text}
                                                     </Link>
-                                                </div>
+                                              
                                             </div>
                                         )
                                     ))}
@@ -192,5 +222,6 @@ const Sidebar = ({ children, handleLogout }) => {
 
     );
 };
+
 
 export default Sidebar;

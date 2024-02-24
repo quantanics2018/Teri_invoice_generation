@@ -1,21 +1,28 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { API_URL } from '../config';
-import { Button, Pagination, TableCell, TextField } from '@mui/material';
+import { Box, Button, Pagination, Skeleton, TableCell, TextField } from '@mui/material';
+import Loader from '../components/Loader';
 
 const TransactionHistory = () => {
     const [data, setData] = useState([])
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
+    const [loading, setLoading] = useState(false);
 
     const fetchData = async () => {
         try {
+            setLoading(true);
             const response = await axios.post(`${API_URL}get/transactionHistory`, {
                 userid: userInfo.userid,
             });
             if (response.data.status) {
                 console.log('Transaction History:', response.data.data);
+                setLoading(false);
                 setData(response.data.data);
+                console.log(response.data.data);
+                // setInterval(() => {
+                // }, 1000);
             } else {
                 console.error('Invalid response format:', response.data);
             }
@@ -44,6 +51,7 @@ const TransactionHistory = () => {
                 });
                 console.log('Response from server:', response.data.qos);
                 if (response.data.qos === 'success') {
+                    fetchData();
                     alert(response.data.message);
                 } else {
                     alert(response.data.message);
@@ -124,6 +132,7 @@ const TransactionHistory = () => {
 
     return (
         <>
+            {/* {loading && <Loader />} */}
             <div className="row_with_count_status">
                 <span className='module_tittle'>Transactions Detials</span>
             </div>
@@ -149,6 +158,15 @@ const TransactionHistory = () => {
                                             <th>Action</th>
                                         </tr>
                                     </thead>
+                                    {loading && <div>
+                                        <Box sx={{ width: 1100 }}>
+                                            <Skeleton />
+                                            <Skeleton animation="wave" />
+                                            <Skeleton animation="wave" />
+                                            <Skeleton animation="wave" />
+                                            <Skeleton animation="wave" />
+                                        </Box>
+                                    </div>}
                                     <tbody className='text-center'>
                                         {data.map((item, index) => (
                                             <tr key={index} className="align-middle text-center">
@@ -182,7 +200,8 @@ const TransactionHistory = () => {
                                                     <Button color="secondary">
                                                         {(item.transactionid && userInfo.userid === item.senderid) ? '🟢' : (userInfo.userid === item.senderid && '🔴')}
                                                     </Button>
-                                                    <Button color="secondary" disabled={item.senderstatus === 1} onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
+                                                    {console.log("hello", item)}
+                                                    <Button color="secondary" disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)} onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
                                                         ✔
                                                     </Button>
                                                 </td>

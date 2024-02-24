@@ -352,13 +352,16 @@
 
 .module_tittle {
     margin-left: 10px;
-    padding-top: 17px;
+    /* padding-top: 17px; */
     align-items: center;
     justify-content: center;
     font-size: 1.1rem;
     color: var(--PAGE_TITTLE_COLOUR);
 }
 
+.user_action_buttons{
+    height: 100px;
+}
 .status-btns {
     gap: 5px;
 }
@@ -1957,7 +1960,7 @@ input[type="checkbox"] {
 }
 
 .InvoiceContainer {
-    height: 90vh;
+    /* height: 90vh; */
     display: flex;
     justify-content: center;
     /* background-color: #f3fbff; */
@@ -1999,11 +2002,13 @@ input[type="checkbox"] {
 
 .addressWithInvoice {
     display: flex;
+    justify-content: space-around;
+
 }
 
 .addressDetials,
 .invoiceNo {
-    /* display: flex; */
+    display: flex;
     flex-grow: 1;
 }
 
@@ -2041,7 +2046,7 @@ input[type="checkbox"] {
 .billTo,
 .invoiceNo,
 .shipTo {
-    /* width: 33.25%; */
+    width: 33.25%;
 }
 
 .listData {
@@ -2118,6 +2123,7 @@ thead {
     display: flex;
     align-items: center;
     height: 100%;
+    justify-content: space-between;
 }
 
 .even {
