@@ -543,6 +543,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     D_Staff: 'No access',
                     // Customer: 'No access',
                     // Products: 'No access',
+                    'Invoice Generator': 'All',
+                    'Invoice PaySlip': 'All',
                 }));
             }
             if (Positionid_val === 3) {
@@ -554,6 +556,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     D_Staff: 'No access',
                     Products: 'No access',
                     'Invoice Generator': 'No access',
+                    'Invoice PaySlip': 'Edit',
 
                 }));
             }
