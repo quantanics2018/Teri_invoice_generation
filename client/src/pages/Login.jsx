@@ -70,6 +70,12 @@ const Login = (props) => {
             if (response.data.success) {
                 sessionStorage.setItem("UserInfo", JSON.stringify({ ...response.data.data, "isLoggedIn": true }));
                 // console.log(response.data);
+                // const expirationTimeInMinutes = 1;
+                // const expirationMilliseconds = expirationTimeInMinutes * 60 * 1000;
+                // setTimeout(() => {
+                //     alert("Session Expired! Please Log in Again.");
+                //     sessionStorage.removeItem("UserInfo");
+                // }, expirationMilliseconds);
                 if (response.data.data.position === "manifacture") {
                     navigate("/Staff_Details");
                 }
@@ -97,7 +103,7 @@ const Login = (props) => {
                         alert("Check your mail");
                         setUsername('');
                         setPassword('');
-                    }else{
+                    } else {
                         setresAlert(setPasswordMail.data.message)
                         setSubmitted(true);
                         alert("Check Your Internet Connection");
@@ -128,7 +134,7 @@ const Login = (props) => {
     };
     return (
         <>
-            {loading &&  <Loader />}
+            {loading && <Loader />}
             <div className='content'>
                 <div className='digital_scan'>
                     <div className="all_inputs">
