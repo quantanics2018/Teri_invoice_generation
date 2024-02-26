@@ -365,13 +365,17 @@ const InvoiceGenerator = () => {
     // useEffect(()=>{
     //     getuserDetial()
     // },[inputValues.UserId])
+    function formatTotal(total) {
+        const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
+        return formattedTotal;
+    }
     return (
         <>
             {loading && <Loader />}
             {/* Preview Modal Start */}
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style={{ paddingLeft:'1.5rem',paddingTop:'1.5rem' ,paddingRight:'1.5rem', marginLeft: '-110px', }}>
+                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px', }}>
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -529,7 +533,13 @@ const InvoiceGenerator = () => {
                                                 type='number'
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
                                                 value={row.Discount}
-                                                onChange={(e) => handleInputChange(row.id, 'Discount', e.target.value)}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value === '' || (parseFloat(value) >= 0 && parseFloat(value) <= 100)) {
+                                                        handleInputChange(row.id, 'Discount', value);
+                                                    }
+                                                }}
+                                                // onChange={(e) => handleInputChange(row.id, 'Discount', e.target.value)}
                                                 onBlur={() => setTotalValue(row.id, hsncodestate, batchnostate, quantitystate, discountstate)}
                                                 InputProps={{
                                                     endAdornment: <InputAdornment position="end">%</InputAdornment>,
@@ -539,7 +549,8 @@ const InvoiceGenerator = () => {
                                         <TableCell>
                                             <TextField
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
-                                                value={row.Total}
+                                                value={row.Total !== '' ? formatTotal(row.Total) : ''}
+                                                // value={row.Total}
                                                 InputProps={{
                                                     endAdornment: <InputAdornment position="end">₹</InputAdornment>,
                                                 }}
@@ -579,7 +590,7 @@ const InvoiceGenerator = () => {
                         <Grid item>
                             <div>
                                 <Typography variant="body1" display="inline" style={{ marginRight: theme.spacing(2) }}>
-                                    Total Amount: {totalSum ? totalSum : 0}
+                                    Total Amount: {totalSum ? formatTotal(totalSum) : 0}
                                 </Typography>
                                 <Typography variant="body1" display="inline">
                                     Total Quantity: {totalQuantity ? totalQuantity : 0}
