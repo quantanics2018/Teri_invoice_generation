@@ -67,7 +67,6 @@ const InvoiceGenerator = () => {
     const [ReciverIdRes, setReciverIdRes] = useState([{}]);
 
     const handleInputChangeInvoice = (fieldName, value) => {
-        console.log("u : ",value)
         setInputValues((prevValues) => ({
             ...prevValues,
             [fieldName]: value,
@@ -92,7 +91,6 @@ const InvoiceGenerator = () => {
     const [rows, setRows] = useState([
         { id: 1, hsncode: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' },
     ]);
-
 
     const verifyKeysHaveValues = (array) => {
         for (const obj of array) {
@@ -309,10 +307,6 @@ const InvoiceGenerator = () => {
     const [discountstate, setdiscountstate] = useState('');
 
     const setthirdInput = (id, Enteredhsncode, Enteredbatchno,columnName) => {
-        
-        
-        // console.log("Index:", productList);
-        // console.log("id and hsn", id);
         sethsncodestate(Enteredhsncode);
         setbatchnostate(Enteredbatchno);
         console.log("hsn : ", Enteredhsncode);
@@ -320,30 +314,38 @@ const InvoiceGenerator = () => {
         console.log("columnName : ", columnName);
 
         if (columnName === 'hsncode') {
-            console.log("updaterow  : ",rows);
             console.log("Entered hsn",Enteredhsncode)
-            const updaterow = rows.map((row) =>
-                row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
-            );
-            setRows(updaterow);
-            console.log("updaterow after1 : ",updaterow);
+            // const updatedRow = rows.map((row) =>
+            //     row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
+            // ); 
+            setRows(prevRows => {
+                const updatedRow = prevRows.map(row =>
+                    row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
+                );
+                return updatedRow;
+            });
+            console.log("updaterow after1 : ",rows);
         }
         if (columnName === 'batchno') {
-            console.log("updaterow : ",rows);
             console.log("Enetered batch",Enteredbatchno)
-            const updaterows = rows.map((row) =>
-                row.id === id ? { ...row, [columnName]: Enteredbatchno } : row
-            );
-            setRows(updaterows);
-            console.log("updaterow after2: ",updaterows);
+            // const updaterows = rows.map((row) =>
+            //     row.id === id ? { ...row, [columnName]: Enteredbatchno } : row
+            // );
+            setRows(prevRows => {
+                const updatedRows = prevRows.map(row =>
+                    row.id === id ? { ...row, [columnName]: Enteredbatchno } : row
+                );
+                return updatedRows;
+            });
+            console.log("updaterow after2: ",rows);
         }
+        console.log("rows final result : ",rows);
 
         const value = productList
             .filter((product) => product.productid === String(Enteredhsncode) && product.batchno === String(Enteredbatchno))
             .map((product) => product.productname)[0] || '';
 
         // console.log("value : ",value);
-        console.log("rows final result : ",rows);
 
         const updatedRows = rows.map((row) =>
             row.id === id ? {
@@ -629,7 +631,6 @@ const InvoiceGenerator = () => {
                                                     // handleInputChange(row.id, 'batchno', value);
                                                     setthirdInput(row.id, hsncodestate, value,'batchno');
                                                     // setthirdInput(row.id, value, batchnostate,'hsncode');
-
                                                 }}
                                                 renderInput={(params) => (
                                                     <TextField {...params} variant="outlined"
