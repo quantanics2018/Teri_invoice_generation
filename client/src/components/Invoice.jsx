@@ -19,9 +19,11 @@ const Invoice = ({
     ReciverInvoiceProp,
     SenderInvoiceProp,
     totalSum,
-    totalQuantity
+    totalQuantity,
+    inputValuesAboveRows
 }) => {
-    console.log("SenderInvoiceProp : ", previewInvoiceprop[0]);
+    // console.log("SenderInvoiceProp : ", previewInvoiceprop[0]);
+    // console.log("SenderInvoiceProp : ", previewInvoiceprop);
     // console.log("SenderInvoiceProp : ",SenderInvoiceProp[0]);
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
@@ -144,7 +146,7 @@ const Invoice = ({
                         <div className="billDetial">
                             {/* <div className="addressWithInvoice"> */}
                             <div className="addressDetials">
-                                <div className="billTo">
+                                {/* <div className="billTo">
                                     <div className="billToTittle">
                                         Bill From:(Seller)
                                     </div>
@@ -157,23 +159,10 @@ const Invoice = ({
                                                 {SenderInvoiceProp[0].cdistrictid}<br />
                                                 {SenderInvoiceProp[0].cstateid}<br />
                                                 {SenderInvoiceProp[0].cpostalcode}<br />
-                                                {/* GSTIN 89898989898989 */}
                                             </pre>
-                                            {/* <li>
-                                                    Terion Customer code, name
-                                                </li>
-                                                <li>
-                                                    TERION INFOTECHNOLOGIES LTD.
-                                                </li>
-                                                <li>
-                                                    Plot No.-35, Sector - 67,
-                                                </li>
-                                                <li>
-                                                    GSTIN : 27272727272727
-                                                </li> */}
                                         </ul>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="shipTo1" style={billTo}>
                                     <div className="billToTittle">
                                         Ship To:(Buyer)
@@ -194,8 +183,15 @@ const Invoice = ({
                                     </div>
                                 </div>
                                 <div className="invoiceNo1" style={invoiceNo}>
-                                    {ReciverInvoiceProp[0].email}<br />
-                                    {ReciverInvoiceProp[0].phno}<br />
+                                    <div className="invoiceDate">
+                                        Invoice Date : {inputValuesAboveRows.Date}<br />
+                                    </div>
+                                    <div className="invoiceMail">
+                                        Buyer Mail : {ReciverInvoiceProp[0].email}<br />
+                                    </div>
+                                    <div className="invoiceMail">
+                                        Buyer Phno : {ReciverInvoiceProp[0].phno}<br />
+                                    </div>
                                     {/* Invoice Number : 4649845 <br /> */}
                                     {/* Invoice Date : 08-03-2021 */}
                                 </div>

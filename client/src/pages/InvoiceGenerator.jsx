@@ -57,7 +57,8 @@ const InvoiceGenerator = () => {
         // Handle selected date, e.g., update state, send to parent component, etc.
     };
 
-    const customerNames = ['Date', 'UserId'];
+    const customerNames1 = ['Date', 'UserId'];
+    const customerNames = [{name:"Date",tittle:"Date"},{name:"Buyer",tittle:"UserId"}];
     const [inputValues, setInputValues] = useState({
         Date: "",
         UserId: "",
@@ -66,6 +67,7 @@ const InvoiceGenerator = () => {
     const [ReciverIdRes, setReciverIdRes] = useState([{}]);
 
     const handleInputChangeInvoice = (fieldName, value) => {
+        console.log("u : ",value)
         setInputValues((prevValues) => ({
             ...prevValues,
             [fieldName]: value,
@@ -90,6 +92,7 @@ const InvoiceGenerator = () => {
     const [rows, setRows] = useState([
         { id: 1, hsncode: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' },
     ]);
+
 
     const verifyKeysHaveValues = (array) => {
         for (const obj of array) {
@@ -147,18 +150,21 @@ const InvoiceGenerator = () => {
     // setCurrentRowId(id);
 
     const handleInputChange = (id, column, value) => {
+        console.log("id, column, value :",id, column, value);
         const updatedRows = rows.map((row) =>
             row.id === id ? { ...row, [column]: value } : row
         );
         setRows(updatedRows);
         if (column === 'hsncode') {
-            sethsncodestate(value)
+            alert(value)
         }
         if (column === 'batchno') {
             setbatchnostate(value)
         }
         if (column === 'Quantity') {
-            setquantitystate(value)
+            // console.log("yes : ",value)
+            setquantitystate(value);
+            // setTotalValue(id, hsncodestate, batchnostate,value, discountstate);
         }
         if (column === 'Discount') {
             setdiscountstate(value)
@@ -176,6 +182,8 @@ const InvoiceGenerator = () => {
                         previewInvoiceprop={rows}
                         ReciverInvoiceProp={ReciverIdRes}
                         SenderInvoiceProp={senderIdRes}
+                        totalSum={totalSum}
+                        totalQuantity={totalQuantity}
                     />
                 </div>
             );
@@ -270,7 +278,7 @@ const InvoiceGenerator = () => {
                 const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
                 const productList = dropDownResponse.data.data;
                 setproductList(productList)
-                console.log("productList : ", productList);
+                // console.log("productList : ", productList);
                 const productName = dropDownResponse.data.data.map(item => item.productname);
                 // setOptions(productIds);
                 setOptionsproductName(productName);
@@ -279,9 +287,9 @@ const InvoiceGenerator = () => {
                 console.error('Error in processing data:', error);
             }
         };
-
         fetchData();
     }, [inputValues]);
+    const productIDs = productList.map(item => item.productid);
 
     const [totalSum, setTotalSum] = useState();
     const [totalQuantity, settotalQuantity] = useState();
@@ -291,7 +299,7 @@ const InvoiceGenerator = () => {
         setTotalSum(totalSumValue);
         const totalQuantityValue = rows.map(item => parseFloat(item.Quantity)).reduce((sum, value) => sum + value, 0);
         settotalQuantity(totalQuantityValue);
-        console.log("total value", totalSumValue);
+        // console.log("total value", totalSumValue);
     }, [rows]); // Include 'rows' in the dependency array
 
 
@@ -300,14 +308,42 @@ const InvoiceGenerator = () => {
     const [quantitystate, setquantitystate] = useState('');
     const [discountstate, setdiscountstate] = useState('');
 
-    const setthirdInput = (id, Enteredhsncode, Enteredbatchno) => {
-        console.log("Index:", productList);
-        // console.log("id and hsn", id, Enteredhsncode, Enteredbatchno);
+    const setthirdInput = (id, Enteredhsncode, Enteredbatchno,columnName) => {
+        
+        
+        // console.log("Index:", productList);
+        // console.log("id and hsn", id);
+        sethsncodestate(Enteredhsncode);
+        setbatchnostate(Enteredbatchno);
+        console.log("hsn : ", Enteredhsncode);
+        console.log("batch : ", Enteredbatchno);
+        console.log("columnName : ", columnName);
+
+        if (columnName === 'hsncode') {
+            console.log("updaterow  : ",rows);
+            console.log("Entered hsn",Enteredhsncode)
+            const updaterow = rows.map((row) =>
+                row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
+            );
+            setRows(updaterow);
+            console.log("updaterow after1 : ",updaterow);
+        }
+        if (columnName === 'batchno') {
+            console.log("updaterow : ",rows);
+            console.log("Enetered batch",Enteredbatchno)
+            const updaterows = rows.map((row) =>
+                row.id === id ? { ...row, [columnName]: Enteredbatchno } : row
+            );
+            setRows(updaterows);
+            console.log("updaterow after2: ",updaterows);
+        }
+
         const value = productList
-            .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
+            .filter((product) => product.productid === String(Enteredhsncode) && product.batchno === String(Enteredbatchno))
             .map((product) => product.productname)[0] || '';
 
-        console.log(value);
+        // console.log("value : ",value);
+        console.log("rows final result : ",rows);
 
         const updatedRows = rows.map((row) =>
             row.id === id ? {
@@ -315,16 +351,92 @@ const InvoiceGenerator = () => {
             } : row
         );
         setRows(updatedRows);
-        console.log(updatedRows);
-    }
-    const setTotalValue = (id, Enteredhsncode, Enteredbatchno, enteredQuantity = 0, enteredDiscount = 0) => {
-        console.log("productList", id, Enteredhsncode, Enteredbatchno, enteredQuantity);
+        
 
+
+        // const value = productList
+        //     .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
+        //     .map((product) => product.productname)[0] || '';
+
+        // // console.log(value);
+
+        // const updatedRows = rows.map((row) =>
+        //     row.id === id ? {
+        //         ...row, productName: value
+        //     } : row
+        // );
+        // setRows(updatedRows);
+    }
+
+    const setthirdInput1 = (id, Enteredhsncode, Enteredbatchno,columnName) => {
+        // console.log("Index:", productList);
+        // console.log("id and hsn", id);
+        sethsncodestate(Enteredhsncode);
+        setbatchnostate(Enteredbatchno);
+        console.log("hsn : ", Enteredhsncode);
+        console.log("batch : ", Enteredbatchno);
+
+        const updatedRows1 = rows.map((row) =>
+            row.id === id ? { ...row, [columnName]: value } : row
+        );
+        setRows(updatedRows1);
+
+
+
+        const value = productList
+            .filter((product) => product.productid === String(Enteredhsncode) && product.batchno === String(Enteredbatchno))
+            .map((product) => product.productname)[0] || '';
+
+        console.log("value : ",value);
+        console.log("rows : ",rows);
+
+        const updatedRows = rows.map((row) =>
+            row.id === id ? {
+                ...row, productName: value
+            } : row
+        );
+        setRows(updatedRows);
+
+        // const value = productList
+        //     .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
+        //     .map((product) => product.productname)[0] || '';
+
+        // // console.log(value);
+
+        // const updatedRows = rows.map((row) =>
+        //     row.id === id ? {
+        //         ...row, productName: value
+        //     } : row
+        // );
+        // setRows(updatedRows);
+    }
+
+    // const setthirdInput1 = (id, Enteredhsncode, Enteredbatchno) => {
+    //     console.log("hsncodestate : ", hsncodestate);
+    //     console.log("batchnostate : ", batchnostate);
+    //     const value = productList
+    //         .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
+    //         .map((product) => product.productname)[0] || '';
+    //     const updatedRows = rows.map((row) =>
+    //         row.id === id ? {
+    //             ...row, productName: value
+    //         } : row
+    //     );
+    //     setRows(updatedRows);
+    // }
+
+    const setTotalValue = (id, Enteredhsncode, Enteredbatchno, enteredQuantity = 0, enteredDiscount = 0) => {
+        console.log("productList", id);
+        console.log("Enteredhsncode : ", Enteredhsncode);
+        console.log("Enteredbatchno : ",Enteredbatchno);
+        console.log("enteredQuantity : ",enteredQuantity);
+        console.log("enteredDiscount : ",enteredDiscount);
+        
         const productPrice = productList
-            .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
+            .filter((product) => product.productid === String(Enteredhsncode) && product.batchno === String(Enteredbatchno))
             .map((product) => product.priceperitem)[0] || '';
 
-        console.log("price : ", productPrice);
+        console.log("productPrice : ",productPrice);
 
         const updatedRows = rows.map((row) =>
             row.id === id ? {
@@ -332,7 +444,7 @@ const InvoiceGenerator = () => {
             } : row
         );
         setRows(updatedRows);
-        // console.log("fortotal :", updatedRows);
+        console.log("updatedRows : ",rows);
     }
 
 
@@ -344,12 +456,12 @@ const InvoiceGenerator = () => {
 
     const getuserDetial = (customerName, value) => {
         // console.log(inputValues.UserId);
-        console.log(customerName, value);
+        console.log("get : ",customerName, value);
         const getReciverData = async () => {
-            const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: inputValues.UserId });
+            const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: value });
             console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
             const reciveridObj = getReciverDataRequest.data.data;
-            // console.log("reciveridObj  rich : ", reciveridObj);
+            console.log("reciveridObj  rich : ", reciveridObj);
             if (getReciverDataRequest.data.status) {
                 setReciverIdRes(reciveridObj);
             }
@@ -369,6 +481,7 @@ const InvoiceGenerator = () => {
         const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
         return formattedTotal;
     }
+    // console.log(inputValues);
     return (
         <>
             {loading && <Loader />}
@@ -387,6 +500,7 @@ const InvoiceGenerator = () => {
                                 SenderInvoiceProp={senderIdRes}
                                 totalSum={totalSum}
                                 totalQuantity={totalQuantity}
+                                inputValuesAboveRows={inputValues}
                             />
                         </div>
                         <div class="modal-footer gap-4">
@@ -408,16 +522,16 @@ const InvoiceGenerator = () => {
                                 <React.Fragment key={index}>
                                     <Grid item xs={4}>
                                         <Typography variant="body1" align="left">
-                                            {customerName}
+                                            {customerName.name}
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        {customerName === 'UserId' ? (
+                                        {customerName.tittle === 'UserId' ? (
                                             <Autocomplete
                                                 options={userNameoptions}
-                                                onChange={(e, value) => handleInputChangeInvoice(customerName, value)}
+                                                onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} label={`${customerName}`} variant="outlined"
+                                                    <TextField {...params} label={`${customerName.name}`} variant="outlined"
                                                         InputLabelProps={{
                                                             className: 'required-label',
                                                             required: true
@@ -427,15 +541,15 @@ const InvoiceGenerator = () => {
                                                 // onBlur={(e) => const value = e.target.value;getuserDetial(customerName, value)}
                                                 onBlur={(e) => {
                                                     const value = e.target.value; // Accessing the value
-                                                    getuserDetial(customerName, value);
+                                                    getuserDetial(customerName.name, value);
                                                 }}
                                             />
                                         ) : (
                                             <TextField fullWidth
                                                 // label={customerName}
                                                 type='date'
-                                                onChange={(e) => handleInputChangeInvoice(customerName, e.target.value)}
-                                                value={inputValues[customerName] || ''}
+                                                onChange={(e) => handleInputChangeInvoice(customerName.name, e.target.value)}
+                                                value={inputValues[customerName.name] || ''}
                                             />
                                             // <GoogleCalendarPicker
                                             //     onDateSelect={handleDateSelect}
@@ -478,21 +592,53 @@ const InvoiceGenerator = () => {
                                     // ref={currentRowid}
                                     >
                                         <TableCell>
-                                            <TextField
+                                            {/* <TextField
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
                                                 list={`suggestions-${row.id}`}
                                                 value={row.hsncode}
                                                 onChange={(e) => handleInputChange(row.id, 'hsncode', e.target.value)}
                                                 onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
+                                            /> */}
+                                            <Autocomplete
+                                                options={productIDs}
+                                                onChange={(event, value) => {
+                                                    setthirdInput(row.id, value, batchnostate,'hsncode');
+                                                }}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} variant="outlined"
+                                                        // onBlur={() => alert(JSON.stringify(row.hsncode))}
+                                                        // setthirdInput(row.id, hsncodestate, batchnostate)
+                                                        disabled={currentRowId !== null && row.id !== currentRowId}
+                                                    />
+                                                )}
+                                                
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <TextField
+                                            {/* <TextField
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
                                                 list={`suggestions-${row.id}`}
                                                 value={row.batchno}
                                                 onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
                                                 onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
+                                            /> */}
+                                            <Autocomplete
+                                                options={[1,2,3]}
+                                                // onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
+                                                onChange={(event, value) => {
+                                                    // handleInputChange(row.id, 'batchno', value);
+                                                    setthirdInput(row.id, hsncodestate, value,'batchno');
+                                                    // setthirdInput(row.id, value, batchnostate,'hsncode');
+
+                                                }}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} variant="outlined"
+                                                        // onBlur={() => alert(JSON.stringify(row.hsncode))}
+                                                        // setthirdInput(row.id, hsncodestate, batchnostate)
+                                                        disabled={currentRowId !== null && row.id !== currentRowId}
+                                                    />
+                                                )}
+                                                
                                             />
                                         </TableCell>
                                         <TableCell>
@@ -524,7 +670,16 @@ const InvoiceGenerator = () => {
                                                 type='number'
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
                                                 value={row.Quantity}
-                                                onChange={(e) => handleInputChange(row.id, 'Quantity', e.target.value)}
+                                                // onChange={(e) => handleInputChange(row.id, 'Quantity', e.target.value);setTotalValue(row.id, hsncodestate, batchnostate, quantitystate, discountstate)}
+                                                onChange={(e) => {
+                                                    handleInputChange(row.id, 'Quantity', e.target.value);
+                                                    // setTotalValue(row.id, hsncodestate, batchnostate, e.target.value, discountstate);
+                                                }}
+                                                // onChange={(event, value) => {
+                                                //     // setthirdInput(row.id, hsncodestate, value);
+                                                //     handleInputChange(row.id, 'Quantity', value);
+                                                //     // setTotalValue(row.id, hsncodestate, batchnostate, value, discountstate);
+                                                // }}
                                                 onBlur={() => setTotalValue(row.id, hsncodestate, batchnostate, quantitystate, discountstate)}
                                             />
                                         </TableCell>

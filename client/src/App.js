@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './assets/style/App.css'
 import './assets/style/main.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 // import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -55,22 +55,24 @@ const App = () => {
   // console.log(userInfo.distributer);
   const currentLoc = window.location.href;
 
+
   return (
     // http://localhost:3001/
     // https://terion.quantanics.in/
     <BrowserRouter>
-      {window.location.href !== `${API_URL_CLIENT}` && userInfo && (
+      {(window.location.href !== `${API_URL_CLIENT}` && userInfo) ? (
         <div>
           <TopNavbar />
           <Sidebar handleLogout={handleLogout}>
           </Sidebar>
+          {/* {(window.location.href !== `http://localhost:3001/`)&& <Navigate to='/Staff_Details' />} */}
           {userInfo.staff > 0 && (
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Staff module */}
                 <Route path='/Staff_Details' element={<StaffDetails position={4} Positionid_val={4} />} />
-                <Route path='/Staff_Details/Edit_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={4}/>} />
-                <Route path='/Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={4}/>} />
+                <Route path='/Staff_Details/Edit_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={4} />} />
+                <Route path='/Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={4} />} />
               </Routes>
             </div>
           )}
@@ -80,9 +82,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Distributer module */}
-                <Route path='/Distributer_Details' element={<StaffDetails position={2} Positionid_val={2}/>} />
-                <Route path='/Distributer_Details/Edit_Distributer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={2}/>} />
-                <Route path='/Distributer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={2}/>} />
+                <Route path='/Distributer_Details' element={<StaffDetails position={2} Positionid_val={2} />} />
+                <Route path='/Distributer_Details/Edit_Distributer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={2} />} />
+                <Route path='/Distributer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={2} />} />
               </Routes>
             </div>
           )}
@@ -91,9 +93,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* D_Staff_Detials module */}
-                <Route path='/D_Staff_Details' element={<StaffDetails position={5} Positionid_val={5}/>} />
-                <Route path='/D_Staff_Details/Edit_D_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={5}/>} />
-                <Route path='/D_Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={5}/>} />
+                <Route path='/D_Staff_Details' element={<StaffDetails position={5} Positionid_val={5} />} />
+                <Route path='/D_Staff_Details/Edit_D_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={5} />} />
+                <Route path='/D_Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={5} />} />
               </Routes>
             </div>
           )}
@@ -102,9 +104,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Customer module */}
-                <Route path='/Customer_Details' element={<StaffDetails position={3} Positionid_val={3}/>} />
-                <Route path='/Customer_Details/Edit_Customer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={3}/>} />
-                <Route path='/Customer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={3}/>} />
+                <Route path='/Customer_Details' element={<StaffDetails position={3} Positionid_val={3} />} />
+                <Route path='/Customer_Details/Edit_Customer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={3} />} />
+                <Route path='/Customer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={3} />} />
               </Routes>
             </div>
           )}
@@ -142,13 +144,14 @@ const App = () => {
             {/* <Route path='Invoice' element={<Invoice />} /> */}
           </Routes>
         </div>
-      )}
-      {/* {(currentLoc === `${API_URL_CLIENT}` || currentLoc === `${API_URL_CLIENT}/UpdatePassword`) && ( */}
+      ) : (
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='UpdatePassword' element={<UpdatePassword />} />
         </Routes>
-       {/* )}  */}
+      )}
+      {/* {(currentLoc === `${API_URL_CLIENT}` || currentLoc === `${API_URL_CLIENT}/UpdatePassword`) && ( */}
+      {/* )}  */}
     </BrowserRouter>
 
   );
