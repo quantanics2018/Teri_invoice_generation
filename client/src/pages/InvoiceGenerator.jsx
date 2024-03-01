@@ -58,7 +58,7 @@ const InvoiceGenerator = () => {
     };
 
     const customerNames1 = ['Date', 'UserId'];
-    const customerNames = [{name:"Date",tittle:"Date"},{name:"Buyer",tittle:"UserId"}];
+    const customerNames = [{ name: "Date", tittle: "Date" }, { name: "Buyer", tittle: "UserId" }];
     const [inputValues, setInputValues] = useState({
         Date: "",
         UserId: "",
@@ -89,10 +89,19 @@ const InvoiceGenerator = () => {
     // content for table
     // , batchno: ''
     const [rows, setRows] = useState([
-        { id: 1, hsncode: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' },
+        {
+            id: 1,
+            hsncode: '',
+            batchno: '',
+            productName: '',
+            Quantity: '',
+            Discount: '',
+            Total: ''
+        },
     ]);
-
+    // console.log("program : ");
     const verifyKeysHaveValues = (array) => {
+        console.log(array);
         for (const obj of array) {
             for (const key in obj) {
                 if (!obj[key]) {
@@ -148,25 +157,46 @@ const InvoiceGenerator = () => {
     // setCurrentRowId(id);
 
     const handleInputChange = (id, column, value) => {
-        console.log("id, column, value :",id, column, value);
+        console.log("id, column, value :", id, column, value);
+        console.log('richrow :', rows);
+        console.log("event : ", value);
         const updatedRows = rows.map((row) =>
             row.id === id ? { ...row, [column]: value } : row
         );
         setRows(updatedRows);
-        if (column === 'hsncode') {
-            alert(value)
+        console.log("handle change : ",rows[id-1]);
+        if (column === 'hsncode' ||  column ==='batchno') {
+            // if (rows[id-1].hsncode !=='' && rows[id-1].batchno !=='') {
+                const value = productList
+                    .filter((product) => product.productid === String(updatedRows[id-1].hsncode) && product.batchno === String(updatedRows[id-1].batchno))
+                    .map((product) => product.productname)[0] || '';
+    
+                // console.log("value : ",value);
+    
+                const getproductbyfilter = updatedRows.map((row) =>
+                    row.id === id ? {
+                        ...row, productName: value
+                    } : row
+                );
+                setRows(getproductbyfilter);
+            // }
         }
-        if (column === 'batchno') {
-            setbatchnostate(value)
-        }
-        if (column === 'Quantity') {
-            // console.log("yes : ",value)
-            setquantitystate(value);
-            // setTotalValue(id, hsncodestate, batchnostate,value, discountstate);
-        }
-        if (column === 'Discount') {
-            setdiscountstate(value)
-        }
+        
+        // if (column === 'hsncode') {
+        //     // alert(value)
+        //     sethsncodestate(value)
+        // }
+        // if (column === 'batchno') {
+        //     setbatchnostate(value)
+        // }
+        // if (column === 'Quantity') {
+        //     // console.log("yes : ",value)
+        //     setquantitystate(value);
+        //     // setTotalValue(id, hsncodestate, batchnostate,value, discountstate);
+        // }
+        // if (column === 'Discount') {
+        //     setdiscountstate(value)
+        // }
     };
 
     // invoice htm send to server
@@ -299,6 +329,7 @@ const InvoiceGenerator = () => {
         settotalQuantity(totalQuantityValue);
         // console.log("total value", totalSumValue);
     }, [rows]); // Include 'rows' in the dependency array
+    
 
 
     const [hsncodestate, sethsncodestate] = useState('');
@@ -306,7 +337,7 @@ const InvoiceGenerator = () => {
     const [quantitystate, setquantitystate] = useState('');
     const [discountstate, setdiscountstate] = useState('');
 
-    const setthirdInput = (id, Enteredhsncode, Enteredbatchno,columnName) => {
+    const setthirdInput = (id, Enteredhsncode, Enteredbatchno, columnName) => {
         sethsncodestate(Enteredhsncode);
         setbatchnostate(Enteredbatchno);
         console.log("hsn : ", Enteredhsncode);
@@ -314,20 +345,28 @@ const InvoiceGenerator = () => {
         console.log("columnName : ", columnName);
 
         if (columnName === 'hsncode') {
-            console.log("Entered hsn",Enteredhsncode)
+            // console.log("Entered hsn", Enteredhsncode)
             // const updatedRow = rows.map((row) =>
             //     row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
-            // ); 
-            setRows(prevRows => {
-                const updatedRow = prevRows.map(row =>
-                    row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
-                );
-                return updatedRow;
-            });
-            console.log("updaterow after1 : ",rows);
+            // );
+
+            console.log("id, column, value :", id, columnName, Enteredhsncode);
+            const updatedRows = rows.map((row) =>
+                row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
+            );
+            setRows(updatedRows);
+
+            // setRows(prevRows => {
+            //     const updatedRow = prevRows.map(row =>
+            //         row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
+            //     );
+            //     return updatedRow;
+            // });
+            console.log("updaterow after1 : ", updatedRows);
         }
         if (columnName === 'batchno') {
-            console.log("Enetered batch",Enteredbatchno)
+            console.log("updated rows rich : ", rows);
+            console.log("Enetered batch", Enteredbatchno)
             // const updaterows = rows.map((row) =>
             //     row.id === id ? { ...row, [columnName]: Enteredbatchno } : row
             // );
@@ -337,9 +376,9 @@ const InvoiceGenerator = () => {
                 );
                 return updatedRows;
             });
-            console.log("updaterow after2: ",rows);
+            // console.log("updaterow after2: ", updatedRows);
         }
-        console.log("rows final result : ",rows);
+        // console.log("rows final result : ", rows);
 
         const value = productList
             .filter((product) => product.productid === String(Enteredhsncode) && product.batchno === String(Enteredbatchno))
@@ -353,7 +392,7 @@ const InvoiceGenerator = () => {
             } : row
         );
         setRows(updatedRows);
-        
+
 
 
         // const value = productList
@@ -370,7 +409,7 @@ const InvoiceGenerator = () => {
         // setRows(updatedRows);
     }
 
-    const setthirdInput1 = (id, Enteredhsncode, Enteredbatchno,columnName) => {
+    const setthirdInput1 = (id, Enteredhsncode, Enteredbatchno, columnName) => {
         // console.log("Index:", productList);
         // console.log("id and hsn", id);
         sethsncodestate(Enteredhsncode);
@@ -389,8 +428,8 @@ const InvoiceGenerator = () => {
             .filter((product) => product.productid === String(Enteredhsncode) && product.batchno === String(Enteredbatchno))
             .map((product) => product.productname)[0] || '';
 
-        console.log("value : ",value);
-        console.log("rows : ",rows);
+        console.log("value : ", value);
+        console.log("rows : ", rows);
 
         const updatedRows = rows.map((row) =>
             row.id === id ? {
@@ -429,24 +468,47 @@ const InvoiceGenerator = () => {
 
     const setTotalValue = (id, Enteredhsncode, Enteredbatchno, enteredQuantity = 0, enteredDiscount = 0) => {
         console.log("productList", id);
-        console.log("Enteredhsncode : ", Enteredhsncode);
-        console.log("Enteredbatchno : ",Enteredbatchno);
-        console.log("enteredQuantity : ",enteredQuantity);
-        console.log("enteredDiscount : ",enteredDiscount);
-        
+        // console.log("Enteredhsncode : ", Enteredhsncode);
+        // console.log("Enteredbatchno : ", Enteredbatchno);
+        // console.log("enteredQuantity : ", enteredQuantity);
+        // console.log("enteredDiscount : ", enteredDiscount);
+        console.log("hsncode : ",rows[id-1].hsncode,typeof rows[id-1].hsncode);
+        console.log("batchno : ",rows[id-1].batchno,typeof String(rows[id-1].batchno));
+
+        // console.log("Quantity : ",rows[id-1].Quantity);
+        // console.log("discount : ",rows[id-1].Discount);
+
+        // const productPrice = productList
+        //     .filter((product) => product.productid === rows[id-1].hsncode && product.batchno === String(rows[id-1].batchno))
+        //     .map((product) => product.priceperitem)[0] || '';
+
         const productPrice = productList
-            .filter((product) => product.productid === String(Enteredhsncode) && product.batchno === String(Enteredbatchno))
+            .filter((product) => product.productid === String(rows[id-1].hsncode) && product.batchno === String(rows[id-1].batchno))
             .map((product) => product.priceperitem)[0] || '';
 
-        console.log("productPrice : ",productPrice);
+        console.log("productPrice : ", productPrice);
+
+        const getcgst = productList
+            .filter((product) => product.productid === String(rows[id-1].hsncode) && product.batchno === String(rows[id-1].batchno))
+            .map((product) => product.cgst)[0] || '';
+
+        console.log("getcgst : ", getcgst);
+
+        const getsgst = productList
+            .filter((product) => product.productid === String(rows[id-1].hsncode) && product.batchno === String(rows[id-1].batchno))
+            .map((product) => product.sgst)[0] || '';
+
+        console.log("getsgst : ", getsgst);
+
 
         const updatedRows = rows.map((row) =>
             row.id === id ? {
-                ...row, Total: (enteredQuantity * productPrice) - ((enteredQuantity * productPrice) * enteredDiscount / 100)
+                ...row, Total: ((rows[id-1].Quantity * productPrice) - ((rows[id-1].Quantity * productPrice) * rows[id-1].Discount / 100))+(productPrice*(getcgst/100))+(productPrice*(getsgst/100))
             } : row
         );
+        
+        console.log("updatedRows : ", rows);
         setRows(updatedRows);
-        console.log("updatedRows : ",rows);
     }
 
 
@@ -458,7 +520,7 @@ const InvoiceGenerator = () => {
 
     const getuserDetial = (customerName, value) => {
         // console.log(inputValues.UserId);
-        console.log("get : ",customerName, value);
+        console.log("get : ", customerName, value);
         const getReciverData = async () => {
             const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: value });
             console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
@@ -603,9 +665,11 @@ const InvoiceGenerator = () => {
                                             /> */}
                                             <Autocomplete
                                                 options={productIDs}
-                                                onChange={(event, value) => {
-                                                    setthirdInput(row.id, value, batchnostate,'hsncode');
-                                                }}
+                                                // onChange={(event, value) => {
+                                                //     setthirdInput(row.id, value, batchnostate, 'hsncode');
+                                                // }}
+                                                value={row.hsncode}
+                                                onChange={(e, value) => handleInputChange(row.id, 'hsncode', value)}
                                                 renderInput={(params) => (
                                                     <TextField {...params} variant="outlined"
                                                         // onBlur={() => alert(JSON.stringify(row.hsncode))}
@@ -613,7 +677,7 @@ const InvoiceGenerator = () => {
                                                         disabled={currentRowId !== null && row.id !== currentRowId}
                                                     />
                                                 )}
-                                                
+
                                             />
                                         </TableCell>
                                         <TableCell>
@@ -625,13 +689,12 @@ const InvoiceGenerator = () => {
                                                 onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
                                             /> */}
                                             <Autocomplete
-                                                options={[1,2,3]}
-                                                // onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
-                                                onChange={(event, value) => {
-                                                    // handleInputChange(row.id, 'batchno', value);
-                                                    setthirdInput(row.id, hsncodestate, value,'batchno');
-                                                    // setthirdInput(row.id, value, batchnostate,'hsncode');
-                                                }}
+                                                options={[1, 2, 3]}
+                                                value={row.batchno}
+                                                onChange={(e, value) => handleInputChange(row.id, 'batchno', value)}
+                                                // onChange={(event, value) => {
+                                                //     setthirdInput(row.id, hsncodestate, value, 'batchno');
+                                                // }}
                                                 renderInput={(params) => (
                                                     <TextField {...params} variant="outlined"
                                                         // onBlur={() => alert(JSON.stringify(row.hsncode))}
@@ -639,7 +702,7 @@ const InvoiceGenerator = () => {
                                                         disabled={currentRowId !== null && row.id !== currentRowId}
                                                     />
                                                 )}
-                                                
+
                                             />
                                         </TableCell>
                                         <TableCell>
@@ -706,6 +769,7 @@ const InvoiceGenerator = () => {
                                             <TextField
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
                                                 value={row.Total !== '' ? formatTotal(row.Total) : ''}
+                                                // value={200}
                                                 // value={row.Total}
                                                 InputProps={{
                                                     endAdornment: <InputAdornment position="end">₹</InputAdornment>,

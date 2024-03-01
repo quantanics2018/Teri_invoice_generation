@@ -105,6 +105,7 @@ const Invoice = ({
         pdf.text(tableContent, 10, 10);
         pdf.save("invoice.pdf");
     };
+    // console.log(previewInvoiceprop);
     return (
         <div className="InvoiceContainer">
             <div className="forScroll">
@@ -206,6 +207,9 @@ const Invoice = ({
                                         <th className='th1' style={th}>PRODUCT NAME</th>
                                         <th className='th1' style={th}>HSN NO.</th>
                                         <th className='th1' style={th}>QTY.</th>
+                                        <th className='th1' style={th}>Discount</th>
+                                        <th className='th1' style={th}>CGST</th>
+                                        <th className='th1' style={th}>SGST</th>
                                         <th className='th1' style={th}>RATE</th>
                                         {/* <th className='th'>AMOUNT</th> */}
                                     </tr>
@@ -216,6 +220,9 @@ const Invoice = ({
                                             <td className='td1' style={td}>{index + 1}</td>
                                             <td className='td1' style={td}>{item.productName || ''}</td>
                                             <td className='td1' style={td}>{item.hsncode || ''}</td>
+                                            <td className='td1' style={td}>{item.Quantity || ''}</td>
+                                            <td className='td1' style={td}>{item.Discount || ''}</td>
+                                            <td className='td1' style={td}>{item.Quantity || ''}</td>
                                             <td className='td1' style={td}>{item.Quantity || ''}</td>
                                             <td className='td1' style={td}>{item.Total || ''}</td>
                                             {/* <td className='td'>{item.rate ? `Rs. ${item.rate.toFixed(2)}` : ''}</td>
