@@ -529,15 +529,18 @@ const InvoiceGenerator = () => {
         console.log("get : ", customerName, value);
         const getReciverData = async () => {
             const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: value });
-            console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
-            const reciveridObj = getReciverDataRequest.data.data;
-            console.log("reciveridObj  rich : ", reciveridObj);
+            console.log(getReciverDataRequest.data.status);
             if (getReciverDataRequest.data.status) {
+                const reciveridObj = getReciverDataRequest.data.data;
                 setReciverIdRes(reciveridObj);
+            }else{
+                alert("ahi")
+                console.log("err");
+                setReciverIdRes(null);
             }
         }
-
-        if (value !== '') {
+        // console.log("hiii 2 ---- ",inputValues.Buyer);
+        if (inputValues.Buyer !== '') {
             getReciverData();
         }
         else {
@@ -610,7 +613,9 @@ const InvoiceGenerator = () => {
                                                     />
                                                 )}
                                                 // onBlur={(e) => const value = e.target.value;getuserDetial(customerName, value)}
+
                                                 onBlur={(e) => {
+                                                    console.log("haiii : ",customerName.name);
                                                     const value = e.target.value; // Accessing the value
                                                     getuserDetial(customerName.name, value);
                                                 }}
