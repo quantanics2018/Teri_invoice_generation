@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import companyLogo from './assets/logo/invoiceLogo.png'
 import { Avatar, Badge, Button, Chip, Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu'
+import { deepOrange, red } from '@mui/material/colors';
 const TopNavbar = () => {
 
 
@@ -24,7 +25,7 @@ const TopNavbar = () => {
       <div className='usernameProfile'>
         <Chip label={userInfo.email} variant="outlined" />
         {/* <Badge color='success' variant='dot' overlap='circular' anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} > */}
-          <Avatar alt={(userInfo.email).toUpperCase()} src="/static/images/avatar/1.jpg" />
+          <Avatar sx={{ bgcolor: red[500] }} alt={(userInfo.email).toUpperCase()} src="/static/images/avatar/1.jpg" />
         {/* </Badge> */}
       </div>
 
