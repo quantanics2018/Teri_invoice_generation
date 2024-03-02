@@ -64,17 +64,19 @@ async function SenderDataInvoiceAddress(req, res) {
         res.status(500).json({ message: "Internal Server Error", status: false });
     }
 }
+
 async function ReciverDataInvoiceAddress(req, res) {
     try {
         const { reciverid } = req.body;
         console.log("reciverid : ", reciverid);
-        const ReciverInvoiceAddressRes = await userdbInstance.userdb.query('select * from public."user" where email=$1;', [reciverid]);
+        const ReciverInvoiceAddressRes = await userdbInstance.userdb.query('select * from public."user" where organizationname=$1 order by rno;', [reciverid]);
         res.json({ message: "Successfully Data Fetched", data: ReciverInvoiceAddressRes.rows, status: true });
     } catch (error) {
         console.error('Error executing database query:', error);
         res.status(500).json({ message: "Internal Server Error", status: false });
     }
 }
+
 async function getprofileInfo(req, res) {
     try {
         const { userid } = req.body;
@@ -131,7 +133,7 @@ async function getProductList(req, res) {
     const { senderID } = req.body.inputValues;
 
     try {
-        // console.log(" userid : ",senderID);
+        console.log(" userid : ",senderID);
         const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [senderID]);
         // console.log(CheckForStaff.rows[0].positionid);
         const res_positionId = CheckForStaff.rows[0].positionid
@@ -145,7 +147,7 @@ async function getProductList(req, res) {
         }
 
         const getProductListResult = await userdbInstance.userdb.query(`SELECT productid,batchno,productname,priceperitem, cgst, sgst
-        FROM public.products where belongsto=$1 order by rno DESC;`, [belongsto]);
+        FROM public.products where belongsto=$1 and status =$2 order by rno DESC;`, [belongsto,'1']);
         // console.log(getProductListResult.rows);
         res.json({ message: "Successfully Data Fetched", data: getProductListResult.rows });
     } catch (error) {
@@ -169,8 +171,8 @@ async function getUserList(req, res) {
         } else {
             belongsto = senderID
         }
-        const getUserList = await userdbInstance.userdb.query(`SELECT email
-        FROM public."user" where adminid=$1 and (positionid = $2 or positionid = $3 )order by rno DESC;`, [belongsto, 2, 3]);
+        const getUserList = await userdbInstance.userdb.query(`SELECT organizationname
+        FROM public."user" where adminid=$1 and status=$2 and (positionid = $3 or positionid = $4 )order by rno DESC;`, [belongsto,'1', 2, 3]);
         res.json({ message: "Successfully Data Fetched", data: getUserList.rows });
     } catch (error) {
         console.error('Error executing database query:', error);

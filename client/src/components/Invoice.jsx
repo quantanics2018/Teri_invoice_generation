@@ -20,71 +20,18 @@ const Invoice = ({
     SenderInvoiceProp,
     totalSum,
     totalQuantity,
-    inputValuesAboveRows
+    inputValuesAboveRows,
+    productList
 }) => {
-    // console.log("SenderInvoiceProp : ", previewInvoiceprop[0]);
-    // console.log("SenderInvoiceProp : ", previewInvoiceprop);
-    // console.log("SenderInvoiceProp : ",SenderInvoiceProp[0]);
+    // console.log("previewInvoiceprop : ", previewInvoiceprop[0]);
+    // console.log("ReciverInvoiceProp : ", ReciverInvoiceProp);
+    console.log("SenderInvoiceProp : ",SenderInvoiceProp);
+    // console.log("totalSum : ",totalSum[0]);
+    // console.log("totalQuantity : ",totalQuantity[0]);
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const senderid = userInfo.userid;
-    // const reciverid = 'Ad001@gmail.com';
-    // const [ReciverIdRes, setReciverIdRes] = useState([]);
-    // const getReciverData = async () => {
-    //     const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: reciverid });
-    //     console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
-    //     const reciveridObj = getReciverDataRequest.data.data;
-    //     console.log("reciveridObj : ", reciveridObj);
-    //     setReciverIdRes(reciveridObj);
-    // }
-
-    // const sendDataToServer = async () => {
-    //     try {
-    //         const htmlString = ReactDOMServer.renderToString(
-    //             <div className="InvoiceContainer">
-    //                 Replace with Invoice in Return
-    //             </div>
-    //         );
-
-    //         const response = await axios.post(`${API_URL}send-email/sendInvoice`, htmlString, {
-    //             headers: {
-    //                 'Content-Type': 'text/html',
-    //             },
-    //         });
-
-    //         if (response.status === 200) {
-    //             console.log('Mail sent successfully');
-    //         } else {
-    //             console.error('Failed to send data');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error sending data:', error);
-    //     }
-    // };
-
-
-    // console.log("ReciverInvoiceProp : ",ReciverInvoiceProp);
-    // const [senderIdRes,setsenderIdRes] = useState();
-    // const [ReciverIdRes,setReciverIdRes] = useState();
-
-    // const senderid = userInfo.userid;
-    // const reciverid = ReciverInvoiceProp.UserId;
-    // const getSenderData = async () => {
-    //     const getSenderDataRequest = await axios.post(`${API_URL}get/SenderDataInvoiceAddress`, {senderid : senderid});
-    //     const senderidObj = getSenderDataRequest.data.data;
-    //     setsenderIdRes(senderidObj);
-    // }
-    // const getReciverData =  async () => {
-    //     const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, {reciverid:reciverid});
-    //     const reciveridObj = getReciverDataRequest.data.data;
-    //     setReciverIdRes(reciveridObj);
-    // }
-    // useEffect(() => {
-    //     // sendDataToServer()
-    //     // getSenderData();
-    //     // getReciverData();
-    // }, [senderid,reciverid]);
-    // console.log(previewInvoiceprop[0].productName);
+   
 
     const downloadPDF = () => {
         const { data } = previewInvoiceprop; // Assuming previewInvoiceprop contains the data object
@@ -105,7 +52,20 @@ const Invoice = ({
         pdf.text(tableContent, 10, 10);
         pdf.save("invoice.pdf");
     };
-    // console.log(previewInvoiceprop);
+    const getcgst = (hsnno,batchno) =>{
+        const getcgst = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.cgst)[0] || '';
+        // console.log("getcgst : ", getcgst);
+        return getcgst
+    }
+    const getsgst = (hsnno,batchno) =>{
+        const getsgst = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.sgst)[0] || '';
+        console.log("getcgst : ", getsgst);
+        return getsgst
+    }
+    function formatTotal(total) {
+        const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
+        return formattedTotal;
+    }
     return (
         <div className="InvoiceContainer">
             <div className="forScroll">
@@ -136,7 +96,7 @@ const Invoice = ({
                             <div className="invoiceName1"
                             //  style={InvoiceHead}
                             >
-                                <QrCode totalSum={totalSum}/>
+                                <QrCode totalSum={totalSum} upi={SenderInvoiceProp[0].upiid}/>
                             </div>
                             <div className="invoiceImg1"
                              style={invoiceImg}
@@ -210,7 +170,7 @@ const Invoice = ({
                                         <th className='th1' style={th}>Discount</th>
                                         <th className='th1' style={th}>CGST</th>
                                         <th className='th1' style={th}>SGST</th>
-                                        <th className='th1' style={th}>RATE</th>
+                                        <th className='th1' style={th}>Total</th>
                                         {/* <th className='th'>AMOUNT</th> */}
                                     </tr>
                                 </thead>
@@ -222,9 +182,9 @@ const Invoice = ({
                                             <td className='td1' style={td}>{item.hsncode || ''}</td>
                                             <td className='td1' style={td}>{item.Quantity || ''}</td>
                                             <td className='td1' style={td}>{item.Discount || ''}</td>
-                                            <td className='td1' style={td}>{item.Quantity || ''}</td>
-                                            <td className='td1' style={td}>{item.Quantity || ''}</td>
-                                            <td className='td1' style={td}>{item.Total || ''}</td>
+                                            <td className='td1' style={td}>{getcgst(item.hsncode,item.batchno) || ''}</td>
+                                            <td className='td1' style={td}>{getsgst(item.hsncode,item.batchno) || ''}</td>
+                                            <td className='td1' style={td}>{formatTotal(item.Total) || ''}</td>
                                             {/* <td className='td'>{item.rate ? `Rs. ${item.rate.toFixed(2)}` : ''}</td>
                                             <td className='td'>{item.amount ? `Rs. ${item.amount.toFixed(2)}` : ''}</td> */}
                                         </tr>
@@ -258,8 +218,14 @@ const Invoice = ({
                                 </div>
                             </div>
                             <hr />
+                            <div className="bankDetails">
+                                <div className="bankName">Bank Name : {SenderInvoiceProp[0].bankname}</div>
+                                <div className="bankAccNo">UPI ID : {SenderInvoiceProp[0].upiid}</div>
+                                <div className="Ifsc">PAN Number : {SenderInvoiceProp[0].pan}</div>
+                            </div>
+                            <hr />
                             we declare that this invoice shows the actual price of the goods <br />
-                            described and tht all particulars are true and correct.
+                            described and the all particulars are true and correct.
                             <hr />
                             <br />
                             <br />

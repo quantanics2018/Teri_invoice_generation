@@ -24,10 +24,13 @@ const QRCode = require('qrcode');
 // }
 const generateQR = async (req, res) => {
     const amount = req.body.totalSum;
-    console.log("totalSum : ", amount);
+    const upi = req.body.upi;
+    // console.log("totalSum : ", amount);
+    // console.log("upi : ", upi);
     // const amount = '1.00';
-    const currency = 'INR';
-    const upiId = 'nitheshwaran003@okicici';
+    const currency = 'INR'; 
+    // const upiId = 'nitheshwaran003-2@oksbi'; 
+    const upiId = upi;
     console.log(upiId);
     try {
         const razorpayLink = `upi://pay?pa=${upiId}&am=${amount}&cu=${currency}`;

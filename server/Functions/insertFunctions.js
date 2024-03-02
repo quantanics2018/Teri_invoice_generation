@@ -152,9 +152,11 @@ async function addUser(req, res) {
     }
 }
 async function addInvoice(req, res) {
-    const { UserId, senderID, Date } = req.body.invoice;
+    // const { UserId, senderID, Date } = req.body.invoice;
+    const { Buyer, senderID, Date } = req.body.invoice;
     const totalSum = req.body.totalValues;
-    const recivermail = UserId;
+    console.log( Buyer, senderID, Date);
+    // const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
 
     // console.log(totalSum);
@@ -162,8 +164,11 @@ async function addInvoice(req, res) {
     // console.log("senderID", senderID);
     // console.log(invoiceItem);
 
-
     try {
+        const getReciverId = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1;', [Buyer]);
+        const recivermail = getReciverId.rows[0].email;
+        console.log(recivermail);
+        
         const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1 and adminid=$2;', [recivermail, senderID]);
         console.log(checkIsUsernameExist.rows);
         if (checkIsUsernameExist.rows != 0) {

@@ -61,7 +61,7 @@ const InvoiceGenerator = () => {
     const customerNames = [{ name: "Date", tittle: "Date" }, { name: "Buyer", tittle: "UserId" }];
     const [inputValues, setInputValues] = useState({
         Date: "",
-        UserId: "",
+        Buyer: "",
         senderID: userInfo.userid,
     });
     const [ReciverIdRes, setReciverIdRes] = useState([{}]);
@@ -237,10 +237,11 @@ const InvoiceGenerator = () => {
 
     const handleSubmit = async () => {
         // console.log(rows);
-        console.log(inputValues);
         const hasEmptyValue = rows.some(row =>
             Object.values(row).some(value => value === '')
         );
+
+        console.log("inputValues :",inputValues);
         const hasEmptyReciverId =
             Object.values(inputValues).some(value => value === '')
         // );
@@ -301,8 +302,9 @@ const InvoiceGenerator = () => {
         const fetchData = async () => {
             try {
                 const dropDownUserResponse = await axios.post(`${API_URL}get/getUserList`, { inputValues });
-                const users = dropDownUserResponse.data.data.map(item => item.email);
+                const users = dropDownUserResponse.data.data.map(item => item.organizationname);
                 setuserNameoptions(users);
+                console.log(users);
                 const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
                 const productList = dropDownResponse.data.data;
                 setproductList(productList)
@@ -317,7 +319,11 @@ const InvoiceGenerator = () => {
         };
         fetchData();
     }, [inputValues]);
-    const productIDs = productList.map(item => item.productid);
+
+    const productHsn = productList.map(item => item.productid);
+    let productBatchno = productList.map(item => item.batchno);
+    productBatchno = [...new Set(productBatchno)];
+    // console.log(uniqueBatchno);
 
     const [totalSum, setTotalSum] = useState();
     const [totalQuantity, settotalQuantity] = useState();
@@ -565,6 +571,7 @@ const InvoiceGenerator = () => {
                                 totalSum={totalSum}
                                 totalQuantity={totalQuantity}
                                 inputValuesAboveRows={inputValues}
+                                productList={productList}
                             />
                         </div>
                         <div class="modal-footer gap-4">
@@ -664,7 +671,7 @@ const InvoiceGenerator = () => {
                                                 onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
                                             /> */}
                                             <Autocomplete
-                                                options={productIDs}
+                                                options={productHsn}
                                                 // onChange={(event, value) => {
                                                 //     setthirdInput(row.id, value, batchnostate, 'hsncode');
                                                 // }}
@@ -689,7 +696,7 @@ const InvoiceGenerator = () => {
                                                 onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
                                             /> */}
                                             <Autocomplete
-                                                options={[1, 2, 3]}
+                                                options={productBatchno}
                                                 value={row.batchno}
                                                 onChange={(e, value) => handleInputChange(row.id, 'batchno', value)}
                                                 // onChange={(event, value) => {

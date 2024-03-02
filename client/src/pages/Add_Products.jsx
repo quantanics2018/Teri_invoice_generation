@@ -124,7 +124,7 @@ const Add_Products = () => {
 
     // validation
     const handleClick = async () => {
-        const isValidhsncode = /^[0-9]+$/.test(postData.hsncode);
+        const isValidhsncode = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(postData.hsncode);
         const isValidbatchno = /^[0-9]+$/.test(postData.batchno);
         const isValidproductname = (postData.productname.trim() !== '');
         const isValidQuantityNo = /^[0-9]+$/.test(postData.quantity);
@@ -233,12 +233,12 @@ const Add_Products = () => {
                 </div>
             </div>
             <div className="device_management display-flex page_top_box box-shadow">
-                <span className='module_tittle '>Product Detials</span>
+                <span className='module_tittle '>Product Details</span>
             </div>
             <div className="add_device_container1">
                 <div className="new_device_content scroll_div">
                     <div className="row_one display-flex">
-                        <div className="adding_new_device uppercase bold">Add Product Detials </div>
+                        <div className="adding_new_device uppercase bold">Add Product Details </div>
                     </div>
                     <div className="row_two display-flex padding-loc">
                         <div className="device_info uppercase light-grey mb-loc-5">
@@ -323,6 +323,7 @@ const Add_Products = () => {
                         </div>
                     </div>
 
+                </div>
                     <div className="operating_buttons display-flex padding-loc">
                         <div className="save_cancel_btn display-flex site_button gap-4">
                             <CancelBtnComp CancelBtnFun={handleCancel} />
@@ -331,7 +332,6 @@ const Add_Products = () => {
                             <button className="btn-loc inactive-loc btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">cancel</button> */}
                         </div>
                     </div>
-                </div>
             </div>
         </div >
 

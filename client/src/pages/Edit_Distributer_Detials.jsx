@@ -841,7 +841,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
             </div>
             {/* access controll end */}
             <div className="row_with_count_status">
-                <span className='module_tittle'>User Detials</span>
+                <span className='module_tittle'>User Details</span>
             </div>
             <div className="add_device_container1">
                 <div className="new_device_content scroll_div">

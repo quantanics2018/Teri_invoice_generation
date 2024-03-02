@@ -136,7 +136,7 @@ const Products = () => {
         //     navigate(`Edit_D_Staff_Details/${encodedText}`);
         // }
 
-        navigate(`Edit_Product_Detials/${data.productid}/${data.batchno}`);
+        navigate(`Edit_Product_Details/${data.productid}/${data.batchno}`);
     }
     const [alldata, setAlldate] = useState([]);
     const fetchData = async () => {
@@ -442,7 +442,7 @@ const Products = () => {
                                                 <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
                                                 <div className='device_content_dropdown display-flex'
                                                     onClick={() => Product_edit_page(data)}
-                                                >Edit Product Detials</div>
+                                                >Edit Product Details</div>
                                             </div>
                                             <div className='display-flex device_action_dropdown2 dropdown_action'>
                                                 <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
@@ -476,7 +476,7 @@ const Products = () => {
                 </div>
             </div>
 
-            {/* Edit Device detials */}
+            {/* Edit Device details */}
             <div class="modal fade device_status_action" id="device_status_action" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">

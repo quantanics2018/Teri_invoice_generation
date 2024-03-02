@@ -36,7 +36,7 @@ const ActionButton = ({fun_to_rotate_btn,index,rotatedIndex,data,updateUserStatu
                             {props.position === 5 &&
                                 " D_Staff "
                             }
-                            Detials</div>
+                            Details</div>
                     </div>
 
                     <div className='display-flex device_action_dropdown2 dropdown_action'

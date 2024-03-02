@@ -365,7 +365,7 @@ const Staff_Detials = (props) => {
                             </div>
 
                             <div className="col-head">Aadhar Number</div>
-                            <div className="col-head">PAN Number</div>
+                            <div className="col-head">Organization</div>
                             <div className="col-head">Postal Code </div>
                             <div className="col-head">Email</div>
                             <div className="col-head">Contact Number</div>
@@ -375,6 +375,7 @@ const Staff_Detials = (props) => {
 
 
                     <div className="scroll_div" style={padding_top}>
+                        {/* {console.log(alldata)} */}
                         {alldata.map((data, index) => (
                             (Positionid_val === 4 || Positionid_val === 5) ? (
                                 <div>
@@ -395,7 +396,7 @@ const Staff_Detials = (props) => {
                                         <div className="col-head">{data.userid}</div>
                                         <div className="col-head">{data.fname}</div>
                                         <div className="col-head">{data.aadhar}</div>
-                                        <div className="col-head">{data.pan}</div>
+                                        <div className="col-head">{data.organizationname}</div>
                                         <div className="col-head">{data.cpostalcode}</div>
                                         <div className="col-head" title={data.email}>{data.email}</div>
                                         <div className="col-head">

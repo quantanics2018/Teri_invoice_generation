@@ -731,7 +731,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 {/* access controll end */}
 
                 <div className="row_with_count_status">
-                    <span className='module_tittle'>User Detials</span>
+                    <span className='module_tittle'>User Details</span>
                 </div>
                 {/* <ImageUpload /> */}
                 <div className="add_device_container1">

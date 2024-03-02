@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const QrCode = ({totalSum}) => {
+const QrCode = ({totalSum,upi}) => {
     const [imageSrc, setImageSrc] = useState('');
 
     const fetchImage = async () => {
         try {
             console.log(totalSum);
-            const response = await axios.post('http://localhost:4000/send-email/generateQR',{totalSum:totalSum});
+            const response = await axios.post('http://localhost:4000/send-email/generateQR',{totalSum:totalSum,upi:upi});
             // console.log(response.data);
             setImageSrc(response.data); // Replace 'image_url' with the actual property name
         } catch (error) {
