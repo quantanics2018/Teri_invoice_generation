@@ -401,7 +401,7 @@ const Products = () => {
                         <div className="col-head">Product Name</div>
                         <div className="col-head">Quantity</div>
                         <div className="col-head">Product Price</div>
-                        <div className="col-head">Action</div>
+                        <div className="col-head col-headAction">Action</div>
                     </div>
                     <div className="scroll_div">
                         {alldata.map((data, index) => (
