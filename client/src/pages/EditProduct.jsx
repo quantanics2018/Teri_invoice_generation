@@ -336,13 +336,13 @@ const EditProduct = () => {
                             </div>
                         </div>
 
+                    </div>
                         <div className="operating_buttons display-flex padding-loc">
                             <div className="save_cancel_btn display-flex site_button gap-4">
                                 <CancelBtnComp CancelBtnFun={handleCancel} />
                                 <SaveBtnComp SaveBtnFun={() => handleClick()} />
                             </div>
                         </div>
-                    </div>
                 </div>
             </div >
         </>
