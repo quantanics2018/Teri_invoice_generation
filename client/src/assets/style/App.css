@@ -720,13 +720,16 @@
     width: 145px;
     padding: 10px;
     flex: 1;
-    text-align: center;
+    /* text-align: center; */
     /* display: flex;
     justify-content: center;
     align-items: center; */
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+.col-headAction{
+    text-align: center;
 }
 
 

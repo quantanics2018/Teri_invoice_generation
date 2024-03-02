@@ -347,7 +347,7 @@ const Staff_Detials = (props) => {
                             <div className="col-head">Aadhar Number</div>
                             <div className="col-head">Email</div>
                             <div className="col-head">Contact Number</div>
-                            <div className="col-head">Action</div>
+                            <div className="col-head col-headAction">Action</div>
                         </div>
                     ) : (
                         <div className='col-headings'>
