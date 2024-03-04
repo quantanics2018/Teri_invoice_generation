@@ -212,6 +212,8 @@ const InvoiceGenerator = () => {
                         SenderInvoiceProp={senderIdRes}
                         totalSum={totalSum}
                         totalQuantity={totalQuantity}
+                        inputValuesAboveRows={inputValues}
+                        productList={productList}
                     />
                 </div>
             );
@@ -304,7 +306,7 @@ const InvoiceGenerator = () => {
                 const dropDownUserResponse = await axios.post(`${API_URL}get/getUserList`, { inputValues });
                 const users = dropDownUserResponse.data.data.map(item => item.organizationname);
                 setuserNameoptions(users);
-                console.log(users);
+                // console.log(users);
                 const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
                 const productList = dropDownResponse.data.data;
                 setproductList(productList)
@@ -605,7 +607,7 @@ const InvoiceGenerator = () => {
                                                 options={userNameoptions}
                                                 onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} label={`${customerName.name}`} variant="outlined"
+                                                    <TextField {...params} label={customerName.name} variant="outlined"
                                                         InputLabelProps={{
                                                             className: 'required-label',
                                                             required: true
