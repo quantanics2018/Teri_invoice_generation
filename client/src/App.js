@@ -57,8 +57,6 @@ const App = () => {
 
 
   return (
-    // http://localhost:3001/
-    // https://terion.quantanics.in/
     <BrowserRouter>
       {(window.location.href !== `${API_URL_CLIENT}` && userInfo) ? (
         <div>
