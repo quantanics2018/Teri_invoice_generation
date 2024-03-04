@@ -279,7 +279,7 @@ const InvoiceGenerator = () => {
             }
         };
         fetchData();
-    }, [inputValues, userNameoptions]);
+    }, [inputValues]);
 
     let productHsn = productList.map(item => item.productid);
     productHsn = [...new Set(productHsn)];
@@ -611,36 +611,36 @@ const InvoiceGenerator = () => {
                                             {customerName.name}
                                         </Typography>
                                     </Grid>
-                                    {console.log("test : ", inputValues.Buyer)}
-                                    {console.log("customerName : ", customerName)}
+                                    {/* {console.log("test : ", inputValues.Buyer)} */}
+                                    {/* {console.log("customerName : ", customerName)} */}
                                     <Grid item xs={6}>
                                         {customerName.tittle === 'UserId' ? (
-                                            // <Autocomplete
-                                            //     options={userNameoptions}
-                                            //     value={inputValues.Buyer}
-                                            //     onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
-                                            //     renderInput={(params) => (
-                                            //         <TextField {...params} 
-                                            //         label={customerName.name} 
-                                            //         variant="outlined"
-                                            //             InputLabelProps={{
-                                            //                 className: 'required-label',
-                                            //                 required: true
-                                            //             }}
-                                            //         />
-                                            //     )}
-                                            //     onBlur={(e) => {
-                                            //         const value = e.target.value; // Accessing the value
-                                            //         getuserDetial(customerName.name, value);
-                                            //     }}
-                                            // />
-                                            <input type='text'
+                                            <Autocomplete
+                                                options={userNameoptions}
+                                                // value={inputValues.Buyer}
                                                 onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} 
+                                                    label={customerName.name} 
+                                                    variant="outlined"
+                                                        InputLabelProps={{
+                                                            className: 'required-label',
+                                                            required: true
+                                                        }}
+                                                    />
+                                                )}
                                                 onBlur={(e) => {
                                                     const value = e.target.value; // Accessing the value
                                                     getuserDetial(customerName.name, value);
                                                 }}
-                                            ></input>
+                                            />
+                                            // <input type='text'
+                                            //     onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
+                                            //     onBlur={(e) => {
+                                            //         const value = e.target.value; // Accessing the value
+                                            //         getuserDetial(customerName.name, value);
+                                            //     }}
+                                            // ></input>
                                         ) : (
                                             <TextField fullWidth
                                                 // label={customerName}
