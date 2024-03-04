@@ -7,7 +7,7 @@ const QrCode = ({totalSum,upi}) => {
 
     const fetchImage = async () => {
         try {
-            console.log(totalSum);
+            // console.log(totalSum);
             const response = await axios.post(`${API_URL}send-email/generateQR`,{totalSum:totalSum,upi:upi});
             // console.log(response.data);
             setImageSrc(response.data); // Replace 'image_url' with the actual property name

@@ -17,10 +17,10 @@ const TransactionHistory = () => {
                 userid: userInfo.userid,
             });
             if (response.data.status) {
-                console.log('Transaction History:', response.data.data);
+                // console.log('Transaction History:', response.data.data);
                 setLoading(false);
                 setData(response.data.data);
-                console.log(response.data.data);
+                // console.log(response.data.data);
                 // setInterval(() => {
                 // }, 1000);
             } else {
@@ -118,7 +118,7 @@ const TransactionHistory = () => {
     };
 
 
-    console.log(data);
+    // console.log(data);
 
     const formatDate = (timestamp) => {
         var date = new Date(timestamp);
@@ -170,7 +170,7 @@ const TransactionHistory = () => {
                                     <tbody className='text-center'>
                                         {data.map((item, index) => (
                                             <tr key={index} className="align-middle text-center">
-                                                {console.log(item)}
+                                                {/* {console.log(item)} */}
                                                 <td className='text-center'>{item.invoiceid}</td>
                                                 {item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
                                                     <td className='text-center'>
@@ -196,11 +196,11 @@ const TransactionHistory = () => {
                                                 </td>
                                                 <td className='text-center actionTrans'>
                                                     {/* onClick={() => deleteRow(row.id)}  */}
-                                                    {console.log("values :", textFieldValues[index], index)}
+                                                    {/* {console.log("values :", textFieldValues[index], index)} */}
                                                     <Button color="secondary">
                                                         {(item.transactionid && userInfo.userid === item.senderid) ? '🟢' : (userInfo.userid === item.senderid && '🔴')}
                                                     </Button>
-                                                    {console.log("hello", item)}
+                                                    {/* {console.log("hello", item)} */}
                                                     <Button color="secondary" disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)} onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
                                                         ✔
                                                     </Button>

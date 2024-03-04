@@ -118,7 +118,7 @@ const Products = () => {
     const Products_edit_page = async () => {
         navigate(`Edit_Products`);
     }
-    console.log(userInfo.position);
+    // console.log(userInfo.position);
 
     const Product_edit_page = (data) => {
         // console.log(data);

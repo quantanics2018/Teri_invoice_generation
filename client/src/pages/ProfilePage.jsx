@@ -29,7 +29,7 @@ const ProfilePage = () => {
 
         fetchData();
     }, []);
-    console.log(profileInfoRes);
+    // console.log(profileInfoRes);
     const userInfoFields = [
         { label: 'UserId', value: profileInfoRes ? profileInfoRes.userid : '' },
         // { label: 'Full name', value: userInfo.fname + {userInfo.lname == null ? '':userInfo.lname}},

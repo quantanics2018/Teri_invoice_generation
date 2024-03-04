@@ -12,7 +12,7 @@ const TopNavbar = () => {
   }
   const userInfoString = sessionStorage.getItem("UserInfo");
   const userInfo = JSON.parse(userInfoString);
-  console.log(userInfo.email);
+  // console.log(userInfo.email);
   return (
     <nav className='top-nav flex-class align-center'>
       {/* Product Logo */}

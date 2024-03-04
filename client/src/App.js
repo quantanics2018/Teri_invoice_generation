@@ -61,9 +61,7 @@ const App = () => {
       {(window.location.href !== `${API_URL_CLIENT}` && userInfo) ? (
         <div>
           <TopNavbar />
-          <Sidebar handleLogout={handleLogout}>
-          </Sidebar>
-          {/* {(window.location.href !== `http://localhost:3001/`)&& <Navigate to='/Staff_Details' />} */}
+          <Sidebar handleLogout={handleLogout} />
           {userInfo.staff > 0 && (
             <div style={{ marginLeft: '50px' }}>
               <Routes>

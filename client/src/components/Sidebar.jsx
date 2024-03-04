@@ -23,8 +23,7 @@ const Sidebar = ({ children, handleLogout }) => {
     // side menubar submenu 
    
     var tmp_position = userInfo.position;
-    console.log("first login state");
-    console.log(tmp_position);
+    // console.log(tmp_position);
 
     /*
     if (tmp_position==="distributor") {
