@@ -309,11 +309,10 @@ const InvoiceGenerator = () => {
             setRows(getproductbyfilter);
             // }
         }
-        alert("changes")
         console.log("handle change : ", updatedRows[id - 1].hsncode);
         productBatchno = productList.filter(item => item.productid === "654321").map(item => item.batchno);
         // setbatchnoOption(productBatchno);
-        console.log(productBatchno);
+        // console.log(productBatchno);
 
         // if (column === 'hsncode') {
         //     // alert(value)
