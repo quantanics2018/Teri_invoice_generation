@@ -156,48 +156,7 @@ const InvoiceGenerator = () => {
     };
     // setCurrentRowId(id);
 
-    const handleInputChange = (id, column, value) => {
-        console.log("id, column, value :", id, column, value);
-        console.log('richrow :', rows);
-        console.log("event : ", value);
-        const updatedRows = rows.map((row) =>
-            row.id === id ? { ...row, [column]: value } : row
-        );
-        setRows(updatedRows);
-        console.log("handle change : ",rows[id-1]);
-        if (column === 'hsncode' ||  column ==='batchno') {
-            // if (rows[id-1].hsncode !=='' && rows[id-1].batchno !=='') {
-                const value = productList
-                    .filter((product) => product.productid === String(updatedRows[id-1].hsncode) && product.batchno === String(updatedRows[id-1].batchno))
-                    .map((product) => product.productname)[0] || '';
-    
-                // console.log("value : ",value);
-    
-                const getproductbyfilter = updatedRows.map((row) =>
-                    row.id === id ? {
-                        ...row, productName: value
-                    } : row
-                );
-                setRows(getproductbyfilter);
-            // }
-        }
-        
-        // if (column === 'hsncode') {
-        //     // alert(value)
-        //     sethsncodestate(value)
-        // }
-        // if (column === 'batchno') {
-        //     setbatchnostate(value)
-        // }
-        // if (column === 'Quantity') {
-        //     // console.log("yes : ",value)
-        //     setquantitystate(value);
-        //     // setTotalValue(id, hsncodestate, batchnostate,value, discountstate);
-        // }
-        // if (column === 'Discount') {
-        //     setdiscountstate(value)
-        // }
-    };
+
 
     // invoice htm send to server
     // console.log(inputValues.UserId);
@@ -243,7 +202,7 @@ const InvoiceGenerator = () => {
             Object.values(row).some(value => value === '')
         );
 
-        console.log("inputValues :",inputValues);
+        console.log("inputValues :", inputValues);
         const hasEmptyReciverId =
             Object.values(inputValues).some(value => value === '')
         // );
@@ -326,6 +285,55 @@ const InvoiceGenerator = () => {
     let productBatchno = productList.map(item => item.batchno);
     productBatchno = [...new Set(productBatchno)];
     // console.log(uniqueBatchno);
+    // const [batchnoOption, setbatchnoOption] = useState(productBatchno);
+
+    const handleInputChange = (id, column, value) => {
+        // console.log("id, column, value :", id, column, value);
+        const updatedRows = rows.map((row) =>
+            row.id === id ? { ...row, [column]: value } : row
+        );
+        setRows(updatedRows);
+        if (column === 'hsncode' || column === 'batchno') {
+            // if (rows[id-1].hsncode !=='' && rows[id-1].batchno !=='') {
+            const value = productList
+                .filter((product) => product.productid === String(updatedRows[id - 1].hsncode) && product.batchno === String(updatedRows[id - 1].batchno))
+                .map((product) => product.productname)[0] || '';
+
+            // console.log("value : ",value);
+
+            const getproductbyfilter = updatedRows.map((row) =>
+                row.id === id ? {
+                    ...row, productName: value
+                } : row
+            );
+            setRows(getproductbyfilter);
+            // }
+        }
+        alert("changes")
+        console.log("handle change : ", updatedRows[id - 1].hsncode);
+        productBatchno = productList.filter(item => item.productid === "654321").map(item => item.batchno);
+        // setbatchnoOption(productBatchno);
+        console.log(productBatchno);
+
+        // if (column === 'hsncode') {
+        //     // alert(value)
+        //     sethsncodestate(value)
+        // }
+        // if (column === 'batchno') {
+        //     setbatchnostate(value)
+        // }
+        // if (column === 'Quantity') {
+        //     // console.log("yes : ",value)
+        //     setquantitystate(value);
+        //     // setTotalValue(id, hsncodestate, batchnostate,value, discountstate);
+        // }
+        // if (column === 'Discount') {
+        //     setdiscountstate(value)
+        // }
+    };
+    // useEffect(() => {
+    //     handleInputChange();
+    // }, [batchnoOption])
 
     const [totalSum, setTotalSum] = useState();
     const [totalQuantity, settotalQuantity] = useState();
@@ -337,7 +345,7 @@ const InvoiceGenerator = () => {
         settotalQuantity(totalQuantityValue);
         // console.log("total value", totalSumValue);
     }, [rows]); // Include 'rows' in the dependency array
-    
+
 
 
     const [hsncodestate, sethsncodestate] = useState('');
@@ -480,8 +488,8 @@ const InvoiceGenerator = () => {
         // console.log("Enteredbatchno : ", Enteredbatchno);
         // console.log("enteredQuantity : ", enteredQuantity);
         // console.log("enteredDiscount : ", enteredDiscount);
-        console.log("hsncode : ",rows[id-1].hsncode,typeof rows[id-1].hsncode);
-        console.log("batchno : ",rows[id-1].batchno,typeof String(rows[id-1].batchno));
+        console.log("hsncode : ", rows[id - 1].hsncode, typeof rows[id - 1].hsncode);
+        console.log("batchno : ", rows[id - 1].batchno, typeof String(rows[id - 1].batchno));
 
         // console.log("Quantity : ",rows[id-1].Quantity);
         // console.log("discount : ",rows[id-1].Discount);
@@ -491,19 +499,19 @@ const InvoiceGenerator = () => {
         //     .map((product) => product.priceperitem)[0] || '';
 
         const productPrice = productList
-            .filter((product) => product.productid === String(rows[id-1].hsncode) && product.batchno === String(rows[id-1].batchno))
+            .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
             .map((product) => product.priceperitem)[0] || '';
 
         console.log("productPrice : ", productPrice);
 
         const getcgst = productList
-            .filter((product) => product.productid === String(rows[id-1].hsncode) && product.batchno === String(rows[id-1].batchno))
+            .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
             .map((product) => product.cgst)[0] || '';
 
         console.log("getcgst : ", getcgst);
 
         const getsgst = productList
-            .filter((product) => product.productid === String(rows[id-1].hsncode) && product.batchno === String(rows[id-1].batchno))
+            .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
             .map((product) => product.sgst)[0] || '';
 
         console.log("getsgst : ", getsgst);
@@ -511,10 +519,10 @@ const InvoiceGenerator = () => {
 
         const updatedRows = rows.map((row) =>
             row.id === id ? {
-                ...row, Total: ((rows[id-1].Quantity * productPrice) - ((rows[id-1].Quantity * productPrice) * rows[id-1].Discount / 100))+(productPrice*(getcgst/100))+(productPrice*(getsgst/100))
+                ...row, Total: ((rows[id - 1].Quantity * productPrice) - ((rows[id - 1].Quantity * productPrice) * rows[id - 1].Discount / 100)) + (productPrice * (getcgst / 100)) + (productPrice * (getsgst / 100))
             } : row
         );
-        
+
         console.log("updatedRows : ", rows);
         setRows(updatedRows);
     }
@@ -528,14 +536,14 @@ const InvoiceGenerator = () => {
 
     const getuserDetial = (customerName, value) => {
         // console.log(inputValues.UserId);
-        console.log("get : ", customerName, value);
+        // console.log("get : ", customerName, value);
         const getReciverData = async () => {
             const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: value });
             console.log(getReciverDataRequest.data.status);
             if (getReciverDataRequest.data.status) {
                 const reciveridObj = getReciverDataRequest.data.data;
                 setReciverIdRes(reciveridObj);
-            }else{
+            } else {
                 alert("ahi")
                 console.log("err");
                 setReciverIdRes(null);
@@ -607,7 +615,9 @@ const InvoiceGenerator = () => {
                                                 options={userNameoptions}
                                                 onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} label={customerName.name} variant="outlined"
+                                                    <TextField {...params} 
+                                                    // label={customerName.name} 
+                                                    variant="outlined"
                                                         InputLabelProps={{
                                                             className: 'required-label',
                                                             required: true
@@ -617,7 +627,7 @@ const InvoiceGenerator = () => {
                                                 // onBlur={(e) => const value = e.target.value;getuserDetial(customerName, value)}
 
                                                 onBlur={(e) => {
-                                                    console.log("haiii : ",customerName.name);
+                                                    // console.log("haiii : ", customerName.name);
                                                     const value = e.target.value; // Accessing the value
                                                     getuserDetial(customerName.name, value);
                                                 }}
@@ -704,6 +714,7 @@ const InvoiceGenerator = () => {
                                             /> */}
                                             <Autocomplete
                                                 options={productBatchno}
+                                                // options={batchnoOption}
                                                 value={row.batchno}
                                                 onChange={(e, value) => handleInputChange(row.id, 'batchno', value)}
                                                 // onChange={(event, value) => {
