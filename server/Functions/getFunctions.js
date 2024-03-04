@@ -70,7 +70,12 @@ async function ReciverDataInvoiceAddress(req, res) {
         const { reciverid } = req.body;
         console.log("reciverid : ", reciverid);
         const ReciverInvoiceAddressRes = await userdbInstance.userdb.query('select * from public."user" where organizationname=$1 order by rno;', [reciverid]);
-        res.json({ message: "Successfully Data Fetched", data: ReciverInvoiceAddressRes.rows, status: true });
+        console.log("ReciverAddress Length : ",ReciverInvoiceAddressRes.rows.length);
+        if (ReciverInvoiceAddressRes.rows.length==1) {
+            res.json({ message: "Successfully Data Fetched", data: ReciverInvoiceAddressRes.rows, status: true });
+        }else{
+            res.json({message:"No Records Found!",status: false});
+        }
     } catch (error) {
         console.error('Error executing database query:', error);
         res.status(500).json({ message: "Internal Server Error", status: false });
