@@ -621,6 +621,7 @@ const InvoiceGenerator = () => {
                                                 onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
                                                 renderInput={(params) => (
                                                     <TextField {...params} 
+                                                    value={inputValues.Buyer}
                                                     label={customerName.name} 
                                                     variant="outlined"
                                                         InputLabelProps={{
