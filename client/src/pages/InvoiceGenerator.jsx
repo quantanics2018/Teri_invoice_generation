@@ -279,14 +279,17 @@ const InvoiceGenerator = () => {
             }
         };
         fetchData();
-    }, [inputValues]);
+    }, [inputValues, userNameoptions]);
 
-    const productHsn = productList.map(item => item.productid);
+    let productHsn = productList.map(item => item.productid);
+    productHsn = [...new Set(productHsn)];
     let productBatchno = productList.map(item => item.batchno);
     productBatchno = [...new Set(productBatchno)];
-    // console.log(uniqueBatchno);
-    // const [batchnoOption, setbatchnoOption] = useState(productBatchno);
-
+    const [batchnoOption, setbatchnoOption] = useState(productBatchno);
+    // console.log(productBatchno);
+    // useEffect(()=>{
+    //     console.log(batchnoOption);
+    // },[batchnoOption])
     const handleInputChange = (id, column, value) => {
         // console.log("id, column, value :", id, column, value);
         const updatedRows = rows.map((row) =>
@@ -309,9 +312,9 @@ const InvoiceGenerator = () => {
             setRows(getproductbyfilter);
             // }
         }
-        console.log("handle change : ", updatedRows[id - 1].hsncode);
-        productBatchno = productList.filter(item => item.productid === "654321").map(item => item.batchno);
-        // setbatchnoOption(productBatchno);
+        // console.log("handle change : ", updatedRows[id - 1].hsncode);
+        productBatchno = productList.filter(item => item.productid === updatedRows[id - 1].hsncode).map(item => item.batchno);
+        setbatchnoOption(productBatchno);
         // console.log(productBatchno);
 
         // if (column === 'hsncode') {
@@ -608,29 +611,36 @@ const InvoiceGenerator = () => {
                                             {customerName.name}
                                         </Typography>
                                     </Grid>
+                                    {console.log("test : ", inputValues.Buyer)}
+                                    {console.log("customerName : ", customerName)}
                                     <Grid item xs={6}>
                                         {customerName.tittle === 'UserId' ? (
-                                            <Autocomplete
-                                                options={userNameoptions}
+                                            // <Autocomplete
+                                            //     options={userNameoptions}
+                                            //     value={inputValues.Buyer}
+                                            //     onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
+                                            //     renderInput={(params) => (
+                                            //         <TextField {...params} 
+                                            //         label={customerName.name} 
+                                            //         variant="outlined"
+                                            //             InputLabelProps={{
+                                            //                 className: 'required-label',
+                                            //                 required: true
+                                            //             }}
+                                            //         />
+                                            //     )}
+                                            //     onBlur={(e) => {
+                                            //         const value = e.target.value; // Accessing the value
+                                            //         getuserDetial(customerName.name, value);
+                                            //     }}
+                                            // />
+                                            <input type='text'
                                                 onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
-                                                renderInput={(params) => (
-                                                    <TextField {...params} 
-                                                    // label={customerName.name} 
-                                                    variant="outlined"
-                                                        InputLabelProps={{
-                                                            className: 'required-label',
-                                                            required: true
-                                                        }}
-                                                    />
-                                                )}
-                                                // onBlur={(e) => const value = e.target.value;getuserDetial(customerName, value)}
-
                                                 onBlur={(e) => {
-                                                    // console.log("haiii : ", customerName.name);
                                                     const value = e.target.value; // Accessing the value
                                                     getuserDetial(customerName.name, value);
                                                 }}
-                                            />
+                                            ></input>
                                         ) : (
                                             <TextField fullWidth
                                                 // label={customerName}
@@ -712,8 +722,8 @@ const InvoiceGenerator = () => {
                                                 onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
                                             /> */}
                                             <Autocomplete
-                                                options={productBatchno}
-                                                // options={batchnoOption}
+                                                // options={productBatchno}
+                                                options={batchnoOption}
                                                 value={row.batchno}
                                                 onChange={(e, value) => handleInputChange(row.id, 'batchno', value)}
                                                 // onChange={(event, value) => {
