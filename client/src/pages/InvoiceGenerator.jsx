@@ -615,32 +615,33 @@ const InvoiceGenerator = () => {
                                     {console.log("customerName : ", customerName)}
                                     <Grid item xs={6}>
                                         {customerName.tittle === 'UserId' ? (
-                                            // <Autocomplete
-                                            //     options={userNameoptions}
-                                            //     value={inputValues.Buyer}
-                                            //     onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
-                                            //     renderInput={(params) => (
-                                            //         <TextField {...params} 
-                                            //         label={customerName.name} 
-                                            //         variant="outlined"
-                                            //             InputLabelProps={{
-                                            //                 className: 'required-label',
-                                            //                 required: true
-                                            //             }}
-                                            //         />
-                                            //     )}
-                                            //     onBlur={(e) => {
-                                            //         const value = e.target.value; // Accessing the value
-                                            //         getuserDetial(customerName.name, value);
-                                            //     }}
-                                            // />
-                                            <input type='text'
+                                            <Autocomplete
+                                                // options={userNameoptions}
+                                                options={['quantanics1','quantanic2', 'quantanic3', 'quantanic4','Sample Static Options']}
+                                                value={inputValues.Buyer}
                                                 onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} 
+                                                    label={customerName.name} 
+                                                    variant="outlined"
+                                                        InputLabelProps={{
+                                                            className: 'required-label',
+                                                            required: true
+                                                        }}
+                                                    />
+                                                )}
                                                 onBlur={(e) => {
                                                     const value = e.target.value; // Accessing the value
                                                     getuserDetial(customerName.name, value);
                                                 }}
-                                            ></input>
+                                            />
+                                            // <input type='text'
+                                            //     onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
+                                            //     onBlur={(e) => {
+                                            //         const value = e.target.value; // Accessing the value
+                                            //         getuserDetial(customerName.name, value);
+                                            //     }}
+                                            // ></input>
                                         ) : (
                                             <TextField fullWidth
                                                 // label={customerName}
