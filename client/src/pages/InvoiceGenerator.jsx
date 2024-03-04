@@ -279,7 +279,7 @@ const InvoiceGenerator = () => {
             }
         };
         fetchData();
-    }, [inputValues, userNameoptions]);
+    }, [inputValues]);
 
     let productHsn = productList.map(item => item.productid);
     productHsn = [...new Set(productHsn)];
