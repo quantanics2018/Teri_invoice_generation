@@ -56,64 +56,84 @@ const Login = (props) => {
         const body = { username, password };
         body.username = body.username.trim();
         body.password = body.password.trim();
-        try {
-            const response = await axios.post(`${API_URL}verify/credentials`,
-                {
-                    username: username,
-                    password: password,
-                }
-            );
-            // console.log(response);
-            // console.log(response.data.message);
-            setresAlert(response.data.message)
-            setSubmitted(true);
-            if (response.data.success) {
-                sessionStorage.setItem("UserInfo", JSON.stringify({ ...response.data.data, "isLoggedIn": true }));
-                // console.log(response.data);
-                // const expirationTimeInMinutes = 1;
-                // const expirationMilliseconds = expirationTimeInMinutes * 60 * 1000;
-                // setTimeout(() => {
-                //     alert("Session Expired! Please Log in Again.");
-                //     sessionStorage.removeItem("UserInfo");
-                // }, expirationMilliseconds);
-                if (response.data.data.position === "manifacture") {
-                    navigate("/Staff_Details");
-                }
-                else if (response.data.data.position === "staff") {
-                    navigate('/Distributer_Details');
-                }
-                else if (response.data.data.position === "distributor") {
-                    navigate('/D_Staff_Details');
+        const isValidUserName = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(body.username);
+        const isValidPassword = body.password.trim() !== '';
+
+        if (isValidUserName && isValidPassword) {
+            await checkCredentials();
+        } else {
+            if (!isValidUserName) {
+                setresAlert("Enter vaild Username");
+                setSubmitted(true);
+                // alert("Enter vaild Username")
+            } 
+            else if(!isValidPassword){
+                setresAlert("Enter vaild Password");
+                setSubmitted(true);
+                // alert('Enter Valid Password')
+            }
+        }
+
+        async function checkCredentials() {
+            try {
+                const response = await axios.post(`${API_URL}verify/credentials`,
+                    {
+                        username: username,
+                        password: password,
+                    }
+                );
+                // console.log(response);
+                // console.log(response.data.message);
+                setresAlert(response.data.message);
+                setSubmitted(true);
+                if (response.data.success) {
+                    sessionStorage.setItem("UserInfo", JSON.stringify({ ...response.data.data, "isLoggedIn": true }));
+                    // console.log(response.data);
+                    // const expirationTimeInMinutes = 1;
+                    // const expirationMilliseconds = expirationTimeInMinutes * 60 * 1000;
+                    // setTimeout(() => {
+                    //     alert("Session Expired! Please Log in Again.");
+                    //     sessionStorage.removeItem("UserInfo");
+                    // }, expirationMilliseconds);
+                    if (response.data.data.position === "manifacture") {
+                        navigate("/Staff_Details");
+                    }
+                    else if (response.data.data.position === "staff") {
+                        navigate('/Distributer_Details');
+                    }
+                    else if (response.data.data.position === "distributor") {
+                        navigate('/D_Staff_Details');
+                    }
+                    else {
+                        navigate('/profilePage');
+                    }
+                    window.location.reload();
                 }
                 else {
-                    navigate('/profilePage');
-                }
-                window.location.reload();
-            }
-            else {
-                if (response.data.password === null) {
-                    setLoading(true);
-                    const setPasswordMail = await axios.post(`${API_URL}send-email/updatePassword`, { username });
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    setLoading(false);
-                    console.log(setPasswordMail.data.success);
-                    if (setPasswordMail.data.success) {
-                        setresAlert(setPasswordMail.data.message)
-                        setSubmitted(true);
-                        alert("Check your mail");
-                        setUsername('');
-                        setPassword('');
-                    } else {
-                        setresAlert(setPasswordMail.data.message)
-                        setSubmitted(true);
-                        alert("Check Your Internet Connection");
+                    if (response.data.password === null) {
+                        setLoading(true);
+                        const setPasswordMail = await axios.post(`${API_URL}send-email/updatePassword`, { username });
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        setLoading(false);
+                        console.log(setPasswordMail.data.success);
+                        if (setPasswordMail.data.success) {
+                            setresAlert(setPasswordMail.data.message);
+                            setSubmitted(true);
+                            alert("Check your Mail");
+                            setUsername('');
+                            setPassword('');
+                        } else {
+                            setresAlert(setPasswordMail.data.message);
+                            setSubmitted(true);
+                            alert("Check Your Internet Connection");
+                        }
+                        // navigate('/UpdatePassword');
                     }
-                    // navigate('/UpdatePassword');
+                    // alert(response.data.message);
                 }
-                // alert(response.data.message);
+            } catch (error) {
+                console.error('Login failed:', error.message);
             }
-        } catch (error) {
-            console.error('Login failed:', error.message);
         }
     };
     // useEffect(() => {
@@ -253,7 +273,7 @@ const Login = (props) => {
                 vertical: 'bottom',
                 horizontal: 'right',
             }}>
-                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
                     {resAlert}
                 </MuiAlert>
             </Snackbar>

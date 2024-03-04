@@ -612,7 +612,7 @@ const InvoiceGenerator = () => {
                                         </Typography>
                                     </Grid>
                                     {/* {console.log("test : ", inputValues.Buyer)} */}
-                                    {/* {console.log("customerName : ", customerName)} */}
+                                    {console.log("customerName : ", userNameoptions)}
                                     <Grid item xs={6}>
                                         {customerName.tittle === 'UserId' ? (
                                             <Autocomplete
