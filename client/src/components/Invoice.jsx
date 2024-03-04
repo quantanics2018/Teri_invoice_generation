@@ -25,7 +25,7 @@ const Invoice = ({
 }) => {
     // console.log("previewInvoiceprop : ", previewInvoiceprop[0]);
     // console.log("ReciverInvoiceProp : ", ReciverInvoiceProp);
-    console.log("SenderInvoiceProp : ",SenderInvoiceProp);
+    // console.log("SenderInvoiceProp : ",SenderInvoiceProp);
     // console.log("totalSum : ",totalSum[0]);
     // console.log("totalQuantity : ",totalQuantity[0]);
     const userInfoString = sessionStorage.getItem("UserInfo");
@@ -59,7 +59,7 @@ const Invoice = ({
     }
     const getsgst = (hsnno,batchno) =>{
         const getsgst = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.sgst)[0] || '';
-        console.log("getcgst : ", getsgst);
+        // console.log("getcgst : ", getsgst);
         return getsgst
     }
     function formatTotal(total) {
