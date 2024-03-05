@@ -9,7 +9,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const options = ['Print and Generate Invoice', 'Perform Invoice'];
 
-export default function SplitButton() {
+export default function SplitButton({performInvoiceToggele}) {
   const [open, setOpen] = React.useState(false);
   const actionRef = React.useRef(null);
   const anchorRef = React.useRef(null);
@@ -42,6 +42,7 @@ export default function SplitButton() {
       <Button
         variant="outlined"
         color="success"
+        disabled={performInvoiceToggele}
         onClick={handleClick} style={{ textTransform: 'uppercase' }}
         data-bs-toggle={options[selectedIndex] === 'Perform Invoice' ? 'modal' : undefined}
         data-bs-target={options[selectedIndex] === 'Perform Invoice' ? '#staticBackdrop' : undefined}

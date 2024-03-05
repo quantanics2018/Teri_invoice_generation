@@ -196,6 +196,19 @@ const InvoiceGenerator = () => {
         }
     };
 
+    const [performInvoiceToggele, setperformInvoiceToggele] = useState(false)
+    const checkforPerfomInvoice = () => {
+        const hasEmptyReciverId = Object.values(inputValues).some(value => value === '')
+        if (hasEmptyReciverId) {
+            return setperformInvoiceToggele(true)
+        } else {
+            return setperformInvoiceToggele(false)
+        }
+    }
+    useEffect(() => {
+        checkforPerfomInvoice()
+    }, [performInvoiceToggele])
+
     const handleSubmit = async () => {
         // console.log(rows);
         const hasEmptyValue = rows.some(row =>
@@ -566,6 +579,8 @@ const InvoiceGenerator = () => {
         // console.log("hiii 2 ---- ",inputValues.Buyer);
         if (inputValues.Buyer !== '') {
             getReciverData();
+            checkforPerfomInvoice();
+
         }
         else {
             console.log("Enter data");
@@ -857,7 +872,8 @@ const InvoiceGenerator = () => {
                     <Grid container justifyContent="space-between" alignItems="center" style={{ width: "80%" }}>
                         <Grid item className='gap-4 d-flex'>
                             <CancelBtnComp />
-                            <SplitButton />
+                            {/* <input type='text' disabled={performInvoiceToggele} /> */}
+                            <SplitButton performInvoiceToggele={performInvoiceToggele}/>
                             <Button variant="outlined" color="primary" onClick={handleSubmit}>
                                 Generate Invoice
                             </Button>
