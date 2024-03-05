@@ -627,41 +627,41 @@ const InvoiceGenerator = () => {
                                     {/* {console.log("customerName : ", userNameoptions)} */}
                                     <Grid item xs={6}>
                                         {customerName.tittle === 'UserId' ? (
-                                            <Autocomplete
-                                                options={userNameoptions}
-                                                // value={inputValues.Buyer}
-                                                onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
-                                                renderInput={(params) => (
-                                                    <TextField {...params}
-                                                        value={inputValues.Buyer}
-                                                        label={customerName.name}
-                                                        variant="outlined"
-                                                        InputLabelProps={{
-                                                            className: 'required-label',
-                                                            required: true
-                                                        }}
-                                                    />
-                                                )}
-                                                onBlur={(e) => {
-                                                    const value = e.target.value; // Accessing the value
-                                                    getuserDetial(customerName.name, value);
-                                                }}
-                                            />
-                                            // quantanics1
-                                            // <TextField
-                                            //     value={inputValues.Buyer}
-                                            //     label={customerName.name}
-                                            //     variant="outlined"
-                                            //     InputLabelProps={{
-                                            //         className: 'required-label',
-                                            //         required: true
-                                            //     }}
+                                            // <Autocomplete
+                                            //     options={userNameoptions}
+                                            //     // value={inputValues.Buyer}
                                             //     onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
+                                            //     renderInput={(params) => (
+                                            //         <TextField {...params}
+                                            //             value={inputValues.Buyer}
+                                            //             label={customerName.name}
+                                            //             variant="outlined"
+                                            //             InputLabelProps={{
+                                            //                 className: 'required-label',
+                                            //                 required: true
+                                            //             }}
+                                            //         />
+                                            //     )}
                                             //     onBlur={(e) => {
                                             //         const value = e.target.value; // Accessing the value
                                             //         getuserDetial(customerName.name, value);
                                             //     }}
                                             // />
+                                            // quantanics1
+                                            <TextField
+                                                value={inputValues.Buyer}
+                                                label={customerName.name}
+                                                variant="outlined"
+                                                InputLabelProps={{
+                                                    className: 'required-label',
+                                                    required: true
+                                                }}
+                                                onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
+                                                onBlur={(e) => {
+                                                    const value = e.target.value; // Accessing the value
+                                                    getuserDetial(customerName.name, value);
+                                                }}
+                                            />
                                         ) : (
                                             <TextField fullWidth
                                                 // label={customerName}
