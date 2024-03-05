@@ -266,6 +266,17 @@ const InvoiceGenerator = () => {
                 const users = dropDownUserResponse.data.data.map(item => item.organizationname);
                 setuserNameoptions(users);
                 // console.log(users);
+                // const checkForUndefined = users.map(item => item === undefined);
+                // console.log(checkForUndefined.includes('quantanics1'));
+
+                const checkForUndefined = users.includes(undefined);
+                if (checkForUndefined) {
+                    console.log(checkForUndefined);
+                    console.log('State is not properly Set!');
+                    setReciverIdRes([{}]);
+                    // alert('Internet connection is not Stable!')
+                }
+
                 const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
                 const productList = dropDownResponse.data.data;
                 setproductList(productList)
@@ -545,10 +556,11 @@ const InvoiceGenerator = () => {
             if (getReciverDataRequest.data.status) {
                 const reciveridObj = getReciverDataRequest.data.data;
                 setReciverIdRes(reciveridObj);
+                console.log(reciveridObj);
             } else {
-                alert("ahi")
+                // alert("ahi")
                 console.log("err");
-                setReciverIdRes(null);
+                setReciverIdRes([{}]);
             }
         }
         // console.log("hiii 2 ---- ",inputValues.Buyer);
@@ -612,7 +624,7 @@ const InvoiceGenerator = () => {
                                         </Typography>
                                     </Grid>
                                     {/* {console.log("test : ", inputValues.Buyer)} */}
-                                    {console.log("customerName : ", userNameoptions)}
+                                    {/* {console.log("customerName : ", userNameoptions)} */}
                                     <Grid item xs={6}>
                                         {customerName.tittle === 'UserId' ? (
                                             <Autocomplete
@@ -620,10 +632,10 @@ const InvoiceGenerator = () => {
                                                 // value={inputValues.Buyer}
                                                 onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
                                                 renderInput={(params) => (
-                                                    <TextField {...params} 
-                                                    value={inputValues.Buyer}
-                                                    label={customerName.name} 
-                                                    variant="outlined"
+                                                    <TextField {...params}
+                                                        value={inputValues.Buyer}
+                                                        label={customerName.name}
+                                                        variant="outlined"
                                                         InputLabelProps={{
                                                             className: 'required-label',
                                                             required: true
@@ -635,13 +647,21 @@ const InvoiceGenerator = () => {
                                                     getuserDetial(customerName.name, value);
                                                 }}
                                             />
-                                            // <input type='text'
+                                            // quantanics1
+                                            // <TextField
+                                            //     value={inputValues.Buyer}
+                                            //     label={customerName.name}
+                                            //     variant="outlined"
+                                            //     InputLabelProps={{
+                                            //         className: 'required-label',
+                                            //         required: true
+                                            //     }}
                                             //     onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
                                             //     onBlur={(e) => {
                                             //         const value = e.target.value; // Accessing the value
                                             //         getuserDetial(customerName.name, value);
                                             //     }}
-                                            // ></input>
+                                            // />
                                         ) : (
                                             <TextField fullWidth
                                                 // label={customerName}
