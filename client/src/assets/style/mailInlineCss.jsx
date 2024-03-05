@@ -24,7 +24,7 @@ const invoiceImg = {
 const invoicepic = {
     height: '100px',
 }
-const invoiceHead =  {
+const invoiceHead = {
     backgroundColor: 'darkblue',
 
 }
@@ -37,9 +37,9 @@ const th = {
     border: '1px solid black',
     padding: '0.5rem',
     borderWidth: '1px',
-    color:'white'
+    color: 'white'
 }
-const td ={
+const td = {
     border: '1px solid black',
     padding: '0.5rem',
     borderWidth: '1px',
@@ -81,15 +81,41 @@ const listData = {
     padding: 0,
 }
 
-const billTo ={
-    width: '33.25%'
+const billTo = {
+    width: '35.25%'
 }
-const invoiceNo={
-    width: '33.25%'
+const invoiceNo = {
+    width: '50.25%',
+    height: '100%'
+
+    // display: 'flex',
+    // flexDirection: 'column',
 }
-const shipTo ={
+const table = {
+    flexGrow: '1',
+    width:'100%',
+    borderCollapse: 'collapse',
+    height: '100%',
+
+    border: '1px solid #000',
+}
+const shipTo = {
     width: '33.25%'
 }
 
+const tbody = {
+    border: '1px solid #000',
 
-export { invoicecontent ,InvoiceHead,invoiceImg,invoicepic,invoiceHead,paymentDetials,th,td ,paymentQrSession,detialAboutPayment,invoiceRow,even,odd,bussinessQuotes,listData,billTo,invoiceNo,shipTo};
+}
+const tBorder = {
+    border: '1px solid #000',
+}
+const rawInput = {
+    outline: 'none',
+    border: 'none',
+    borderBottom: '1px solid #ccc',
+    // borderColor: 'dodgerblue',
+    // boxShadow: '0 0 5px dodgerblue',
+}
+
+export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput};

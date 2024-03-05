@@ -10,7 +10,7 @@ import { API_URL } from '../config';
 import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd,even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo } from '../assets/style/mailInlineCss';
+import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd, even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo, table, tbody, tBorder, rawInput } from '../assets/style/mailInlineCss';
 import { TextField } from '@mui/material';
 // import htmlPdf from 'html-pdf';
 
@@ -31,7 +31,7 @@ const Invoice = ({
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const senderid = userInfo.userid;
-   
+
 
     const downloadPDF = () => {
         const { data } = previewInvoiceprop; // Assuming previewInvoiceprop contains the data object
@@ -52,12 +52,12 @@ const Invoice = ({
         pdf.text(tableContent, 10, 10);
         pdf.save("invoice.pdf");
     };
-    const getcgst = (hsnno,batchno) =>{
+    const getcgst = (hsnno, batchno) => {
         const getcgst = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.cgst)[0] || '';
         // console.log("getcgst : ", getcgst);
         return getcgst
     }
-    const getsgst = (hsnno,batchno) =>{
+    const getsgst = (hsnno, batchno) => {
         const getsgst = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.sgst)[0] || '';
         // console.log("getcgst : ", getsgst);
         return getsgst
@@ -68,6 +68,7 @@ const Invoice = ({
     }
     return (
         <div className="InvoiceContainer">
+            {console.log(SenderInvoiceProp)}
             <div className="forScroll">
                 <div className="A4SheetSize" id="invoice-content">
                     {/* <button onClick={downloadPdf}>Download PDF</button> */}
@@ -83,23 +84,29 @@ const Invoice = ({
                             //  style={invoiceDetial}
                             >
                                 <pre>
-                                    <h1>INVOICE</h1>
-                                    {SenderInvoiceProp[0].fname}{SenderInvoiceProp[0].lname}<br />
-                                    {SenderInvoiceProp[0].organizationname} , 
-                                    {" "+SenderInvoiceProp[0].cstreetname}<br />
-                                    {SenderInvoiceProp[0].cdistrictid}<br />
-                                    {SenderInvoiceProp[0].cstateid}<br />
-                                    {SenderInvoiceProp[0].cpostalcode}<br />
+                                    <h4>INVOICE</h4>
+                                    {/* {SenderInvoiceProp[0].fname}{SenderInvoiceProp[0].lname}<br /> */}
+                                    <div className="organizationName" style={{ fontWeight: 900, fontSize: '20px' }}>
+                                        {SenderInvoiceProp[0].organizationname}
+                                    </div>
+                                    No : {SenderInvoiceProp[0].cstreetname}<br />
+                                    {SenderInvoiceProp[0].cdistrictid} -
+                                    {/* {SenderInvoiceProp[0].cstateid}<br /> */}
+                                    {" " + SenderInvoiceProp[0].cpostalcode}<br />
+                                    Ph : {SenderInvoiceProp[0].phno}<br />
+                                    GSTIN/UIN : {SenderInvoiceProp[0].gstnno}<br />
+                                    State Name : {SenderInvoiceProp[0].cstateid}<br />
+                                    E-Mail : {SenderInvoiceProp[0].email}<br />
                                     {/* GSTIN 89898989898989 */}
                                 </pre>
                             </div>
                             <div className="invoiceName1"
                             //  style={InvoiceHead}
                             >
-                                <QrCode totalSum={totalSum} upi={SenderInvoiceProp[0].upiid}/>
+                                <QrCode totalSum={totalSum} upi={SenderInvoiceProp[0].upiid} />
                             </div>
                             <div className="invoiceImg1"
-                             style={invoiceImg}
+                                style={invoiceImg}
                             >
                                 <img className='invoicepic1' style={invoicepic} src={invoicePic} alt="" />
                             </div>
@@ -126,35 +133,62 @@ const Invoice = ({
                                 </div> */}
                                 <div className="shipTo1" style={billTo}>
                                     <div className="billToTittle">
-                                        Ship To:(Buyer)
+                                        Buyer:(Bill To)
                                     </div>
                                     <div className="billToBody">
                                         {/* {console.log(ReciverInvoiceProp[0])} */}
                                         <ul className='listData1' style={listData}>
                                             <pre>
-                                                {ReciverInvoiceProp[0].fname}{ReciverInvoiceProp[0].lname}<br />
+                                                {/* {ReciverInvoiceProp[0].fname}{ReciverInvoiceProp[0].lname}<br /> */}
                                                 {ReciverInvoiceProp[0].organizationname}<br />
                                                 {ReciverInvoiceProp[0].cstreetname}<br />
-                                                {ReciverInvoiceProp[0].cdistrictid}<br />
-                                                {ReciverInvoiceProp[0].cstateid}<br />
-                                                {ReciverInvoiceProp[0].cpostalcode}<br />
+                                                {ReciverInvoiceProp[0].cdistrictid} -
+                                                {" " + ReciverInvoiceProp[0].cpostalcode}<br />
+                                                Ph : {ReciverInvoiceProp[0].phno}<br />
+                                                GSTIN/UIN : {ReciverInvoiceProp[0].gstnno}<br />
+                                                State Name : {ReciverInvoiceProp[0].cstateid}<br />
+                                                E-Mail : {ReciverInvoiceProp[0].email}<br />
                                                 {/* GSTIN 89898989898989 */}
                                             </pre>
                                         </ul>
                                     </div>
                                 </div>
                                 <div className="invoiceNo1" style={invoiceNo}>
-                                    <div className="invoiceDate">
+                                    <table className='table1' style={table}>
+                                        <tbody style={tbody}>
+                                            <tr style={tBorder}>
+                                                <td style={tBorder}>
+                                                    <div className="tdh">
+                                                        Invoice No.
+                                                    </div>
+                                                    <div className="tdv"><input type="text" style={rawInput} /></div>
+                                                </td>
+                                                <td style={tBorder}>
+                                                    <div className="tdh">
+                                                        Dated
+                                                    </div>
+                                                    <div className="tdv"><input type="text" style={rawInput} /></div>
+                                                </td>
+                                            </tr>
+                                            <tr style={tBorder}>
+                                                <td style={tBorder}>Row 2</td>
+                                                <td style={tBorder}>Row 2</td>
+                                            </tr>
+                                            <tr style={tBorder}>
+                                                <td style={tBorder}>Row 3</td>
+                                                <td style={tBorder}>Row 3</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    {/* <div className="invoiceDate">
                                         Invoice Date : {inputValuesAboveRows.Date}<br />
                                     </div>
                                     <div className="invoiceMail">
-                                        Buyer Mail : {ReciverInvoiceProp[0].email}<br />
+                                        Ph : {ReciverInvoiceProp[0].phno}<br />
                                     </div>
                                     <div className="invoiceMail">
-                                        Buyer Phno : {ReciverInvoiceProp[0].phno}<br />
-                                    </div>
-                                    {/* Invoice Number : 4649845 <br /> */}
-                                    {/* Invoice Date : 08-03-2021 */}
+                                        E-Mail : {ReciverInvoiceProp[0].email}<br />
+                                    </div> */}
                                 </div>
                             </div>
 
@@ -182,8 +216,8 @@ const Invoice = ({
                                             <td className='td1' style={td}>{item.hsncode || ''}</td>
                                             <td className='td1' style={td}>{item.Quantity || ''}</td>
                                             <td className='td1' style={td}>{item.Discount || ''}</td>
-                                            <td className='td1' style={td}>{getcgst(item.hsncode,item.batchno) || ''}</td>
-                                            <td className='td1' style={td}>{getsgst(item.hsncode,item.batchno) || ''}</td>
+                                            <td className='td1' style={td}>{getcgst(item.hsncode, item.batchno) || ''}</td>
+                                            <td className='td1' style={td}>{getsgst(item.hsncode, item.batchno) || ''}</td>
                                             <td className='td1' style={td}>{formatTotal(item.Total) || ''}</td>
                                             {/* <td className='td'>{item.rate ? `Rs. ${item.rate.toFixed(2)}` : ''}</td>
                                             <td className='td'>{item.amount ? `Rs. ${item.amount.toFixed(2)}` : ''}</td> */}
@@ -199,7 +233,7 @@ const Invoice = ({
                                 </div>
                                 <div className="detialAboutPayment1" style={detialAboutPayment}>
                                     <div className="alternating-rows-container1">
-                                        <div className="invoiceRow1 odd1" style={{...invoiceRow, ...odd}}>TOTAL QUANTITY
+                                        <div className="invoiceRow1 odd1" style={{ ...invoiceRow, ...odd }}>TOTAL QUANTITY
                                             <div className="totalVal">{totalQuantity}</div>
                                             {/* <TextField
                                             id="standard-number"
@@ -211,7 +245,7 @@ const Invoice = ({
                                             variant="standard"
                                         /> */}
                                         </div>
-                                        <div className="invoiceRow1 even1" style={{...invoiceRow, ...even}}>TOTAL PRICE
+                                        <div className="invoiceRow1 even1" style={{ ...invoiceRow, ...even }}>TOTAL PRICE
                                             <div className="totalVal1">{totalSum}</div>
                                         </div>
                                     </div>
@@ -220,6 +254,7 @@ const Invoice = ({
                             <hr />
                             <div className="bankDetails">
                                 <div className="bankName">Bank Name : {SenderInvoiceProp[0].bankname}</div>
+                                <div className="bankName">BANK ACC NO : {SenderInvoiceProp[0].bankaccno}</div>
                                 <div className="bankAccNo">UPI ID : {SenderInvoiceProp[0].upiid}</div>
                                 <div className="Ifsc">PAN Number : {SenderInvoiceProp[0].pan}</div>
                             </div>
@@ -233,8 +268,8 @@ const Invoice = ({
                             <br />
                             <br />
                             <br />
-                            <div className="bussinessQuotes1" 
-                            style={bussinessQuotes}
+                            <div className="bussinessQuotes1"
+                                style={bussinessQuotes}
                             >
                                 <h5 className='bussinessContent1'>THANK YOU ! WE APPRECIATE YOUR BUSINESS</h5>
                             </div>

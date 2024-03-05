@@ -2012,6 +2012,7 @@ input[type="checkbox"] {
 .invoiceNo {
     display: flex;
     flex-grow: 1;
+    justify-content: space-between;
 }
 
 .InvoiceHead {
