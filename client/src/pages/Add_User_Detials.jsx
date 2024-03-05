@@ -144,7 +144,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
         e.preventDefault();
         // top level
         // const isValiduserid = postData.userid.trim() !== '';
-        const isValiduserid = /^.{1,20}$/.test(postData.userid.trim());
+        const userId = postData.userid.trim();
+        const isValiduserid = userId !== '' &&  /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(userId);
+        // const isValiduserid = /^.{1,20}$/.test(postData.userid.trim());
         const isValidaadharNo = /^\d{12}$/.test(postData.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(postData.fName)
         const isValidlName = /^[A-Za-z\s'-]+$/.test(postData.lName)

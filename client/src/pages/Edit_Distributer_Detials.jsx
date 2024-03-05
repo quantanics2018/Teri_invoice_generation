@@ -285,7 +285,9 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     const handle_save = async (e) => {
         e.preventDefault();
         // top level
-        const isValiduserid = inputValues.userid.trim() !== '';
+        const userId = inputValues.userid.trim();
+        const isValiduserid = userId !== '' &&  /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(userId);
+        // const isValiduserid = inputValues.userid.trim() !== '';
         const isValidaadharNo = /^\d{12}$/.test(inputValues.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(inputValues.fName)
         const isValidlName = /^[A-Za-z\s'-]+$/.test(inputValues.lName) && (typeof inputValues.lName === 'string' && inputValues.lName.trim() !== '')

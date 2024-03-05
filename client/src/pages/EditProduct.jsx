@@ -168,8 +168,12 @@ const EditProduct = () => {
     };
     // validation
     const handleClick = async () => {
-        const isValidhsncode = /^[0-9]+$/.test(inputValues.productid);
-        const isValidbatchno = /^[0-9]+$/.test(inputValues.batchno);
+        const isValidhsncode = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(inputValues.productid);
+        const isValidbatchno = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(inputValues.batchno);
+
+        // const isValidhsncode = /^[0-9]+$/.test(inputValues.productid);
+        // const isValidbatchno = /^[0-9]+$/.test(inputValues.batchno);
+        
         const isValidproductname = (inputValues.productname.trim() !== '');
         const isValidQuantityNo = /^[0-9]+$/.test(inputValues.quantity);
         const isValidpriceperitem = /^[0-9]+$/.test(inputValues.priceperitem);

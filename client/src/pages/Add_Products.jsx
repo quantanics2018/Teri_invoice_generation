@@ -124,8 +124,11 @@ const Add_Products = () => {
 
     // validation
     const handleClick = async () => {
-        const isValidhsncode = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(postData.hsncode);
-        const isValidbatchno = /^[0-9]+$/.test(postData.batchno);
+        const hsncode = postData.hsncode.trim();
+        const batchno = postData.batchno.trim();
+        const isValidhsncode = hsncode !== '' && /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(hsncode);
+        const isValidbatchno = batchno !== '' && /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(batchno);
+        // const isValidbatchno = /^[0-9]+$/.test(postData.batchno);
         const isValidproductname = (postData.productname.trim() !== '');
         const isValidQuantityNo = /^[0-9]+$/.test(postData.quantity);
         const isValidpriceperitem = /^[0-9]+$/.test(postData.priceperitem);
