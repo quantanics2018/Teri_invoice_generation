@@ -113,7 +113,6 @@ const Invoice = ({
     const grandTotal = () =>{
         return TaxableValue() + TotalcgstValue() + TotalsgstValue();
     }
-
     function formatTotal(total) {
         const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
         return formattedTotal;

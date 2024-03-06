@@ -42,7 +42,7 @@ export default function SplitButton({performInvoiceToggele}) {
       <Button
         variant="outlined"
         color="success"
-        disabled={performInvoiceToggele}
+        // disabled={performInvoiceToggele}
         onClick={handleClick} style={{ textTransform: 'uppercase' }}
         data-bs-toggle={options[selectedIndex] === 'Perform Invoice' ? 'modal' : undefined}
         data-bs-target={options[selectedIndex] === 'Perform Invoice' ? '#staticBackdrop' : undefined}
