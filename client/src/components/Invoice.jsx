@@ -118,11 +118,11 @@ const Invoice = ({
         return formattedTotal;
     }
     return (
-        <div className="InvoiceContainer">
-            {console.log(SenderInvoiceProp)}
-            <div className="forScroll">
-                <div className="A4SheetSize" id="invoice-content">
-                    <h4>TAX INVOICE</h4>
+        
+            
+           
+                <div className="A4SheetSize"  id="invoice-content" style={{height:'100%',width:'100%'}}>
+                    <h4 className='text-center'>TAX INVOICE</h4>
                     {/* <button onClick={downloadPdf}>Download PDF</button> */}
                     {/* <button onClick={() => downloadPDF(previewInvoiceprop)}>Download PDF</button> */}
                     <div className="invoiceconten"
@@ -437,8 +437,7 @@ const Invoice = ({
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+        
     )
 }
 export default Invoice;

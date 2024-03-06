@@ -5,7 +5,7 @@
 // const API_URL_CLIENT = 'https://terion.quantanics.in/';
 
 const API_URL = 'http://localhost:4000/';
-const API_URL_CLIENT = 'http://localhost:3001/';
+const API_URL_CLIENT = 'http://localhost:3000/';
 
 
 
