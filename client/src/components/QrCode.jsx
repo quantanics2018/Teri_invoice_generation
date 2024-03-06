@@ -20,7 +20,7 @@ const QrCode = ({totalSum,upi}) => {
     }, [totalSum]);
     return (
         <>
-            <img src={imageSrc} alt="Qr Scanner" />
+            <img src={imageSrc} alt="Qr Scanner" height={100} width={100}/>
         </>
     )
 }

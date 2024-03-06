@@ -87,10 +87,10 @@ const listData = {
 }
 
 const billTo = {
-    width: '35.25%'
+    width: '50%'
 }
 const invoiceNo = {
-    width: '50.25%',
+    width: '50%',
     height: '100%'
 
     // display: 'flex',
@@ -114,15 +114,25 @@ const tbody = {
 }
 const tBorder = {
     border: '1px solid #000',
+    display:'flex',
+}
+const tBorderd = {
+    border: '1px solid #000',
+    display:'flex',
+    width:'50%'
 }
 const rawInput = {
     outline: 'none',
     border: 'none',
     width: '-webkit-fill-available',
+    height: '-webkit-fill-available',
 
     // borderBottom: '1px solid #ccc',
     // borderColor: 'dodgerblue',
     // boxShadow: '0 0 5px dodgerblue',
+}
+const tdh = {
+    whiteSpace: 'nowrap',
 }
 const tdv = {
     width:'100px',
@@ -137,6 +147,7 @@ const textarea ={
     width:'160%',
     outline: 'none',
     border: 'none',
+    height:'64px'
 }
 const billDetial ={
     display: 'flex',
@@ -146,4 +157,20 @@ const billDetial ={
     border: '1px solid',
     // padding: '1rem',
 }
-export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput,tdv,tdvDate,textarea,billDetial,bankDetails};
+const tandc ={
+    whiteSpace:'nowrap'
+}
+const nowrap ={
+    whiteSpace:'nowrap'
+
+}
+const taxInvoiceHead ={
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
+}
+const invoiceDetial = {
+    padding:'1rem',
+    border: '1px solid',
+}
+export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput,tdv,tdvDate,textarea,billDetial,bankDetails,tdh,tBorderd,tandc,nowrap,taxInvoiceHead,invoiceDetial};

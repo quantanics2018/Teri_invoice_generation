@@ -62,7 +62,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
         mobileNo: '',
         upiPaymentNo: '',
         accName: '',
+        accHolderName:'',
         accNo: '',
+        ifscCode:'',
         passbookImg: '',
 
         pAddress: '',
@@ -93,7 +95,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
             mobileNo: '',
             upiPaymentNo: '',
             accName: '',
+            accHolderName:'',
             accNo: '',
+            ifscCode:'',
             passbookImg: '',
 
             // pAddress: '',
@@ -158,14 +162,18 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 // Inner Level
                 const isValidbussinessType = (postData.bussinessType === 'Organization' || postData.bussinessType === 'Individual');
                 const isValidOrgName = postData.OrganizationName.trim() !== '';
-                const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(postData.gstNumber)
-                const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber)
+                const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(postData.gstNumber);
+                const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber);
+
                 // Upi Bank Detials
-                // const isValidupiPaymentNo = postData.upiPaymentNo.trim() !== '';
-                // const isValidaccName = postData.accName.trim() !== '';
-                // const isValidaccNo = (/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
+                const isValidupiPaymentNo = postData.upiPaymentNo.trim() !== '';
+                const isValidaccName = postData.accName.trim() !== '';
+                const isValidaccHolderName = postData.accHolderName.trim() !== '';
+                const isValidaccNo = (/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
+                const isValidifscCode = postData.ifscCode.trim() !== '';
                 // alert(isValidaccNo)
                 // const isValidpAddress = postData.pAddress.trim() !== '';
+
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
                 const isValidState = postData.State.trim() !== '';
@@ -177,7 +185,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 const isValidPostalCode2 = postData.PostalCode2.trim() !== '';
                 // alert("hai da")
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
-                    // & isValidupiPaymentNo & isValidaccName & isValidaccNo & isValidpAddress 
+                    & isValidupiPaymentNo & isValidaccName & isValidaccHolderName & isValidaccNo & isValidifscCode 
+                    // & isValidpAddress 
                     & isValidstreetAddress & isValidCity & isValidState & isValidpCode
                     // & isValidCommunicationAddress 
                     & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
@@ -216,22 +225,32 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setresAlert("Enter Valid PAN Number");
                         setSubmitted(true);
                     }
-                    // else if (!isValidupiPaymentNo) {
-                    //     setresAlert("Enter Valid UPI Payment ID");
-                    //     setSubmitted(true);
-                    // }
-                    // else if (!isValidaccName) {
-                    //     setresAlert("Enter Valid Account Name");
-                    //     setSubmitted(true);
-                    // }
-                    // else if (!isValidaccNo) {
-                    //     setresAlert("Enter Valid Account Number");
-                    //     setSubmitted(true);
-                    // }
+                    // upi start
+                    else if (!isValidupiPaymentNo) {
+                        setresAlert("Enter Valid UPI Payment ID");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidaccName) {
+                        setresAlert("Enter Valid Account Name");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidaccHolderName) {
+                        setresAlert("Enter Valid Account Holder Name");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidaccNo) {
+                        setresAlert("Enter Valid Account Number");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidifscCode) {
+                        setresAlert("Enter Valid IFSC Name");
+                        setSubmitted(true);
+                    }
                     // else if (!isValidpAddress) {
                     //     setresAlert("Enter Valid Permenant Address");
                     //     setSubmitted(true);
                     // }
+                    // upi end
                     else if (!isValidstreetAddress) {
                         setresAlert("Enter Valid Street Adress");
                         setSubmitted(true);
@@ -333,7 +352,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
         // 2. UPI Payment Details:
         { label: "UPI ID", name: "upiPaymentNo", value: postData.upiPaymentNo, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Bank Name", name: "accName", value: postData.accName, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Account Holder Name", name: "accHolderName", value: postData.accHolderName, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Bank Account Number", name: "accNo", value: postData.accNo, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "IFSC Code", name: "ifscCode", value: postData.ifscCode, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         // { label: "Pass Book image vvv", name: "passbookImg", value: postData.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         // 3. Address Details:
         { label: "Permanent Address", name: "pAddress", value: postData.pAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
@@ -945,7 +966,40 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             )}
 
                             <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(10, 13).map((field, index) => (
+                                {inputFields.slice(10, 14).map((field, index) => (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <div className="dsa_1st_input">
+                                            {!(field.isStaff) && (
+                                                <Box className="inputs-group display-flex"
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column', // Change the direction for small screens
+                                                        '& .MuiTextField-root': {
+                                                            m: 1,
+                                                            width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                        },
+                                                    }}
+                                                >
+                                                    {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                    <TextField
+                                                        label={`${field.label}`}
+                                                        type={field.inputType || "text"}
+                                                        className="form-control-loc"
+                                                        value={field.value}
+                                                        onChange={(e) => handleInputChange(e, field.name, field.inputType)}
+                                                        name={field.name}
+                                                        id={`input${index + 1}`}
+                                                    />
+                                                    {/* Add error handling if needed */}
+                                                </Box>
+                                            )}
+
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="dsa_row_3 display-flex">
+                                {inputFields.slice(14, 15).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {!(field.isStaff) && (
@@ -1018,7 +1072,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             )}
 
                             <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(14, 18).map((field, index) => (
+                                {inputFields.slice(16, 20).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {!(field.isStaff) && (
@@ -1089,7 +1143,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
                             )}
                             <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(18, 22).map((field, index) => (
+                                {inputFields.slice(20, 24).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {!(field.isStaff) && (
@@ -1127,7 +1181,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 ))}
                             </div>
                             <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(23, 24).map((field, index) => (
+                                {inputFields.slice(24, 25).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {!(field.isStaff) && (

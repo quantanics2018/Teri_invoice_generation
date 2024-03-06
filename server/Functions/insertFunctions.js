@@ -17,7 +17,9 @@ async function addUser(req, res) {
         adminid,
         upiPaymentNo,
         accName,
+        accHolderName,
         accNo,
+        ifscCode,
         passbookImg,
 
         pAddress,
@@ -33,16 +35,16 @@ async function addUser(req, res) {
         PostalCode2 } = req.body.userDetials;
     const status = 1;
     const AccessControls = req.body.AccessControls;
-    // console.log(passbookImg);
-    // console.log(AccessControls);
+    console.log(accHolderName);
+    console.log(ifscCode);
     // console.log(AccessControls);
 
     try {
         await userdbInstance.userdb.query('BEGIN');
         // const ueserTable_old = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, altphoneno, aadhar, pan, name, positionid, adminid, pstreetname, pdistrictid, pstateid, ppostalcode,status) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING userid',
         //     [userid, email, mobileNo, mobileNo, aadharNo, panNumber, fName, Positionid, adminid, streetAddress, City, State, pCode, status]);
-        const ueserTable = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, aadhar, pan, positionid, adminid,status, pstreetname, pdistrictid, pstateid, ppostalcode , cstreetname, cdistrictid,cstateid, cpostalcode,organizationname, gstnno, bussinesstype, fname, lname, upiid,bankname, bankaccno,passbookimg) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25) RETURNING userid',
-            [userid, email, mobileNo, aadharNo, panNumber, Positionid, adminid, status, streetAddress, City, State, pCode, StreetAddress2, City2, State2, PostalCode2, OrganizationName, gstNumber, bussinessType, fName, lName, upiPaymentNo, accName, accNo, passbookImg]);
+        const ueserTable = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, aadhar, pan, positionid, adminid,status, pstreetname, pdistrictid, pstateid, ppostalcode , cstreetname, cdistrictid,cstateid, cpostalcode,organizationname, gstnno, bussinesstype, fname, lname, upiid,bankname, bankaccno,passbookimg,accholdername,ifsccode) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27) RETURNING userid',
+            [userid, email, mobileNo, aadharNo, panNumber, Positionid, adminid, status, streetAddress, City, State, pCode, StreetAddress2, City2, State2, PostalCode2, OrganizationName, gstNumber, bussinessType, fName, lName, upiPaymentNo, accName, accNo, passbookImg,accHolderName,ifscCode]);
 
         // // console.log(ueserTable.rows[0].userid);
         // // const userid = ueserTable.rows[0].userid
