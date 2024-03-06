@@ -1972,9 +1972,10 @@ input[type="checkbox"] {
 
 .A4SheetSize {
     /* overflow: scroll; */
-    width: 793.75px;
+    /* width: 793.75px; */
     /* height: 110px; */
     height: 1122.56px;
+    /* width:100%; */
     background-color: #ffffff;
 
 }
