@@ -150,7 +150,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
         const isValidaadharNo = /^\d{12}$/.test(postData.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(postData.fName)
         const isValidlName = /^[A-Za-z\s'-]+$/.test(postData.lName)
-        const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(postData.email)
+        // const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(postData.email)
+        const isValidemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)
         const isValidMobileNo = /^\d{10}$/.test(postData.mobileNo)
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
             if (!(Positionid_val === 4 || Positionid_val === 5)) {

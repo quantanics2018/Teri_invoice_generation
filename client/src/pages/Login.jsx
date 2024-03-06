@@ -56,7 +56,8 @@ const Login = (props) => {
         const body = { username, password };
         body.username = body.username.trim();
         body.password = body.password.trim();
-        const isValidUserName = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(body.username);
+        const isValidUserName = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.username);
+        // const isValidUserName = true;
         const isValidPassword = body.password.trim() !== '';
 
         if (isValidUserName && isValidPassword) {

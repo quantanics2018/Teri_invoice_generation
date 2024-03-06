@@ -291,7 +291,8 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         const isValidaadharNo = /^\d{12}$/.test(inputValues.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(inputValues.fName)
         const isValidlName = /^[A-Za-z\s'-]+$/.test(inputValues.lName) && (typeof inputValues.lName === 'string' && inputValues.lName.trim() !== '')
-        const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(inputValues.email)
+        // const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(inputValues.email)
+        const isValidemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.email)
         const isValidMobileNo = /^\d{10}$/.test(inputValues.mobileNo)
         // console.log(inputValues, isValidlName);
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {

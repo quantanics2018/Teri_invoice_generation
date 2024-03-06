@@ -13,7 +13,7 @@ async function checkCredentials(req, res) {
       } else {
         // console.log(username);
         const GetTheUserStatus = await userdbInstance.userdb.query('select status from public."user" where email=$1;', [username]);
-        // console.log(GetTheUserStatus.rows);
+        console.log(GetTheUserStatus.rows);
         // console.log(GetTheUserStatus.rows[0].status === 1);
         if (GetTheUserStatus.rows[0].status === '1') {
           const data = await userdbInstance.userdb.query(`SELECT 

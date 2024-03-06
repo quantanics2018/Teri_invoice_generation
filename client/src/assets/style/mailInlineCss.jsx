@@ -15,9 +15,9 @@ const InvoiceHead = {
     padding: '1rem'
 }
 const invoiceImg = {
-    width: 'calc(100% - 1rem)',
-    height: 'calc(100%-1rem)',
-    position: 'absolute',
+    // width: 'calc(100% - 1rem)',
+    // height: 'calc(100%-1rem)',
+    // position: 'absolute',
     display: 'flex',
     justifyContent: 'center',
 }
@@ -32,6 +32,11 @@ const paymentDetials = {
     display: 'flex',
     width: '100%',
     height: 'auto',
+    justifyContent:'space-between',
+    border:'1px solid',
+}
+const bankDetails = {
+    width: '100%',
 }
 const th = {
     border: '1px solid black',
@@ -50,7 +55,7 @@ const paymentQrSession = {
 }
 const detialAboutPayment = {
     border: '1px solid',
-    width: '60%',
+    width: '100%',
 }
 const invoiceRow = {
     display: 'flex',
@@ -113,9 +118,32 @@ const tBorder = {
 const rawInput = {
     outline: 'none',
     border: 'none',
-    borderBottom: '1px solid #ccc',
+    width: '-webkit-fill-available',
+
+    // borderBottom: '1px solid #ccc',
     // borderColor: 'dodgerblue',
     // boxShadow: '0 0 5px dodgerblue',
 }
+const tdv = {
+    width:'100px',
+    fontWeight:'700'
+}
+const tdvDate = {
+    width:'100px',
+    fontWeight:'700'
 
-export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput};
+}
+const textarea ={
+    width:'160%',
+    outline: 'none',
+    border: 'none',
+}
+const billDetial ={
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'space-between',
+    border: '1px solid',
+    // padding: '1rem',
+}
+export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput,tdv,tdvDate,textarea,billDetial,bankDetails};

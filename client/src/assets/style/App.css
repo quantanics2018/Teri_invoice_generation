@@ -2043,7 +2043,7 @@ input[type="checkbox"] {
     width: 100%;
     justify-content: space-between;
     border: 1px solid;
-    padding: 1rem;
+    /* padding: 1rem; */
 }
 
 .billTo,
@@ -2256,7 +2256,7 @@ th {
 }
 
 td {
-    padding: 10px 0px;
+    /* padding: 10px 0px; */
     border-bottom: 0.5px solid rgb(226, 226, 226);
     text-align: left;
 }
