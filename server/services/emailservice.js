@@ -8,6 +8,7 @@ const pdf = require('html-pdf');
 const puppeteer = require('puppeteer');
 const { API_URL_CLIENT } = require('../serversideConfig');
 const { generateQR } = require('./QrGeneration');
+const userdbInstance = require('../instances/dbInstance');
 
 async function generatePDF(htmlContent) {
     return new Promise((resolve, reject) => {
@@ -25,8 +26,10 @@ async function generatePDF(htmlContent) {
 async function emailservice(req, res) {
     const mailcontent = req.body;
     console.log("html content: ", mailcontent.htmlString);
-    console.log("mailcontent.email  : ", mailcontent.email);
-    const to = mailcontent.email;
+    console.log("mailcontent.email  : ", mailcontent.Buyer);
+    const recivermail = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1', [mailcontent.Buyer]);
+    console.log(recivermail.rows[0].email);
+    const to = recivermail.rows[0].email;
     // const to = 'nitheshwaran003@gmail.com';
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',

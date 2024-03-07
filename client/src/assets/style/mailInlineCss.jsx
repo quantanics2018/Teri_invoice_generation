@@ -62,6 +62,7 @@ const invoiceRow = {
     alignItems: 'center',
     height: '100%',
     justifyContent: 'space-between',
+    padding:'0.5rem'
 }
 const even = {
     color: 'darkblue'
@@ -87,14 +88,27 @@ const listData = {
 }
 
 const billTo = {
-    width: '50%'
+    width: '40%',
+    borderRight:'1px solid',
+    // height:'450px'
+    // border: '0px 1px 0px 0px solid',
+
 }
 const invoiceNo = {
-    width: '50%',
-    height: '100%'
+    width: '55%',
+    height: '100%',
+
 
     // display: 'flex',
     // flexDirection: 'column',
+}
+const addressDetials ={
+    borderBottom: '1px solid',
+    width:'100%',
+    display:'flex',
+    flexGrow: '1',
+    // flexDirection:'column',
+    justifyContent: 'space-between',
 }
 const table = {
     flexGrow: '1',
@@ -118,18 +132,26 @@ const tBorder = {
 }
 const tBorderd = {
     border: '1px solid #000',
-    display:'flex',
+    // display:'flex',
     width:'50%'
 }
 const rawInput = {
     outline: 'none',
     border: 'none',
-    width: '-webkit-fill-available',
-    height: '-webkit-fill-available',
+    // width: '-webkit-fill-available',
+    width: '100px',
+    // height: '-webkit-fill-available',
 
     // borderBottom: '1px solid #ccc',
     // borderColor: 'dodgerblue',
     // boxShadow: '0 0 5px dodgerblue',
+}
+const reciverBill ={
+    marginBottom:'0',
+}
+const textwarp = {
+    overflow: 'hidden',
+    textWrap: 'balance',
 }
 const tdh = {
     whiteSpace: 'nowrap',
@@ -144,10 +166,17 @@ const tdvDate = {
 
 }
 const textarea ={
-    width:'160%',
+    width:'100%',
     outline: 'none',
     border: 'none',
-    height:'64px'
+    height:'20px'
+}
+const bussinessContent={
+    fontWeight:'600',
+    color:'white',
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center'
 }
 const billDetial ={
     display: 'flex',
@@ -170,7 +199,50 @@ const taxInvoiceHead ={
     alignItems:'center',
 }
 const invoiceDetial = {
+    // margin:'1rem',
     padding:'1rem',
-    border: '1px solid',
+    borderBottom: '1px solid',
 }
-export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput,tdv,tdvDate,textarea,billDetial,bankDetails,tdh,tBorderd,tandc,nowrap,taxInvoiceHead,invoiceDetial};
+const df ={
+    display:'flex',
+}
+const dfc ={
+    display:'flex',
+    flexDirection:'column',
+}
+const gap ={
+    gap:'3px',
+}
+const invoicedetail = {
+    width:'60%'
+
+}
+const rowInvoiceDetail={
+    borderBottom: '1px solid',
+    // padding:'1rem'
+    // margin:'1px'
+}
+const inputbox ={
+    outline: 'none',
+    border: 'none',
+    // width:'20px',
+}
+const row1Invoice ={
+    borderRight:'1px solid',
+}
+const width50 = {
+    width:'50%'
+}
+const pad ={
+    padding:'1rem',
+}
+const padInPx ={
+    padding:'3px',
+}
+const mt = {
+    marginTop:'4rem'
+}
+const sb ={
+    justifyContent:'space-between'
+}
+export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput,tdv,tdvDate,textarea,billDetial,bankDetails,tdh,tBorderd,tandc,nowrap,taxInvoiceHead,invoiceDetial,df,gap,dfc,addressDetials,invoicedetail,rowInvoiceDetail,inputbox,row1Invoice,width50,reciverBill,pad,textwarp,padInPx,bussinessContent,mt,sb};

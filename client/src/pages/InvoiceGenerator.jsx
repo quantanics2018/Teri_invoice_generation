@@ -160,7 +160,7 @@ const InvoiceGenerator = () => {
 
     // invoice htm send to server
     // console.log(inputValues.UserId);
-    const sendDataToServer = async () => {
+    const sendDataToServer = async (invoiceid) => {
         try {
             const htmlString = ReactDOMServer.renderToString(
                 <div className="InvoiceContainer">
@@ -173,18 +173,20 @@ const InvoiceGenerator = () => {
                         totalQuantity={totalQuantity}
                         inputValuesAboveRows={inputValues}
                         productList={productList}
+                        invoiceid={invoiceid}
                     />
                 </div>
             );
+            // console.log("hai invoiceid log :",invoiceid)
+            console.log("inputValues.UserId : ",inputValues.Buyer);
             const response = await axios.post(`${API_URL}send-email/sendInvoice`
-                , { htmlString: htmlString, email: inputValues.UserId }
+                , { htmlString: htmlString, Buyer: inputValues.Buyer }
                 , {
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 }
             );
-
             if (response.status === 200) {
                 // alert("success")
                 console.log('Mail sent successfully');
@@ -230,7 +232,8 @@ const InvoiceGenerator = () => {
                     setLoading(true);
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows, totalValues: totalSum });
                     if (response.data.status) {
-                        await sendDataToServer();
+                        // alert(response.data.invoiceid);
+                        await sendDataToServer(response.data.invoiceid);
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
@@ -593,19 +596,19 @@ const InvoiceGenerator = () => {
         const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
         return formattedTotal;
     }
-    // console.log(inputValues);
+
     return (
         <>
             {loading && <Loader />}
             {/* Preview Modal Start */}
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px', }}>
+                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px'}}>
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div id="invoiceContent" class="modal-body">
+                        <div id="invoiceContent" class="modal-body pdf-height">
                             <Invoice
                                 previewInvoiceprop={rows}
                                 ReciverInvoiceProp={ReciverIdRes}
