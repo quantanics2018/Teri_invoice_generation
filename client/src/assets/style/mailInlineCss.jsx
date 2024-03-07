@@ -42,12 +42,16 @@ const th = {
     border: '1px solid black',
     padding: '0.5rem',
     borderWidth: '1px',
-    color: 'white'
+    color: 'white',
+    display:'flex',
+    flexGrow: '1',
 }
 const td = {
     border: '1px solid black',
     padding: '0.5rem',
     borderWidth: '1px',
+    display:'flex',
+    flexGrow: '1',
 }
 const paymentQrSession = {
     border: '1px solid',
