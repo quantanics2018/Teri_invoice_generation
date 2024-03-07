@@ -97,15 +97,11 @@ const billTo = {
 const invoiceNo = {
     width: '55%',
     height: '100%',
-
-
-    // display: 'flex',
-    // flexDirection: 'column',
 }
 const addressDetials ={
     borderBottom: '1px solid',
     width:'100%',
-    display:'flex',
+    display:'flex !important',
     flexGrow: '1',
     // flexDirection:'column',
     justifyContent: 'space-between',
