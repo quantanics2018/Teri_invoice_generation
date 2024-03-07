@@ -21,7 +21,7 @@ const Invoice = ({
     totalSum,
     totalQuantity,
     inputValuesAboveRows,
-    productList,invoiceid
+    productList, invoiceid
 }) => {
     // console.log("previewInvoiceprop : ", previewInvoiceprop[0]);
     // console.log("ReciverInvoiceProp : ", ReciverInvoiceProp);
@@ -103,7 +103,6 @@ const Invoice = ({
         }, 0);
         return total / previewInvoiceprop.length;
     }
-    // console.log(Totalcgst());
     const TotalcgstValue = () => {
         return TaxableValue() * TotalcgstPercent() / 100;
     }
@@ -118,37 +117,16 @@ const Invoice = ({
         return formattedTotal;
     }
     return (
-        // <div className="InvoiceContainer">
-        // <div className="forScroll">
         <div className="A4SheetSize" id="invoice-content" style={pad}>
             <div className="taxInvoiceHead" style={taxInvoiceHead}>
                 <h4>TAX INVOICE {invoiceid}</h4>
             </div>
             <br />
-            {/* <button onClick={downloadPdf}>Download PDF</button> */}
-            {/* <button onClick={() => downloadPDF(previewInvoiceprop)}>Download PDF</button> */}
             <div className="invoiceconten"
-            // style={invoicecontent}
             >
                 <div className="InvoiceHead1"
                     style={InvoiceHead}
-                // style={{background:'red'}}
                 >
-                    {/* <div className="invoiceDetial1">
-                                <pre>
-                                    <h4>INVOICE</h4>
-                                    <div className="organizationName" style={{ fontWeight: 900, fontSize: '20px' }}>
-                                        {SenderInvoiceProp[0].organizationname}
-                                    </div>
-                                    No : {SenderInvoiceProp[0].cstreetname}<br />
-                                    {SenderInvoiceProp[0].cdistrictid} -
-                                    {" " + SenderInvoiceProp[0].cpostalcode}<br />
-                                    Ph : {SenderInvoiceProp[0].phno}<br />
-                                    GSTIN/UIN : {SenderInvoiceProp[0].gstnno}<br />
-                                    State Name : {SenderInvoiceProp[0].cstateid}<br />
-                                    E-Mail : {SenderInvoiceProp[0].email}<br />
-                                </pre>
-                            </div> */}
 
                     <div className="invoiceImg1"
                         style={invoiceImg}
@@ -167,13 +145,11 @@ const Invoice = ({
                                 style={{ ...invoiceDetial, ...padInPx }}
                             >
                                 <pre style={textwarp}>
-                                    {/* {SenderInvoiceProp[0].fname}{SenderInvoiceProp[0].lname}<br /> */}
                                     <div className="organizationName" style={{ fontWeight: 900, fontSize: '20px' }}>
                                         {SenderInvoiceProp[0].organizationname}
                                     </div>
                                     No : {SenderInvoiceProp[0].cstreetname}<br />
                                     {SenderInvoiceProp[0].cdistrictid} -
-                                    {/* {SenderInvoiceProp[0].cstateid}<br /> */}
                                     {" " + SenderInvoiceProp[0].cpostalcode}<br />
                                     Ph : {SenderInvoiceProp[0].phno}<br />
                                     GSTIN/UIN : {SenderInvoiceProp[0].gstnno}<br />
@@ -184,19 +160,12 @@ const Invoice = ({
                             </div>
 
                             <div className="buyerDetail"
-                            // style={invoiceDetial}
                             >
-                                {/* <div className="billToTittle">
-                                            Buyer:(Bill To)
-                                        </div> */}
                                 <div className="billToBody"
-                                    // style={invoiceDetial}
                                     style={padInPx}
                                 >
-                                    {/* {console.log(ReciverInvoiceProp[0])} */}
                                     <pre style={{ ...reciverBill, ...textwarp }}>
                                         Buyer:(Bill To) <br />
-                                        {/* {ReciverInvoiceProp[0].fname}{ReciverInvoiceProp[0].lname}<br /> */}
                                         {ReciverInvoiceProp[0].organizationname}<br />
                                         {ReciverInvoiceProp[0].cstreetname}<br />
                                         {ReciverInvoiceProp[0].cdistrictid} -
@@ -205,7 +174,6 @@ const Invoice = ({
                                         GSTIN/UIN : {ReciverInvoiceProp[0].gstnno}<br />
                                         State Name : {ReciverInvoiceProp[0].cstateid}<br />
                                         E-Mail : {ReciverInvoiceProp[0].email}<br /><br />
-                                        {/* GSTIN 89898989898989 */}
                                     </pre>
                                 </div>
                             </div>
@@ -296,131 +264,8 @@ const Invoice = ({
                                 <div className="tandc"><textarea style={textarea}></textarea></div>
                             </div>
                         </div>
-                        {/* <div className="invoiceNo1" 
-                            // style={invoiceNo}
-                            >
-                                <div className='table1' 
-                                // style={table}
-                                >
-                                    <div 
-                                    // style={tbody}
-                                    >
-                                        <div 
-                                        // style={tBorder}
-                                        >
-                                            <div 
-                                            style={df}
-                                            >
-                                                <div className="tdh" 
-                                                style={tdh}
-                                                >
-                                                    Invoice No.
-                                                </div>
-                                                <div className="tdv" style={tdv}><input type="text" style={rawInput} /></div>
-                                            </div>
-                                            <div style={tBorderd}>
-                                                <div className="tdh" style={tdh}>
-                                                    Dated
-                                                </div>
-                                                <div className="tdv" style={tdvDate}> {" : " + inputValuesAboveRows.Date}</div>
-                                            </div>
-                                        </div>
-                                        <div 
-                                        style={tBorder}
-                                        >
-                                            <div style={df}>
-                                                <div className="tdh" style={tdh}>
-                                                    Delivery Note
-                                                </div>
-                                                <div className="tdv" style={tdv}><input type="text" style={rawInput} /></div>
-                                            </div>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                Mode/Terms of Payment
-                                                </div>
-                                                <div className="tdv" style={tdv}><input type="text" style={rawInput} /></div>
-                                            </div>
-                                        </div>
-                                        <div style={tBorder}>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Reference No. & Date
-                                                </div>
-                                                <div className="tdv" style={tdv}><input type="text" style={rawInput} /></div>
-                                            </div>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Other References
-                                                </div>
-                                                <div className="tdv" style={tdv}><input type="text" style={rawInput} /></div>
-                                            </div>
-                                        </div>
-                                        <div style={tBorder}>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Buyer's Order No.
-                                                </div>
-                                                <div className="tdv" style={tdv}><input type="text" style={rawInput} /></div>
-                                            </div>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Dated
-                                                </div>
-                                                <div className="tdv" style={tdv}>{" : " + inputValuesAboveRows.Date}</div>
-                                            </div>
-                                        </div>
-                                        <div style={tBorder}>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Dispatch Doc No.
-                                                </div>
-                                                <div className="tdv" style={tdv}><input type="text" style={rawInput} /></div>
-                                            </div>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Delivery Note Date
-                                                </div>
-                                                <div className="tdv" style={{ ...tdv, ...nowrap }}>{" : " + inputValuesAboveRows.Date}</div>
-                                            </div>
-                                        </div>
-                                        <div style={tBorder}>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Dispatch through
-                                                </div>
-                                                <div className="tdv" style={tdv}>G-PAY</div>
-                                            </div>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Destination
-                                                </div>
-                                                <div className="tdv" style={tdv}>{" : " + inputValuesAboveRows.Date}</div>
-                                            </div>
-                                        </div>
-                                        <div style={tBorder}>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Bill of Landing/LR-RR No.
-                                                </div>
-                                                <div className="tdv" style={tdv}>VR</div>
-                                            </div>
-                                            <div style={tBorderd}>
-                                                <div className="tdh">
-                                                    Motor Vehicle No.
-                                                </div>
-                                                <div className="tdv" style={tdv}><input type="text" style={rawInput} /></div>
-                                            </div>
-                                        </div>
-                                        <div style={tBorder}>
-                                            <div className="tandc" style={{ ...tandc, ...nowrap }}>Terms of Delivery :</div>
-                                            <textarea type="text" style={textarea} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
                     </div>
 
-                    {/* </div> */}
                     <table border="1">
                         <thead className='invoiceHead1' style={invoiceHead}>
                             <tr>
@@ -432,7 +277,6 @@ const Invoice = ({
                                 <th className='th1' style={th}>DISCOUNT</th>
                                 <th className='th1' style={th}>UNIT RATE</th>
                                 <th className='th1' style={th}>TOTAL</th>
-                                {/* <th className='th'>AMOUNT</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -443,44 +287,27 @@ const Invoice = ({
                                     <td className='td1' style={td}>{item.hsncode || ''}</td>
                                     <td className='td1' style={td}>{parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''}</td>
                                     <td className='td1' style={td}>{item.Quantity || ''}</td>
-                                    {/* <td className='td1' style={td}>discount</td> */}
                                     <td className='td1' style={td}>{item.Discount || ''}</td>
                                     <td className='td1' style={td}>{unitRate(item.hsncode, item.batchno)}</td>
                                     <td className='td1' style={td}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}</td>
-                                    {/* <td className='td1' style={td}>{formatTotal(item.Total) || ''}</td> */}
-                                    {/* <td className='td'>{item.rate ? `Rs. ${item.rate.toFixed(2)}` : ''}</td>
-                                            <td className='td'>{item.amount ? `Rs. ${item.amount.toFixed(2)}` : ''}</td> */}
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    {/* <div className="countInWords">Thirty One</div> */}
                     <div className="paymentDetials1" style={paymentDetials}>
                         <div className="bankDetails" style={{ ...bankDetails, ...padInPx }}>
-                            {/* {console.log(SenderInvoiceProp)} */}
                             <div className="bankName"><b>Bank Details</b></div>
                             <div className="bankName">Bank Name : {SenderInvoiceProp[0].bankname}</div>
                             <div className="bankName">Account Holder Name : {SenderInvoiceProp[0].accholdername}</div>
                             <div className="bankName">BANK ACC NO : {SenderInvoiceProp[0].bankaccno}</div>
                             <div className="bankName">IFSC CODE : {SenderInvoiceProp[0].ifsccode}</div>
                             <div className="bankAccNo">UPI ID : {SenderInvoiceProp[0].upiid}</div>
-                            {/* <div className="Ifsc">PAN Number : {SenderInvoiceProp[0].pan}</div> */}
                         </div>
                         <div className="detialAboutPayment1" style={detialAboutPayment}>
                             <div className="alternating-rows-container1"
-                            // style={{...dfc,...gap}}
                             >
                                 <div className="invoiceRow1 odd1" style={{ ...invoiceRow, ...odd }}>Taxable Value
                                     <div className="totalVal">{TaxableValue()}</div>
-                                    {/* <TextField
-                                            id="standard-number"
-                                            label="Number"
-                                            type="number"
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                            variant="standard"
-                                        /> */}
                                 </div>
                                 <div className="invoiceRow1 even1" style={{ ...invoiceRow, ...even }}>CGST {formatTotal(TotalcgstPercent())} %
                                     <div className="totalVal1">{formatTotal(TotalcgstValue())}</div>
@@ -501,31 +328,21 @@ const Invoice = ({
                         </div>
                     </div>
 
-
-                    {/* <div className="bankDetails">
-                                <div className="bankName">Bank Name : {SenderInvoiceProp[0].bankname}</div>
-                                <div className="bankName">BANK ACC NO : {SenderInvoiceProp[0].bankaccno}</div>
-                                <div className="bankAccNo">UPI ID : {SenderInvoiceProp[0].upiid}</div>
-                                <div className="Ifsc">PAN Number : {SenderInvoiceProp[0].pan}</div>
-                            </div>
-                            <hr /> */}
                     <div className="acc" style={{ ...df, ...sb }}>
                         <div className="dec">
                             We declare that this invoice shows the actual price of the goods <br />
                             described and the all particulars are true and correct.
                         </div>
-                        <div className="sign" style={{...mt,...pad}}>Authorized Sign.</div>
+                        <div className="sign" style={{ ...mt, ...pad }}>Authorized Sign.</div>
                     </div>
                     <div className="bussinessQuotes1"
                         style={bussinessQuotes}
                     >
-                        <div className='bussinessContent1' style={{...bussinessContent,...pad}}>THANK YOU ! WE APPRECIATE YOUR BUSINESS</div>
+                        <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>THANK YOU ! WE APPRECIATE YOUR BUSINESS</div>
                     </div>
                 </div>
             </div>
         </div>
-        // </div>
-        // </div>
     )
 }
 export default Invoice;
