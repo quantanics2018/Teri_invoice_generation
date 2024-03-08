@@ -29,7 +29,7 @@ const invoiceHead = {
 
 }
 const paymentDetials = {
-    display: 'flex',
+    // display: 'flex',
     width: '100%',
     height: 'auto',
     justifyContent:'space-between',
@@ -37,6 +37,8 @@ const paymentDetials = {
 }
 const bankDetails = {
     width: '100%',
+    alignItems:'center',
+    justifyContent:'end'
 }
 const th = {
     border: '1px solid black',
@@ -169,7 +171,7 @@ const textarea ={
     width:'100%',
     outline: 'none',
     border: 'none',
-    height:'20px'
+    height:'66px'
 }
 const bussinessContent={
     fontWeight:'600',

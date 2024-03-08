@@ -512,7 +512,7 @@ const InvoiceGenerator = () => {
     // }
 
     const setTotalValue = (id, Enteredhsncode, Enteredbatchno, enteredQuantity = 0, enteredDiscount = 0) => {
-        console.log("productList", id);
+        // console.log("productList", id);
         // console.log("Enteredhsncode : ", Enteredhsncode);
         // console.log("Enteredbatchno : ", Enteredbatchno);
         // console.log("enteredQuantity : ", enteredQuantity);

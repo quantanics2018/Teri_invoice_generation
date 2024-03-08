@@ -32,6 +32,48 @@ const Invoice = ({
     const userInfo = JSON.parse(userInfoString);
     const senderid = userInfo.userid;
 
+    // style
+    const containerStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+    };
+
+    const rowStyle = {
+        display: 'flex',
+    };
+
+    const cellStyle = {
+        flex: 1,
+        border: '1px solid #000',
+        // padding: '20px',
+        textAlign: 'center',
+    };
+    const totalgstname = {
+        height: '200px',
+        marginTop: '20px'
+    }
+    const numberinWord = {
+        borderLeft: '1px solid',
+        borderRight: '1px solid',
+    }
+    const amountHeading = {
+        justifyContent: 'space-between'
+    }
+    const subGst = {
+        justifyContent: 'space-around',
+        borderTop: '1px solid',
+        alignItems: 'center',
+    }
+    const cgstRate = {
+        flex: '1',
+        borderRight: '1px solid #000',
+    }
+    const cgstAmount = {
+        flex: '1',
+    }
+    const ditailwithfixedwidth = {
+        width: '400px'
+    }
 
     const downloadPDF = () => {
         const { data } = previewInvoiceprop; // Assuming previewInvoiceprop contains the data object
@@ -261,7 +303,7 @@ const Invoice = ({
                             </div>
                         </div>
                         <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                            <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx,...dfc,...gap }}>
+                            <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...dfc, ...gap }}>
                                 <div className="termofdelivery">
                                     Bill of Lading/LR-RR No
                                 </div>
@@ -355,9 +397,9 @@ const Invoice = ({
                     </div> */}
             </div>
             {/* </div> */}
-            <div className="mathan">
+            <div className="bodydiv">
 
-                <div border="1" className="table" style={table1}>
+                {/* <div border="1" className="table" style={table1}>
                     <div className='invoiceHead1' style={{ ...invoiceHead, ...df }}>
                         <div className='th1' style={th}>S.No.</div>
                         <div className='th1' style={th}>DESCRIPTION OF GOODS</div>
@@ -382,17 +424,192 @@ const Invoice = ({
                             </div>
                         ))}
                     </div>
-                </div>
-                <div className="paymentDetials1" style={paymentDetials}>
-                    <div className="bankDetails" style={{ ...bankDetails, ...padInPx }}>
-                        <div className="bankName"><b>Bank Details</b></div>
-                        <div className="bankName">Bank Name : {SenderInvoiceProp[0].bankname}</div>
-                        <div className="bankName">Account Holder Name : {SenderInvoiceProp[0].accholdername}</div>
-                        <div className="bankName">BANK ACC NO : {SenderInvoiceProp[0].bankaccno}</div>
-                        <div className="bankName">IFSC CODE : {SenderInvoiceProp[0].ifsccode}</div>
-                        <div className="bankAccNo">UPI ID : {SenderInvoiceProp[0].upiid}</div>
+                </div> */}
+                <div style={containerStyle}>
+                    {/* Table heading row */}
+                    <div style={rowStyle}>
+                        <div style={cellStyle}>S.No.</div>
+                        <div style={cellStyle}>Description of Goods</div>
+                        <div style={cellStyle}>HSN NO</div>
+                        <div style={cellStyle}>Quantity</div>
+                        <div style={cellStyle}>Rate</div>
+                        <div style={cellStyle}>per</div>
+                        <div style={cellStyle}>Disc. %</div>
+                        <div style={cellStyle}>Amount</div>
                     </div>
-                    <div className="detialAboutPayment1" style={detialAboutPayment}>
+                    {/* Table data  */}
+                    {[...previewInvoiceprop, {}, {}].map((item, index) =>
+                        <div style={rowStyle}>
+                            <div style={cellStyle}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
+                            <div style={cellStyle}>
+                                {item.productName || ''}
+                                {index === previewInvoiceprop.length &&
+                                    <div style={totalgstname}>
+                                        <div className="invoiceRow1 even1">
+                                            CGST
+                                            {/* {formatTotal(TotalcgstPercent())} % */}
+                                            {/* <div className="totalVal1">{formatTotal(TotalcgstValue())}</div> */}
+                                        </div>
+                                        <div className="invoiceRow1 even1">
+                                            SGST
+                                            {/* {formatTotal(TotalcgstPercent())} % */}
+                                            {/* <div className="totalVal1">{formatTotal(TotalcgstValue())}</div> */}
+                                        </div>
+                                        <div className="invoiceRow1 even1">
+                                            Round Off
+                                            {/* {formatTotal(TotalcgstPercent())} % */}
+                                            {/* <div className="totalVal1">{formatTotal(TotalcgstValue())}</div> */}
+                                        </div>
+                                    </div>
+                                }
+                                {index === previewInvoiceprop.length + 1 &&
+                                    <div>
+                                        <b>Total</b>
+                                    </div>
+                                }
+                            </div>
+                            <div style={cellStyle}>{item.hsncode || ''}</div>
+                            {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
+                            <div style={cellStyle}>{item.Quantity || ''}</div>
+                            <div style={cellStyle}>{(index <= previewInvoiceprop.length - 1) && 'Nos.'}</div>
+                            <div style={cellStyle}>{unitRate(item.hsncode, item.batchno)}</div>
+                            <div style={cellStyle}>{item.Discount || ''}</div>
+                            <div style={cellStyle}>
+                                {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
+                                {index === previewInvoiceprop.length &&
+                                    <div style={totalgstname}>
+                                        <div className="invoiceRow1 even1">
+                                            {/* CGST */}
+                                            {/* {formatTotal(TotalcgstPercent())} % */}
+                                            <div className="totalVal1">{formatTotal(TotalcgstValue())}</div>
+                                        </div>
+                                        <div className="invoiceRow1 even1">
+                                            {/* SGST */}
+                                            {/* {formatTotal(TotalcgstPercent())} % */}
+                                            <div className="totalVal1">{formatTotal(TotalsgstValue())}</div>
+                                        </div>
+                                        <div className="invoiceRow1 even1">
+                                            {/* Round Off */}
+                                            {/* {formatTotal(TotalcgstPercent())} % */}
+                                            <div className="totalVal1">{0}</div>
+                                        </div>
+                                    </div>
+                                }
+                                {index === previewInvoiceprop.length + 1 &&
+                                    <div>
+                                        <b>{formatTotal(grandTotal())}</b>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="numberinWord" style={numberinWord}>
+                    <div className="amountHeading" style={{ ...amountHeading, ...df }}>
+                        <div className="changeablecontent">Amount Changeable (in words)</div>
+                        <div className="oe"><b>E & O.E</b></div>
+                    </div>
+                    <div className="amountHeading"><b>Thirty seven</b></div>
+                </div>
+                <div style={containerStyle}>
+                    {/* Table heading row */}
+                    <div style={rowStyle}>
+                        <div style={cellStyle}>HSN/SAC</div>
+                        <div style={cellStyle}>Taxable Value</div>
+                        <div style={cellStyle}>
+                            <div className="cgst">CGST</div>
+                            <div className="subGst" style={{ ...subGst, ...df }}>
+                                <div className="cgstRate" style={cgstRate}>Rate</div>
+                                <div className="cgstAmount" style={cgstAmount}>Amount</div>
+                            </div>
+                        </div>
+                        <div style={cellStyle}>
+                            <div className="cgst">SGST/UTGST</div>
+                            <div className="subGst" style={{ ...subGst, ...df }}>
+                                <div className="cgstRate" style={cgstRate}>Rate</div>
+                                <div className="cgstAmount" style={cgstAmount}>Amount</div>
+                            </div>
+                        </div>
+                        <div style={cellStyle}>Total Tax Amount</div>
+                    </div>
+                    {[...previewInvoiceprop, {}].map((item, index) =>
+                        <div style={rowStyle}>
+                            <div style={cellStyle}>
+                                {item.productName || ''}
+                                {index === previewInvoiceprop.length &&
+                                    <div>
+                                        <b>Total</b>
+                                    </div>
+                                }
+                            </div>
+                            <div style={cellStyle}>
+                                {/* {item.hsncode || ''} */}
+                                {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
+                                {index === previewInvoiceprop.length &&
+                                    <div>
+                                        <b>{TaxableValue()}</b>
+                                    </div>
+                                }
+                            </div>
+                            {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
+                            <div style={cellStyle}>
+                                {/* {item.Quantity || ''} */}
+                                <div className="subGst" style={{ ...subGst, ...df }}>
+                                    <div className="cgstRate" style={cgstRate}>
+                                        {parseInt(getcgst(item.hsncode, item.batchno)) ? parseInt(getcgst(item.hsncode, item.batchno)) + '%' : ''}
+                                    </div>
+                                    <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100) : ''}</div>
+                                </div>
+                                {index === previewInvoiceprop.length &&
+                                    <div>
+                                        <b>{formatTotal(TotalcgstValue())}</b>
+                                    </div>
+                                }
+                            </div>
+                            <div style={cellStyle}>
+                                {/* {unitRate(item.hsncode, item.batchno)} */}
+                                <div className="subGst" style={{ ...subGst, ...df }}>
+                                    <div className="cgstRate" style={cgstRate}>
+                                        {parseInt(getsgst(item.hsncode, item.batchno)) ? parseInt(getsgst(item.hsncode, item.batchno)) + '%' : ''}
+                                    </div>
+                                    <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100) : ''}</div>
+                                    {index === previewInvoiceprop.length &&
+                                        <div>
+                                            <b>{formatTotal(TotalsgstValue())}</b>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div style={cellStyle}>
+                                {/* {item.Discount || ''} */}
+                                {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal((((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100)
+                                    + (((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100))
+                                    : ''}
+                                {index === previewInvoiceprop.length &&
+                                    <div>
+                                        <b>{(TotalcgstValue()) + (TotalsgstValue())}</b>
+                                    </div>}
+
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+
+
+                <div className="paymentDetials1" style={paymentDetials}>
+                    <div className="bankDetails" style={{ ...df, ...bankDetails, ...padInPx }}>
+                        <div className="ditailwithfixedwidth" style={ditailwithfixedwidth}>
+                            <div className="bankName"><b>Bank Details</b></div>
+                            <div className="bankName">Bank Name : {SenderInvoiceProp[0].bankname}</div>
+                            <div className="bankName">Account Holder Name : {SenderInvoiceProp[0].accholdername}</div>
+                            <div className="bankName">BANK ACC NO : {SenderInvoiceProp[0].bankaccno}</div>
+                            <div className="bankName">IFSC CODE : {SenderInvoiceProp[0].ifsccode}</div>
+                            <div className="bankAccNo">UPI ID : {SenderInvoiceProp[0].upiid}</div>
+                        </div>
+
+                    </div>
+                    {/* <div className="detialAboutPayment1" style={detialAboutPayment}>
                         <div className="alternating-rows-container1"
                         >
                             <div className="invoiceRow1 odd1" style={{ ...invoiceRow, ...odd }}>Taxable Value
@@ -414,20 +631,22 @@ const Invoice = ({
                                 <div className="totalVal1">{formatTotal(grandTotal())}</div>
                             </div>
                         </div>
+                    </div> */}
+                    Company's PAN : {SenderInvoiceProp[0].pan}
+                    <div className="acc" style={{ ...df, ...sb }}>
+                        <div className="dec">
+                            <b>Declaration :</b> <br />
+                            We declare that this invoice shows the actual price of the goods <br />
+                            described and the all particulars are true and correct.
+                        </div>
+                        <div className="sign" style={{ ...mt, ...pad }}>Authorized Sign.</div>
                     </div>
                 </div>
 
-                <div className="acc" style={{ ...df, ...sb }}>
-                    <div className="dec">
-                        We declare that this invoice shows the actual price of the goods <br />
-                        described and the all particulars are true and correct.
-                    </div>
-                    <div className="sign" style={{ ...mt, ...pad }}>Authorized Sign.</div>
-                </div>
                 <div className="bussinessQuotes1"
                     style={bussinessQuotes}
                 >
-                    <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>THANK YOU ! WE APPRECIATE YOUR BUSINESS</div>
+                    <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>This is a Computer Genereated Invoice</div>
                 </div>
             </div>
         </div>
