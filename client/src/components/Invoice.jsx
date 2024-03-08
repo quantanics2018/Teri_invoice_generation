@@ -10,7 +10,7 @@ import { API_URL } from '../config';
 import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd, even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo, table, tbody, tBorder, rawInput, tdv, tdvDate, textarea, billDetial, bankDetails, tdh, tBorderd, tandc, nowrap, taxInvoiceHead, invoiceDetial, df, gap, dfc, addressDetials, invoicedetail, rowInvoiceDetail, inputbox, row1Invoice, width50, reciverBill, pad, textwarp, mt, sb, padInPx, bussinessContent } from '../assets/style/mailInlineCss';
+import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd, even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo, table, tbody, tBorder, rawInput, tdv, tdvDate, textarea, billDetial, bankDetails, tdh, tBorderd, tandc, nowrap, taxInvoiceHead, invoiceDetial, df, gap, dfc, addressDetials, invoicedetail, rowInvoiceDetail, inputbox, row1Invoice, width50, reciverBill, pad, textwarp, mt, sb, padInPx, bussinessContent, table1, row } from '../assets/style/mailInlineCss';
 import { TextField } from '@mui/material';
 // import htmlPdf from 'html-pdf';
 
@@ -218,11 +218,18 @@ const Invoice = ({
                             </div>
                         </div>
                         <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                            <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
-                                Buyer's Order No.<b>VERBAL</b>
+                            <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="termofdelivery">
+                                    Buyer's Order No.
+                                </div>
+                                <input type='text' style={rawInput} />
+
                             </div>
-                            <div className="row2Invoice" style={{ ...width50, ...padInPx }}>
-                                Dated : {inputValuesAboveRows.Date}
+                            <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="termofdelivery">
+                                    Dated
+                                </div>
+                                <input type='text' style={rawInput} />
                             </div>
                         </div>
                         <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
@@ -240,8 +247,11 @@ const Invoice = ({
                             </div>
                         </div>
                         <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                            <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
-                                Dispatch Through <b>G-PAY</b>
+                            <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="termofdelivery">
+                                    Dispatch Through
+                                </div>
+                                <input type='text' style={rawInput} />
                             </div>
                             <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap }}>
                                 <div className="termofdelivery">
@@ -251,10 +261,13 @@ const Invoice = ({
                             </div>
                         </div>
                         <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                            <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
-                                Bill of Lading/LR-RR No. <b>VR</b>
+                            <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx,...dfc,...gap }}>
+                                <div className="termofdelivery">
+                                    Bill of Lading/LR-RR No
+                                </div>
+                                <input type='text' style={rawInput} />
                             </div>
-                            <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap }}>
+                            <div className="row2Invoice" style={{ ...width50, ...padInPx, ...dfc, ...gap }}>
                                 <div className="termofdelivery">
                                     Motor Vehicle No.
                                 </div>
@@ -342,32 +355,34 @@ const Invoice = ({
                     </div> */}
             </div>
             {/* </div> */}
-            <div className="mathan"><div border="1">
-                <div className='invoiceHead1' style={{ ...invoiceHead, ...df }}>
-                    <div className='th1' style={th}>S.No.</div>
-                    <div className='th1' style={th}>DESCRIPTION OF GOODS</div>
-                    <div className='th1' style={th}>HSN NO</div>
-                    <div className='th1' style={th}>GST</div>
-                    <div className='th1' style={th}>QTY.</div>
-                    <div className='th1' style={th}>DISCOUNT</div>
-                    <div className='th1' style={th}>UNIT RATE</div>
-                    <div className='th1' style={th}>TOTAL</div>
+            <div className="mathan">
+
+                <div border="1" className="table" style={table1}>
+                    <div className='invoiceHead1' style={{ ...invoiceHead, ...df }}>
+                        <div className='th1' style={th}>S.No.</div>
+                        <div className='th1' style={th}>DESCRIPTION OF GOODS</div>
+                        <div className='th1' style={th}>HSN NO</div>
+                        <div className='th1' style={th}>GST</div>
+                        <div className='th1' style={th}>QTY.</div>
+                        <div className='th1' style={th}>DISCOUNT</div>
+                        <div className='th1' style={th}>UNIT RATE</div>
+                        <div className='th1' style={th}>TOTAL</div>
+                    </div>
+                    <div style={dfc}>
+                        {previewInvoiceprop.map((item, index) => (
+                            <div key={index} style={{ ...df, ...row }}>
+                                <div className='td1' style={td}>{index + 1}</div>
+                                <div className='td1' style={td}>{item.productName || ''}</div>
+                                <div className='td1' style={td}>{item.hsncode || ''}</div>
+                                <div className='td1' style={td}>{parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''}</div>
+                                <div className='td1' style={td}>{item.Quantity || ''}</div>
+                                <div className='td1' style={td}>{item.Discount || ''}</div>
+                                <div className='td1' style={td}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}</div>
+                                <div className='td1' style={td}>{unitRate(item.hsncode, item.batchno)}</div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <div style={dfc}>
-                    {previewInvoiceprop.map((item, index) => (
-                        <div key={index} style={df}>
-                            <div className='td1' style={td}>{index + 1}</div>
-                            <div className='td1' style={td}>{item.productName || ''}</div>
-                            <div className='td1' style={td}>{item.hsncode || ''}</div>
-                            <div className='td1' style={td}>{parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''}</div>
-                            <div className='td1' style={td}>{item.Quantity || ''}</div>
-                            <div className='td1' style={td}>{item.Discount || ''}</div>
-                            <div className='td1' style={td}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}</div>
-                            <div className='td1' style={td}>{unitRate(item.hsncode, item.batchno)}</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
                 <div className="paymentDetials1" style={paymentDetials}>
                     <div className="bankDetails" style={{ ...bankDetails, ...padInPx }}>
                         <div className="bankName"><b>Bank Details</b></div>

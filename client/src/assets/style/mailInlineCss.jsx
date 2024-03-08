@@ -137,9 +137,9 @@ const tBorderd = {
 }
 const rawInput = {
     outline: 'none',
-    border: 'none',
+    // border: 'none',
     // width: '-webkit-fill-available',
-    width: '100px',
+    width: '110px',
     // height: '-webkit-fill-available',
 
     // borderBottom: '1px solid #ccc',
@@ -245,4 +245,19 @@ const mt = {
 const sb ={
     justifyContent:'space-between'
 }
-export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput,tdv,tdvDate,textarea,billDetial,bankDetails,tdh,tBorderd,tandc,nowrap,taxInvoiceHead,invoiceDetial,df,gap,dfc,addressDetials,invoicedetail,rowInvoiceDetail,inputbox,row1Invoice,width50,reciverBill,pad,textwarp,padInPx,bussinessContent,mt,sb};
+
+/* table start */
+const table1 = {
+    display: 'table',
+    width: '100%',
+    borderCollapse: 'collapse',
+}
+const row = {
+    display: 'table-column',
+}
+// .cell {
+//     display: table-cell;
+//     border: 1px solid black;
+//     padding: 10px;
+// }
+export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput,tdv,tdvDate,textarea,billDetial,bankDetails,tdh,tBorderd,tandc,nowrap,taxInvoiceHead,invoiceDetial,df,gap,dfc,addressDetials,invoicedetail,rowInvoiceDetail,inputbox,row1Invoice,width50,reciverBill,pad,textwarp,padInPx,bussinessContent,mt,sb,table1,row};

@@ -622,6 +622,9 @@ const InvoiceGenerator = () => {
                         <div class="modal-footer gap-4">
                             <CancelBtnComp dataBsDismiss="modal" />
                             <Button variant="outlined" style={SaveBtn} onClick={generatePDF}>PDF</Button>
+                            <Button data-bs-dismiss="modal"  variant="outlined" color="primary" onClick={handleSubmit} >
+                                Generate Invoice
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -877,9 +880,9 @@ const InvoiceGenerator = () => {
                             <CancelBtnComp />
                             {/* <input type='text' disabled={performInvoiceToggele} /> */}
                             <SplitButton performInvoiceToggele={performInvoiceToggele}/>
-                            <Button variant="outlined" color="primary" onClick={handleSubmit}>
+                            {/* <Button variant="outlined" color="primary" onClick={handleSubmit}>
                                 Generate Invoice
-                            </Button>
+                            </Button> */}
                         </Grid>
                         <Grid item>
                             <div>

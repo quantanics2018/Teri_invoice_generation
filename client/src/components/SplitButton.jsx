@@ -7,7 +7,7 @@ import MenuItem from '@mui/joy/MenuItem';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 // import fetchImage  from './QrCode';
 
-const options = ['Print and Generate Invoice', 'Perform Invoice'];
+const options = ['Print and Generate Invoice', 'View Invoice'];
 
 export default function SplitButton({performInvoiceToggele}) {
   const [open, setOpen] = React.useState(false);
@@ -44,8 +44,8 @@ export default function SplitButton({performInvoiceToggele}) {
         color="success"
         // disabled={performInvoiceToggele}
         onClick={handleClick} style={{ textTransform: 'uppercase' }}
-        data-bs-toggle={options[selectedIndex] === 'Perform Invoice' ? 'modal' : undefined}
-        data-bs-target={options[selectedIndex] === 'Perform Invoice' ? '#staticBackdrop' : undefined}
+        data-bs-toggle={options[selectedIndex] === 'View Invoice' ? 'modal' : undefined}
+        data-bs-target={options[selectedIndex] === 'View Invoice' ? '#staticBackdrop' : undefined}
       >{options[selectedIndex]}</Button>
       {/* <IconButton
           aria-controls={open ? 'split-button-menu' : undefined}
