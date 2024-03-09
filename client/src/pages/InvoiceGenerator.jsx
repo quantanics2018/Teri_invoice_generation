@@ -174,11 +174,12 @@ const InvoiceGenerator = () => {
                         inputValuesAboveRows={inputValues}
                         productList={productList}
                         invoiceid={invoiceid}
+                        generateInvoice={true}
                     />
                 </div>
             );
             // console.log("hai invoiceid log :",invoiceid)
-            console.log("inputValues.UserId : ",inputValues.Buyer);
+            console.log("inputValues.UserId : ", inputValues.Buyer);
             const response = await axios.post(`${API_URL}send-email/sendInvoice`
                 , { htmlString: htmlString, Buyer: inputValues.Buyer }
                 , {
@@ -603,7 +604,7 @@ const InvoiceGenerator = () => {
             {/* Preview Modal Start */}
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px'}}>
+                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -622,14 +623,45 @@ const InvoiceGenerator = () => {
                         <div class="modal-footer gap-4">
                             <CancelBtnComp dataBsDismiss="modal" />
                             <Button variant="outlined" style={SaveBtn} onClick={generatePDF}>PDF</Button>
-                            <Button data-bs-dismiss="modal"  variant="outlined" color="primary" onClick={handleSubmit} >
+                            {/* <Button data-bs-dismiss="modal" variant="outlined" color="primary" onClick={handleSubmit} >
+                                Generate Invoice
+                            </Button> */}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Preview Modal End */}
+            {/* Generate Modal Start */}
+            <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
+                        <div class="modal-header" style={{ padding: 0 }}>
+                            <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="invoiceContent" class="modal-body pdf-height">
+                            <Invoice
+                                previewInvoiceprop={rows}
+                                ReciverInvoiceProp={ReciverIdRes}
+                                SenderInvoiceProp={senderIdRes}
+                                totalSum={totalSum}
+                                totalQuantity={totalQuantity}
+                                inputValuesAboveRows={inputValues}
+                                productList={productList}
+                                generateInvoice={true}
+                            />
+                        </div>
+                        <div class="modal-footer gap-4">
+                            <CancelBtnComp dataBsDismiss="modal" />
+                            {/* <Button variant="outlined" style={SaveBtn} onClick={generatePDF}>PDF</Button> */}
+                            <Button data-bs-dismiss="modal" variant="outlined" color="primary" onClick={handleSubmit} >
                                 Generate Invoice
                             </Button>
                         </div>
                     </div>
                 </div>
             </div>
-            {/* Preview Modal End */}
+            {/* Generate Modal End */}
             <div className='innercontent'>
                 <StyledPaper elevation={3}>
                     {/* <Typography variant="h5" align="center" gutterBottom>
@@ -879,7 +911,7 @@ const InvoiceGenerator = () => {
                         <Grid item className='gap-4 d-flex'>
                             <CancelBtnComp />
                             {/* <input type='text' disabled={performInvoiceToggele} /> */}
-                            <SplitButton performInvoiceToggele={performInvoiceToggele}/>
+                            <SplitButton performInvoiceToggele={performInvoiceToggele} />
                             {/* <Button variant="outlined" color="primary" onClick={handleSubmit}>
                                 Generate Invoice
                             </Button> */}

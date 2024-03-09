@@ -22,7 +22,9 @@ const Invoice = ({
     totalSum,
     totalQuantity,
     inputValuesAboveRows,
-    productList, invoiceid
+    productList, invoiceid,
+    selectedIndex,
+    generateInvoice
 }) => {
     // console.log("previewInvoiceprop : ", previewInvoiceprop[0]);
     // console.log("ReciverInvoiceProp : ", ReciverInvoiceProp);
@@ -170,7 +172,7 @@ const Invoice = ({
     console.log(Math.round(formatTotal(grandTotal())));
     const number = !isNaN(Math.round(formatTotal(grandTotal()))) ? Math.round(formatTotal(grandTotal())) : 0;
     const integerWords = numberToWords.toWords(number);
-    
+
     console.log(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))));
     const number1 = !isNaN(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue())))) ? Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))) : 0;
     const integerWords1 = numberToWords.toWords(number1);
@@ -184,7 +186,12 @@ const Invoice = ({
     return (
         <div className="A4SheetSize" id="invoice-content" style={pad}>
             <div className="taxInvoiceHead" style={taxInvoiceHead}>
-                <h4>TAX INVOICE {invoiceid}</h4>
+                {generateInvoice ?
+                    <h4>GENERATE INVOICE {invoiceid}</h4>
+                    : <h4>
+                        PERFORM INVOICE
+                    </h4>
+                }
             </div>
             <br />
             {/* <div className="invoiceconten"  style={dfc}> */}
@@ -664,14 +671,14 @@ const Invoice = ({
                             </div>
                         </div>
                     </div> */}
-                    Company's PAN : {SenderInvoiceProp[0].pan}
+                    Company's PAN : <b>{SenderInvoiceProp[0].pan}</b>
                     <div className="acc" style={{ ...df, ...sb }}>
                         <div className="dec">
                             <b>Declaration :</b> <br />
                             We declare that this invoice shows the actual price of the goods <br />
                             described and the all particulars are true and correct.
                         </div>
-                        <div className="sign" style={{ ...mt, ...pad, ...sign,...dfc }}>
+                        <div className="sign" style={{ ...mt, ...pad, ...sign, ...dfc }}>
                             <div className="pvtName">VAIBAVSRI INDIA PRIVATE LIMITITED</div>
                             <div className="authSign">Authorized Sign.</div>
                         </div>

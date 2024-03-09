@@ -7,9 +7,9 @@ import MenuItem from '@mui/joy/MenuItem';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 // import fetchImage  from './QrCode';
 
-const options = ['Print and Generate Invoice', 'View Invoice'];
+const options = ['Generate Invoice', 'Perform Invoice'];
 
-export default function SplitButton({performInvoiceToggele}) {
+export default function SplitButton({ performInvoiceToggele }) {
   const [open, setOpen] = React.useState(false);
   const actionRef = React.useRef(null);
   const anchorRef = React.useRef(null);
@@ -21,7 +21,7 @@ export default function SplitButton({performInvoiceToggele}) {
       // alert("modal");
 
     }
-    else if (options[selectedIndex] === 'Print and Generate Invoice') {
+    else if (options[selectedIndex] === 'Generate Invoice') {
       alert("Download pdf");
     }
   };
@@ -33,21 +33,22 @@ export default function SplitButton({performInvoiceToggele}) {
 
   return (
     <React.Fragment>
-      {/* <ButtonGroup
+      <ButtonGroup
         ref={anchorRef}
         variant="outlined"
         color="success"
         aria-label="split button"
-      > */}
+      >
       <Button
         variant="outlined"
         color="success"
         // disabled={performInvoiceToggele}
-        onClick={handleClick} style={{ textTransform: 'uppercase' }}
-        data-bs-toggle={options[selectedIndex] === 'View Invoice' ? 'modal' : undefined}
-        data-bs-target={options[selectedIndex] === 'View Invoice' ? '#staticBackdrop' : undefined}
+        // onClick={handleClick} 
+        style={{ textTransform: 'uppercase' }}
+        data-bs-toggle={options[selectedIndex] === 'Perform Invoice' ? 'modal' : 'modal'}
+        data-bs-target={options[selectedIndex] === 'Perform Invoice' ? '#staticBackdrop' : '#staticBackdrop1'}
       >{options[selectedIndex]}</Button>
-      {/* <IconButton
+      <IconButton
           aria-controls={open ? 'split-button-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-label="select merge strategy"
@@ -63,8 +64,8 @@ export default function SplitButton({performInvoiceToggele}) {
           }}
         >
           <ArrowDropDownIcon />
-        </IconButton> */}
-      {/* </ButtonGroup> */}
+        </IconButton>
+      </ButtonGroup>
       <Menu open={open} onClose={() => setOpen(false)} anchorEl={anchorRef.current}>
         {options.map((option, index) => (
           <MenuItem
@@ -77,6 +78,6 @@ export default function SplitButton({performInvoiceToggele}) {
           </MenuItem>
         ))}
       </Menu>
-    </React.Fragment>
+    </React.Fragment >
   );
 }
