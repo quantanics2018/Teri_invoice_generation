@@ -678,7 +678,7 @@ const Invoice = ({
                             We declare that this invoice shows the actual price of the goods <br />
                             described and the all particulars are true and correct.
                         </div>
-                        <div className="sign" style={{ ...mt, ...pad, ...sign, ...dfc }}>
+                        <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
                             <div className="pvtName">VAIBAVSRI INDIA PRIVATE LIMITITED</div>
                             <div className="authSign">Authorized Sign.</div>
                         </div>
