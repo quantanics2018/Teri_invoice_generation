@@ -34,6 +34,7 @@ const paymentDetials = {
     height: 'auto',
     justifyContent:'space-between',
     border:'1px solid',
+    borderTop: 'none',
 }
 const bankDetails = {
     width: '100%',

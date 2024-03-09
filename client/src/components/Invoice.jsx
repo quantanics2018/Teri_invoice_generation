@@ -74,6 +74,14 @@ const Invoice = ({
     const ditailwithfixedwidth = {
         width: '400px'
     }
+    const sign = {
+        border: '1px solid',
+        height: '100px',
+        width: '400px',
+        display: 'flex',
+        alignItems: 'end',
+        justifyContent: 'space-between'
+    }
 
     const downloadPDF = () => {
         const { data } = previewInvoiceprop; // Assuming previewInvoiceprop contains the data object
@@ -163,7 +171,7 @@ const Invoice = ({
             <div className="taxInvoiceHead" style={taxInvoiceHead}>
                 <h4>TAX INVOICE {invoiceid}</h4>
             </div>
-            {/* <br /> */}
+            <br />
             {/* <div className="invoiceconten"  style={dfc}> */}
             <div className="InvoiceHead1"
                 style={InvoiceHead}
@@ -595,6 +603,15 @@ const Invoice = ({
                     )}
                 </div>
 
+                <div className="numberinWord"
+                    style={numberinWord}
+                >
+                    <div className="amountHeading" style={df}>
+                        <div className="changeablecontent">Taxable Amount (in words) : </div>
+                        <div className="amountHeading"><b>Thirty seven</b></div>
+                    </div>
+                </div>
+
 
 
                 <div className="paymentDetials1" style={paymentDetials}>
@@ -639,7 +656,10 @@ const Invoice = ({
                             We declare that this invoice shows the actual price of the goods <br />
                             described and the all particulars are true and correct.
                         </div>
-                        <div className="sign" style={{ ...mt, ...pad }}>Authorized Sign.</div>
+                        <div className="sign" style={{ ...mt, ...pad, ...sign,...dfc }}>
+                            <div className="pvtName">VAIBAVSRI INDIA PRIVATE LIMITITED</div>
+                            <div className="authSign">Authorized Sign.</div>
+                        </div>
                     </div>
                 </div>
 
