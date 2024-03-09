@@ -26,7 +26,7 @@ import QrCode from '../components/QrCode';
 import { invoicecontent } from '../assets/style/mailInlineCss';
 
 // import Autocomplete from '@material-ui/lab/Autocomplete';
-
+let gag = 55;
 
 const StyledPaper = styled(Paper)({
     padding: '20px',
@@ -36,7 +36,6 @@ const StyledPaper = styled(Paper)({
 const thead = {
     textAlign: "center",
     color: "white"
-
 }
 const pName = {
     minWidth: '250px'
@@ -169,7 +168,7 @@ const InvoiceGenerator = () => {
                         previewInvoiceprop={rows}
                         ReciverInvoiceProp={ReciverIdRes}
                         SenderInvoiceProp={senderIdRes}
-                        totalSum={totalSum}
+                        // totalSum={totalSum}
                         totalQuantity={totalQuantity}
                         inputValuesAboveRows={inputValues}
                         productList={productList}
@@ -211,6 +210,8 @@ const InvoiceGenerator = () => {
     useEffect(() => {
         checkforPerfomInvoice()
     }, [performInvoiceToggele])
+
+
 
     const handleSubmit = async () => {
         // console.log(rows);
@@ -634,6 +635,7 @@ const InvoiceGenerator = () => {
                                 totalQuantity={totalQuantity}
                                 inputValuesAboveRows={inputValues}
                                 productList={productList}
+                                generateInvoice={false}
                             />
                         </div>
                         <div class="modal-footer gap-4">
@@ -952,3 +954,4 @@ const InvoiceGenerator = () => {
 };
 
 export default InvoiceGenerator;
+export {gag}

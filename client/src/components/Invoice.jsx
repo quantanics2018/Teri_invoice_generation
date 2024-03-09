@@ -13,19 +13,22 @@ import html2canvas from 'html2canvas';
 import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd, even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo, table, tbody, tBorder, rawInput, tdv, tdvDate, textarea, billDetial, bankDetails, tdh, tBorderd, tandc, nowrap, taxInvoiceHead, invoiceDetial, df, gap, dfc, addressDetials, invoicedetail, rowInvoiceDetail, inputbox, row1Invoice, width50, reciverBill, pad, textwarp, mt, sb, padInPx, bussinessContent, table1, row } from '../assets/style/mailInlineCss';
 import { TextField } from '@mui/material';
 import numberToWords from 'number-to-words';
+import { gag } from '../pages/InvoiceGenerator';
 // import htmlPdf from 'html-pdf';
+
 
 const Invoice = ({
     previewInvoiceprop,
     ReciverInvoiceProp,
     SenderInvoiceProp,
-    totalSum,
+    // totalSum,
     totalQuantity,
     inputValuesAboveRows,
     productList, invoiceid,
     selectedIndex,
     generateInvoice
 }) => {
+
     // console.log("previewInvoiceprop : ", previewInvoiceprop[0]);
     // console.log("ReciverInvoiceProp : ", ReciverInvoiceProp);
     // console.log("SenderInvoiceProp : ",SenderInvoiceProp);
@@ -189,7 +192,8 @@ const Invoice = ({
                 {generateInvoice ?
                     <h4>GENERATE INVOICE {invoiceid}</h4>
                     : <h4>
-                        PERFORM INVOICE
+                        PERFORM INVOICE 
+                        {/* {gag} */}
                     </h4>
                 }
             </div>
