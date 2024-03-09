@@ -151,7 +151,8 @@ async function getProductList(req, res) {
             belongsto = senderID
         }
 
-        const getProductListResult = await userdbInstance.userdb.query(`SELECT productid,batchno,productname,priceperitem, cgst, sgst
+        // productid,batchno,productname,priceperitem, cgst, sgst
+        const getProductListResult = await userdbInstance.userdb.query(`SELECT * 
         FROM public.products where belongsto=$1 and status =$2 order by rno DESC;`, [belongsto,'1']);
         // console.log(getProductListResult.rows);
         res.json({ message: "Successfully Data Fetched", data: getProductListResult.rows });

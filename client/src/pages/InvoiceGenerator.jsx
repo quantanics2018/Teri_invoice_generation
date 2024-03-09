@@ -518,6 +518,7 @@ const InvoiceGenerator = () => {
         // console.log("Enteredbatchno : ", Enteredbatchno);
         // console.log("enteredQuantity : ", enteredQuantity);
         // console.log("enteredDiscount : ", enteredDiscount);
+
         console.log("hsncode : ", rows[id - 1].hsncode, typeof rows[id - 1].hsncode);
         console.log("batchno : ", rows[id - 1].batchno, typeof String(rows[id - 1].batchno));
 
@@ -534,27 +535,42 @@ const InvoiceGenerator = () => {
 
         console.log("productPrice : ", productPrice);
 
-        const getcgst = productList
+        const availableQuantity = productList
             .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
-            .map((product) => product.cgst)[0] || '';
+            .map((product) => product.quantity)[0] || '';
+        console.log("availableQuantity :", availableQuantity);
+        if (availableQuantity < rows[id - 1].Quantity) {
+            const updatedRows = [...rows];
+            // Update the Quantity of the specific row
+            updatedRows[id - 1] = { ...updatedRows[id - 1], Quantity: '' };
+            // Update the state with the new array
+            setRows(updatedRows);
+            alert("Insufficient Quantity");
+        } else {
+            // console.log("fine");
+            const getcgst = productList
+                .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
+                .map((product) => product.cgst)[0] || '';
 
-        console.log("getcgst : ", getcgst);
+            console.log("getcgst : ", getcgst);
 
-        const getsgst = productList
-            .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
-            .map((product) => product.sgst)[0] || '';
+            const getsgst = productList
+                .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
+                .map((product) => product.sgst)[0] || '';
 
-        console.log("getsgst : ", getsgst);
+            console.log("getsgst : ", getsgst);
 
 
-        const updatedRows = rows.map((row) =>
-            row.id === id ? {
-                ...row, Total: ((rows[id - 1].Quantity * productPrice) - ((rows[id - 1].Quantity * productPrice) * rows[id - 1].Discount / 100)) + (productPrice * (getcgst / 100)) + (productPrice * (getsgst / 100))
-            } : row
-        );
+            const updatedRows = rows.map((row) =>
+                row.id === id ? {
+                    ...row, Total: ((rows[id - 1].Quantity * productPrice) - ((rows[id - 1].Quantity * productPrice) * rows[id - 1].Discount / 100)) + (productPrice * (getcgst / 100)) + (productPrice * (getsgst / 100))
+                } : row
+            );
 
-        console.log("updatedRows : ", rows);
-        setRows(updatedRows);
+            console.log("updatedRows : ", rows);
+            setRows(updatedRows);
+        }
+
     }
 
 
