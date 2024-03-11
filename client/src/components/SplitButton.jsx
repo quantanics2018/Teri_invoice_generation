@@ -7,7 +7,7 @@ import MenuItem from '@mui/joy/MenuItem';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 // import fetchImage  from './QrCode';
 
-const options = ['Generate Invoice', 'Perform Invoice'];
+const options = ['Tax Invoice', 'Perform Invoice'];
 
 export default function SplitButton({ performInvoiceToggele }) {
   const [open, setOpen] = React.useState(false);
@@ -17,11 +17,11 @@ export default function SplitButton({ performInvoiceToggele }) {
 
   const handleClick = () => {
     console.log(`You clicked ${options[selectedIndex]}`);
-    if (options[selectedIndex] === 'Preview and Generate Invoice') {
+    if (options[selectedIndex] === 'Preview and Tax Invoice') {
       // alert("modal");
 
     }
-    else if (options[selectedIndex] === 'Generate Invoice') {
+    else if (options[selectedIndex] === 'Tax Invoice') {
       alert("Download pdf");
     }
   };

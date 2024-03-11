@@ -20,8 +20,7 @@ import { SaveBtn } from '../assets/style/cssInlineConfig';
 import { CancelBtnComp } from './AddUserBtn';
 // import htmlPdf from 'html-pdf';
 
-
-const Invoice = ({
+const MailSendingContent = ({
     previewInvoiceprop,
     ReciverInvoiceProp,
     SenderInvoiceProp,
@@ -92,13 +91,6 @@ const Invoice = ({
         display: 'flex',
         alignItems: 'end',
         justifyContent: 'space-between'
-    }
-    const actions ={
-        padding:'1rem',
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'end',
-        gap:'1rem'
     }
 
     const downloadPDF = () => {
@@ -199,20 +191,50 @@ const Invoice = ({
         return integerWords.replace(/\b\w/g, firstChar => firstChar.toUpperCase());
     }
 
+    // send data to server
+    const sendDataToServer = async (invoiceid) => {
+        // alert("toserver")
+        try {
+            // const htmlString = ReactDOMServer.renderToString(
+            //     <div className="InvoiceContainer">
+                    // <Invoice/>
+            //     </div>
+            // );
+            console.log("hai invoiceid log :",invoiceid)
+            console.log("inputValues.UserId : ", inputValuesAboveRows.Buyer);
+            const response = await axios.post(`${API_URL}send-email/sendInvoice`
+                , { htmlString: "htmlString", Buyer: inputValuesAboveRows.Buyer }
+                , {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            if (response.status === 200) {
+                // alert("success")
+                console.log('Mail sent successfully');
+            } else {
+                console.error('Failed to send data');
+            }
+        } catch (error) {
+            console.error('Error sending data:', error);
+        }
+    };
+
     // Handle submit
     const [loading, setLoading] = useState(false);
     const totalSum = Math.round(formatTotal(grandTotal()))
-    console.log("rows : ", totalSum);
+    console.log("rows : " ,totalSum);
     const handleSubmit = async () => {
 
         const hasEmptyValue = previewInvoiceprop.some(row =>
-            Object.values(row).some(value => value === '' || value === null),
+            Object.values(row).some(value => value === '' ||  value === null),
         );
 
         // console.log("inputValues :", previewInvoiceprop);
         // console.log("inputValues --- :", hasEmptyValue);
         const hasEmptyReciverId =
-            Object.values(inputValuesAboveRows).some(value => value === '' || value === null)
+            Object.values(inputValuesAboveRows).some(value => value === '' ||  value === null)
         // );
         if (hasEmptyReciverId) {
             alert("Reciver Details can't be Empty");
@@ -226,16 +248,16 @@ const Invoice = ({
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                     if (response.data.status) {
                         // alert(response.data.invoiceid);
-                        // await sendDataToServer(response.data.invoiceid);
+                        await sendDataToServer(response.data.invoiceid);
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
                     }
                     setLoading(false);
                     // console.log("rsponse : ",response.data.status);
-                    if (response.data.status) {
-                        navigate('/TransactionHistory');
-                    }
+                    // if (response.data.status) {
+                    //     navigate('/TransactionHistory');
+                    // }
                     // setPreviewInvoice(response.data.message)
                 } catch (error) {
                     console.error('Error sending data:', error);
@@ -568,14 +590,7 @@ const Invoice = ({
                                 </div>
                                 <div style={cellStyle}>{item.hsncode || ''}</div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div style={cellStyle}>
-                                    {item.Quantity || ''}
-                                    {index === previewInvoiceprop.length + 1 &&
-                                        <div>
-                                            <b>{totalQuantity}</b>
-                                        </div>
-                                    }
-                                </div>
+                                <div style={cellStyle}>{item.Quantity || ''}</div>
                                 <div style={cellStyle}>{(index <= previewInvoiceprop.length - 1) && 'Nos.'}</div>
                                 <div style={cellStyle}>{unitRate(item.hsncode, item.batchno)}</div>
                                 <div style={cellStyle}>{item.Discount || ''}</div>
@@ -767,22 +782,18 @@ const Invoice = ({
                     </div>
                 </div>
             </div>
-            <div className="actions" style={actions}>
-                <CancelBtnComp dataBsDismiss="modal" />
-                {generateInvoice ? (
-                    <Button data-bs-dismiss="modal" variant="outlined" color="primary"
-                        onClick={handleSubmit}
-                    >
-                        Generate Invoice
-                    </Button>
-                ) : (
-                    <Button variant="outlined" style={SaveBtn}
-                        onClick={generatePDF}
-                    >PDF</Button>
-                )}
-
-            </div>
-
+            <CancelBtnComp dataBsDismiss="modal" />
+            {generateInvoice ? (
+                <Button data-bs-dismiss="modal" variant="outlined" color="primary"
+                    onClick={handleSubmit}
+                >
+                    Generate Invoice
+                </Button>
+            ):(
+                <Button variant="outlined" style={SaveBtn} 
+                onClick={generatePDF}
+                >PDF</Button>
+            )}
             {/* {generateInvoice &
                 <div class="modal-footer gap-4">
                     <CancelBtnComp dataBsDismiss="modal" />
@@ -797,6 +808,6 @@ const Invoice = ({
         </div>
     )
 }
-export default Invoice;
+export default MailSendingContent;
 
 

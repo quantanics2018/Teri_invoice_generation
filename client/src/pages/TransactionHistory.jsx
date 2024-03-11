@@ -174,7 +174,8 @@ const TransactionHistory = () => {
                                                 <td className='text-center'>{item.invoiceid}</td>
                                                 {item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
                                                     <td className='text-center'>
-                                                        <TextField variant="standard" disabled={userInfo.userid === item.senderid}
+                                                        <TextField variant="standard" 
+                                                        disabled={userInfo.userid === item.senderid}
                                                             style={{ marginTop: '10px' }}
                                                             id="outlined-size-small"
                                                             size="small"
@@ -201,7 +202,9 @@ const TransactionHistory = () => {
                                                         {(item.transactionid && userInfo.userid === item.senderid) ? '🟢' : (userInfo.userid === item.senderid && '🔴')}
                                                     </Button>
                                                     {/* {console.log("hello", item)} */}
-                                                    <Button color="secondary" disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)} onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
+                                                    <Button color="secondary" 
+                                                    disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)} 
+                                                    onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
                                                         ✔
                                                     </Button>
                                                 </td>

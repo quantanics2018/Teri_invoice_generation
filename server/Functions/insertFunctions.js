@@ -161,7 +161,7 @@ async function addInvoice(req, res) {
     // const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
 
-    // console.log(totalSum);
+    console.log(totalSum);
     // console.log("recivermail : ", recivermail);
     // console.log("senderID", senderID);
     // console.log(invoiceItem);

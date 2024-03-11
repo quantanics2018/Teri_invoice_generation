@@ -152,7 +152,7 @@ const Staff_Detials = (props) => {
                 // alert("Can edit")
                 if (currentstatus == 1) {
                     currentstatus = 0;
-                    const confirmed = window.confirm("Are You Sure! You Want to Inactivate the User?");
+                    const confirmed = window.confirm("Are You Sure! You Want to Delete the User?");
                     // setInactivateAlert(true)
                     if (confirmed) {
                         statusApiAction();

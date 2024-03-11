@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 import QrCode from '../components/QrCode';
 import { invoicecontent } from '../assets/style/mailInlineCss';
+import MailSendingContent from '../components/MailSendingContent';
 
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 let gag = 55;
@@ -160,6 +161,8 @@ const InvoiceGenerator = () => {
     // invoice htm send to server
     // console.log(inputValues.UserId);
     const sendDataToServer = async (invoiceid) => {
+        alert("yes");
+        console.log("yess");
         try {
             const htmlString = ReactDOMServer.renderToString(
                 <div className="InvoiceContainer">
@@ -213,44 +216,44 @@ const InvoiceGenerator = () => {
 
 
 
-    const handleSubmit = async () => {
-        // console.log(rows);
-        const hasEmptyValue = rows.some(row =>
-            Object.values(row).some(value => value === '')
-        );
+    // const handleSubmit = async () => {
+    //     // console.log(rows);
+    //     const hasEmptyValue = rows.some(row =>
+    //         Object.values(row).some(value => value === '')
+    //     );
 
-        console.log("inputValues :", inputValues);
-        const hasEmptyReciverId =
-            Object.values(inputValues).some(value => value === '')
-        // );
-        if (hasEmptyReciverId) {
-            alert("Reciver Details can't be Empty");
-        } else {
-            if (hasEmptyValue) {
-                alert('Please fill in all fields in each row before submitting.');
-            } else {
-                // alert('Success');
-                try {
-                    setLoading(true);
-                    const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows, totalValues: totalSum });
-                    if (response.data.status) {
-                        // alert(response.data.invoiceid);
-                        await sendDataToServer(response.data.invoiceid);
-                        alert(response.data.message);
-                    } else {
-                        alert(response.data.message);
-                    }
-                    setLoading(false);
-                    if (response.data.status) {
-                        navigate('/TransactionHistory');
-                    }
-                    // setPreviewInvoice(response.data.message)
-                } catch (error) {
-                    console.error('Error sending data:', error);
-                }
-            }
-        }
-    }
+    //     console.log("inputValues :", inputValues);
+    //     const hasEmptyReciverId =
+    //         Object.values(inputValues).some(value => value === '')
+    //     // );
+    //     if (hasEmptyReciverId) {
+    //         alert("Reciver Details can't be Empty");
+    //     } else {
+    //         if (hasEmptyValue) {
+    //             alert('Please fill in all fields in each row before submitting.');
+    //         } else {
+    //             // alert('Success');
+    //             try {
+    //                 setLoading(true);
+    //                 const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows, totalValues: totalSum });
+    //                 if (response.data.status) {
+    //                     // alert(response.data.invoiceid);
+    //                     await sendDataToServer(response.data.invoiceid);
+    //                     alert(response.data.message);
+    //                 } else {
+    //                     alert(response.data.message);
+    //                 }
+    //                 setLoading(false);
+    //                 if (response.data.status) {
+    //                     navigate('/TransactionHistory');
+    //                 }
+    //                 // setPreviewInvoice(response.data.message)
+    //             } catch (error) {
+    //                 console.error('Error sending data:', error);
+    //             }
+    //         }
+    //     }
+    // }
 
     const [senderIdRes, setsenderIdRes] = useState([{}]);
     useEffect(() => {
@@ -576,10 +579,10 @@ const InvoiceGenerator = () => {
 
 
     // perform a invoice
-    const generatePDF = () => {
-        const invoicecontent = document.getElementById('invoiceContent');
-        html2pdf().from(invoicecontent).save();
-    }
+    // const generatePDF = () => {
+    //     const invoicecontent = document.getElementById('invoiceContent');
+    //     html2pdf().from(invoicecontent).save();
+    // }
 
     const getuserDetial = (customerName, value) => {
         // console.log(inputValues.UserId);
@@ -615,6 +618,7 @@ const InvoiceGenerator = () => {
         return formattedTotal;
     }
 
+
     return (
         <>
             {loading && <Loader />}
@@ -638,13 +642,15 @@ const InvoiceGenerator = () => {
                                 generateInvoice={false}
                             />
                         </div>
-                        <div class="modal-footer gap-4">
+                        {/* <div class="modal-footer gap-4">
                             <CancelBtnComp dataBsDismiss="modal" />
-                            <Button variant="outlined" style={SaveBtn} onClick={generatePDF}>PDF</Button>
-                            {/* <Button data-bs-dismiss="modal" variant="outlined" color="primary" onClick={handleSubmit} >
+                            <Button variant="outlined" style={SaveBtn} 
+                            // onClick={generatePDF}
+                            >PDF</Button>
+                            <Button data-bs-dismiss="modal" variant="outlined" color="primary" onClick={handleSubmit} >
                                 Generate Invoice
-                            </Button> */}
-                        </div>
+                            </Button>
+                        </div> */}
                     </div>
                 </div>
             </div>
@@ -669,13 +675,15 @@ const InvoiceGenerator = () => {
                                 generateInvoice={true}
                             />
                         </div>
-                        <div class="modal-footer gap-4">
+                        {/* <div class="modal-footer gap-4">
                             <CancelBtnComp dataBsDismiss="modal" />
-                            {/* <Button variant="outlined" style={SaveBtn} onClick={generatePDF}>PDF</Button> */}
-                            <Button data-bs-dismiss="modal" variant="outlined" color="primary" onClick={handleSubmit} >
+                            <Button variant="outlined" style={SaveBtn} onClick={generatePDF}>PDF</Button>
+                            <Button data-bs-dismiss="modal" variant="outlined" color="primary"
+                            // onClick={handleSubmit} 
+                            >
                                 Generate Invoice
                             </Button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
@@ -936,9 +944,9 @@ const InvoiceGenerator = () => {
                         </Grid>
                         <Grid item>
                             <div>
-                                <Typography variant="body1" display="inline" style={{ marginRight: theme.spacing(2) }}>
+                                {/* <Typography variant="body1" display="inline" style={{ marginRight: theme.spacing(2) }}>
                                     Total Amount: {totalSum ? formatTotal(totalSum) : 0}
-                                </Typography>
+                                </Typography> */}
                                 <Typography variant="body1" display="inline">
                                     Total Quantity: {totalQuantity ? totalQuantity : 0}
                                 </Typography>
@@ -946,12 +954,10 @@ const InvoiceGenerator = () => {
                         </Grid>
                     </Grid>
                 </footer>
-
-
             </div>
         </>
     );
 };
 
 export default InvoiceGenerator;
-export {gag}
+export { gag }

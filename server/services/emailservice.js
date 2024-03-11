@@ -28,7 +28,7 @@ async function emailservice(req, res) {
     console.log("html content: ", mailcontent.htmlString);
     console.log("mailcontent.email  : ", mailcontent.Buyer);
     const recivermail = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1', [mailcontent.Buyer]);
-    console.log(recivermail.rows[0].email);
+    console.log("email to : ",recivermail.rows[0].email);
     const to = recivermail.rows[0].email;
     // const to = 'nitheshwaran003@gmail.com';
     const transporter = nodemailer.createTransport({
@@ -161,7 +161,6 @@ async function UpdatePasswordmailservice(req, res) {
 const sendInvoice = async (req, res) => {
     // const upiId = 'nitheshwaran003@okicici';
     // const htmlString = req.body
-    // console.log("test :", htmlString);
     await emailservice(req, res);
     // res.json({ success: true, message: 'send email' });
 };
