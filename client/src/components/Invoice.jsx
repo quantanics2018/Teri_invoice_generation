@@ -248,10 +248,35 @@ const Invoice = ({
         }
     }
 
-    const generatePDF = () => {
-        const invoicecontent = document.getElementById('invoiceContent1');
-        html2pdf().from(invoicecontent).save();
+    // const generatePDF = () => {
+    //     const invoicecontent = document.getElementById('invoiceContent1');
+    //     html2pdf().from(invoicecontent).save();
+    // }
+
+    // Convert image to base64
+const imageToBase64 = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+};
+
+// Usage:
+const generatePDF = async () => {
+    const invoicecontent = document.getElementById('invoiceContent1');
+    const img = document.querySelector('.sign img');
+
+    if (img) {
+        const base64 = await imageToBase64(img.src);
+        img.src = base64;
     }
+    html2pdf().from(invoicecontent).save();
+}
+
     const [signSrc, setSignSrc] = useState('');
     useEffect(() => {
         const statusApiAction = async () => {
@@ -294,6 +319,7 @@ const Invoice = ({
                         : <h4>
                             PERFORM INVOICE
                             {/* {gag} */}
+                            {/* <img src={signSrc} style={Signature} alt="signature" height={50} width={300} /> */}
                         </h4>
                     }
                 </div>
