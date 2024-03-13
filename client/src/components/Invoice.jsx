@@ -93,12 +93,12 @@ const Invoice = ({
         alignItems: 'end',
         justifyContent: 'space-between'
     }
-    const actions ={
-        padding:'1rem',
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'end',
-        gap:'1rem'
+    const actions = {
+        padding: '1rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'end',
+        gap: '1rem'
     }
 
     const downloadPDF = () => {
@@ -248,9 +248,41 @@ const Invoice = ({
         const invoicecontent = document.getElementById('invoiceContent1');
         html2pdf().from(invoicecontent).save();
     }
+    const [signSrc, setSignSrc] = useState('');
+    useEffect(() => {
+        const statusApiAction = async () => {
+            try {
+                const response = await axios.post(`${API_URL}get/signature`, {
+                    userid: "Ad0045"
+                });
+                console.log(response.data);
+                const blob = new Blob([response.data], { type: 'image/jpg' });
+                const url = URL.createObjectURL(blob);
+                console.log(url);
+                setSignSrc(url);
+
+
+                // let url;
+                // if (response.data instanceof Blob) {
+                //     url = URL.createObjectURL(response.data);
+                // } else if (typeof response.data === 'string') {
+                //     url = response.data; // If the response data is already a URL
+                // } else {
+                //     throw new Error('Response data format not supported');
+                // }
+                // setSignSrc(url);
+            } catch (error) {
+                console.error('Error fetching signature:', error);
+            }
+        };
+
+        statusApiAction();
+    }, []);
+
 
     return (
         <div className="fullPage">
+            <img src={signSrc} alt="signature" />
             <div className="A4SheetSize" id="invoiceContent1" style={pad}>
                 <div className="taxInvoiceHead" style={taxInvoiceHead}>
                     {generateInvoice ?

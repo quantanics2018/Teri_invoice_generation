@@ -154,7 +154,7 @@ async function UpdatePasswordmailservice(req, res) {
         res.json({ success: true, message: 'Check Your Mail for further Steps' });
     } catch (error) {
         console.error(error);
-        res.json({ success: true, message: 'Failed to send email' });
+        res.json({ success: true, message: 'User Added Successfully ! But Failed to send email' });
         // throw new Error('Failed to send email');
     }
 }

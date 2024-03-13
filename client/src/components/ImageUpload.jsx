@@ -7,7 +7,7 @@ const ImageUpload = () => {
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
-
+    console.log(file);
     const handleUpload = async () => {
         // Ensure a file is selected
         if (!file) {
@@ -17,11 +17,15 @@ const ImageUpload = () => {
 
         const formData = new FormData();
         formData.append('image', file);
-        for (const entry of formData.entries()) {
-            console.log(entry);
-        }
+        formData.append('type', 'single');
+        // for (const entry of formData.entries()) {
+        //     console.log(entry);
+        // }
         try {
-            const response = await axios.post('http://localhost:4000/upload', formData);
+            const response = await axios.post('http://localhost:4000/upload',
+                //  {hai:formData, type:'single'}
+                 formData
+            );
 
             if (response.status === 200) {
                 console.log('File uploaded successfully:', response.data);

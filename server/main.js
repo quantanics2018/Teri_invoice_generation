@@ -20,6 +20,22 @@ const { generateQR } = require('./services/QrGeneration');
 const multer = require('multer');
 // var upload = multer({ dest: './uploads/' });
 
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Specify the upload directory
+    },
+    filename: function (req, file, cb) {
+        console.log("print helo Inside : ");
+        // const imageName = req.body.imageName;
+        console.log("Inner : ", req.body);
+        cb(null, 'PassbookImg' + 'userid' + path.extname(file.originalname)); // Set unique filename
+    },
+});
+const upload = multer({ storage: storage });
+app.use('/uploads', express.static('uploads'));
+
+
 app.post('/verify/:entity(user|credentials)', async (req, res) => {
     const entity = req.params.entity;
     if (entity === 'credentials') {
@@ -32,10 +48,13 @@ app.post('/verify/:entity(user|credentials)', async (req, res) => {
 });
 
 // add into DB
-app.post('/add/:entity(user|products|invoice|feedback)', async (req, res) => {
+app.post('/add/:entity(user|products|invoice|feedback)', upload.single('image'), async (req, res) => {
     const entity = req.params.entity;
     if (entity === 'user') {
         try {
+            // const passbookImg  = req.body.SignatureImage;
+            // console.log(passbookImg);
+            // res.json({ message: "Testing-1" });
             const addUser = await addData.addUser(req, res);
         } catch (error) {
             console.error('Error retrieving user details:', error);
@@ -67,9 +86,9 @@ app.post('/add/:entity(user|products|invoice|feedback)', async (req, res) => {
         }
     }
 })
-
+app.use('/images', express.static(path.join(__dirname, 'uploads')));
 // Get Data From DB
-app.post('/get/:entity(user|credentials|product|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo|SenderDataInvoiceAddress|ReciverDataInvoiceAddress)', async (req, res) => {
+app.post('/get/:entity(user|credentials|product|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo|SenderDataInvoiceAddress|ReciverDataInvoiceAddress|signature)', async (req, res) => {
     const entity = req.params.entity;
     const requestData = req.body;
     if (entity === 'user') {
@@ -84,6 +103,18 @@ app.post('/get/:entity(user|credentials|product|products|state|district|access_c
     if (entity === 'SenderDataInvoiceAddress') {
         try {
             var userdata = await getData.SenderDataInvoiceAddress(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'signature') {
+        try {
+            const { userid } = req.body;
+            console.log("senderid - : ", userid);
+            res.sendFile(path.join(__dirname, 'uploads', `${userid}.jpeg`));
+            // var userdata = await getData.GetSignature(req, res);
         }
         catch (error) {
             res.send("error");
@@ -249,170 +280,24 @@ app.post('/send-email/:entity(updatePassword|generateQR|sendInvoice)', async (re
     }
 });
 
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Specify the upload directory
-    },
-    filename: function (req, file, cb) {
-        cb(null, 'PassbookImg'+'userid' + path.extname(file.originalname)); // Set unique filename
-    },
-});
-const upload = multer({ storage: storage });
-app.use('/uploads', express.static('uploads'));
 // Example route to handle image upload
 app.post('/upload', upload.single('image'), (req, res) => {
-    const  file = req.file;
-    // console.log(file);
-    const { filename } = req.file;
-    res.json({ success: true, filename });
+    const file = req.file;
+    const { imageName } = req.body;
+    // console.log("outer : ",imageName);
+
+    fs.rename(file.path, './uploads/' + (imageName + path.extname(file.originalname)), function (err) {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Error renaming file' });
+        }
+        res.json({ success: true, message: `Photo Uploaded Successfully ${imageName}`, filename: imageName });
+    });
+
+    // res.json({ status: true, message: 'Photo Uploaded Successfully' });
+    // res.json({ success: true, filename });
 });
 
 app.listen(4000, () => {
     console.log("server is running on port 4000");
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// dont change
-// POST endpoint to insert data
-// app.post('/admin/insert', async (req, res) => {
-//     try {
-//         const {
-//             MF_Id,
-//             M_Email,
-//             M_Phone_No,
-//             M_Pan_Number,
-//             M_Aadhar_Number,
-//             M_Name,
-//             M_Position,
-//             M_Alternate_Phone_No,
-//             M_User_Name,
-//             M_Password,
-//             M_Business_Type,
-//             M_GST_Number,
-//             M_Organization_Name,
-//             M_Account_Name,
-//             M_Account_Number,
-//             M_Linked_Phone_no,
-//             M_Pass_Img,
-//             M_Upi_Id,
-//             M_PR_Street_Address,
-//             M_PR_City,
-//             M_PR_State,
-//             M_PR_PostalCode,
-//             M_CD_Street_Address,
-//             M_CD_City,
-//             M_CD_State,
-//             M_CD_PostalCode,
-//             M_DS_Id,
-//             M_Amount,
-//             M_Updated_By
-//         } = req.body; // Use req.body to get values from the request body
-//         console.log("HII Hello", MF_Id, M_Email)
-//         const result = await User_db_connection.query(`
-//             INSERT INTO public.manufacturer(
-//                 "MF_Id", "M_Email", "M_Phone_No", "M_Pan_Number", "M_Aadhar_Number",
-//                 "M_Name", "M_Position", "M_Alternate_Phone_No", "M_User_Name",
-//                 "M_Password", "M_Business_Type", "M_GST_Number", "M_Organization_Name",
-//                 "M_Account_Name", "M_Account_Number", "M_Linked_Phone_no", "M_Pass_Img",
-//                 "M_Upi_Id", "M_PR_Street_Address", "M_PR_City", "M_PR_State", "M_PR_PostalCode",
-//                 "M_CD_Street_Address", "M_CD_City", "M_CD_State", "M_CD_PostalCode", "M_DS_Id",
-//                 "M_Amount","M_Updated_By"
-//             )
-//             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29)
-//             RETURNING *;
-//         `, [
-//             MF_Id,
-//             M_Email,
-//             M_Phone_No,
-//             M_Pan_Number,
-//             M_Aadhar_Number,
-//             M_Name,
-//             M_Position,
-//             M_Alternate_Phone_No,
-//             M_User_Name,
-//             M_Password,
-//             M_Business_Type,
-//             M_GST_Number,
-//             M_Organization_Name,
-//             M_Account_Name,
-//             M_Account_Number,
-//             M_Linked_Phone_no,
-//             M_Pass_Img,
-//             M_Upi_Id,
-//             M_PR_Street_Address,
-//             M_PR_City,
-//             M_PR_State,
-//             M_PR_PostalCode,
-//             M_CD_Street_Address,
-//             M_CD_City,
-//             M_CD_State,
-//             M_CD_PostalCode,
-//             M_DS_Id,
-//             M_Amount,
-//             M_Updated_By
-//         ]);
-
-//         console.log(result.rows);
-//         res.json(result.rows);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// });

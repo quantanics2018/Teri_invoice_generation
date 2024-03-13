@@ -62,9 +62,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
         mobileNo: '',
         upiPaymentNo: '',
         accName: '',
-        accHolderName:'',
+        accHolderName: '',
         accNo: '',
-        ifscCode:'',
+        ifscCode: '',
         passbookImg: '',
 
         pAddress: '',
@@ -95,9 +95,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
             mobileNo: '',
             upiPaymentNo: '',
             accName: '',
-            accHolderName:'',
+            accHolderName: '',
             accNo: '',
-            ifscCode:'',
+            ifscCode: '',
             passbookImg: '',
 
             // pAddress: '',
@@ -132,13 +132,34 @@ const Add_User_Detials = ({ Positionid_val }) => {
         console.log(postData);
     };
 
+    // Access control
+    const [accessValues, setAccessValues] = useState({
+        Staff: 'View', // Default values
+        Distributor: 'View',
+        D_Staff: 'View',
+        Customer: 'View',
+        Products: 'View',
+        'Invoice Generator': 'View',
+        'Invoice PaySlip': 'View'
+    });
+
     // const [file, setFile] = useState(null);
     // const handleFileChange = (e) => {
     //     setFile(e.target.files[0]);
     // };
 
-    // const formData = new FormData();
-    // formData.append('image', postData.passbookImg);
+    const formData = new FormData();
+    const [file, setFile] = useState(null);
+    const handleFileChanges = (e) => {
+        setFile(e.target.files[0]);
+    };
+    console.log(file);
+    formData.append('image', file);
+    formData.append('imageName', postData.userid);
+
+    // console.log(postData.passbookImg);
+    // formData.append('userDetials', postData);
+    // formData.append('AccessControls', accessValues);
     // for (const entry of formData.entries()) {
     //     console.log(entry);
     // }
@@ -149,7 +170,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         // top level
         // const isValiduserid = postData.userid.trim() !== '';
         const userId = postData.userid.trim();
-        const isValiduserid = userId !== '' &&  /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(userId);
+        const isValiduserid = userId !== '' && /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(userId);
         // const isValiduserid = /^.{1,20}$/.test(postData.userid.trim());
         const isValidaadharNo = /^\d{12}$/.test(postData.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(postData.fName)
@@ -174,6 +195,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 // alert(isValidaccNo)
                 // const isValidpAddress = postData.pAddress.trim() !== '';
 
+                // check for image
+                const isImagePresent = (file !== null);
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
                 const isValidState = postData.State.trim() !== '';
@@ -185,25 +208,38 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 const isValidPostalCode2 = postData.PostalCode2.trim() !== '';
                 // alert("hai da")
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
-                    & isValidupiPaymentNo & isValidaccName & isValidaccHolderName & isValidaccNo & isValidifscCode 
+                    & isValidupiPaymentNo & isValidaccName & isValidaccHolderName & isValidaccNo & isValidifscCode
                     // & isValidpAddress 
+                    & isImagePresent
                     & isValidstreetAddress & isValidCity & isValidState & isValidpCode
                     // & isValidCommunicationAddress 
                     & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
                 ) {
                     try {
-                        setLoading(true);
-                        const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues });
+                        // setLoading(true);
+                        const response = await axios.post(`${API_URL}add/user`,
+                            // formData
+                            { userDetials: postData, AccessControls: accessValues }
+                        );
                         // alert(response.data.message);
                         setresAlert(response.data.message)
                         setSubmitted(true);
                         if (response.data.status) {
-                            handleClear();
-                            navigate(-1);
-                            // setTimeout(() => {
-                            // }, 1000);
+                            // alert("add signature")
+                            console.log("uploading image");
+                            const response = await axios.post('http://localhost:4000/upload',
+                                formData
+                            );
+                            console.log(response.data.status);
+                            if (response.data.status) {
+                                // handleClear();
+                                // navigate(-1);
+                                console.log('File uploaded successfully:', response.data);
+                            } else {
+                                console.error('Failed to upload file:', response.statusText);
+                            }
                         }
-                        setLoading(false);
+                        // setLoading(false);
                     } catch (error) {
                         console.error('Error sending data:', error);
                     }
@@ -244,6 +280,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     }
                     else if (!isValidifscCode) {
                         setresAlert("Enter Valid IFSC Name");
+                        setSubmitted(true);
+                    }
+                    else if (!isImagePresent) {
+                        setresAlert("Oops ! Upload Image");
                         setSubmitted(true);
                     }
                     // else if (!isValidpAddress) {
@@ -355,7 +395,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         { label: "Account Holder Name", name: "accHolderName", value: postData.accHolderName, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Bank Account Number", name: "accNo", value: postData.accNo, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "IFSC Code", name: "ifscCode", value: postData.ifscCode, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        // { label: "Pass Book image vvv", name: "passbookImg", value: postData.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Pass Book image", name: "passbookImg", value: postData.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         // 3. Address Details:
         { label: "Permanent Address", name: "pAddress", value: postData.pAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Permanent Street Address", name: "streetAddress", value: postData.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
@@ -431,16 +471,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
     // }, [postData.Positionid]);
     // console.log("haiiii", userInfo.position);
 
-    // Access control
-    const [accessValues, setAccessValues] = useState({
-        Staff: 'View', // Default values
-        Distributor: 'View',
-        D_Staff: 'View',
-        Customer: 'View',
-        Products: 'View',
-        'Invoice Generator': 'View',
-        'Invoice PaySlip': 'View'
-    });
+
 
     const handleRadioChange = (row, value) => {
         setAccessValues((prevValues) => ({
@@ -718,9 +749,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 </div>
                 {/* User access model */}
                 {/* Access controll start */}
-                <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{overflow:'hidden'}}>
+                <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ overflow: 'hidden' }}>
                     <div class="modal-dialog modal-lg">
-                        <div class="modal-content" style={{padding:'1rem'}}>
+                        <div class="modal-content" style={{ padding: '1rem' }}>
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Access Control</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -757,7 +788,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 <div className="row_with_count_status">
                     <span className='module_tittle'>User Details</span>
                 </div>
-                {/* <ImageUpload /> */}
+                <ImageUpload />
                 <div className="add_device_container1">
                     <div className="new_device_content scroll_div">
                         <div className="row_one display-flex">
@@ -1033,37 +1064,41 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             </div>
 
                             {/* <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(13, 14).map((field, index) => (
-                                <div key={index} className="inputbox display-flex input">
-                                    <div className="dsa_1st_input">
-                                        {!(field.isStaff) && (
-                                            <Box className="inputs-group display-flex"
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    '& .MuiTextField-root': {
-                                                        m: 1,
-                                                        width: field.name === 'bussinessType' ? '30ch' : '100%',
-                                                    },
-                                                }}
-                                                style={{ marginLeft: '10px', flexDirection: 'row' }}
-                                            >
-                                                <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
-                                                    Passbook Image
-                                                    <input
-                                                        type="file"
-                                                        style={{ display: 'none' }}
-                                                        onChange={handleFileChange}
-                                                    />
-                                                </Button>
-                                                <span style={{ marginLeft: '10px' }}>{fileName && `${fileName}`}</span>
-                                            </Box>
-                                        )}
+                                {inputFields.slice(13, 14).map((field, index) => (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <div className="dsa_1st_input">
+                                            {!(field.isStaff) && (
+                                                <Box className="inputs-group display-flex"
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        '& .MuiTextField-root': {
+                                                            m: 1,
+                                                            width: field.name === 'bussinessType' ? '30ch' : '100%',
+                                                        },
+                                                    }}
+                                                    style={{ marginLeft: '10px', flexDirection: 'row' }}
+                                                >
+                                                    <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
+                                                        Passbook Image
+                                                        <input
+                                                            type="file"
+                                                            style={{ display: 'none' }}
+                                                            onChange={handleFileChange}
+                                                        />
+                                                    </Button>
+                                                    <span style={{ marginLeft: '10px' }}>{fileName && `${fileName}`}</span>
+                                                </Box>
+                                            )}
 
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div> */}
+                                ))}
+                            </div> */}
+                            <div>
+                                <input type="file" onChange={handleFileChanges} />
+                                {/* <button onClick={handleUpload}>Upload Image</button> */}
+                            </div>
 
                             {!(Positionid_val === 4 || Positionid_val === 5) && (
                                 <div className="device_info uppercase light-grey mb-loc-5">
@@ -1072,7 +1107,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             )}
 
                             <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(16, 20).map((field, index) => (
+                                {inputFields.slice(17, 21).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {!(field.isStaff) && (
@@ -1143,7 +1178,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
                             )}
                             <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(20, 24).map((field, index) => (
+                                {inputFields.slice(21, 25).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {!(field.isStaff) && (
@@ -1181,7 +1216,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 ))}
                             </div>
                             <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(24, 25).map((field, index) => (
+                                {inputFields.slice(24, 24).map((field, index) => (
                                     <div key={index} className="inputbox display-flex input">
                                         <div className="dsa_1st_input">
                                             {!(field.isStaff) && (

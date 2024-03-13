@@ -1,7 +1,6 @@
 // In getFunctions.js (or wherever you have your getdata function)
 const userdbInstance = require('../instances/dbInstance');
 
-
 // async function getUserData(req, res) {
 //     const { adminid } = req.body;
 //     console.log(adminid);
@@ -63,6 +62,16 @@ async function SenderDataInvoiceAddress(req, res) {
         console.error('Error executing database query:', error);
         res.status(500).json({ message: "Internal Server Error", status: false });
     }
+}
+// const signImages = path.join(__dirname, '../uploads/');
+// app.use('/images', express.static(path.join(__dirname, '../uploads')));
+
+async function GetSignature(req, res) {
+    const { userid } = req.body;
+    console.log("senderid - : ", userid);
+    // res.sendFile(path.join(__dirname, 'uploads', 'Ad0045.jpg'));
+    res.sendFile(path.join(__dirname, '../uploads', 'Ad0045.jpg'));
+    // res.json({ message: "Successfully Sign Fetched", status: true });
 }
 
 async function ReciverDataInvoiceAddress(req, res) {
@@ -233,4 +242,4 @@ async function getProductDataIndividual(req, res) {
 }
 
 
-module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, ReciverDataInvoiceAddress };
+module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress,GetSignature, ReciverDataInvoiceAddress };
