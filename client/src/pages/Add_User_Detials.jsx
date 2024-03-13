@@ -153,7 +153,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
     const handleFileChanges = (e) => {
         setFile(e.target.files[0]);
     };
-    console.log(file);
+    // console.log(file);
     formData.append('image', file);
     formData.append('imageName', postData.userid);
 
@@ -163,6 +163,31 @@ const Add_User_Detials = ({ Positionid_val }) => {
     // for (const entry of formData.entries()) {
     //     console.log(entry);
     // }
+
+    const isImageValid = (file) => {
+        if (!file) {
+            return false; // No file present
+        }
+
+        // Check file format
+        // const allowedFormats = ['jpg', 'jpeg', 'png'];
+        const allowedFormats = ['png'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (!allowedFormats.includes(fileExtension)) {
+            return false; // File format not allowed
+        }
+
+        // Check file size
+        const maxSizeInBytes = 10 * 1024 * 1024; // 10 MB
+        if (file.size > maxSizeInBytes) {
+            return false; // File size exceeds the limit
+        }
+
+        // If file passes both format and size checks
+        return true;
+    };
+
+
     const [loading, setLoading] = useState(false);
     const [resAlert, setresAlert] = useState(null)
     const handleSubmit = async (e) => {
@@ -196,7 +221,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 // const isValidpAddress = postData.pAddress.trim() !== '';
 
                 // check for image
-                const isImagePresent = (file !== null);
+                // const isImagePresent = (file !== null);
+                const isImagePresent = isImageValid(file);
+                // console.log("isImagePresent : ",isImagePresent);
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
                 const isValidState = postData.State.trim() !== '';
@@ -217,6 +244,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 ) {
                     try {
                         // setLoading(true);
+
                         const response = await axios.post(`${API_URL}add/user`,
                             // formData
                             { userDetials: postData, AccessControls: accessValues }
@@ -226,7 +254,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setSubmitted(true);
                         if (response.data.status) {
                             // alert("add signature")
-                            console.log("uploading image");
+                            // console.log("uploading image");
                             const response = await axios.post('http://localhost:4000/upload',
                                 formData
                             );
@@ -239,6 +267,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 console.error('Failed to upload file:', response.statusText);
                             }
                         }
+
                         // setLoading(false);
                     } catch (error) {
                         console.error('Error sending data:', error);
@@ -283,7 +312,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setSubmitted(true);
                     }
                     else if (!isImagePresent) {
-                        setresAlert("Oops ! Upload Image");
+                        setresAlert("Only PNG format is allowed & Image size should be less than 10MB.");
                         setSubmitted(true);
                     }
                     // else if (!isValidpAddress) {

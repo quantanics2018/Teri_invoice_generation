@@ -100,7 +100,11 @@ const Invoice = ({
         justifyContent: 'end',
         gap: '1rem'
     }
-
+    const Signature = {
+        position:'absolute',
+        marginTop:'-3rem',
+        marginLeft:'-3rem'
+    }
     const downloadPDF = () => {
         const { data } = previewInvoiceprop; // Assuming previewInvoiceprop contains the data object
         const pdf = new jsPDF();
@@ -251,16 +255,17 @@ const Invoice = ({
     const [signSrc, setSignSrc] = useState('');
     useEffect(() => {
         const statusApiAction = async () => {
+            console.log(userInfo.userid);
             try {
                 const response = await axios.post(`${API_URL}get/signature`, {
-                    userid: "Ad0045"
+                    userid: userInfo.userid
                 });
                 console.log(response.data);
-                const blob = new Blob([response.data], { type: 'image/jpg' });
+                console.log(response.data.src);
+                const blob = new Blob([response.data], { type: 'image/png' });
                 const url = URL.createObjectURL(blob);
                 console.log(url);
-                setSignSrc(url);
-
+                setSignSrc(`${API_URL}${response.data.src}`);
 
                 // let url;
                 // if (response.data instanceof Blob) {
@@ -277,12 +282,11 @@ const Invoice = ({
         };
 
         statusApiAction();
-    }, []);
+    }, [signSrc]);
 
 
     return (
         <div className="fullPage">
-            <img src={signSrc} alt="signature" />
             <div className="A4SheetSize" id="invoiceContent1" style={pad}>
                 <div className="taxInvoiceHead" style={taxInvoiceHead}>
                     {generateInvoice ?
@@ -785,7 +789,9 @@ const Invoice = ({
                                 We declare that this invoice shows the actual price of the goods <br />
                                 described and the all particulars are true and correct.
                             </div>
+
                             <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
+                                <img src={signSrc} style={Signature} alt="signature" height={50} width={300} />
                                 <div className="pvtName">VAIBAVSRI INDIA PRIVATE LIMITITED</div>
                                 <div className="authSign">Authorized Sign.</div>
                             </div>

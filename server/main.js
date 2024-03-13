@@ -113,7 +113,30 @@ app.post('/get/:entity(user|credentials|product|products|state|district|access_c
         try {
             const { userid } = req.body;
             console.log("senderid - : ", userid);
-            res.sendFile(path.join(__dirname, 'uploads', `${userid}.jpeg`));
+            const folderPath = '../uploads'; // Change this to the path of your folder
+            const fileName = userid;
+            const filePath = path.join(folderPath, fileName);
+           
+
+            const allowedExtensions = ['jpeg', 'jpg', 'png'];
+            
+
+            res.send({ src: `images/${userid}.png` });
+
+
+            // // Find the first matching extension from the allowed list
+            // const matchedExtension = allowedExtensions.find(ext => {
+            //     const imagePath = `images/${userid}.${ext}`;
+            //     // Check if the file exists
+            //     return fs.existsSync(imagePath);
+            // });
+            // if (matchedExtension) {
+            //     res.send({ src: `images/${userid}.${matchedExtension}` });
+            // } else {
+            //     res.status(404).send({ error: 'Image not found' });
+            // }
+
+            // res.sendFile(path.join(__dirname, 'uploads', `${userid}.jpeg`));
             // var userdata = await getData.GetSignature(req, res);
         }
         catch (error) {
