@@ -60,7 +60,7 @@ const Invoice = ({
         textAlign: 'center',
     };
     const totalgstname = {
-        height: '200px',
+        height: '100px',
         marginTop: '20px'
     }
     const numberinWord = {
@@ -702,7 +702,7 @@ const generatePDF = async () => {
                         {[...previewInvoiceprop, {}].map((item, index) =>
                             <div style={rowStyle}>
                                 <div style={cellStyle}>
-                                    {item.productName || ''}
+                                    {item.hsncode || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div>
                                             <b>Total</b>
