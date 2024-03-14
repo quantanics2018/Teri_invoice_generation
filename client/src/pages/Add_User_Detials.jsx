@@ -155,6 +155,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
     };
     // console.log(file);
     formData.append('image', file);
+    formData.append('type', 'single');
     formData.append('imageName', postData.userid);
 
     // console.log(postData.passbookImg);
@@ -165,25 +166,32 @@ const Add_User_Detials = ({ Positionid_val }) => {
     // }
 
     const isImageValid = (file) => {
+        console.log(file); // Logging the parameter passed to the function
         if (!file) {
             return false; // No file present
         }
-
-        // Check file format
-        // const allowedFormats = ['jpg', 'jpeg', 'png'];
-        const allowedFormats = ['png'];
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        if (!allowedFormats.includes(fileExtension)) {
-            return false; // File format not allowed
+        // Check if the input is a string (representing a file name)
+        if (typeof file === 'string') {
+            const allowedFormats = ['png'];
+            const fileExtension = file.split('.').pop().toLowerCase();
+            if (!allowedFormats.includes(fileExtension)) {
+                return false; // File format not allowed
+            }
+            // Since we don't have file size information for a string input, we skip the size check
+        } else {
+            // Assuming `files1` is a file object
+            const allowedFormats = ['png'];
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            if (!allowedFormats.includes(fileExtension)) {
+                return false; // File format not allowed
+            }
+            // Check file size
+            const maxSizeInBytes = 10 * 1024 * 1024; // 10 MB
+            if (file.size > maxSizeInBytes) {
+                return false; // File size exceeds the limit
+            }
         }
-
-        // Check file size
-        const maxSizeInBytes = 10 * 1024 * 1024; // 10 MB
-        if (file.size > maxSizeInBytes) {
-            return false; // File size exceeds the limit
-        }
-
-        // If file passes both format and size checks
+        // If file passes both format and size checks or if it's a valid string representing a file name
         return true;
     };
 
@@ -223,7 +231,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 // check for image
                 // const isImagePresent = (file !== null);
                 const isImagePresent = isImageValid(file);
-                // console.log("isImagePresent : ",isImagePresent);
+                console.log("isImagePresent : ",isImagePresent);
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
                 const isValidState = postData.State.trim() !== '';
@@ -254,14 +262,14 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setSubmitted(true);
                         if (response.data.status) {
                             // alert("add signature")
-                            // console.log("uploading image");
-                            const response = await axios.post('http://localhost:4000/upload',
+                            console.log("uploading image");
+                            const response = await axios.post(`${API_URL}upload`,
                                 formData
                             );
                             console.log(response.data.status);
                             if (response.data.status) {
-                                // handleClear();
-                                // navigate(-1);
+                                handleClear();
+                                navigate(-1);
                                 console.log('File uploaded successfully:', response.data);
                             } else {
                                 console.error('Failed to upload file:', response.statusText);
@@ -817,7 +825,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 <div className="row_with_count_status">
                     <span className='module_tittle'>User Details</span>
                 </div>
-                <ImageUpload />
+                {/* <ImageUpload /> */}
                 <div className="add_device_container1">
                     <div className="new_device_content scroll_div">
                         <div className="row_one display-flex">

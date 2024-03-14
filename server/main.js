@@ -313,7 +313,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Error renaming file' });
         }
-        res.json({ success: true, message: `Photo Uploaded Successfully ${imageName}`, filename: imageName });
+        res.json({ status: true, message: `Photo Uploaded Successfully ${imageName}`, filename: imageName });
     });
 
     // res.json({ status: true, message: 'Photo Uploaded Successfully' });

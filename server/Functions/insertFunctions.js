@@ -140,8 +140,8 @@ async function addUser(req, res) {
         const access_controlTable = await userdbInstance.userdb.query('insert into accesscontroll (distributer,product,invoicegenerator,userid,customer,staff,invoicepayslip,d_staff) values ($1,$2,$3,$4,$5,$6,$7,$8)',
             [distributor_ac, products_ac, InvoiceGenerator_ac, userid, customer_ac, staff_ac, InvoicePaySlip_ac,D_Staff_ac]);
         await userdbInstance.userdb.query('COMMIT');
-        const Res_UserAddedMail = UserAddedMail(req, res);
-        // return res.json({ message: "Data inserted Successfully", status: true });
+        // const Res_UserAddedMail = UserAddedMail(req, res);
+        return res.json({ message: "Data inserted Successfully", status: true });
     } catch (error) {
         await userdbInstance.userdb.query('ROLLBACK');
         console.error('Error executing database query:', error);
