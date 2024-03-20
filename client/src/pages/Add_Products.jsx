@@ -120,6 +120,7 @@ const Add_Products = () => {
     const handleSnackbarClose = () => {
         setSubmitted(false);
     };
+
     const [resAlert, setresAlert] = useState(null)
 
     // validation
@@ -131,7 +132,8 @@ const Add_Products = () => {
         // const isValidbatchno = /^[0-9]+$/.test(postData.batchno);
         const isValidproductname = (postData.productname.trim() !== '');
         const isValidQuantityNo = /^[0-9]+$/.test(postData.quantity);
-        const isValidpriceperitem = /^[0-9]+$/.test(postData.priceperitem);
+        // const isValidpriceperitem = /^[0-9]+$/.test(postData.priceperitem);
+        const isValidpriceperitem = /^\d+(\.\d{2})?$/.test(postData.priceperitem);   
         const isValidCGST = /^[0-9]+$/.test(postData.CGST);
         const isValidSGCT = /^[0-9]+$/.test(postData.SGCT);
         // console.log(isValidhsncode, userInfo.userid);
@@ -181,7 +183,8 @@ const Add_Products = () => {
                 // alert("Enter a valid Quantity Number")
             }
             else if (isValidpriceperitem === false) {
-                setresAlert("Enter a valid Price Detail");
+                // setresAlert("Enter a valid Price Detail");
+                setresAlert("Price Detail Must Be In Two Digit");
                 setSubmitted(true);
                 // alert("Enter a valid Price Detail")
             }
@@ -205,8 +208,8 @@ const Add_Products = () => {
         { label: "Price Per Item", name: "priceperitem", value: postData.priceperitem, icon: person },
         { label: "CGST", name: "CGST", value: postData.CGST, icon: person },
         { label: "SGCT", name: "SGCT", value: postData.SGCT, icon: person }
-        // { label: "Add To", name: "Addto",value: postData.Addto, icon: person },
     ]
+    
 
     return (
         <div className='Add_device1 '>

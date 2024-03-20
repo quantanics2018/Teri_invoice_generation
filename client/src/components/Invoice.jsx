@@ -10,7 +10,7 @@ import { API_URL } from '../config';
 import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd, even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo, table, tbody, tBorder, rawInput, tdv, tdvDate, textarea, billDetial, bankDetails, tdh, tBorderd, tandc, nowrap, taxInvoiceHead, invoiceDetial, df, gap, dfc, addressDetials, invoicedetail, rowInvoiceDetail, inputbox, row1Invoice, width50, reciverBill, pad, textwarp, mt, sb, padInPx, bussinessContent, table1, row } from '../assets/style/mailInlineCss';
+import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd, even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo, table, tbody, tBorder, rawInput, tdv, tdvDate, textarea, billDetial, bankDetails, tdh, tBorderd, tandc, nowrap, taxInvoiceHead, invoiceDetial, df, gap, gap1, dfc, addressDetials, invoicedetail, rowInvoiceDetail, inputbox, row1Invoice, width50, reciverBill, pad, textwarp, mt, sb, padInPx, bussinessContent, table1, row } from '../assets/style/mailInlineCss';
 import { Button, TextField } from '@mui/material';
 import numberToWords from 'number-to-words';
 import { gag } from '../pages/InvoiceGenerator';
@@ -83,7 +83,7 @@ const Invoice = ({
         flex: '1',
     }
     const ditailwithfixedwidth = {
-        width: '400px'
+        width: '40%'
     }
     const sign = {
         border: '1px solid',
@@ -101,9 +101,16 @@ const Invoice = ({
         gap: '1rem'
     }
     const Signature = {
-        position:'absolute',
-        marginTop:'-3rem',
-        marginLeft:'-3rem'
+        // position:'absolute',
+        marginTop: '-1rem',
+        // marginLeft:'-3rem'
+    }
+    const PVTname = {
+        marginTop: '-1rem',
+    }
+    const AuthSign = {
+        marginTop: '-1rem',
+        // marginLeft:'-3rem'
     }
     const downloadPDF = () => {
         const { data } = previewInvoiceprop; // Assuming previewInvoiceprop contains the data object
@@ -254,28 +261,50 @@ const Invoice = ({
     // }
 
     // Convert image to base64
-const imageToBase64 = async (url) => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
-};
+    const imageToBase64 = async (url) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    };
 
-// Usage:
-const generatePDF = async () => {
-    const invoicecontent = document.getElementById('invoiceContent1');
-    const img = document.querySelector('.sign img');
+    // Usage:
+    // const generatePDF = async () => {
+    //     const invoicecontent = document.getElementById('invoiceContent1');
+    //     const img = document.querySelector('.sign img');
 
-    if (img) {
-        const base64 = await imageToBase64(img.src);
-        img.src = base64;
+    //     if (img) {
+    //         const base64 = await imageToBase64(img.src);
+    //         img.src = base64;
+    //     }
+    //     html2pdf().from(invoicecontent).save();
+    // }
+    const generatePDF = async () => {
+        const invoicecontent = document.getElementById('invoiceContent1');
+        const img = document.querySelector('.sign img');
+    
+        if (img) {
+            const base64 = await imageToBase64(img.src);
+            img.src = base64;
+        }
+    
+        // Define options for PDF generation
+        const options = {
+            filename: 'invoice.pdf', // Optional, specify a filename for the downloaded PDF
+            image: { type: 'jpeg', quality: 0.98 }, // Optional, set image type and quality
+            html2canvas: { scale: 2 }, // Optional, adjust the scale for better rendering
+            jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm' } // Specify A4 size and portrait orientation
+        };
+    
+        // Generate PDF with specified options
+        html2pdf().set(options).from(invoicecontent).save();
     }
-    html2pdf().from(invoicecontent).save();
-}
+    
+    
 
     const [signSrc, setSignSrc] = useState('');
     useEffect(() => {
@@ -315,9 +344,9 @@ const generatePDF = async () => {
             <div className="A4SheetSize" id="invoiceContent1" style={pad}>
                 <div className="taxInvoiceHead" style={taxInvoiceHead}>
                     {generateInvoice ?
-                        <h4>GENERATE INVOICE {invoiceid}</h4>
+                        <h4>TAX INVOICE {invoiceid}</h4>
                         : <h4>
-                            PERFORM INVOICE
+                            PROFORMA INVOICE
                             {/* {gag} */}
                             {/* <img src={signSrc} style={Signature} alt="signature" height={50} width={300} /> */}
                         </h4>
@@ -325,7 +354,7 @@ const generatePDF = async () => {
                 </div>
                 <br />
                 {/* <div className="invoiceconten"  style={dfc}> */}
-                <div className="InvoiceHead1"
+                {/* <div className="InvoiceHead1"
                     style={InvoiceHead}
                 >
 
@@ -340,7 +369,7 @@ const generatePDF = async () => {
                     >
                         <QrCode totalSum={formatTotal(grandTotal())} upi={SenderInvoiceProp[0].upiid} />
                     </div>
-                </div>
+                </div> */}
 
                 <div className="billDetial" style={{ ...billDetial, ...dfc }}>
                     <div className="addressDetials" style={addressDetials}>
@@ -359,7 +388,7 @@ const generatePDF = async () => {
                                     GSTIN/UIN : {SenderInvoiceProp[0].gstnno}<br />
                                     State Name : {SenderInvoiceProp[0].cstateid}<br />
                                     E-Mail : {SenderInvoiceProp[0].email}<br />
-                                    <br />
+                                    {/* <br /> */}
                                 </pre>
                             </div>
 
@@ -392,13 +421,13 @@ const generatePDF = async () => {
                                 </div>
                             </div>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Delivery Note
                                     </div>
                                     <input type='text' style={rawInput} />
                                 </div>
-                                <div className="row2Invoice" style={{ ...width50, ...df, ...padInPx, ...gap }}>
+                                <div className="row2Invoice" style={{ ...width50, ...df, ...padInPx, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Terms of Payment
                                     </div>
@@ -406,13 +435,13 @@ const generatePDF = async () => {
                                 </div>
                             </div>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Reference No. & Date
                                     </div>
                                     <input type='text' style={rawInput} />
                                 </div>
-                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Other References
                                     </div>
@@ -420,14 +449,14 @@ const generatePDF = async () => {
                                 </div>
                             </div>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Buyer's Order No.
                                     </div>
                                     <input type='text' style={rawInput} />
 
                                 </div>
-                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Dated
                                     </div>
@@ -435,13 +464,13 @@ const generatePDF = async () => {
                                 </div>
                             </div>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Dispatch Doc No.
                                     </div>
                                     <input type='text' style={rawInput} />
                                 </div>
-                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Delivery Note Date
                                     </div>
@@ -449,13 +478,13 @@ const generatePDF = async () => {
                                 </div>
                             </div>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Dispatch Through
                                     </div>
                                     <input type='text' style={rawInput} />
                                 </div>
-                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap }}>
+                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Destination
                                     </div>
@@ -463,20 +492,20 @@ const generatePDF = async () => {
                                 </div>
                             </div>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...dfc, ...gap }}>
+                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...dfc, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Bill of Lading/LR-RR No
                                     </div>
                                     <input type='text' style={rawInput} />
                                 </div>
-                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...dfc, ...gap }}>
+                                <div className="row2Invoice" style={{ ...width50, ...padInPx, ...dfc, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Motor Vehicle No.
                                     </div>
                                     <input type='text' style={rawInput} />
                                 </div>
                             </div>
-                            <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...dfc, ...gap }}>
+                            <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...dfc, ...gap1 }}>
                                 <div className="tandc">Terms of Delivery</div>
                                 <div className="tandc"><textarea style={textarea}></textarea></div>
                             </div>
@@ -676,7 +705,7 @@ const generatePDF = async () => {
                             <div className="changeablecontent">Amount Changeable (in words)</div>
                             <div className="oe"><b>E & O.E</b></div>
                         </div>
-                        <div className="amountHeading"><b>{capitalizeIntegerWords(integerWords)}</b></div>
+                        <div className="amountHeading"><b>{capitalizeIntegerWords(integerWords)} Only</b></div>
                     </div>
                     <div style={containerStyle}>
                         {/* Table heading row */}
@@ -767,7 +796,7 @@ const generatePDF = async () => {
                     >
                         <div className="amountHeading" style={df}>
                             <div className="changeablecontent">Taxable Amount (in words) : </div>
-                            <div className="amountHeading"><b>{capitalizeIntegerWords(integerWords1)}</b></div>
+                            <div className="amountHeading"><b>{capitalizeIntegerWords(integerWords1)} Only</b></div>
                         </div>
                     </div>
 
@@ -775,6 +804,9 @@ const generatePDF = async () => {
 
                     <div className="paymentDetials1" style={paymentDetials}>
                         <div className="bankDetails" style={{ ...df, ...bankDetails, ...padInPx }}>
+                            <div className="invoiceName1" style={{ marginRight: '40%'}}>
+                                <QrCode totalSum={formatTotal(grandTotal())} upi={SenderInvoiceProp[0].upiid} />
+                            </div>
                             <div className="ditailwithfixedwidth" style={ditailwithfixedwidth}>
                                 <div className="bankName"><b>Bank Details</b></div>
                                 <div className="bankName">Bank Name : {SenderInvoiceProp[0].bankname}</div>
@@ -807,7 +839,8 @@ const generatePDF = async () => {
                                 <div className="totalVal1">{formatTotal(grandTotal())}</div>
                             </div>
                         </div>
-                    </div> */}
+                      </div> */}
+
                         Company's PAN : <b>{SenderInvoiceProp[0].pan}</b>
                         <div className="acc" style={{ ...df, ...sb }}>
                             <div className="dec">
@@ -817,9 +850,10 @@ const generatePDF = async () => {
                             </div>
 
                             <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
-                                <img src={signSrc} style={Signature} alt="signature" height={50} width={300} />
-                                <div className="pvtName">VAIBAVSRI INDIA PRIVATE LIMITITED</div>
-                                <div className="authSign">Authorized Sign.</div>
+                                <div className="pvtName" style={PVTname}>VAIBAVSRI INDIA PRIVATE LIMITITED</div>
+                                <img src={signSrc} style={Signature} alt="signature" height={10} width={300} />
+                                <div className="authSign" style={AuthSign}>Authorized Sign.</div>
+
                             </div>
                         </div>
                     </div>

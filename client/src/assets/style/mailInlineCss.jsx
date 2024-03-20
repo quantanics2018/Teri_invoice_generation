@@ -216,6 +216,9 @@ const dfc ={
 const gap ={
     gap:'3px',
 }
+const gap1 ={
+    gap:'1px',
+}
 const invoicedetail = {
     width:'60%'
 
@@ -263,4 +266,4 @@ const row = {
 //     border: 1px solid black;
 //     padding: 10px;
 // }
-export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput,tdv,tdvDate,textarea,billDetial,bankDetails,tdh,tBorderd,tandc,nowrap,taxInvoiceHead,invoiceDetial,df,gap,dfc,addressDetials,invoicedetail,rowInvoiceDetail,inputbox,row1Invoice,width50,reciverBill,pad,textwarp,padInPx,bussinessContent,mt,sb,table1,row};
+export { invoicecontent, InvoiceHead, invoiceImg, invoicepic, invoiceHead, paymentDetials, th, td, paymentQrSession, detialAboutPayment, invoiceRow, even, odd, bussinessQuotes, listData, billTo, invoiceNo, shipTo, table , tbody,tBorder,rawInput,tdv,tdvDate,textarea,billDetial,bankDetails,tdh,tBorderd,tandc,nowrap,taxInvoiceHead,invoiceDetial,df,gap, gap1,dfc,addressDetials,invoicedetail,rowInvoiceDetail,inputbox,row1Invoice,width50,reciverBill,pad,textwarp,padInPx,bussinessContent,mt,sb,table1,row};
