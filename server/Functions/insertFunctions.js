@@ -281,7 +281,7 @@ async function addProduct(req, res) {
         else {
             await userdbInstance.userdb.query('BEGIN');
             const insertProductResult = await userdbInstance.userdb.query(`INSERT INTO public.products(
-                productid, quantity, priceperitem, "Lastupdatedby",productname,belongsto,status,batchno,cgst,sgst)
+                productid, quantity, priceperitem, last_updated_by,productname,belongsto,status,batchno,cgst,sgst)
                 VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10);`, [hsncode, quantity, priceperitem, updator, productname, belongsto, '1', batchno, CGST, SGCT]);
             await userdbInstance.userdb.query('COMMIT');
             if (insertProductResult.rowCount === 1) {

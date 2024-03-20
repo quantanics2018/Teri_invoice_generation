@@ -119,7 +119,7 @@ async function getProducts(req, res) {
         }
         // console.log("belongsto : ", belongsto);
 
-        const getAllProductsResult = await userdbInstance.userdb.query(`SELECT rno, productid, quantity, priceperitem, "Lastupdatedby", productname,status ,batchno, cgst, sgst
+        const getAllProductsResult = await userdbInstance.userdb.query(`SELECT rno, productid, quantity, priceperitem, last_updated_by, productname,status ,batchno, cgst, sgst
         FROM public.products where belongsto=$1 and status=$2 order by rno DESC;`, [belongsto, '1']);
         res.json({ message: "Successfully Data Fetched", data: getAllProductsResult.rows });
     } catch (error) {
