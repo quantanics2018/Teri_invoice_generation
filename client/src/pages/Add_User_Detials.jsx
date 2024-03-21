@@ -26,7 +26,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { API_URL } from '../config';
 import TextField from '@mui/material/TextField';
-import { Box, Button, Checkbox, FormControl, InputAdornment, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, InputAdornment, InputLabel, MenuItem, Select, Snackbar, Typography } from '@mui/material';
 import { CancelBtn, SaveBtn, UserActionBtn } from '../assets/style/cssInlineConfig';
 import { AddUserBtn, SaveBtnComp } from '../components/AddUserBtn';
 import { CancelBtnComp } from '../components/AddUserBtn'
@@ -758,14 +758,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         {resAlert}
                     </MuiAlert>
                 </Snackbar>
-                {/* <Snackbar open={submittedWarnning} autoHideDuration={1000} onClose={handleSnackbarClose} anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-            }}>
-                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-                    {resAlert}
-                </MuiAlert>
-            </Snackbar> */}
+               
                 {/* Exit Conformation */}
                 <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -836,53 +829,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 {(Positionid_val === 4) && " Staff "}
                                 {(Positionid_val === 5) && " D_Staff "}
                                 Details </div>
-                            {/* <select value={selectedUser} onChange={handleUserChange}>
-                            <option value={"select user"}>Select User</option>
-                            {userInfo.position === 'manifacture' && (
-                                <>
-                                    <option value="Staff">Staff</option>
-                                    <option value="Distributor">Distributor</option>
-                                </>
-                            )}
-                            {userInfo.position === 'staff' && (
-                                <>
-                                    <option value="Distributor">Distributor</option>
-                                </>
-                            )}
-                            {userInfo.position === 'distributor' && (
-                                <option value="Customer" >Customer</option>
-                            )}
-                        </select> */}
+                           
                         </div>
-                        {/* <FormControl style={{ width: '150px' }}>
-                        <InputLabel id="demo-simple-select-label">Select user</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={selectedUser}
-                            label="Select user"
-                            onChange={handleUserChange}
-                        >
-                            {userInfo.position === 'manifacture' && (
-                                <>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value="Staff">Staff</MenuItem>
-                                    <MenuItem value="Distributor">Distributor</MenuItem>
-                                </>
-                            )}
-                            {userInfo.position === 'staff' && (
-                                <>
-                                    <MenuItem value="Distributor">Distributor</MenuItem>
-                                </>
-                            )}
-                            {userInfo.position === 'distributor' && (
-                                <MenuItem value="Customer" >Customer</MenuItem>
-                            )}
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                    </FormControl> */}
+                      
 
                         <div className="row_two display-flex padding-loc">
                             <div className="device_info uppercase light-grey mb-loc-5">
@@ -908,6 +857,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
 
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                                    {/* signature input */}
+                                                    {console.log("signature input")}
+                                                    
                                                     <TextField
                                                         label={
                                                             <span>{`${field.label}`}</span>
@@ -1100,42 +1052,12 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 ))}
                             </div>
 
-                            {/* <div className="dsa_row_3 display-flex">
-                                {inputFields.slice(13, 14).map((field, index) => (
-                                    <div key={index} className="inputbox display-flex input">
-                                        <div className="dsa_1st_input">
-                                            {!(field.isStaff) && (
-                                                <Box className="inputs-group display-flex"
-                                                    sx={{
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        '& .MuiTextField-root': {
-                                                            m: 1,
-                                                            width: field.name === 'bussinessType' ? '30ch' : '100%',
-                                                        },
-                                                    }}
-                                                    style={{ marginLeft: '10px', flexDirection: 'row' }}
-                                                >
-                                                    <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
-                                                        Passbook Image
-                                                        <input
-                                                            type="file"
-                                                            style={{ display: 'none' }}
-                                                            onChange={handleFileChange}
-                                                        />
-                                                    </Button>
-                                                    <span style={{ marginLeft: '10px' }}>{fileName && `${fileName}`}</span>
-                                                </Box>
-                                            )}
-
-                                        </div>
-                                    </div>
-                                ))}
-                            </div> */}
-                            <div>
+                          
+                            <Box sx={{display:'flex',direction:'row',alignItems:'center',justfiyContent:'center'}}>
+                                <Typography sx={{marginLeft:'0.5rem',marginRight:'1rem'}}>Upload Signature</Typography>
                                 <input type="file" onChange={handleFileChanges} />
                                 {/* <button onClick={handleUpload}>Upload Image</button> */}
-                            </div>
+                            </Box>
 
                             {!(Positionid_val === 4 || Positionid_val === 5) && (
                                 <div className="device_info uppercase light-grey mb-loc-5">
@@ -1180,37 +1102,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                     </div>
                                 ))}
                             </div>
-                            {/* <div className="dsa_row_3 display-flex">
-                            {inputFields.slice(18, 18).map((field, index) => (
-                                <div key={index} className="inputbox display-flex input">
-                                    <div className="dsa_1st_input">
-                                        {!(field.isStaff) && (
-                                            <Box className="inputs-group display-flex"
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column', // Change the direction for small screens
-                                                    '& .MuiTextField-root': {
-                                                        m: 1,
-                                                        width: field.name === 'bussinessType' ? '30ch' : '100%',
-                                                    },
-                                                }}
-                                            >
-                                                <TextField
-                                                    label={`${field.label} *`}
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={(e) => handleInputChange(e, field.name)}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                />
-                                            </Box>
-                                        )}
-
-                                    </div>
-                                </div>
-                            ))}
-                        </div> */}
+                           
                             {!(Positionid_val === 4 || Positionid_val === 5) && (
                                 <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
                             )}
@@ -1306,9 +1198,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         <div className="save_cancel_btn display-flex site_button gap-4">
                             <CancelBtnComp CancelBtnFun={handleCancel} />
                             <SaveBtnComp SaveBtnFun={(e) => handleSubmit(e)} />
-                            {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={(e) => handleSubmit(e)}>Save</button>
-                            <button type="button" class="btn-loc inactive-loc btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                            <button className="btn-loc inactive-loc btn " style={cancel_btn} data-bs-toggle="modal" data-bs-target="#exampleModal">cancel</button> */}
+                         
                         </div>
                     </div>
                 </div>

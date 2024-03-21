@@ -850,7 +850,7 @@ const Invoice = ({
                             </div>
 
                             <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
-                                <div className="pvtName" style={PVTname}>VAIBAVSRI INDIA PRIVATE LIMITITED</div>
+                                <div className="pvtName" style={PVTname}>{SenderInvoiceProp[0].organizationname}</div>
                                 <img src={signSrc} style={Signature} alt="signature" height={10} width={300} />
                                 <div className="authSign" style={AuthSign}>Authorized Sign.</div>
 
