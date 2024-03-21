@@ -55,6 +55,8 @@ app.post('/add/:entity(user|products|invoice|feedback)', upload.single('image'),
             // const passbookImg  = req.body.SignatureImage;
             // console.log(passbookImg);
             // res.json({ message: "Testing-1" });
+            console.log("image is ");
+            console.log(req.body.image);
             const addUser = await addData.addUser(req, res);
         } catch (error) {
             console.error('Error retrieving user details:', error);
