@@ -41,6 +41,8 @@ async function emailservice(req, res) {
             pass: 'imkq rydg xtla lvmx',
         },
     });
+    
+
     const htmlString = mailcontent.htmlString;
     const pdfFilePath = path.join(__dirname, 'GooglePay_QR.pdf');
     const pdfBuffer = await fs.readFile(pdfFilePath);
