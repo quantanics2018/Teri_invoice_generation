@@ -640,8 +640,11 @@ const InvoiceGenerator = () => {
                                 inputValuesAboveRows={inputValues}
                                 productList={productList}
                                 generateInvoice={false}
+                                buyercompany={inputValues.Buyer}
                             />
+                           
                         </div>
+                       
                         {/* <div class="modal-footer gap-4">
                             <CancelBtnComp dataBsDismiss="modal" />
                             <Button variant="outlined" style={SaveBtn} 
@@ -673,6 +676,7 @@ const InvoiceGenerator = () => {
                                 inputValuesAboveRows={inputValues}
                                 productList={productList}
                                 generateInvoice={true}
+                                buyercompany={inputValues.Buyer}
                             />
                         </div>
                         {/* <div class="modal-footer gap-4">

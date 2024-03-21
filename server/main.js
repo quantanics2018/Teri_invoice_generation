@@ -18,6 +18,7 @@ const { UpdatePasswordmailservice } = require('./services/emailservice');
 const { sendInvoice } = require('./services/emailservice');
 const { generateQR } = require('./services/QrGeneration');
 const multer = require('multer');
+const userdbInstance = require('./instances/dbInstance');
 // var upload = multer({ dest: './uploads/' });
 
 
@@ -319,6 +320,93 @@ app.post('/upload', upload.single('image'), (req, res) => {
     // res.json({ status: true, message: 'Photo Uploaded Successfully' });
     // res.json({ success: true, filename });
 });
+
+//Mathan - email
+
+// Nodemailer configuration
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587, // or 465
+    secure: false,
+    auth: {
+      user: 'terionorganization@gmail.com',
+      pass: 'imkq rydg xtla lvmx'
+    }
+  });
+
+const invoicesDir = path.join(__dirname, 'EmailPdfContent');
+
+// Ensure the invoices directory exists
+if (!fs.existsSync(invoicesDir)) {
+  fs.mkdirSync(invoicesDir);
+}
+console.log(invoicesDir);
+
+// Define a route to handle saving PDF files
+app.post('/save-pdf-server', upload.single('file'), async(req, res) => {
+
+    console.log("*******************************",req.body.companyname); 
+    console.log("*******************************",req.body);
+    // Check if file exists in the request
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+  
+    const tempPath = req.file.path;
+    const targetPath = path.join(invoicesDir, 'Email.pdf');
+    const recivermail = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1', [req.body.companyname]);
+    console.log("email to : ",recivermail.rows[0].email);
+    const to = recivermail.rows[0].email;
+    console.log(to);
+    fs.rename(tempPath, targetPath, err => {
+      if (err) {
+        console.error('Error saving file:', err);
+        res.status(500).json({ message: 'Error saving file'});
+      } else {
+        // Read the PDF file
+        fs.readFile(targetPath, (err, data) => {
+          if (err) {
+            console.error('Error reading PDF file:', err);
+            return res.status(500).send('Error reading PDF file');
+          }
+          
+          // Mail options
+          const mailOptions = {
+            from: 'terionorganization@gmail.com',
+            to: to,
+            subject: 'Official mail from Terion Organization',
+            text: 'INVOICE FROM TERION',
+            attachments: [
+              {
+                filename: 'Email.pdf',
+                content: data
+              }
+            ]
+          };
+  
+          // Send mail
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+              return res.status(500).send('Error sending email');
+            }
+            console.log('Email sent: ' + info.response);
+            
+            // After email is sent successfully, delete the PDF file
+            fs.unlink(targetPath, err => {
+              if (err) {
+                console.error('Error deleting PDF file:', err);
+              } else {
+                console.log('PDF file deleted successfully');
+              }
+            });
+  
+            res.send('Email sent successfully');
+          });
+        });
+      }
+    });
+  });
 
 app.listen(4000, () => {
     console.log("server is running on port 4000");
