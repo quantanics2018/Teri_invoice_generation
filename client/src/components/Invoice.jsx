@@ -267,6 +267,7 @@ const Invoice = ({
     //     html2pdf().from(invoicecontent).save();
     // }
 
+    
     // Convert image to base64
     const imageToBase64 = async (url) => {
         const response = await fetch(url);
@@ -278,20 +279,6 @@ const Invoice = ({
             reader.readAsDataURL(blob);
         });
     };
-
-    // Usage:
-    // const generatePDF = async () => {
-    //     const invoicecontent = document.getElementById('invoiceContent1');
-    //     const img = document.querySelector('.sign img');
-
-    //     if (img) {
-    //         const base64 = await imageToBase64(img.src);
-    //         img.src = base64;
-    //     }
-    //     html2pdf().from(invoicecontent).save();
-    // }
-
-
 
 
     const [signSrc, setSignSrc] = useState('');
@@ -775,7 +762,6 @@ const Invoice = ({
                                 <div className="pvtName" style={PVTname}>{SenderInvoiceProp[0].organizationname}</div>
                                 <img src={signSrc} style={Signature} alt="signature" height={10} width={300} />
                                 <div className="authSign" style={AuthSign}>Authorized Sign.</div>
-
                             </div>
                         </div>
                     </div>
