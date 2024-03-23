@@ -19,7 +19,8 @@ import { useNavigate } from 'react-router-dom';
 import { SaveBtn } from '../assets/style/cssInlineConfig';
 import { CancelBtnComp } from './AddUserBtn';
 
-import '/home/quantanics/Desktop/teri/client/src/assets/style/main.css';
+// import '/home/quantanics/Desktop/teri/client/src/assets/style/main.css';
+import '../assets/style/main.css'
 import React, { useRef } from 'react';
 
 // import htmlPdf from 'html-pdf';
@@ -329,23 +330,22 @@ const Invoice = ({
     const generatePDF = async () => {
         const invoicecontent = document.getElementById('invoiceContent1');
         const img = document.querySelector('.sign img');
-
+    
         if (img) {
             const base64 = await imageToBase64(img.src);
             img.src = base64;
         }
-
-        // Define options for PDF generation
-        const options = {
-            filename: 'invoice.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm' } // Specify A4 size and portrait orientation
-        };
-
-        // Generate PDF with specified options
-        html2pdf().set(options).from(invoicecontent).save();
+    
+        // Convert HTML content to canvas
+        html2canvas(invoicecontent, { scale: 2 }).then(canvas => {
+            // Convert canvas to PDF
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Width and height are set to A4 dimensions
+            pdf.save('invoice.pdf');
+        });
     }
+    
 
     const invoiceRef = useRef(null);
     const handleDownload1 = async() => {
