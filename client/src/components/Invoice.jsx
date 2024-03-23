@@ -18,7 +18,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { SaveBtn } from '../assets/style/cssInlineConfig';
 import { CancelBtnComp } from './AddUserBtn';
+
 import '/home/quantanics/Desktop/teri/client/src/assets/style/main.css';
+import React, { useRef } from 'react';
+
 // import htmlPdf from 'html-pdf';
 
 
@@ -31,6 +34,7 @@ const Invoice = ({
     inputValuesAboveRows,
     productList, invoiceid,
     selectedIndex,
+    buyercompany,
     generateInvoice
 }) => {
     const navigate = useNavigate();
@@ -237,6 +241,7 @@ const Invoice = ({
                     setLoading(true);
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                     if (response.data.status) {
+                        handleDownload1();
                         // alert(response.data.invoiceid);
                         // await sendDataToServer(response.data.invoiceid);
                         alert(response.data.message);
@@ -284,28 +289,9 @@ const Invoice = ({
     //     }
     //     html2pdf().from(invoicecontent).save();
     // }
-    const generatePDF = async () => {
-        const invoicecontent = document.getElementById('invoiceContent1');
-        const img = document.querySelector('.sign img');
-    
-        if (img) {
-            const base64 = await imageToBase64(img.src);
-            img.src = base64;
-        }
-    
-        // Define options for PDF generation
-        const options = {
-            filename: 'invoice.pdf', // Optional, specify a filename for the downloaded PDF
-            image: { type: 'jpeg', quality: 0.98 }, // Optional, set image type and quality
-            html2canvas: { scale: 2 }, // Optional, adjust the scale for better rendering
-            jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm' } // Specify A4 size and portrait orientation
-        };
-    
-        // Generate PDF with specified options
-        html2pdf().set(options).from(invoicecontent).save();
-    }
-    
-    
+
+
+
 
     const [signSrc, setSignSrc] = useState('');
     useEffect(() => {
@@ -340,9 +326,63 @@ const Invoice = ({
     }, [signSrc]);
 
 
+    const generatePDF = async () => {
+        const invoicecontent = document.getElementById('invoiceContent1');
+        const img = document.querySelector('.sign img');
+
+        if (img) {
+            const base64 = await imageToBase64(img.src);
+            img.src = base64;
+        }
+
+        // Define options for PDF generation
+        const options = {
+            filename: 'invoice.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { format: 'a4', orientation: 'portrait', unit: 'mm' } // Specify A4 size and portrait orientation
+        };
+
+        // Generate PDF with specified options
+        html2pdf().set(options).from(invoicecontent).save();
+    }
+
+    const invoiceRef = useRef(null);
+    const handleDownload1 = () => {
+        // Adjust these values to change the width and height of the canvas
+        const width = 1000; // Example width
+        const height = 1500; // Example height
+
+        html2canvas(invoiceRef.current, { width, height }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'px', [width, height]);
+            pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+            const blobData = pdf.output('blob');
+            const formData = new FormData();
+            formData.append('file', blobData, 'Email.pdf');
+            formData.append('companyname', buyercompany);
+            console.log(buyercompany);
+            axios.post('http://localhost:4000/save-pdf-server', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then(response => {
+                    console.log('File saved successfully:', response.data);
+                    // Optionally, notify the user of successful save
+                })
+                .catch(error => {
+                    console.error('Error saving file:', error);
+                    // Optionally, notify the user of error
+                });
+        });
+    };
+
+
+
     return (
         <div className="fullPage">
-            <div className="A4SheetSize" id="invoiceContent1" style={pad}>
+            <div className="A4SheetSize" id="invoiceContent1" style={pad} ref={invoiceRef}>
                 <div className="taxInvoiceHead" style={taxInvoiceHead}>
                     {generateInvoice ?
                         <h4>TAX INVOICE {invoiceid}</h4>
@@ -354,23 +394,6 @@ const Invoice = ({
                     }
                 </div>
                 <br />
-                {/* <div className="invoiceconten"  style={dfc}> */}
-                {/* <div className="InvoiceHead1"
-                    style={InvoiceHead}
-                >
-
-                    <div className="invoiceImg1"
-                        style={invoiceImg}
-                    >
-                        <img className='invoicepic1'
-                            style={invoicepic}
-                            src={invoicePic} alt="" />
-                    </div>
-                    <div className="invoiceName1"
-                    >
-                        <QrCode totalSum={formatTotal(grandTotal())} upi={SenderInvoiceProp[0].upiid} />
-                    </div>
-                </div> */}
 
                 <div className="billDetial" style={{ ...billDetial, ...dfc }}>
                     <div className="addressDetials" style={addressDetials}>
@@ -513,10 +536,7 @@ const Invoice = ({
                         </div>
                     </div>
                 </div>
-                {/* </div> */}
                 <div className="bodydiv">
-
-                   
                     <div style={containerStyle}>
                         {/* Table heading row */}
                         <div style={rowStyle}>
@@ -707,7 +727,7 @@ const Invoice = ({
 
                     <div className="paymentDetials1" style={paymentDetials}>
                         <div className="bankDetails" style={{ ...df, ...bankDetails, ...padInPx }}>
-                            <div className="invoiceName1" style={{ marginRight: '40%'}}>
+                            <div className="invoiceName1" style={{ marginRight: '40%' }}>
                                 <QrCode totalSum={formatTotal(grandTotal())} upi={SenderInvoiceProp[0].upiid} />
                             </div>
                             <div className="ditailwithfixedwidth" style={ditailwithfixedwidth}>
@@ -773,6 +793,7 @@ const Invoice = ({
                 {generateInvoice ? (
                     <Button data-bs-dismiss="modal" variant="outlined" color="primary"
                         onClick={handleSubmit}
+                        // onClick={handleDownload1}
                     >
                         Generate Invoice
                     </Button>
