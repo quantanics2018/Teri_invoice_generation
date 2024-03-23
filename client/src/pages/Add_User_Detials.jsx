@@ -215,7 +215,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
         console.log("isImagePresent : ",isImagePresent);
 
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
+
             console.log("Hello From Staff");  
+
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
                 // Inner Level
                 const isValidbussinessType = (postData.bussinessType === 'Organization' || postData.bussinessType === 'Individual');
