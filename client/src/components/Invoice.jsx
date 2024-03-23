@@ -352,8 +352,8 @@ const Invoice = ({
 
         html2canvas(invoiceRef.current, { width, height }).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'px', [width, height]); // Adjust units and dimensions as needed
-            pdf.addImage(imgData, 'PNG', 0, 0, width, height); // Adjust positioning and size
+            const pdf = new jsPDF('p', 'px', [width, height]);
+            pdf.addImage(imgData, 'PNG', 0, 0, width, height);
             const blobData = pdf.output('blob');
             const formData = new FormData();
             formData.append('file', blobData, 'Email.pdf');
