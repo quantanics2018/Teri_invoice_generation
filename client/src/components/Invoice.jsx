@@ -18,7 +18,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { SaveBtn } from '../assets/style/cssInlineConfig';
 import { CancelBtnComp } from './AddUserBtn';
+
+import '/home/quantanics/Desktop/teri/client/src/assets/style/main.css';
 import React, { useRef } from 'react';
+
 // import htmlPdf from 'html-pdf';
 
 
@@ -537,20 +540,20 @@ const Invoice = ({
                     <div style={containerStyle}>
                         {/* Table heading row */}
                         <div style={rowStyle}>
-                            <div style={cellStyle}>S.No.</div>
-                            <div style={cellStyle}>Description of Goods</div>
-                            <div style={cellStyle}>HSN NO</div>
-                            <div style={cellStyle}>Quantity</div>
-                            <div style={cellStyle}>Rate</div>
-                            <div style={cellStyle}>per</div>
-                            <div style={cellStyle}>Disc. %</div>
-                            <div style={cellStyle}>Amount</div>
+                            <div className='invoice_table_header' style={{width:'6%'}}>S.No.</div>
+                            <div className='invoice_table_header' style={{width:'34%'}}>Description of Goods</div>
+                            <div className='invoice_table_header' style={{width:'13%'}}>HSN NO</div>
+                            <div className='invoice_table_header' style={{width:'10%'}}>Quantity</div>
+                            <div className='invoice_table_header' style={{width:'10%'}}>Rate</div>
+                            <div className='invoice_table_header' style={{width:'10%'}}>per</div>
+                            <div className='invoice_table_header' style={{width:'7%'}}>Disc. %</div>
+                            <div className='invoice_table_header' style={{width:'10%'}}>Amount</div>
                         </div>
                         {/* Table data  */}
                         {[...previewInvoiceprop, {}, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div style={cellStyle}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
-                                <div style={cellStyle}>
+                                <div className='invoice_table_header' style={{width:'6%'}}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
+                                <div className='invoice_table_header' style={{width:'34%'}}>
                                     {item.productName || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
@@ -577,9 +580,9 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div style={cellStyle}>{item.hsncode || ''}</div>
+                                <div className='invoice_table_header' style={{width:'13%'}}>{item.hsncode || ''}</div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div style={cellStyle}>
+                                <div className='invoice_table_header' style={{width:'10%'}}>
                                     {item.Quantity || ''}
                                     {index === previewInvoiceprop.length + 1 &&
                                         <div>
@@ -587,10 +590,10 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div style={cellStyle}>{(index <= previewInvoiceprop.length - 1) && 'Nos.'}</div>
-                                <div style={cellStyle}>{unitRate(item.hsncode, item.batchno)}</div>
-                                <div style={cellStyle}>{item.Discount || ''}</div>
-                                <div style={cellStyle}>
+                                <div className='invoice_table_header' style={{width:'10%'}}>{(index <= previewInvoiceprop.length - 1) && 'Nos.'}</div>
+                                <div className='invoice_table_header' style={{width:'10%'}}>{unitRate(item.hsncode, item.batchno)}</div>
+                                <div className='invoice_table_header' style={{width:'7%'}}>{item.Discount || ''}</div>
+                                <div className='invoice_table_header' style={{width:'10%'}}>
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>

@@ -580,3 +580,11 @@ main {
     color: #005ABC;
     font-size: 1rem;
 }
+
+
+/* invoice css  invoice page alignment css*/
+.invoice_table_header{
+    border:1px solid #000;
+    text-align:center;
+    border-top: 0px;
+}
