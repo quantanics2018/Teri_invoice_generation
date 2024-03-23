@@ -211,6 +211,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
         // const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(postData.email)
         const isValidemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)
         const isValidMobileNo = /^\d{10}$/.test(postData.mobileNo)
+        const isImagePresent = isImageValid(file);
+        console.log("isImagePresent : ",isImagePresent);
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
                 // Inner Level
@@ -230,8 +232,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
                 // check for image
                 // const isImagePresent = (file !== null);
-                const isImagePresent = isImageValid(file);
-                console.log("isImagePresent : ",isImagePresent);
+               
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
                 const isValidState = postData.State.trim() !== '';
@@ -373,10 +374,20 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     setresAlert(response.data.message)
                     setSubmitted(true);
                     if (response.data.status) {
-                        setTimeout(() => {
-                            handleClear();
-                            navigate(-1);
-                        }, 1000);
+                        const response = await axios.post(`${API_URL}upload`,
+                            formData
+                        );
+                        console.log(response.data.status);
+                        if (response.data.status) {
+                            setTimeout(() => {
+                                handleClear();
+                                navigate(-1);
+                            }, 1000);
+                            console.log(' staff addingFile uploaded successfully:', response.data);
+                        } else {
+                            console.error('staff adding Failed to upload file:', response.statusText);
+                        }
+                       
                     }
                 } catch (error) {
                     console.error('Error sending data:', error);
