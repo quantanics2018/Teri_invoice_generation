@@ -346,9 +346,6 @@ console.log(invoicesDir);
 
 // Define a route to handle saving PDF files
 app.post('/save-pdf-server', upload.single('file'), async(req, res) => {
-
-    console.log("*******************************",req.body.companyname); 
-    console.log("*******************************",req.body);
     // Check if file exists in the request
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });

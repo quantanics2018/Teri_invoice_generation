@@ -345,11 +345,10 @@ const Invoice = ({
     }
 
     const invoiceRef = useRef(null);
-    const handleDownload1 = () => {
+    const handleDownload1 = async() => {
         // Adjust these values to change the width and height of the canvas
-        const width = 1000; // Example width
-        const height = 1500; // Example height
-
+        const width = 1000; 
+        const height = 1500; 
         html2canvas(invoiceRef.current, { width, height }).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'px', [width, height]);
@@ -358,7 +357,7 @@ const Invoice = ({
             const formData = new FormData();
             formData.append('file', blobData, 'Email.pdf');
             formData.append('companyname', buyercompany);
-            console.log(buyercompany);
+            // console.log(buyercompany);
             axios.post('http://localhost:4000/save-pdf-server', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -366,7 +365,7 @@ const Invoice = ({
             })
                 .then(response => {
                     console.log('File saved successfully:', response.data);
-                    // Optionally, notify the user of successful save
+                
                 })
                 .catch(error => {
                     console.error('Error saving file:', error);
@@ -587,8 +586,8 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div style={cellStyle}>{(index <= previewInvoiceprop.length - 1) && 'Nos.'}</div>
                                 <div style={cellStyle}>{unitRate(item.hsncode, item.batchno)}</div>
+                                <div style={cellStyle}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
                                 <div style={cellStyle}>{item.Discount || ''}</div>
                                 <div style={cellStyle}>
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
