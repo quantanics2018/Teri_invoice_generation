@@ -165,16 +165,30 @@ async function addInvoice(req, res) {
 
     console.log(totalSum);
     // console.log("recivermail : ", recivermail);
-    // console.log("senderID", senderID);
+    console.log("senderID", senderID);
     // console.log(invoiceItem);
 
     try {
+      
+
         const getReciverId = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1;', [Buyer]);
         const recivermail = getReciverId.rows[0].email;
-        console.log(recivermail);
+        console.log("recivermail : ",recivermail);
 
-        const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1 and adminid=$2;', [recivermail, senderID]);
-        console.log(checkIsUsernameExist.rows);
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [senderID]);
+        // console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [senderID]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = senderID
+        }
+        console.log("belongsto- senderid : ",belongsto);
+
+        const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1 and adminid=$2;', [recivermail, belongsto]);
+        console.log("Check for row exists : ",checkIsUsernameExist.rows);
         if (checkIsUsernameExist.rows != 0) {
             await userdbInstance.userdb.query('BEGIN');
 
