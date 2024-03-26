@@ -176,7 +176,8 @@ const EditProduct = () => {
         
         const isValidproductname = (inputValues.productname.trim() !== '');
         const isValidQuantityNo = /^[0-9]+$/.test(inputValues.quantity);
-        const isValidpriceperitem = /^[0-9]+$/.test(inputValues.priceperitem);
+        // const isValidpriceperitem = /^\d+(\.\d{2})?$/.test(postData.priceperitem);
+        const isValidpriceperitem = /^\d+(\.\d{2})?$/.test(inputValues.priceperitem);
         const isValidCGST = /^[0-9]+$/.test(inputValues.CGST);
         const isValidSGCT = /^[0-9]+$/.test(inputValues.SGCT);
         if (isValidhsncode & isValidbatchno & isValidproductname & isValidQuantityNo & isValidpriceperitem & isValidCGST & isValidSGCT) {
