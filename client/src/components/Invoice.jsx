@@ -39,12 +39,6 @@ const Invoice = ({
     generateInvoice
 }) => {
     const navigate = useNavigate();
-
-    // console.log("previewInvoiceprop : ", previewInvoiceprop[0]);
-    // console.log("ReciverInvoiceProp : ", ReciverInvoiceProp);
-    // console.log("SenderInvoiceProp : ",SenderInvoiceProp);
-    // console.log("totalSum : ",totalSum[0]);
-    // console.log("totalQuantity : ",totalQuantity[0]);
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const senderid = userInfo.userid;
@@ -139,16 +133,13 @@ const Invoice = ({
     };
     const getcgst = (hsnno, batchno) => {
         const getcgst = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.cgst)[0] || '';
-        // console.log("getcgst : ", getcgst);
         return getcgst
     }
     const getsgst = (hsnno, batchno) => {
         const getsgst = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.sgst)[0] || '';
-        // console.log("getcgst : ", getsgst);
         return getsgst
     }
 
-    // console.log("productList :", productList);
 
     const unitRate = (hsnno, batchno) => {
         const unitRate = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.priceperitem)[0] || '';
@@ -161,29 +152,21 @@ const Invoice = ({
         return previewInvoiceprop.reduce((acc, item) => {
             const unitPrice = parseInt(unitRate(item.hsncode, item.batchno));
             const totalPrice = (unitPrice * parseInt(item.Quantity)) - ((unitPrice * parseInt(item.Quantity)) * parseInt(item.Discount) / 100);
-            // console.log(acc);
             return acc + totalPrice;
         }, 0);
     }
-    // const getTaxableValue = TaxableValue();
-    // console.log(getTaxableValue);
 
     const TotalcgstPercent = () => {
         const total = previewInvoiceprop.reduce((acc, item) => {
-            // console.log(item);
             const Totalcgst = parseInt(getcgst(item.hsncode, item.batchno));
-            // console.log(acc);
             return acc + Totalcgst;
         }, 0);
         return total / previewInvoiceprop.length;
     }
-    // console.log(Totalcgst());
 
     const TotalsgstPercent = () => {
         const total = previewInvoiceprop.reduce((acc, item) => {
-            // console.log(item);
             const Totalsgst = parseInt(getsgst(item.hsncode, item.batchno));
-            // console.log(acc);
             return acc + Totalsgst;
         }, 0);
         return total / previewInvoiceprop.length;
@@ -201,11 +184,11 @@ const Invoice = ({
         const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
         return formattedTotal;
     }
-    console.log(Math.round(formatTotal(grandTotal())));
+    // console.log(Math.round(formatTotal(grandTotal())));
     const number = !isNaN(Math.round(formatTotal(grandTotal()))) ? Math.round(formatTotal(grandTotal())) : 0;
     const integerWords = numberToWords.toWords(number);
 
-    console.log(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))));
+    // console.log(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))));
     const number1 = !isNaN(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue())))) ? Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))) : 0;
     const integerWords1 = numberToWords.toWords(number1);
     // consecimalPart = Math.round((number - integerPart) * 100);
@@ -219,7 +202,7 @@ const Invoice = ({
     // Handle submit
     const [loading, setLoading] = useState(false);
     const totalSum = Math.round(formatTotal(grandTotal()))
-    console.log("rows : ", totalSum);
+    // console.log("rows : ", totalSum);
     const handleSubmit = async () => {
 
         const hasEmptyValue = previewInvoiceprop.some(row =>
@@ -295,16 +278,6 @@ const Invoice = ({
                 const url = URL.createObjectURL(blob);
                 // console.log(url);
                 setSignSrc(`${API_URL}${response.data.src}`);
-
-                // let url;
-                // if (response.data instanceof Blob) {
-                //     url = URL.createObjectURL(response.data);
-                // } else if (typeof response.data === 'string') {
-                //     url = response.data; // If the response data is already a URL
-                // } else {
-                //     throw new Error('Response data format not supported');
-                // }
-                // setSignSrc(url);
             } catch (error) {
                 console.error('Error fetching signature:', error);
             }
@@ -315,80 +288,74 @@ const Invoice = ({
 
 
     const generatePDF = async () => {
-        const invoicecontent = document.getElementById('invoiceContent1');
-        const img = document.querySelector('.sign img');
+        // const invoicecontent = document.getElementById('invoiceContent1');
+        // const img = document.querySelector('.sign img');
 
-        if (img) {
-            const base64 = await imageToBase64(img.src);
-            img.src = base64;
-        }
+        // if (img) {
+        //     const base64 = await imageToBase64(img.src);
+        //     img.src = base64;
+        // }
 
-        // Convert HTML content to canvas
-        html2canvas(invoicecontent, { scale: 2 }).then(canvas => {
-            // Convert canvas to PDF
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgData = canvas.toDataURL('image/jpeg', 1.0);
-            pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Width and height are set to A4 dimensions
+        // // Convert HTML content to canvas
+        // html2canvas(invoicecontent, { scale: 2 }).then(canvas => {
+        //     // Convert canvas to PDF
+        //     const pdf = new jsPDF('p', 'mm', 'a4');
+        //     const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        //     pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Width and height are set to A4 dimensions
+        //     pdf.save('invoice.pdf');
+        // });
+        try {
+            const canvas = await html2canvas(invoiceRef.current, {
+                scale: 2,
+                useCORS: true,
+                logging: true
+            });
+            const imageData = canvas.toDataURL('image/jpeg');
+            const pdf = new jsPDF();
+            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
             pdf.save('invoice.pdf');
-        });
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
 
     const invoiceRef = useRef(null);
     const handleDownload1 = async () => {
         try {
-            // Convert div to canvas
             const canvas = await html2canvas(invoiceRef.current, {
-                scale: 2, // Adjust scale as needed
-                useCORS: true, // Allow cross-origin images
-                logging: true // Enable logging for debugging
+                scale: 2,
+                useCORS: true,
+                logging: true 
             });
-    
+
             // Convert canvas to data URL
             const imageData = canvas.toDataURL('image/jpeg');
-    
+
             // Generate PDF using jsPDF
             const pdf = new jsPDF();
-    
+
             // Add image to PDF
             pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-    
-            // Save PDF locally within React project
-            pdf.save('invoice.pdf');
-    
-            alert('PDF saved successfully');
+            const blobData = pdf.output('blob');
+            const formData = new FormData();
+            formData.append('file', blobData, 'Email.pdf');
+            formData.append('companyname', buyercompany);
+            // console.log(buyercompany);
+            axios.post(`${API_URL}save-pdf-server`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then(response => {
+                    console.log('File saved successfully:', response.data);
+
+                })
+          
         } catch (error) {
             console.error('Error:', error);
-            alert('Error occurred while saving PDF');
+           
         }
-
-        // Adjust these values to change the width and height of the canvas
-        // const width = 1000; 
-        // const height = 1500; 
-        // alert("entering : ")
-        // html2canvas(invoiceRef.current, { width, height }).then(canvas => {
-        //     const imgData = canvas.toDataURL('image/png');
-        //     const pdf = new jsPDF('p', 'px', [width, height]);
-        //     pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-        //     const blobData = pdf.output('blob');
-        //     const formData = new FormData();
-        //     formData.append('file', blobData, 'Email.pdf');
-        //     formData.append('companyname', buyercompany);
-        //     // console.log(buyercompany);
-        //     axios.post('http://localhost:4000/save-pdf-server', formData, {
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data',
-        //         },
-        //     })
-        //         .then(response => {
-        //             console.log('File saved successfully:', response.data);
-
-        //         })
-        //         .catch(error => {
-        //             console.error('Error saving file:', error);
-        //             // Optionally, notify the user of error
-        //         });
-        // });
     };
 
 
@@ -401,8 +368,6 @@ const Invoice = ({
                         <h4>TAX INVOICE {invoiceid}</h4>
                         : <h4>
                             PROFORMA INVOICE
-                            {/* {gag} */}
-                            {/* <img src={signSrc} style={Signature} alt="signature" height={50} width={300} /> */}
                         </h4>
                     }
                 </div>
