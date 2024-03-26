@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { API_URL } from '../config';
-import { Button,Box,Snackbar } from '@mui/material';
+import { Button, Box, Snackbar } from '@mui/material';
 import Loader from '../components/Loader';
 import MuiAlert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
@@ -20,83 +20,85 @@ import { useNavigate } from 'react-router-dom';
 const ProfilePage = () => {
 
 
-   
+
 
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
- 
+
     const userid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
     const [profileInfoRes, setprofileInfoRes] = useState({
         // id:userid,
-        fname:'',
-        lname:'',
-        email:'',
-        mobile:'',
-        aadhar:'',
-        pannumber:'',
-        streetname:'',
-        dname:'',
-        sname:'',
-        orgname:'',
-        btype:'',
-        pcode:''
+        fname: '',
+        lname: '',
+        email: '',
+        mobile: '',
+        aadhar: '',
+        pannumber: '',
+        streetname: '',
+        dname: '',
+        sname: '',
+        orgname: '',
+        btype: '',
+        pcode: ''
 
 
     })
 
-    const [fixed_data,setfixed_data] = useState({
-        fname:'',
-        lname:'',
-        position:'',
-        streetname:'',
-        dname:'',
-        sname:'',
-        positionid:'',
+    const [fixed_data, setfixed_data] = useState({
+        fname: '',
+        lname: '',
+        position: '',
+        streetname: '',
+        dname: '',
+        sname: '',
+        positionid: '',
     })
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // const userid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
-                await axios.post(`${API_URL}get/profileInfo`, { userid }).then(res=>{
+                await axios.post(`${API_URL}get/profileInfo`, { userid }).then(res => {
                     console.log("ajax data");
                     console.log(res.data.data[0]);
-                    setprofileInfoRes({...profileInfoRes,
-                        fname : res.data.data[0].fname,
-                        lname:res.data.data[0].lname,
+                    setprofileInfoRes({
+                        ...profileInfoRes,
+                        fname: res.data.data[0].fname,
+                        lname: res.data.data[0].lname,
                         email: res.data.data[0].email,
-                        mobile:res.data.data[0].phno,
+                        mobile: res.data.data[0].phno,
                         aadhar: res.data.data[0].aadhar,
                         pannumber: res.data.data[0].pan,
                         streetname: res.data.data[0].pstreetname,
-                        dname:res.data.data[0].pdistrictid,
-                        sname:res.data.data[0].pstateid,
+                        dname: res.data.data[0].pdistrictid,
+                        sname: res.data.data[0].pstateid,
                         orgname: res.data.data[0].organizationname,
                         btype: res.data.data[0].bussinesstype,
                         pcode: res.data.data[0].cpostalcode,
-                        position:res.data.data[0].position,
+                        position: res.data.data[0].position,
                     });
 
 
-                    setfixed_data({...fixed_data,
-                        fname:res.data.data[0].fname,
-                        lname:res.data.data[0].lname,
-                        position:res.data.data[0].position,
-                        streetname:res.data.data[0].pstreetname,
-                        dname:res.data.data[0].pdistrictid,
-                        sname:res.data.data[0].pstateid,
+                    setfixed_data({
+                        ...fixed_data,
+                        fname: res.data.data[0].fname,
+                        lname: res.data.data[0].lname,
+                        position: res.data.data[0].position,
+                        streetname: res.data.data[0].pstreetname,
+                        dname: res.data.data[0].pdistrictid,
+                        sname: res.data.data[0].pstateid,
                         pcode: res.data.data[0].cpostalcode,
-                        positionid:res.data.data[0].positionid,
+                        positionid: res.data.data[0].positionid,
                     });
                     // userInfoFields.value = 'hao'
-                    if (res.data.data[0].positionid==="1") {
+                    if (res.data.data[0].positionid === "1") {
                         setmanufacture(true);
                         console.log("position id is  manufacturer");
-                    }else{
+                    } else {
                         setmanufacture(false);
                         console.log("position id is not manufacturer");
                     }
                 });
-               
+
             } catch (error) {
                 console.error("Error fetching user data:", error);
             }
@@ -109,18 +111,18 @@ const ProfilePage = () => {
     const userInfoFields = [
         // { label: 'UserId',fieldname:'id'},
         // { label: 'Full name', value: userInfo.fname + {userInfo.lname == null ? '':userInfo.lname}},
-        { label: 'First Name',fieldname:'fname'},
-        { label: 'Last Name',fieldname:'lname'},
-        { label: 'Email',fieldname:'email'},
-        { label: 'Mobile Number',fieldname:'mobile'},
-        { label: 'Aadhar Number',fieldname:'aadhar'},
-        { label: 'Pan Number',fieldname:'pannumber'},
-        { label: 'Street Name',fieldname:'streetname'},
-        { label: 'District Name',fieldname:'dname'},
-        { label: 'State Name',fieldname:'sname'},
-        { label: 'Organization Name',fieldname:'orgname'},
-        { label: 'Bussiness Type',fieldname:'btype'},
-        { label: 'Postal code' ,fieldname:'pcode'},
+        { label: 'First Name', fieldname: 'fname' },
+        { label: 'Last Name', fieldname: 'lname' },
+        { label: 'Email', fieldname: 'email' },
+        { label: 'Mobile Number', fieldname: 'mobile' },
+        { label: 'Aadhar Number', fieldname: 'aadhar' },
+        { label: 'Pan Number', fieldname: 'pannumber' },
+        { label: 'Street Name', fieldname: 'streetname' },
+        { label: 'District Name', fieldname: 'dname' },
+        { label: 'State Name', fieldname: 'sname' },
+        { label: 'Organization Name', fieldname: 'orgname' },
+        { label: 'Bussiness Type', fieldname: 'btype' },
+        { label: 'Postal code', fieldname: 'pcode' },
         // Add more fields as needed
     ];
     const data = [
@@ -143,8 +145,8 @@ const ProfilePage = () => {
 
     // profile data onsubmit function
     const [loading, setLoading] = useState(false);
-    const [resAlert, setresAlert] = useState(null) 
-    const handleSubmit = async (event) =>{
+    const [resAlert, setresAlert] = useState(null)
+    const handleSubmit = async (event) => {
         event.preventDefault()
 
         const userId = userid.trim();
@@ -163,16 +165,15 @@ const ProfilePage = () => {
         const isValidState = profileInfoRes.sname.trim() !== '';
         const isValidpCode = profileInfoRes.pcode.trim() !== '';
 
-        if(isValiduserid && isValidaadharNo && isValidfName && isValidlName && isValidemail && isValidMobileNo 
+        if (isValiduserid && isValidaadharNo && isValidfName && isValidlName && isValidemail && isValidMobileNo
             && isValidbussinessType && isValidOrgName && isValidpanNumber && isValidstreetAddress && isValidCity
-            && isValidState && isValidpCode)
-        {
+            && isValidState && isValidpCode) {
             // alert(isValiduserid+" the userid is:\t"+userId);
             // setSubmitted(true);
-            try{
+            try {
 
                 setLoading(true);
-                const response = await axios.put(`${API_URL}profile_udpate/user`, { userId:userId,userDetails: profileInfoRes });
+                const response = await axios.put(`${API_URL}profile_udpate/user`, { userId: userId, userDetails: profileInfoRes });
                 console.log("ajax response for profile updation");
                 console.log(response.data.status);
                 if (response.data.status) {
@@ -180,20 +181,20 @@ const ProfilePage = () => {
                     setSubmitted(true);
                     if (response.data.status) {
                         // setTimeout(() => {
-                            setLoading(false);
-                            // alert("Update Profile Data");
+                        setLoading(false);
+                        // alert("Update Profile Data");
                         // }, 1000);
                     }
                 } else {
                     alert(response.data.message)
                 }
             }
-            catch(error){
+            catch (error) {
                 console.log("profile page updation ajax error");
                 console.log(error);
             }
 
-        }else{
+        } else {
             if (!isValiduserid) {
                 setresAlert("UserID Field is Empty");
                 setSubmitted(true);
@@ -248,15 +249,15 @@ const ProfilePage = () => {
                 setSubmitted(true);
             }
 
-            if(!isValidpCode){
+            if (!isValidpCode) {
                 setresAlert("Postal Code is Empty")
             }
-            
+
         }
 
 
     }
-   
+
     const handleSnackbarClose = () => {
         setSubmitted(false);
     };
@@ -264,102 +265,106 @@ const ProfilePage = () => {
     const navigate = useNavigate();
     const [submitted, setSubmitted] = useState(false);
 
-    const [ismanufacture,setmanufacture] = useState(false);
+    const [ismanufacture, setmanufacture] = useState(false);
 
     return (
         <>
-        {loading && <Loader />}
-        {/* Snack bar */}
-        <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{vertical: 'bottom',horizontal: 'right',}}>
-            <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-                {resAlert}
-            </MuiAlert>
-        </Snackbar>
-        <Container style={{ marginLeft: '53px' }}>
-            <Grid container spacing={3} style={{ marginTop: '1rem' }}>
+            {loading && <Loader />}
+            {/* Snack bar */}
+            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
+            <Container style={{ marginLeft: '53px' }}>
+                <Grid container spacing={3} style={{ marginTop: '1rem' }}>
 
-                {/* Top Section */}
-                <Grid container spacing={2}>
-                    {/* Left column for the image */}
-                    <Grid item xs={12} md={6}>
-                        <CardContent>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',filter: 'drop-shadow(0px 0px 3px red)'}}>
-                                <Avatar src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" sx={{ width: 150, height: 150 }} />
-                            </div>
-                        </CardContent>
+                    {/* Top Section */}
+                    <Grid container spacing={2}>
+                        {/* Left column for the image */}
+                        <Grid item xs={12} md={6}>
+                            <CardContent>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', filter: 'drop-shadow(0px 0px 3px red)' }}>
+                                    <Avatar src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" sx={{ width: 150, height: 150 }} />
+                                </div>
+                            </CardContent>
+                        </Grid>
+
+                        {/* Right column for profile information */}
+                        <Grid item xs={12} md={6}>
+                            <CardContent>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    {/* <Typography variant="h5" style={{ textTransform: 'capitalize' }}>{fixed_data.position}</Typography> */}
+                                    <Typography variant="h5" style={{ textTransform: 'capitalize' }}>
+                                        {fixed_data.position.toLowerCase() === 'manifacture' ? 'Manufacturer' : fixed_data.position}
+                                    </Typography>
+                                    {console.log("user info data position:\t" + fixed_data.position)}
+
+                                    <Typography variant="h4">{fixed_data.fname} {fixed_data.lname}</Typography>
+                                    <Typography variant="body1" style={{ color: 'black' }}>User ID: {userid}</Typography>
+                                    <Typography variant="body2" style={{ color: 'black' }}>
+                                        {fixed_data.streetname} {fixed_data.dname} , {fixed_data.sname} - {fixed_data.pcode}
+                                    </Typography>
+                                </div>
+                            </CardContent>
+                        </Grid>
                     </Grid>
 
-                    {/* Right column for profile information */}
-                    <Grid item xs={12} md={6}>
-                        <CardContent>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                <Typography variant="h5" style={{ textTransform: 'capitalize' }}>{fixed_data.position}</Typography>
-                                {console.log("user info data position:\t"+fixed_data.position)}
-                                <Typography variant="h4">{fixed_data.fname} {fixed_data.lname}</Typography>
-                                <Typography variant="body1" style={{ color: 'black' }}>User ID: {userid}</Typography>
-                                <Typography variant="body2" style={{ color: 'black' }}>
-                                    {fixed_data.streetname} {fixed_data.dname} , {fixed_data.sname} - {fixed_data.pcode}
-                                </Typography>
-                            </div>
-                        </CardContent>
-                    </Grid>
-                </Grid>
 
 
-
-                {/* Bottom Section */}
-                <Grid item xs={12} md={8} spaceing={1} display={'contents'}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h6" style={{ marginBottom: 20 }}>Profile Information</Typography>
-                            <form >
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12} md={6} key={0} >    
-                                        <TextField
-                                            fullWidth
-                                            variant="outlined"
-                                            margin="dense"
-                                            InputLabelProps={{ shrink: true }}
-                                            value={userid}
-                                            label="UserId"
-                                            disabled={true}
-
-                                        />
-                                    </Grid>
-
-                                    {userInfoFields.map((field, index) => (
-                                        
-                                        <Grid item xs={12} md={6} key={index} >
+                    {/* Bottom Section */}
+                    <Grid item xs={12} md={8} spaceing={1} display={'contents'}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" style={{ marginBottom: 20 }}>Profile Information</Typography>
+                                <form >
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={12} md={6} key={0} >
                                             <TextField
                                                 fullWidth
                                                 variant="outlined"
                                                 margin="dense"
                                                 InputLabelProps={{ shrink: true }}
-                                                value={profileInfoRes[field.fieldname]}
-                                                defaultValue={profileInfoRes[field.fieldname]}
-                                                // onChange={(e)=>{setprofileInfoRes({[field.fieldname] : e.target.value})}}
-                                                onChange={handleInputchange}
-                                                name={field.fieldname}
-                                                label={field.label}
-                                                disabled={!ismanufacture}
-                                            />
-                                        </Grid> 
-                                    ))}
-                                </Grid>
-                                {ismanufacture  && 
-                                <Box width={'100%'} margin={'1rem'} sx={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-                                    <Button variant="contained" width={'100%'} onClick={(e)=>handleSubmit(e)}>Update Data</Button>
-                                </Box>
-                                }
-                                
-                            </form>
-                        </CardContent>
-                    </Card>
+                                                value={userid}
+                                                label="UserId"
+                                                disabled={true}
 
-                   
+                                            />
+                                        </Grid>
+
+                                        {userInfoFields.map((field, index) => (
+
+                                            <Grid item xs={12} md={6} key={index} >
+                                                <TextField
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    margin="dense"
+                                                    InputLabelProps={{ shrink: true }}
+                                                    value={profileInfoRes[field.fieldname]}
+                                                    defaultValue={profileInfoRes[field.fieldname]}
+                                                    // onChange={(e)=>{setprofileInfoRes({[field.fieldname] : e.target.value})}}
+                                                    onChange={handleInputchange}
+                                                    name={field.fieldname}
+                                                    label={field.label}
+                                                    disabled={!ismanufacture}
+                                                />
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                    {ismanufacture &&
+                                        <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
+                                        </Box>
+                                    }
+
+                                </form>
+                            </CardContent>
+                        </Card>
+
+
+                    </Grid>
                 </Grid>
-            </Grid>
-        </Container>
+            </Container>
         </>
     );
 };
