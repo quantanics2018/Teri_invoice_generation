@@ -184,7 +184,9 @@ const EditProduct = () => {
                 // console.log("hai", inputValues);
                 const response = await axios.put(`${API_URL}update/product`, { productdetial: inputValues, updator: userInfo.userid, batchno: productBatch });
                 // alert("response.data.message");
-                // console.log(response.data.message);
+                console.log("ajax response");
+                console.log(response)
+                console.log(response.data.status);
                 if (response.data.status) {
                     setresAlert(response.data.message);
                     setSubmitted(true);

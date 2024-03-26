@@ -88,6 +88,13 @@ const ProfilePage = () => {
                         positionid:res.data.data[0].positionid,
                     });
                     // userInfoFields.value = 'hao'
+                    if (res.data.data[0].positionid==="1") {
+                        setmanufacture(true);
+                        console.log("position id is  manufacturer");
+                    }else{
+                        setmanufacture(false);
+                        console.log("position id is not manufacturer");
+                    }
                 });
                
             } catch (error) {
@@ -256,6 +263,9 @@ const ProfilePage = () => {
 
     const navigate = useNavigate();
     const [submitted, setSubmitted] = useState(false);
+
+    const [ismanufacture,setmanufacture] = useState(false);
+
     return (
         <>
         {loading && <Loader />}
@@ -315,31 +325,32 @@ const ProfilePage = () => {
                                             disabled={true}
                                         />
                                     </Grid>
-                                   
+
                                     {userInfoFields.map((field, index) => (
-                                         <Grid item xs={12} md={6} key={index} >
-                                            
-                                         <TextField
-                                             fullWidth
-                                             variant="outlined"
-                                             margin="dense"
-                                             InputLabelProps={{ shrink: true }}
-                                             value={profileInfoRes[field.fieldname]}
-                                             defaultValue={profileInfoRes[field.fieldname]}
-                                             // onChange={(e)=>{setprofileInfoRes({[field.fieldname] : e.target.value})}}
-                                             onChange={handleInputchange}
-                                             name={field.fieldname}
-                                             label={field.label}
-                                         />
-                                     </Grid>
-                                      
                                         
-                                        
+                                        <Grid item xs={12} md={6} key={index} >
+                                            <TextField
+                                                fullWidth
+                                                variant="outlined"
+                                                margin="dense"
+                                                InputLabelProps={{ shrink: true }}
+                                                value={profileInfoRes[field.fieldname]}
+                                                defaultValue={profileInfoRes[field.fieldname]}
+                                                // onChange={(e)=>{setprofileInfoRes({[field.fieldname] : e.target.value})}}
+                                                onChange={handleInputchange}
+                                                name={field.fieldname}
+                                                label={field.label}
+                                                disabled={!ismanufacture}
+                                            />
+                                        </Grid> 
                                     ))}
                                 </Grid>
+                                {ismanufacture  && 
                                 <Box width={'100%'} margin={'1rem'} sx={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
                                     <Button variant="contained" width={'100%'} onClick={(e)=>handleSubmit(e)}>Update Data</Button>
                                 </Box>
+                                }
+                                
                             </form>
                         </CardContent>
                     </Card>
