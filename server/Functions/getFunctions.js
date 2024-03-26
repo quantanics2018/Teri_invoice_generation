@@ -95,7 +95,8 @@ async function getprofileInfo(req, res) {
     try {
         const { userid } = req.body;
         // console.log(adminid,position);
-        const getprofileInfoResult = await userdbInstance.userdb.query('select * from public."user" where userid=$1;', [userid]);
+        // const getprofileInfoResult = await userdbInstance.userdb.query('select * from public."user" where userid=$1;', [userid]);
+        const getprofileInfoResult = await userdbInstance.userdb.query('select public."position".position,public."user".* from public."user" join public."position" on public."user".positionid=public."position".positionid where public."user".userid=$1;', [userid]);
         res.json({ message: "Successfully Data Fetched", data: getprofileInfoResult.rows });
     } catch (error) {
         console.error('Error executing database query:', error);

@@ -316,4 +316,45 @@ async function productQuantity(req, res) {
 }
 
 
-module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword, updatereciverStatus, updatesenderStatus, productQuantity };
+
+async function update_user_profile(req,res){
+    const userid = req.body.userId;
+
+    const {
+        fname,
+        lname,
+        email,
+        mobile,
+        aadhar,
+        pannumber,
+        streetname,
+        dname,
+        sname,
+        orgname,
+        btype,
+        pcode,
+
+    } = req.body.userDetails;
+
+    try{
+        const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public."user"
+        SET email=$1, phno=$2, aadhar=$3, pan=$4, pstreetname=$5, pdistrictid=$6, pstateid=$7, ppostalcode=$8 , cstreetname=$9, cdistrictid=$10,cstateid=$11, cpostalcode=$12,organizationname=$13,  bussinesstype=$14, fname=$15, lname=$16 WHERE userid=$17;`, [email,  mobile,  aadhar,  pannumber, streetname, dname, sname, pcode, streetname, dname, sname, pcode,orgname, btype,fname,lname,userid]);
+        
+        if (userUpdateResult.rowCount === 1) {
+            res.json({ message: "Successfully Updated", status: true });
+            console.log("db updation is okay");
+        } else {
+            res.json({ message: "Oops! Something Went Wrong DB Updation side", status: false });
+            
+            console.log("404 error db error");
+        }
+
+    }
+    catch(error){
+        console.log("error message for user profile updation in db handling file");
+        res.status(500).json({message:'profile updation query error'});
+    }
+}
+
+
+module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword, updatereciverStatus, updatesenderStatus, productQuantity,update_user_profile };

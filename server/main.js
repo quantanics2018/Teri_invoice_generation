@@ -254,6 +254,19 @@ app.put('/update/:entity(user|product|productremove|userremove|password|productQ
     }
 });
 
+// user profile update url controlling 
+app.put('/profile_udpate/:entity(user)',async (req, res) =>{
+    const entity = req.params.entity;
+
+    if (entity==="user") {
+        const result_data = await updateData.update_user_profile(req,res);
+
+    }
+    console.log("profile updation request data");
+    console.log(entity);
+
+    
+});
 // Delete data
 app.post('/delete/:entity(user|products)', async (req, res) => {
     const entity = req.params.entity;
