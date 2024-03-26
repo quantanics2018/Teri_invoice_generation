@@ -267,7 +267,7 @@ const Invoice = ({
     //     html2pdf().from(invoicecontent).save();
     // }
 
-    
+
     // Convert image to base64
     const imageToBase64 = async (url) => {
         const response = await fetch(url);
@@ -284,16 +284,16 @@ const Invoice = ({
     const [signSrc, setSignSrc] = useState('');
     useEffect(() => {
         const statusApiAction = async () => {
-            console.log(userInfo.userid);
+            // console.log(userInfo.userid);
             try {
                 const response = await axios.post(`${API_URL}get/signature`, {
                     userid: userInfo.userid
                 });
-                console.log(response.data);
-                console.log(response.data.src);
+                // console.log(response.data);
+                // console.log(response.data.src);
                 const blob = new Blob([response.data], { type: 'image/png' });
                 const url = URL.createObjectURL(blob);
-                console.log(url);
+                // console.log(url);
                 setSignSrc(`${API_URL}${response.data.src}`);
 
                 // let url;
@@ -317,12 +317,12 @@ const Invoice = ({
     const generatePDF = async () => {
         const invoicecontent = document.getElementById('invoiceContent1');
         const img = document.querySelector('.sign img');
-    
+
         if (img) {
             const base64 = await imageToBase64(img.src);
             img.src = base64;
         }
-    
+
         // Convert HTML content to canvas
         html2canvas(invoicecontent, { scale: 2 }).then(canvas => {
             // Convert canvas to PDF
@@ -332,36 +332,63 @@ const Invoice = ({
             pdf.save('invoice.pdf');
         });
     }
-    
+
 
     const invoiceRef = useRef(null);
-    const handleDownload1 = async() => {
+    const handleDownload1 = async () => {
+        try {
+            // Convert div to canvas
+            const canvas = await html2canvas(invoiceRef.current, {
+                scale: 2, // Adjust scale as needed
+                useCORS: true, // Allow cross-origin images
+                logging: true // Enable logging for debugging
+            });
+    
+            // Convert canvas to data URL
+            const imageData = canvas.toDataURL('image/jpeg');
+    
+            // Generate PDF using jsPDF
+            const pdf = new jsPDF();
+    
+            // Add image to PDF
+            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+    
+            // Save PDF locally within React project
+            pdf.save('invoice.pdf');
+    
+            alert('PDF saved successfully');
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error occurred while saving PDF');
+        }
+
         // Adjust these values to change the width and height of the canvas
-        const width = 1000; 
-        const height = 1500; 
-        html2canvas(invoiceRef.current, { width, height }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'px', [width, height]);
-            pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-            const blobData = pdf.output('blob');
-            const formData = new FormData();
-            formData.append('file', blobData, 'Email.pdf');
-            formData.append('companyname', buyercompany);
-            // console.log(buyercompany);
-            axios.post('http://localhost:4000/save-pdf-server', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-                .then(response => {
-                    console.log('File saved successfully:', response.data);
-                
-                })
-                .catch(error => {
-                    console.error('Error saving file:', error);
-                    // Optionally, notify the user of error
-                });
-        });
+        // const width = 1000; 
+        // const height = 1500; 
+        // alert("entering : ")
+        // html2canvas(invoiceRef.current, { width, height }).then(canvas => {
+        //     const imgData = canvas.toDataURL('image/png');
+        //     const pdf = new jsPDF('p', 'px', [width, height]);
+        //     pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+        //     const blobData = pdf.output('blob');
+        //     const formData = new FormData();
+        //     formData.append('file', blobData, 'Email.pdf');
+        //     formData.append('companyname', buyercompany);
+        //     // console.log(buyercompany);
+        //     axios.post('http://localhost:4000/save-pdf-server', formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data',
+        //         },
+        //     })
+        //         .then(response => {
+        //             console.log('File saved successfully:', response.data);
+
+        //         })
+        //         .catch(error => {
+        //             console.error('Error saving file:', error);
+        //             // Optionally, notify the user of error
+        //         });
+        // });
     };
 
 
@@ -369,7 +396,7 @@ const Invoice = ({
     return (
         <div className="fullPage">
             <div className="A4SheetSize" id="invoiceContent1" style={pad} ref={invoiceRef}>
-                <div className="taxInvoiceHead" style={taxInvoiceHead}>
+                <div className="taxInvoiceHead" style={taxInvoiceHead} id="taxInvoiceHead">
                     {generateInvoice ?
                         <h4>TAX INVOICE {invoiceid}</h4>
                         : <h4>
@@ -526,20 +553,20 @@ const Invoice = ({
                     <div style={containerStyle}>
                         {/* Table heading row */}
                         <div style={rowStyle}>
-                            <div className='invoice_table_header' style={{width:'6%'}}>S.No.</div>
-                            <div className='invoice_table_header' style={{width:'34%'}}>Description of Goods</div>
-                            <div className='invoice_table_header' style={{width:'13%'}}>HSN NO</div>
-                            <div className='invoice_table_header' style={{width:'10%'}}>Quantity</div>
-                            <div className='invoice_table_header' style={{width:'10%'}}>Rate</div>
-                            <div className='invoice_table_header' style={{width:'10%'}}>per</div>
-                            <div className='invoice_table_header' style={{width:'7%'}}>Disc. %</div>
-                            <div className='invoice_table_header' style={{width:'10%'}}>Amount</div>
+                            <div className='invoice_table_header' style={{ width: '6%' }}>S.No.</div>
+                            <div className='invoice_table_header' style={{ width: '34%' }}>Description of Goods</div>
+                            <div className='invoice_table_header' style={{ width: '13%' }}>HSN NO</div>
+                            <div className='invoice_table_header' style={{ width: '10%' }}>Quantity</div>
+                            <div className='invoice_table_header' style={{ width: '10%' }}>Rate</div>
+                            <div className='invoice_table_header' style={{ width: '10%' }}>per</div>
+                            <div className='invoice_table_header' style={{ width: '7%' }}>Disc. %</div>
+                            <div className='invoice_table_header' style={{ width: '10%' }}>Amount</div>
                         </div>
                         {/* Table data  */}
                         {[...previewInvoiceprop, {}, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div className='invoice_table_header' style={{width:'6%'}}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
-                                <div className='invoice_table_header' style={{width:'34%'}}>
+                                <div className='invoice_table_header' style={{ width: '6%' }}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
+                                <div className='invoice_table_header' style={{ width: '34%' }}>
                                     {item.productName || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
@@ -566,9 +593,9 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{width:'13%'}}>{item.hsncode || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '13%' }}>{item.hsncode || ''}</div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div className='invoice_table_header' style={{width:'10%'}}>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>
                                     {item.Quantity || ''}
                                     {index === previewInvoiceprop.length + 1 &&
                                         <div>
@@ -576,10 +603,10 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{width:'10%'}}>{unitRate(item.hsncode, item.batchno)}</div>
-                                <div className='invoice_table_header' style={{width:'10%'}}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
-                                <div className='invoice_table_header' style={{width:'7%'}}>{item.Discount || ''}</div>
-                                <div className='invoice_table_header' style={{width:'10%'}}>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>{unitRate(item.hsncode, item.batchno)}</div>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
+                                <div className='invoice_table_header' style={{ width: '7%' }}>{item.Discount || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
@@ -778,7 +805,7 @@ const Invoice = ({
                 {generateInvoice ? (
                     <Button data-bs-dismiss="modal" variant="outlined" color="primary"
                         onClick={handleSubmit}
-                        // onClick={handleDownload1}
+                    // onClick={handleDownload1}
                     >
                         Generate Invoice
                     </Button>

@@ -60,7 +60,8 @@ const InvoiceGenerator = () => {
     const customerNames1 = ['Date', 'UserId'];
     const customerNames = [{ name: "Date", tittle: "Date" }, { name: "Buyer", tittle: "UserId" }];
     const [inputValues, setInputValues] = useState({
-        Date: "",
+        // Date: "",
+        Date: new Date().toISOString().split('T')[0],
         Buyer: "",
         senderID: userInfo.userid,
     });
@@ -750,7 +751,7 @@ const InvoiceGenerator = () => {
                                                 // label={customerName}
                                                 type='date'
                                                 onChange={(e) => handleInputChangeInvoice(customerName.name, e.target.value)}
-                                                value={inputValues[customerName.name] || ''}
+                                                value={inputValues[customerName.name] || new Date().toISOString().split('T')[0]}
                                             />
                                             // <GoogleCalendarPicker
                                             //     onDateSelect={handleDateSelect}
