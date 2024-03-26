@@ -39,12 +39,6 @@ const Invoice = ({
     generateInvoice
 }) => {
     const navigate = useNavigate();
-
-    // console.log("previewInvoiceprop : ", previewInvoiceprop[0]);
-    // console.log("ReciverInvoiceProp : ", ReciverInvoiceProp);
-    // console.log("SenderInvoiceProp : ",SenderInvoiceProp);
-    // console.log("totalSum : ",totalSum[0]);
-    // console.log("totalQuantity : ",totalQuantity[0]);
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const senderid = userInfo.userid;
@@ -139,16 +133,13 @@ const Invoice = ({
     };
     const getcgst = (hsnno, batchno) => {
         const getcgst = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.cgst)[0] || '';
-        // console.log("getcgst : ", getcgst);
         return getcgst
     }
     const getsgst = (hsnno, batchno) => {
         const getsgst = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.sgst)[0] || '';
-        // console.log("getcgst : ", getsgst);
         return getsgst
     }
 
-    // console.log("productList :", productList);
 
     const unitRate = (hsnno, batchno) => {
         const unitRate = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.priceperitem)[0] || '';
@@ -161,29 +152,21 @@ const Invoice = ({
         return previewInvoiceprop.reduce((acc, item) => {
             const unitPrice = parseInt(unitRate(item.hsncode, item.batchno));
             const totalPrice = (unitPrice * parseInt(item.Quantity)) - ((unitPrice * parseInt(item.Quantity)) * parseInt(item.Discount) / 100);
-            // console.log(acc);
             return acc + totalPrice;
         }, 0);
     }
-    // const getTaxableValue = TaxableValue();
-    // console.log(getTaxableValue);
 
     const TotalcgstPercent = () => {
         const total = previewInvoiceprop.reduce((acc, item) => {
-            // console.log(item);
             const Totalcgst = parseInt(getcgst(item.hsncode, item.batchno));
-            // console.log(acc);
             return acc + Totalcgst;
         }, 0);
         return total / previewInvoiceprop.length;
     }
-    // console.log(Totalcgst());
 
     const TotalsgstPercent = () => {
         const total = previewInvoiceprop.reduce((acc, item) => {
-            // console.log(item);
             const Totalsgst = parseInt(getsgst(item.hsncode, item.batchno));
-            // console.log(acc);
             return acc + Totalsgst;
         }, 0);
         return total / previewInvoiceprop.length;
@@ -201,11 +184,11 @@ const Invoice = ({
         const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
         return formattedTotal;
     }
-    console.log(Math.round(formatTotal(grandTotal())));
+    // console.log(Math.round(formatTotal(grandTotal())));
     const number = !isNaN(Math.round(formatTotal(grandTotal()))) ? Math.round(formatTotal(grandTotal())) : 0;
     const integerWords = numberToWords.toWords(number);
 
-    console.log(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))));
+    // console.log(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))));
     const number1 = !isNaN(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue())))) ? Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))) : 0;
     const integerWords1 = numberToWords.toWords(number1);
     // consecimalPart = Math.round((number - integerPart) * 100);
@@ -219,7 +202,7 @@ const Invoice = ({
     // Handle submit
     const [loading, setLoading] = useState(false);
     const totalSum = Math.round(formatTotal(grandTotal()))
-    console.log("rows : ", totalSum);
+    // console.log("rows : ", totalSum);
     const handleSubmit = async () => {
 
         const hasEmptyValue = previewInvoiceprop.some(row =>
@@ -267,6 +250,7 @@ const Invoice = ({
     //     html2pdf().from(invoicecontent).save();
     // }
 
+
     // Convert image to base64
     const imageToBase64 = async (url) => {
         const response = await fetch(url);
@@ -279,45 +263,21 @@ const Invoice = ({
         });
     };
 
-    // Usage:
-    // const generatePDF = async () => {
-    //     const invoicecontent = document.getElementById('invoiceContent1');
-    //     const img = document.querySelector('.sign img');
-
-    //     if (img) {
-    //         const base64 = await imageToBase64(img.src);
-    //         img.src = base64;
-    //     }
-    //     html2pdf().from(invoicecontent).save();
-    // }
-
-
-
 
     const [signSrc, setSignSrc] = useState('');
     useEffect(() => {
         const statusApiAction = async () => {
-            console.log(userInfo.userid);
+            // console.log(userInfo.userid);
             try {
                 const response = await axios.post(`${API_URL}get/signature`, {
                     userid: userInfo.userid
                 });
-                console.log(response.data);
-                console.log(response.data.src);
+                // console.log(response.data);
+                // console.log(response.data.src);
                 const blob = new Blob([response.data], { type: 'image/png' });
                 const url = URL.createObjectURL(blob);
-                console.log(url);
+                // console.log(url);
                 setSignSrc(`${API_URL}${response.data.src}`);
-
-                // let url;
-                // if (response.data instanceof Blob) {
-                //     url = URL.createObjectURL(response.data);
-                // } else if (typeof response.data === 'string') {
-                //     url = response.data; // If the response data is already a URL
-                // } else {
-                //     throw new Error('Response data format not supported');
-                // }
-                // setSignSrc(url);
             } catch (error) {
                 console.error('Error fetching signature:', error);
             }
@@ -328,53 +288,74 @@ const Invoice = ({
 
 
     const generatePDF = async () => {
-        const invoicecontent = document.getElementById('invoiceContent1');
-        const img = document.querySelector('.sign img');
-    
-        if (img) {
-            const base64 = await imageToBase64(img.src);
-            img.src = base64;
-        }
-    
-        // Convert HTML content to canvas
-        html2canvas(invoicecontent, { scale: 2 }).then(canvas => {
-            // Convert canvas to PDF
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgData = canvas.toDataURL('image/jpeg', 1.0);
-            pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Width and height are set to A4 dimensions
+        // const invoicecontent = document.getElementById('invoiceContent1');
+        // const img = document.querySelector('.sign img');
+
+        // if (img) {
+        //     const base64 = await imageToBase64(img.src);
+        //     img.src = base64;
+        // }
+
+        // // Convert HTML content to canvas
+        // html2canvas(invoicecontent, { scale: 2 }).then(canvas => {
+        //     // Convert canvas to PDF
+        //     const pdf = new jsPDF('p', 'mm', 'a4');
+        //     const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        //     pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Width and height are set to A4 dimensions
+        //     pdf.save('invoice.pdf');
+        // });
+        try {
+            const canvas = await html2canvas(invoiceRef.current, {
+                scale: 2,
+                useCORS: true,
+                logging: true
+            });
+            const imageData = canvas.toDataURL('image/jpeg');
+            const pdf = new jsPDF();
+            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
             pdf.save('invoice.pdf');
-        });
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
-    
+
 
     const invoiceRef = useRef(null);
-    const handleDownload1 = async() => {
-        // Adjust these values to change the width and height of the canvas
-        const width = 1000; 
-        const height = 1500; 
-        html2canvas(invoiceRef.current, { width, height }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'px', [width, height]);
-            pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+    const handleDownload1 = async () => {
+        try {
+            const canvas = await html2canvas(invoiceRef.current, {
+                scale: 2,
+                useCORS: true,
+                logging: true 
+            });
+
+            // Convert canvas to data URL
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // Generate PDF using jsPDF
+            const pdf = new jsPDF();
+
+            // Add image to PDF
+            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
             const blobData = pdf.output('blob');
             const formData = new FormData();
             formData.append('file', blobData, 'Email.pdf');
             formData.append('companyname', buyercompany);
             // console.log(buyercompany);
-            axios.post('http://localhost:4000/save-pdf-server', formData, {
+            axios.post(`${API_URL}save-pdf-server`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
                 .then(response => {
                     console.log('File saved successfully:', response.data);
-                
+
                 })
-                .catch(error => {
-                    console.error('Error saving file:', error);
-                    // Optionally, notify the user of error
-                });
-        });
+          
+        } catch (error) {
+            console.error('Error:', error);
+           
+        }
     };
 
 
@@ -382,13 +363,11 @@ const Invoice = ({
     return (
         <div className="fullPage">
             <div className="A4SheetSize" id="invoiceContent1" style={pad} ref={invoiceRef}>
-                <div className="taxInvoiceHead" style={taxInvoiceHead}>
+                <div className="taxInvoiceHead" style={taxInvoiceHead} id="taxInvoiceHead">
                     {generateInvoice ?
                         <h4>TAX INVOICE {invoiceid}</h4>
                         : <h4>
                             PROFORMA INVOICE
-                            {/* {gag} */}
-                            {/* <img src={signSrc} style={Signature} alt="signature" height={50} width={300} /> */}
                         </h4>
                     }
                 </div>
@@ -539,20 +518,20 @@ const Invoice = ({
                     <div style={containerStyle}>
                         {/* Table heading row */}
                         <div style={rowStyle}>
-                            <div className='invoice_table_header' style={{width:'6%'}}>S.No.</div>
-                            <div className='invoice_table_header' style={{width:'34%'}}>Description of Goods</div>
-                            <div className='invoice_table_header' style={{width:'13%'}}>HSN NO</div>
-                            <div className='invoice_table_header' style={{width:'10%'}}>Quantity</div>
-                            <div className='invoice_table_header' style={{width:'10%'}}>Rate</div>
-                            <div className='invoice_table_header' style={{width:'10%'}}>per</div>
-                            <div className='invoice_table_header' style={{width:'7%'}}>Disc. %</div>
-                            <div className='invoice_table_header' style={{width:'10%'}}>Amount</div>
+                            <div className='invoice_table_header' style={{ width: '6%' }}>S.No.</div>
+                            <div className='invoice_table_header' style={{ width: '34%' }}>Description of Goods</div>
+                            <div className='invoice_table_header' style={{ width: '13%' }}>HSN NO</div>
+                            <div className='invoice_table_header' style={{ width: '10%' }}>Quantity</div>
+                            <div className='invoice_table_header' style={{ width: '10%' }}>Rate</div>
+                            <div className='invoice_table_header' style={{ width: '10%' }}>per</div>
+                            <div className='invoice_table_header' style={{ width: '7%' }}>Disc. %</div>
+                            <div className='invoice_table_header' style={{ width: '10%' }}>Amount</div>
                         </div>
                         {/* Table data  */}
                         {[...previewInvoiceprop, {}, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div className='invoice_table_header' style={{width:'6%'}}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
-                                <div className='invoice_table_header' style={{width:'34%'}}>
+                                <div className='invoice_table_header' style={{ width: '6%' }}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
+                                <div className='invoice_table_header' style={{ width: '34%' }}>
                                     {item.productName || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
@@ -579,9 +558,9 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{width:'13%'}}>{item.hsncode || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '13%' }}>{item.hsncode || ''}</div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div className='invoice_table_header' style={{width:'10%'}}>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>
                                     {item.Quantity || ''}
                                     {index === previewInvoiceprop.length + 1 &&
                                         <div>
@@ -589,10 +568,10 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{width:'10%'}}>{unitRate(item.hsncode, item.batchno)}</div>
-                                <div className='invoice_table_header' style={{width:'10%'}}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
-                                <div className='invoice_table_header' style={{width:'7%'}}>{item.Discount || ''}</div>
-                                <div className='invoice_table_header' style={{width:'10%'}}>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>{unitRate(item.hsncode, item.batchno)}</div>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
+                                <div className='invoice_table_header' style={{ width: '7%' }}>{item.Discount || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
@@ -739,29 +718,6 @@ const Invoice = ({
                             </div>
 
                         </div>
-                        {/* <div className="detialAboutPayment1" style={detialAboutPayment}>
-                        <div className="alternating-rows-container1"
-                        >
-                            <div className="invoiceRow1 odd1" style={{ ...invoiceRow, ...odd }}>Taxable Value
-                                <div className="totalVal">{TaxableValue()}</div>
-                            </div>
-                            <div className="invoiceRow1 even1" style={{ ...invoiceRow, ...even }}>CGST {formatTotal(TotalcgstPercent())} %
-                                <div className="totalVal1">{formatTotal(TotalcgstValue())}</div>
-                            </div>
-                            <div className="invoiceRow1" style={{ ...invoiceRow, ...odd }}>SGST {formatTotal(TotalsgstPercent())} %
-                                <div className="totalVal1">{formatTotal(TotalsgstValue())}</div>
-                            </div>
-                            <div className="invoiceRow1 even1" style={{ ...invoiceRow, ...even }}>IGST%
-                                <div className="totalVal1">Nil</div>
-                            </div>
-                            <div className="invoiceRow1" style={{ ...invoiceRow, ...odd }}>Round Off
-                                <div className="totalVal1">0</div>
-                            </div>
-                            <div className="invoiceRow1 even1" style={{ ...invoiceRow, ...even }}>Grand Total (Rs.)
-                                <div className="totalVal1">{formatTotal(grandTotal())}</div>
-                            </div>
-                        </div>
-                      </div> */}
 
                         Company's PAN : <b>{SenderInvoiceProp[0].pan}</b>
                         <div className="acc" style={{ ...df, ...sb }}>
@@ -775,7 +731,6 @@ const Invoice = ({
                                 <div className="pvtName" style={PVTname}>{SenderInvoiceProp[0].organizationname}</div>
                                 <img src={signSrc} style={Signature} alt="signature" height={10} width={300} />
                                 <div className="authSign" style={AuthSign}>Authorized Sign.</div>
-
                             </div>
                         </div>
                     </div>
@@ -792,7 +747,7 @@ const Invoice = ({
                 {generateInvoice ? (
                     <Button data-bs-dismiss="modal" variant="outlined" color="primary"
                         onClick={handleSubmit}
-                        // onClick={handleDownload1}
+                    // onClick={handleDownload1}
                     >
                         Generate Invoice
                     </Button>
