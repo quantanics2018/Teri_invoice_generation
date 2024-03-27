@@ -202,8 +202,8 @@ async function addInvoice(req, res) {
             console.log("RECIVERID", reciverID);
             const InvoiceTableResult = await userdbInstance.userdb.query(
                 `INSERT INTO public.invoice(
-                    senderid,receiverid,senderstatus,date,total)
-                VALUES ($1,$2,$3,$4,$5) RETURNING invoiceid;`, [belongsto, reciverID, 0, Date, totalSum]
+                    senderid,receiverid,senderstatus,date,total,lastupdatedby)
+                VALUES ($1,$2,$3,$4,$5,$6) RETURNING invoiceid;`, [belongsto, reciverID, 0, Date, totalSum,Currentuser]
             );
             // console.log(InvoiceTableResult.rows[0].invoiceid);
             const invoiceid = InvoiceTableResult.rows[0].invoiceid;
