@@ -272,12 +272,12 @@ const Products = () => {
             <div className='status-bar'>
                 <div className="device_mangement_main_content">
                     <div className="row_with_count_status">
-                        <span className='module_tittle'>Products</span>
+                        <span className='module_tittle'>Products </span>
                         {((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) &&
                             <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
                         }
+                             {/* <h5 style={{color: 'red'}}>Hello{userInfo.position}</h5> */}
                     </div>
-                    
                     {/* <div className='filters display-flex' >
                         <div className="pagination_with_filters">
                             <div class="pagination display-flex" onClick={handleDivClick}>
