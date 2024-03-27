@@ -35,6 +35,8 @@ async function addUser(req, res) {
         PostalCode2 } = req.body.userDetials;
     const status = 1;
     const AccessControls = req.body.AccessControls;
+    const Currentuser = req.body.Currentuser;
+    console.log("Currentuser",Currentuser);
 
     // const file = req.file;
     // console.log(file);
@@ -137,8 +139,8 @@ async function addUser(req, res) {
             InvoicePaySlip_ac = 3;
         }
         // console.log('test : ',staff_ac,Distributor_ac,Customer_ac,Products_ac,InvoiceGenerator_ac,InvoicePaySlip_ac);
-        const access_controlTable = await userdbInstance.userdb.query('insert into accesscontroll (distributer,product,invoicegenerator,userid,customer,staff,invoicepayslip,d_staff) values ($1,$2,$3,$4,$5,$6,$7,$8)',
-            [distributor_ac, products_ac, InvoiceGenerator_ac, userid, customer_ac, staff_ac, InvoicePaySlip_ac,D_Staff_ac]);
+        const access_controlTable = await userdbInstance.userdb.query('insert into accesscontroll (distributer,product,invoicegenerator,userid,customer,staff,invoicepayslip,d_staff,last_updated_by) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)',
+            [distributor_ac, products_ac, InvoiceGenerator_ac, userid, customer_ac, staff_ac, InvoicePaySlip_ac,D_Staff_ac,Currentuser]);
         await userdbInstance.userdb.query('COMMIT');
         // const Res_UserAddedMail = UserAddedMail(req, res);
         return res.json({ message: "Data inserted Successfully", status: true });
@@ -156,6 +158,7 @@ async function addUser(req, res) {
     }
 }
 async function addInvoice(req, res) {
+
     // const { UserId, senderID, Date } = req.body.invoice;
     const { Buyer, senderID, Date } = req.body.invoice;
     const totalSum = req.body.totalValues;
@@ -169,15 +172,14 @@ async function addInvoice(req, res) {
     // console.log(invoiceItem);
 
     try {
-      
-
         const getReciverId = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1;', [Buyer]);
         const recivermail = getReciverId.rows[0].email;
-        console.log("recivermail : ",recivermail);
+        // console.log("recivermail : ",recivermail);
 
         const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [senderID]);
         // console.log(CheckForStaff.rows[0].positionid);
         const res_positionId = CheckForStaff.rows[0].positionid
+        console.log("TEst Id position",res_positionId);
         let belongsto;
         if (res_positionId == 4 || res_positionId == 5) {
             const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [senderID]);
@@ -196,11 +198,11 @@ async function addInvoice(req, res) {
                 `select userid from public."user" where email=$1`, [recivermail]
             );
             const reciverID = ForReciverId.rows[0].userid
-            // console.log(reciverID);
+            console.log("RECIVERID",reciverID);
             const InvoiceTableResult = await userdbInstance.userdb.query(
                 `INSERT INTO public.invoice(
                     senderid,receiverid,senderstatus,date,total)
-                VALUES ($1,$2,$3,$4,$5) RETURNING invoiceid;`, [senderID, reciverID, 0, Date, totalSum]
+                VALUES ($1,$2,$3,$4,$5) RETURNING invoiceid;`, [belongsto, reciverID, 0, Date, totalSum]
             );
             // console.log(InvoiceTableResult.rows[0].invoiceid);
             const invoiceid = InvoiceTableResult.rows[0].invoiceid;
@@ -220,7 +222,7 @@ async function addInvoice(req, res) {
                 const ReduceFromSenderTable = await userdbInstance.userdb.query(
                     `UPDATE products
                     SET quantity = quantity - $1
-                    WHERE belongsto=$2 and productid = $3 and batchno = $4;`, [item.Quantity, senderID, item.hsncode, item.batchno]
+                    WHERE belongsto=$2 and productid = $3 and batchno = $4;`, [item.Quantity, belongsto, item.hsncode, item.batchno]
                 );
 
                 const checkProductAlreadyExist = await userdbInstance.userdb.query(
@@ -235,9 +237,11 @@ async function addInvoice(req, res) {
                 } else {
                     // console.log("No");
                     const getAllOtherDetails = await userdbInstance.userdb.query(
-                        `select priceperitem ,cgst , sgst from public.products WHERE belongsto=$1 and productid=$2 and batchno = $3`, [senderID, item.hsncode, item.batchno]
+                        `select priceperitem ,cgst , sgst from public.products WHERE belongsto=$1 and productid=$2 and batchno = $3`, [belongsto, item.hsncode, item.batchno]
                     );
+                    console.log("Identification",getAllOtherDetails.rows[0]);
                     const priceperitem = getAllOtherDetails.rows[0].priceperitem;
+                    
                     const cgst = getAllOtherDetails.rows[0].cgst;
                     const sgst = getAllOtherDetails.rows[0].sgst;
                     // console.log("priceperitem : ",priceperitem , cgst,sgst);

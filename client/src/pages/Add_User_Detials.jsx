@@ -121,6 +121,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         
     };
     const [state,setstate]=useState([]);
+    const [district,setdistrict]=useState([]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -128,24 +129,23 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 const statedata = (dropDownUserResponse.data.data.map(item => item.statename))
                 console.log(dropDownUserResponse.data.data.map(item => item.statename));
                 setstate(statedata);
-                // const users = dropDownUserResponse.data.data.map(item => item.organizationname);
-                // setuserNameoptions(users)
-                // const checkForUndefined = users.includes(undefined);
-                // if (checkForUndefined) {
-                //     console.log(checkForUndefined);
-                //     console.log('State is not properly Set!');
-                //     setReciverIdRes([{}]);
-                // }
-                // const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
-                // const productList = dropDownResponse.data.data;
-                // setproductList(productList)
-                // const productName = dropDownResponse.data.data.map(item => item.productname);
-                // setOptionsproductName(productName);
             } catch (error) {
                 console.error('Error in processing data:', error);
             }
         };
         fetchData();
+        const fetchdistrict = async () => {
+            try {
+                const dropDownUserResponse = await axios.post(`${API_URL}get/district`);
+                console.log(dropDownUserResponse);
+                const districtdata = (dropDownUserResponse.data.data.map(item => item.districtname))
+                console.log(dropDownUserResponse.data.data.map(item => item.districtname));
+                setdistrict(districtdata);
+            } catch (error) {
+                console.error('Error in processing data:', error);
+            }
+        };
+        fetchdistrict();
     }, []);
 
     const handleInputChange = (e) => {
@@ -230,7 +230,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
         return true;
     };
 
-
+    // console.log("User_________id",userInfo.userid);
+    // const userInfoString = sessionStorage.getItem("UserInfo");
+    // const userInfo = JSON.parse(userInfoString);
     const [loading, setLoading] = useState(false);
     const [resAlert, setresAlert] = useState(null)
     const handleSubmit = async (e) => {
@@ -252,7 +254,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
 
             console.log("Hello From Staff");
-
+           
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
                 // Inner Level
                 const isValidbussinessType = (postData.bussinessType === 'Organization' || postData.bussinessType === 'Individual');
@@ -291,12 +293,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     // & isValidCommunicationAddress 
                     & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
                 ) {
-                    try {
+                    
+                    try {   
                         // setLoading(true);
 
                         const response = await axios.post(`${API_URL}add/user`,
                             // formData
-                            { userDetials: postData, AccessControls: accessValues }
+                            { userDetials: postData, AccessControls: accessValues,Currentuser: userInfo.userid}
                         );
                         // alert(response.data.message);
                         setresAlert(response.data.message)
@@ -410,7 +413,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 if (isImagePresent) {
                     try {
                         setLoading(true);
-                        const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues });
+                        const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues,Currentuser: userInfo.userid });
                         // alert(response.data.message);
                         setresAlert(response.data.message)
                         setSubmitted(true);
@@ -1140,7 +1143,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     {
                                                         field.name == 'State' || field.name == 'City' ? (
                                                             <Autocomplete
-                                                                options={state}
+                                                            options={field.name === 'State' ? state : district}    
                                                                 onChange={(e, value) => handleInputChangeInvoice(field.name, value)}
                                                                 renderInput={(params) => (
                                                                     <TextField {...params}

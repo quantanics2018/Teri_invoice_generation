@@ -44,14 +44,20 @@ async function getUserData(req, res) {
 
 async function getStateData(req, res) {
     try {
-        // const { adminid, position } = req.body;
-        // console.log("adminid : ", adminid, "position : ", position);
-        console.log("TEEEEEESSSSSSSSSSSTTTTTTT");
-        // const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [adminid]);
-
         const userStateResult = await userdbInstance.userdb.query('SELECT statename FROM public.state;');
         res.json({ message: "Successfully Data Fetched", data: userStateResult.rows });
-        console.log(userStateResult);
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+async function getDistrictData(req, res) {
+    try {
+        
+        console.log("TEEEEEESSSSSSSSSSSTTTTTTT");
+        const userdistrictResult = await userdbInstance.userdb.query('SELECT districtname FROM public.district;');
+        res.json({ message: "Successfully Data Fetched", data: userdistrictResult.rows });
+        
     } catch (error) {
         console.error('Error executing database query:', error);
         res.status(500).json({ message: "Internal Server Error" });
@@ -148,13 +154,28 @@ async function getProducts(req, res) {
 async function getTransactionHistory(req, res) {
     try {
         const { userid } = req.body;
-        // console.log(" userid : ",userid);
+        console.log(" userid : ",userid);
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [userid]);
+        // console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        console.log("TEst Id position",res_positionId);
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [userid]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = userid
+        }
+        console.log("belongsto- senderid : ",belongsto);
+
+
+        
         // const userTransactionResult = await userdbInstance.userdb.query(`select * from invoice where senderid = $1 or receiverid = $2 order by rno DESC;`, [userid,userid]);
         const userTransactionResult = await userdbInstance.userdb.query(`SELECT invoice.*, public."user".email
         FROM invoice
         JOIN public."user" ON public."user".userid = invoice.receiverid
         WHERE senderid = $1 OR receiverid = $2
-        ORDER BY rno DESC;`, [userid, userid]);
+        ORDER BY rno DESC;`, [belongsto, belongsto]);
         res.json({ status: true, message: "Successfully Data Fetched", data: userTransactionResult.rows });
     } catch (error) {
         console.error('Error executing database query:', error);
@@ -260,4 +281,4 @@ async function getProductDataIndividual(req, res) {
 }
 
 
-module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData};
+module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData,getDistrictData};

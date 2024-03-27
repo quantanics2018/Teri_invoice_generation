@@ -112,6 +112,15 @@ app.post('/get/:entity(user|credentials|product|products|state|district|access_c
             console.error("Error retrieving data");
         }
     }
+    if (entity === 'district') {
+        try {
+            var userdata = await getData.getDistrictData(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
     if (entity === 'SenderDataInvoiceAddress') {
         try {
             var userdata = await getData.SenderDataInvoiceAddress(req, res);
