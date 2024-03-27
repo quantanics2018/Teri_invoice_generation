@@ -626,7 +626,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         { label: 'Invoice PaySlip', disableHead: false },
     ]
     let updatedAccessHead = [...accessHead];
-    if (userInfo.position === 'manifacture') {
+    if (userInfo.position === 'Manufacturer') {
         // const labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
         let labelsToUpdate
         if (Positionid_val === 4) {
@@ -708,7 +708,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 'Invoice Generator': 'No access',
             }));
         }
-        else if (userInfo.position === 'manifacture') {
+        else if (userInfo.position === 'Manufacturer') {
             setAccessValues((prevValues) => ({
                 ...prevValues,
                 Staff: 'No access',
@@ -717,7 +717,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
             }));
         }
     }, []);
-    // if (userInfo.position === 'manifacture') {
+    // if (userInfo.position === 'Manufacturer') {
     //     updatedAccessHead = [...accessHead];
     // }
     // if (userInfo.position === 'staff') {

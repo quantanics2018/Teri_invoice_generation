@@ -59,7 +59,7 @@ const ProfilePage = () => {
                 // const userid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
                 await axios.post(`${API_URL}get/profileInfo`, { userid }).then(res => {
                     console.log("ajax data");
-                    console.log(res.data.data[0]);
+                    console.log("Out come datttattttttttttttttttttttttaaaa",res.data.data[0]);
                     setprofileInfoRes({
                         ...profileInfoRes,
                         fname: res.data.data[0].fname,
@@ -75,6 +75,7 @@ const ProfilePage = () => {
                         btype: res.data.data[0].bussinesstype,
                         pcode: res.data.data[0].cpostalcode,
                         position: res.data.data[0].position,
+                        positionid: res.data.data[0].positionid
                     });
 
 
@@ -296,7 +297,14 @@ const ProfilePage = () => {
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                     {/* <Typography variant="h5" style={{ textTransform: 'capitalize' }}>{fixed_data.position}</Typography> */}
                                     <Typography variant="h5" style={{ textTransform: 'capitalize' }}>
-                                        {fixed_data.position.toLowerCase() === 'manifacture' ? 'Manufacturer' : fixed_data.position}
+                                        {/* {fixed_data.data.data[0].positionid === '1' && 'Manufacturer'} */}
+                                        {/* {console.log("Test data",fixed_data)}
+                                        {fixed_data.positionid=== '1' && 'Manufacturer'}
+                                        {fixed_data.positionid=== '2' && 'Distributor'}
+                                        {fixed_data.positionid=== '3' && 'Customer'}
+                                        {fixed_data.positionid=== '4' && 'Staff'}
+                                        {fixed_data.positionid=== '5' && 'Distributor Staff'} */}
+                                        {fixed_data.position}
                                     </Typography>
                                     {console.log("user info data position:\t" + fixed_data.position)}
 

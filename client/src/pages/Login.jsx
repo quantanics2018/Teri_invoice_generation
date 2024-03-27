@@ -96,7 +96,7 @@ const Login = (props) => {
                     //     alert("Session Expired! Please Log in Again.");
                     //     sessionStorage.removeItem("UserInfo");
                     // }, expirationMilliseconds);
-                    if (response.data.data.position === "manifacture") {
+                    if (response.data.data.position === "Manufacturer") {
                         navigate("/Staff_Details");
                     }
                     else if (response.data.data.position === "staff") {

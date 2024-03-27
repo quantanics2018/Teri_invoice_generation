@@ -124,12 +124,12 @@ const EditProduct = () => {
         device_user_data();
     }, [productid]);
 
-    console.log(!(userInfo.position === 'staff' || userInfo.position === 'manifacture'));
+    console.log(!(userInfo.position === 'staff' || userInfo.position === 'Manufacturer'));
     const inputFields = [
         { label: "HSN Code", name: "productid", value: inputValues.productid, icon: ic_home_work, disabled: true },
         { label: "Batch No", name: "batchno", value: inputValues.batchno, icon: person, disabled: true },
         { label: "Product Name", name: "productname", value: inputValues.productname, icon: person },
-        { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person, disabled: !(userInfo.position === 'staff' || userInfo.position === 'manifacture') },
+        { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person, disabled: !(userInfo.position === 'staff' || userInfo.position === 'Manufacturer') },
         { label: "Price Per Item", name: "priceperitem", value: inputValues.priceperitem, icon: person },
         { label: "CGST", name: "CGST", value: inputValues.CGST, icon: person },
         { label: "SGCT", name: "SGCT", value: inputValues.SGCT, icon: person }

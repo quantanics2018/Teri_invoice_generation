@@ -287,7 +287,7 @@ const InvoiceGenerator = () => {
                 const dropDownUserResponse = await axios.post(`${API_URL}get/getUserList`, { inputValues });
                 const users = dropDownUserResponse.data.data.map(item => item.organizationname);
                 setuserNameoptions(users);
-                // console.log(users);
+                console.log(users);
                 // const checkForUndefined = users.map(item => item === undefined);
                 // console.log(checkForUndefined.includes('quantanics1'));
 

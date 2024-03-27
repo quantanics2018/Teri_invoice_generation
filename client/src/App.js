@@ -45,7 +45,7 @@ const App = () => {
   //   isLoggedIn: true,
   //   name: "admin",
   //   phno: "123456789",
-  //   position: "manifacture",
+  //   position: "Manufacturer",
   //   product: "3",
   //   userid: "123",
   //   userprofile: "1"

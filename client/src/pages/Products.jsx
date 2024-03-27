@@ -273,7 +273,7 @@ const Products = () => {
                 <div className="device_mangement_main_content">
                     <div className="row_with_count_status">
                         <span className='module_tittle'>Products</span>
-                        {((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) &&
+                        {((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) &&
                             <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
                         }
                     </div>
@@ -385,9 +385,9 @@ const Products = () => {
                                 </div>
                             </div>
                         </div>
-                        manifacture
-                        {console.log("test",((userInfo.position === 'manifacture') || (userInfo.position === 'staff')))}
-                        {((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) &&
+                        Manufacturer
+                        {console.log("test",((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')))}
+                        {((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) &&
                             <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
                         }
 
@@ -415,15 +415,15 @@ const Products = () => {
                                     <input
                                         type="number"
                                         className='col-head'
-                                        autoFocus={((userInfo.position === 'manifacture') || (userInfo.position === 'staff'))}
+                                        autoFocus={((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff'))}
                                         value={data.quantity}
-                                        onBlur={() => (((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) && updateInDb(data.productid, data.batchno,data.quantity, index))}
-                                        onChange={(event) => (((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) && handleQuantityChange(event, index))}
+                                        onBlur={() => (((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) && updateInDb(data.productid, data.batchno,data.quantity, index))}
+                                        onChange={(event) => (((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) && handleQuantityChange(event, index))}
                                     />
                                 ) : (
                                     <div
                                         className="col-head editable"
-                                        onDoubleClick={() => (((userInfo.position === 'manifacture') || (userInfo.position === 'staff')) && handleDoubleClick(index, data.quantity))}
+                                        onDoubleClick={() => (((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) && handleDoubleClick(index, data.quantity))}
                                     >
                                         {data.quantity}
                                     </div>

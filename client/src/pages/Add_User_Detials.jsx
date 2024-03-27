@@ -26,7 +26,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { API_URL } from '../config';
 import TextField from '@mui/material/TextField';
-import { Box, Button, Checkbox, FormControl, InputAdornment, InputLabel, MenuItem, Select, Snackbar, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Checkbox, FormControl, InputAdornment, InputLabel, MenuItem, Select, Snackbar, Typography } from '@mui/material';
 import { CancelBtn, SaveBtn, UserActionBtn } from '../assets/style/cssInlineConfig';
 import { AddUserBtn, SaveBtnComp } from '../components/AddUserBtn';
 import { CancelBtnComp } from '../components/AddUserBtn'
@@ -113,6 +113,40 @@ const Add_User_Detials = ({ Positionid_val }) => {
             PostalCode2: '',
         });
     }
+    const handleInputChangeInvoice = (fieldName, value) => {
+        setPostData((prevValues) => ({
+            ...prevValues,
+            [fieldName]: value,
+        }));
+        
+    };
+    const [state,setstate]=useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const dropDownUserResponse = await axios.post(`${API_URL}get/state`);
+                const statedata = (dropDownUserResponse.data.data.map(item => item.statename))
+                console.log(dropDownUserResponse.data.data.map(item => item.statename));
+                setstate(statedata);
+                // const users = dropDownUserResponse.data.data.map(item => item.organizationname);
+                // setuserNameoptions(users)
+                // const checkForUndefined = users.includes(undefined);
+                // if (checkForUndefined) {
+                //     console.log(checkForUndefined);
+                //     console.log('State is not properly Set!');
+                //     setReciverIdRes([{}]);
+                // }
+                // const dropDownResponse = await axios.post(`${API_URL}get/productList`, { inputValues });
+                // const productList = dropDownResponse.data.data;
+                // setproductList(productList)
+                // const productName = dropDownResponse.data.data.map(item => item.productname);
+                // setOptionsproductName(productName);
+            } catch (error) {
+                console.error('Error in processing data:', error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value, type } = e.target;
@@ -124,12 +158,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 [name]: e.target.files[0], // Use the file from the input
             });
         } else {
+            console.log("Name Value Printinggggggg",name , value);
             setPostData({
                 ...postData,
                 [name]: value,
             });
         }
-        console.log(postData);
+        console.log("PostDataaaaaaaaaa",postData);
     };
 
     // Access control
@@ -212,11 +247,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
         const isValidemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)
         const isValidMobileNo = /^\d{10}$/.test(postData.mobileNo)
         const isImagePresent = isImageValid(file);
-        console.log("isImagePresent : ",isImagePresent);
+        console.log("isImagePresent : ", isImagePresent);
 
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
 
-            console.log("Hello From Staff");  
+            console.log("Hello From Staff");
 
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
                 // Inner Level
@@ -236,10 +271,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
                 // check for image
                 // const isImagePresent = (file !== null);
-               
+
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
                 const isValidState = postData.State.trim() !== '';
+                // console.log("qqqqqqqqqqqqqqqqqqqqq",isValidState);
                 const isValidpCode = postData.pCode.trim() !== '';
                 // const isValidCommunicationAddress = postData.CommunicationAddress.trim() !== '';
                 const isValidStreetAddress2 = postData.StreetAddress2.trim() !== '';
@@ -371,36 +407,36 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     }
                 }
             } else {
-                if(isImagePresent){
-                try {
-                    setLoading(true);
-                    const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues });
-                    // alert(response.data.message);
-                    setresAlert(response.data.message)
-                    setSubmitted(true);
-                    if (response.data.status) {
-                        const response = await axios.post(`${API_URL}upload`,
-                            formData
-                        );
-                        console.log(response.data.status);
+                if (isImagePresent) {
+                    try {
+                        setLoading(true);
+                        const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues });
+                        // alert(response.data.message);
+                        setresAlert(response.data.message)
+                        setSubmitted(true);
                         if (response.data.status) {
-                            setTimeout(() => {
-                                handleClear();
-                                navigate(-1);
-                            }, 1000);
-                            console.log(' staff addingFile uploaded successfully:', response.data);
-                        } else {
-                            console.error('staff adding Failed to upload file:', response.statusText);
+                            const response = await axios.post(`${API_URL}upload`,
+                                formData
+                            );
+                            console.log(response.data.status);
+                            if (response.data.status) {
+                                setTimeout(() => {
+                                    handleClear();
+                                    navigate(-1);
+                                }, 1000);
+                                console.log(' staff addingFile uploaded successfully:', response.data);
+                            } else {
+                                console.error('staff adding Failed to upload file:', response.statusText);
+                            }
+
                         }
-                       
+                    } catch (error) {
+                        console.error('Error sending data:', error);
                     }
-                } catch (error) {
-                    console.error('Error sending data:', error);
                 }
-            }
-            else{
-                alert("Wrong Image format:Image should be png")
-            }
+                else {
+                    alert("Wrong Image format:Image should be png")
+                }
                 setLoading(false);
             }
         }
@@ -455,15 +491,15 @@ const Add_User_Detials = ({ Positionid_val }) => {
         { label: "Pass Book image", name: "passbookImg", value: postData.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         // 3. Address Details:
         { label: "Permanent Address", name: "pAddress", value: postData.pAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "Permanent Street Address", name: "streetAddress", value: postData.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "District", name: "City", value: postData.City, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "State", name: "State", value: postData.State, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "District", name: "City", value: postData.City, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Permanent Street Address", name: "streetAddress", value: postData.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Postal Code", name: "pCode", value: postData.pCode, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
 
         // { label: "Communication Address", name: "CommunicationAddress", value: postData.CommunicationAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "Communication Street Address", name: "StreetAddress2", value: postData.StreetAddress2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "District", name: "City2", value: postData.City2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "State", name: "State2", value: postData.State2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "District", name: "City2", value: postData.City2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Communication Street Address", name: "StreetAddress2", value: postData.StreetAddress2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Postal Code", name: "PostalCode2", value: postData.PostalCode2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
     ];
 
@@ -554,8 +590,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
     ]
     console.log(Positionid_val);
     let updatedAccessHead = [...accessHead];
-    console.log(userInfo.position === 'manifacture');
-    if (userInfo.position === 'manifacture') {
+    console.log(userInfo.position === 'Manufacturer');
+    if (userInfo.position === 'Manufacturer') {
         let labelsToUpdate
         if (Positionid_val === 4) {
             labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
@@ -673,7 +709,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 }));
             }
         }
-        else if (userInfo.position === 'manifacture') {
+        else if (userInfo.position === 'Manufacturer') {
             if (Positionid_val === 4) {
                 setAccessValues((prevValues) => ({
                     ...prevValues,
@@ -778,7 +814,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         {resAlert}
                     </MuiAlert>
                 </Snackbar>
-               
+
                 {/* Exit Conformation */}
                 <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -849,9 +885,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 {(Positionid_val === 4) && " Staff "}
                                 {(Positionid_val === 5) && " D_Staff "}
                                 Details </div>
-                           
+
                         </div>
-                      
+
 
                         <div className="row_two display-flex padding-loc">
                             <div className="device_info uppercase light-grey mb-loc-5">
@@ -879,7 +915,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                     {/* signature input */}
                                                     {console.log("signature input")}
-                                                    
+
                                                     <TextField
                                                         label={
                                                             <span>{`${field.label}`}</span>
@@ -947,6 +983,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                             startAdornment: field.name === 'mobileNo' ? <InputAdornment position="start">+91</InputAdornment> : null
                                                         }}
                                                     >
+
                                                         {currencies.map((option) => (
                                                             <MenuItem key={option.value} value={option.value}>
                                                                 {option.label}
@@ -1072,9 +1109,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 ))}
                             </div>
 
-                          
-                            <Box sx={{display:'flex',direction:'row',alignItems:'center',justfiyContent:'center'}}>
-                                <Typography sx={{marginLeft:'0.5rem',marginRight:'1rem'}}>Upload Signature</Typography>
+
+                            <Box sx={{ display: 'flex', direction: 'row', alignItems: 'center', justfiyContent: 'center' }}>
+                                <Typography sx={{ marginLeft: '0.5rem', marginRight: '1rem' }}>Upload Signature</Typography>
                                 <input type="file" onChange={handleFileChanges} />
                                 {/* <button onClick={handleUpload}>Upload Image</button> */}
                             </Box>
@@ -1100,21 +1137,40 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         },
                                                     }}
                                                 >
-                                                    {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                    <TextField
-                                                        label={`${field.label}`}
-                                                        type="text"
-                                                        className="form-control-loc"
-                                                        value={field.value}
-                                                        onChange={(e) => handleInputChange(e, field.name)}
-                                                        name={field.name}
-                                                        id={`input${index + 1}`}
-                                                        InputLabelProps={{
-                                                            className: 'required-label',
-                                                            required: true
-                                                        }}
-                                                    />
-                                                    {/* Add error handling if needed */}
+                                                    {
+                                                        field.name == 'State' || field.name == 'City' ? (
+                                                            <Autocomplete
+                                                                options={state}
+                                                                onChange={(e, value) => handleInputChangeInvoice(field.name, value)}
+                                                                renderInput={(params) => (
+                                                                    <TextField {...params}
+                                                                    value={field.value}
+                                                                        label={`${field.label}`}
+                                                                        variant="outlined"
+                                                                        InputLabelProps={{
+                                                                            className: 'required-label',
+                                                                            required: true
+                                                                        }}
+                                                                    />
+                                                                )}
+                                                            />
+                                                        ) : (
+                                                            <TextField
+                                                                label={`${field.label}`}
+                                                                type="text"
+                                                                className="form-control-loc"
+                                                                value={field.value}
+                                                                onChange={(e) => handleInputChange(e, field.name)}
+                                                                name={field.name}
+                                                                id={`input${index + 1}`}
+                                                                InputLabelProps={{
+                                                                    className: 'required-label',
+                                                                    required: true
+                                                                }}
+                                                            />
+                                                        )
+                                                    }
+
                                                 </Box>
                                             )}
 
@@ -1122,7 +1178,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                     </div>
                                 ))}
                             </div>
-                           
+
                             {!(Positionid_val === 4 || Positionid_val === 5) && (
                                 <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
                             )}
@@ -1218,7 +1274,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         <div className="save_cancel_btn display-flex site_button gap-4">
                             <CancelBtnComp CancelBtnFun={handleCancel} />
                             <SaveBtnComp SaveBtnFun={(e) => handleSubmit(e)} />
-                         
+
                         </div>
                     </div>
                 </div>
