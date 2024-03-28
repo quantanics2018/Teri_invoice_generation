@@ -38,6 +38,11 @@ const Invoice = ({
     buyercompany,
     generateInvoice
 }) => {
+
+
+    console.log("Data!!!!!!!!!!!!!!generateInvoice",generateInvoice);
+    console.log("Data!!!!!!!!!!!!!!ReciverInvoiceProp",ReciverInvoiceProp);
+    console.log("Data!!!!!!!!!!!!!!invoiceid",invoiceid);
     const navigate = useNavigate();
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
@@ -202,15 +207,12 @@ const Invoice = ({
     // Handle submit
     const [loading, setLoading] = useState(false);
     const totalSum = Math.round(formatTotal(grandTotal()))
-    // console.log("rows : ", totalSum);
+    const [invoiceId, setInvoiceId] = useState('');
     const handleSubmit = async () => {
 
         const hasEmptyValue = previewInvoiceprop.some(row =>
             Object.values(row).some(value => value === '' || value === null),
         );
-
-        // console.log("inputValues :", previewInvoiceprop);
-        // console.log("inputValues --- :", hasEmptyValue);
         const hasEmptyReciverId =
             Object.values(inputValuesAboveRows).some(value => value === '' || value === null)
         // );
@@ -220,24 +222,24 @@ const Invoice = ({
             if (hasEmptyValue) {
                 alert('Please fill in all fields in each row before submitting.');
             } else {
-                // alert('Success');
                 try {
                     setLoading(true);
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                     if (response.data.status) {
+                        // console.log(response.data);
+                        setInvoiceId(response.data.status);
                         handleDownload1();
                         // alert(response.data.invoiceid);
+                        // console.log("DATA FROM INVOICE",response.data.invoiceid);
                         // await sendDataToServer(response.data.invoiceid);
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
                     }
                     setLoading(false);
-                    // console.log("rsponse : ",response.data.status);
                     if (response.data.status) {
                         navigate('/TransactionHistory');
                     }
-                    // setPreviewInvoice(response.data.message)
                 } catch (error) {
                     console.error('Error sending data:', error);
                 }
@@ -288,22 +290,6 @@ const Invoice = ({
 
 
     const generatePDF = async () => {
-        // const invoicecontent = document.getElementById('invoiceContent1');
-        // const img = document.querySelector('.sign img');
-
-        // if (img) {
-        //     const base64 = await imageToBase64(img.src);
-        //     img.src = base64;
-        // }
-
-        // // Convert HTML content to canvas
-        // html2canvas(invoicecontent, { scale: 2 }).then(canvas => {
-        //     // Convert canvas to PDF
-        //     const pdf = new jsPDF('p', 'mm', 'a4');
-        //     const imgData = canvas.toDataURL('image/jpeg', 1.0);
-        //     pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297); // Width and height are set to A4 dimensions
-        //     pdf.save('invoice.pdf');
-        // });
         try {
             const canvas = await html2canvas(invoiceRef.current, {
                 scale: 2,
@@ -416,7 +402,7 @@ const Invoice = ({
                         <div className="invoicedetail" style={invoicedetail}>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
                                 <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
-                                    Invoice No.<input type='text' style={rawInput} />
+                                    Invoice No.<input value={invoiceId} type='text' style={rawInput} />
                                 </div>
                                 <div className="row2Invoice" style={{ ...width50, ...padInPx }}>
                                     Date : {inputValuesAboveRows.Date}
@@ -728,18 +714,19 @@ const Invoice = ({
                             </div>
 
                             <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
-                                <div className="pvtName" style={PVTname}>{SenderInvoiceProp[0].organizationname}</div>
+                                <div className="pvtName" style={PVTname}>For {SenderInvoiceProp[0].organizationname}</div>
                                 <img src={signSrc} style={Signature} alt="signature" height={10} width={300} />
                                 <div className="authSign" style={AuthSign}>Authorized Sign.</div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bussinessQuotes1"
+                    {/* <div className="bussinessQuotes1"
                         style={bussinessQuotes}
-                    >
-                        <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>This is a Computer Genereated Invoice</div>
-                    </div>
+                    > */}
+                        {/* <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>This is a Computer Genereated Invoice</div> */}
+                        <div >This is a Computer Genereated Invoice</div>
+                    {/* </div> */}
                 </div>
             </div>
             <div className="actions" style={actions}>

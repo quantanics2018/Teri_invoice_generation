@@ -118,10 +118,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
             ...prevValues,
             [fieldName]: value,
         }));
-        
+
     };
-    const [state,setstate]=useState([]);
-    const [district,setdistrict]=useState([]);
+    const [state, setstate] = useState([]);
+    const [district, setdistrict] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -158,13 +158,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 [name]: e.target.files[0], // Use the file from the input
             });
         } else {
-            console.log("Name Value Printinggggggg",name , value);
+            console.log("Name Value Printinggggggg", name, value);
             setPostData({
                 ...postData,
                 [name]: value,
             });
         }
-        console.log("PostDataaaaaaaaaa",postData);
+        console.log("PostDataaaaaaaaaa", postData);
     };
 
     // Access control
@@ -248,17 +248,23 @@ const Add_User_Detials = ({ Positionid_val }) => {
         // const isValidemail = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(postData.email)
         const isValidemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)
         const isValidMobileNo = /^\d{10}$/.test(postData.mobileNo)
-        const isImagePresent = isImageValid(file);
+
+        // const isImagePresent = isImageValid(file);
+
+        const isImagePresent = Positionid_val !== 3 ? isImageValid(file) : true;
+
         console.log("isImagePresent : ", isImagePresent);
 
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
 
             console.log("Hello From Staff");
-           
+
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
                 // Inner Level
                 const isValidbussinessType = (postData.bussinessType === 'Organization' || postData.bussinessType === 'Individual');
-                const isValidOrgName = postData.OrganizationName.trim() !== '';
+                // const isValidOrgName = postData.OrganizationName.trim() !== '';
+                const isValidOrgName =  Positionid_val !== 3 ? postData.OrganizationName.trim() !== '': true;
+                // Positionid_val !== 3 ? isImageValid(file) : true;
                 const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(postData.gstNumber);
                 const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber);
 
@@ -288,18 +294,19 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
                     & isValidupiPaymentNo & isValidaccName & isValidaccHolderName & isValidaccNo & isValidifscCode
                     // & isValidpAddress 
+                    // ((Positionid_val !== 3) && isImagePresent) 
                     & isImagePresent
                     & isValidstreetAddress & isValidCity & isValidState & isValidpCode
                     // & isValidCommunicationAddress 
                     & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
                 ) {
-                    
-                    try {   
+
+                    try {
                         // setLoading(true);
 
                         const response = await axios.post(`${API_URL}add/user`,
                             // formData
-                            { userDetials: postData, AccessControls: accessValues,Currentuser: userInfo.userid}
+                            { userDetials: postData, AccessControls: accessValues, Currentuser: userInfo.userid }
                         );
                         // alert(response.data.message);
                         setresAlert(response.data.message)
@@ -307,17 +314,24 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         if (response.data.status) {
                             // alert("add signature")
                             console.log("uploading image");
-                            const response = await axios.post(`${API_URL}upload`,
-                                formData
-                            );
-                            console.log(response.data.status);
-                            if (response.data.status) {
+                            if (Positionid_val !== 3) {
+                                const response = await axios.post(`${API_URL}upload`,
+                                    formData
+                                );
+                                console.log(response.data.status);
+                                if (response.data.status) {
+                                    handleClear();
+                                    navigate(-1);
+                                    console.log('File uploaded successfully:', response.data);
+                                } else {
+                                    console.error('Failed to upload file:', response.statusText);
+                                }
+                            }
+                            else{
                                 handleClear();
                                 navigate(-1);
-                                console.log('File uploaded successfully:', response.data);
-                            } else {
-                                console.error('Failed to upload file:', response.statusText);
                             }
+
                         }
 
                         // setLoading(false);
@@ -363,6 +377,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setresAlert("Enter Valid IFSC Name");
                         setSubmitted(true);
                     }
+                    // else if (Positionid_val !== 3 && !isImagePresent) {
                     else if (!isImagePresent) {
                         setresAlert("Only PNG format is allowed & Image size should be less than 10MB.");
                         setSubmitted(true);
@@ -410,10 +425,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     }
                 }
             } else {
+                // if (Positionid_val !== 3 && isImagePresent) {
                 if (isImagePresent) {
                     try {
                         setLoading(true);
-                        const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues,Currentuser: userInfo.userid });
+                        const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues, Currentuser: userInfo.userid });
                         // alert(response.data.message);
                         setresAlert(response.data.message)
                         setSubmitted(true);
@@ -977,11 +993,21 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         name={field.name}
                                                         id={`input${index + 1}`}
                                                         select={field.name === 'bussinessType' && true}
-                                                        labelClassName="required"
-                                                        InputLabelProps={{
-                                                            className: 'required-label',
-                                                            required: true
-                                                        }}
+                                                        // labelClassName="required"
+                                                        // {!(Positionid_val !== 3)&&
+                                                        //     InputLabelProps={{
+                                                        //         className: 'required-label',
+                                                        //         required: true
+                                                        //     }}
+                                                        // }
+                                                        InputLabelProps={
+                                                            (!((field.name === 'OrganizationName') && (Positionid_val === 3) )) &&{
+                                                                className: 'required-label',
+                                                                required: true
+                                                            }
+                                                        }
+                                                        
+                                                                    
                                                         InputProps={{
                                                             startAdornment: field.name === 'mobileNo' ? <InputAdornment position="start">+91</InputAdornment> : null
                                                         }}
@@ -1111,13 +1137,15 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                     </div>
                                 ))}
                             </div>
+                            {/* Sign */}
+                            {(Positionid_val !== 3) && (
+                                <Box sx={{ display: 'flex', direction: 'row', alignItems: 'center', justfiyContent: 'center' }}>
+                                    <Typography sx={{ marginLeft: '0.5rem', marginRight: '1rem' }}>Upload Signature</Typography>
+                                    <input type="file" onChange={handleFileChanges} />
+                                    {/* <button onClick={handleUpload}>Upload Image</button> */}
+                                </Box>
+                            )}
 
-
-                            <Box sx={{ display: 'flex', direction: 'row', alignItems: 'center', justfiyContent: 'center' }}>
-                                <Typography sx={{ marginLeft: '0.5rem', marginRight: '1rem' }}>Upload Signature</Typography>
-                                <input type="file" onChange={handleFileChanges} />
-                                {/* <button onClick={handleUpload}>Upload Image</button> */}
-                            </Box>
 
                             {!(Positionid_val === 4 || Positionid_val === 5) && (
                                 <div className="device_info uppercase light-grey mb-loc-5">
@@ -1143,11 +1171,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     {
                                                         field.name == 'State' || field.name == 'City' ? (
                                                             <Autocomplete
-                                                            options={field.name === 'State' ? state : district}    
+                                                                options={field.name === 'State' ? state : district}
                                                                 onChange={(e, value) => handleInputChangeInvoice(field.name, value)}
                                                                 renderInput={(params) => (
                                                                     <TextField {...params}
-                                                                    value={field.value}
+                                                                        value={field.value}
                                                                         label={`${field.label}`}
                                                                         variant="outlined"
                                                                         InputLabelProps={{
