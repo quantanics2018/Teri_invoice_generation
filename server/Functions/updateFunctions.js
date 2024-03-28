@@ -334,11 +334,19 @@ async function update_user_profile(req,res){
         btype,
         pcode,
 
+        bname,
+        acno,
+        ifsc_code,
+        achname,
+        upi_id,
+        gstno,  
+
+
     } = req.body.userDetails;
 
     try{
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public."user"
-        SET email=$1, phno=$2, aadhar=$3, pan=$4, pstreetname=$5, pdistrictid=$6, pstateid=$7, ppostalcode=$8 , cstreetname=$9, cdistrictid=$10,cstateid=$11, cpostalcode=$12,organizationname=$13,  bussinesstype=$14, fname=$15, lname=$16 WHERE userid=$17;`, [email,  mobile,  aadhar,  pannumber, streetname, dname, sname, pcode, streetname, dname, sname, pcode,orgname, btype,fname,lname,userid]);
+        SET email=$1, phno=$2, aadhar=$3, pan=$4, pstreetname=$5, pdistrictid=$6, pstateid=$7, ppostalcode=$8 , cstreetname=$9, cdistrictid=$10,cstateid=$11, cpostalcode=$12,organizationname=$13,  bussinesstype=$14, fname=$15, lname=$16  , gstnno=$17 , upiid=$18 , bankname=$19, bankaccno=$20 , accholdername=$21 , ifsccode=$22 WHERE userid=$23;`, [email,  mobile,  aadhar,  pannumber, streetname, dname, sname, pcode, streetname, dname, sname, pcode,orgname, btype,fname,lname,gstno,upi_id,bname,acno,achname,ifsc_code,userid]);
         
         if (userUpdateResult.rowCount === 1) {
             res.json({ message: "Successfully Updated", status: true });
