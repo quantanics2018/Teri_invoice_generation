@@ -360,7 +360,7 @@ const Invoice = ({
                             <div className="invoiceDetial1"
                                 style={{ ...invoiceDetial, ...padInPx }}
                             >
-                                <pre style={textwarp}>
+                                <pre style={{...textwarp,padding:'3px'}}>
                                     <div className="organizationName" style={{ fontWeight: 900, fontSize: '20px' }}>
                                         {SenderInvoiceProp[0].organizationname}
                                     </div>
@@ -380,7 +380,7 @@ const Invoice = ({
                                 <div className="billToBody"
                                     style={padInPx}
                                 >
-                                    <pre style={{ ...reciverBill, ...textwarp }}>
+                                    <pre style={{ ...reciverBill, ...textwarp,padding:'3px'}}>
                                         Buyer:(Bill To) <br />
                                         {ReciverInvoiceProp[0].organizationname}<br />
                                         {ReciverInvoiceProp[0].cstreetname}<br />
@@ -389,12 +389,12 @@ const Invoice = ({
                                         Ph : {ReciverInvoiceProp[0].phno}<br />
                                         GSTIN/UIN : {ReciverInvoiceProp[0].gstnno}<br />
                                         State Name : {ReciverInvoiceProp[0].cstateid}<br />
-                                        E-Mail : {ReciverInvoiceProp[0].email}<br /><br />
+                                        E-Mail : {ReciverInvoiceProp[0].email}<br />
                                     </pre>
                                 </div>
                             </div>
                         </div>
-                        <div className="invoicedetail" style={invoicedetail}>
+                        <div className="invoicedetail" style={{...invoicedetail,padding:'3px'}}>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
                                 {generateInvoice ?
                                     <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
@@ -506,7 +506,7 @@ const Invoice = ({
                         {/* Table heading row */}
                         <div style={rowStyle}>
                             {/* <div className='invoice_table_header' style={{ width: '6%', }}>S.No.</div> */}
-                            <div className='invoice_table_header' style={{ width: '6%' }}>S.No.</div>
+                            <div className='invoice_table_header' style={{ width: '6%',padding: '3px' }}>S.No.</div>
                             <div className='invoice_table_header' style={{ width: '34%' }}>Description of Goods</div>
                             <div className='invoice_table_header' style={{ width: '13%' }}>HSN NO</div>
                             <div className='invoice_table_header' style={{ width: '10%' }}>Quantity</div>
@@ -518,8 +518,8 @@ const Invoice = ({
                         {/* Table data  */}
                         {[...previewInvoiceprop, {}, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div className='invoice_table_header' style={{ width: '6%' , borderBottomColor: '#00000033'}}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
-                                <div className='invoice_table_header' style={{ width: '34%' , borderBottomColor: '#00000033'}}>
+                                <div className='invoice_table_header' style={{ width: '6%' ,padding: '3px'}}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
+                                <div className='invoice_table_header' style={{ width: '34%' }}>
                                     {item.productName || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
@@ -541,14 +541,14 @@ const Invoice = ({
                                         </div>
                                     }
                                     {index === previewInvoiceprop.length + 1 &&
-                                        <div>
+                                        <div style={{padding:'3px'}}>
                                             <b>Total</b>
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{ width: '13%' , borderBottomColor: '#00000033'}}>{item.hsncode || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '13%' }}>{item.hsncode || ''}</div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div className='invoice_table_header' style={{ width: '10%' , borderBottomColor: '#00000033'}}>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>
                                     {item.Quantity || ''}
                                     {index === previewInvoiceprop.length + 1 &&
                                         <div>
@@ -556,17 +556,17 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{ width: '10%' , borderBottomColor: '#00000033'}}>{unitRate(item.hsncode, item.batchno)}</div>
-                                <div className='invoice_table_header' style={{ width: '10%' , borderBottomColor: '#00000033'}}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
-                                <div className='invoice_table_header' style={{ width: '7%' , borderBottomColor: '#00000033'}}>{item.Discount || ''}</div>
-                                <div className='invoice_table_header' style={{ width: '10%' , borderBottomColor: '#00000033'}}>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>{unitRate(item.hsncode, item.batchno)}</div>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
+                                <div className='invoice_table_header' style={{ width: '7%' }}>{item.Discount || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
                                             <div className="invoiceRow1 even1">
                                                 {/* CGST */}
                                                 {/* {formatTotal(TotalcgstPercent())} % */}
-                                                <div className="totalVal1"style={{borderBottomColor: '#00000033'}}>{formatTotal(TotalcgstValue())}</div>
+                                                <div className="totalVal1">{formatTotal(TotalcgstValue())}</div>
                                             </div>
                                             <div className="invoiceRow1 even1">
                                                 {/* SGST */}
@@ -589,8 +589,8 @@ const Invoice = ({
                             </div>
                         )}
                     </div>
-                    <div className="numberinWord" style={numberinWord}>
-                        <div className="amountHeading" style={{ ...amountHeading, ...df }}>
+                    <div className="numberinWord" style={{...numberinWord,padding:'3px'}}>
+                        <div className="amountHeading" style={{ ...amountHeading, ...df}}>
                             <div className="changeablecontent">Amount Changeable (in words)</div>
                             <div className="oe"><b>E & O.E</b></div>
                         </div>
