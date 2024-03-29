@@ -40,9 +40,9 @@ const Invoice = ({
 }) => {
 
 
-    console.log("Data!!!!!!!!!!!!!!generateInvoice",generateInvoice);
-    console.log("Data!!!!!!!!!!!!!!ReciverInvoiceProp",ReciverInvoiceProp);
-    console.log("Data!!!!!!!!!!!!!!invoiceid",invoiceid);
+    console.log("Data!!!!!!!!!!!!!!generateInvoice", generateInvoice);
+    console.log("Data!!!!!!!!!!!!!!ReciverInvoiceProp", ReciverInvoiceProp);
+    console.log("Data!!!!!!!!!!!!!!invoiceid", invoiceid);
     const navigate = useNavigate();
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
@@ -62,7 +62,7 @@ const Invoice = ({
         flex: 1,
         border: '1px solid #000',
         // padding: '20px',
-        textAlign: 'center',
+        textAlign: 'center'
     };
     const totalgstname = {
         height: '100px',
@@ -205,9 +205,9 @@ const Invoice = ({
     }
 
     // Handle submit
+    const [invoiceId, setInvoiceId] = useState('');
     const [loading, setLoading] = useState(false);
     const totalSum = Math.round(formatTotal(grandTotal()))
-    const [invoiceId, setInvoiceId] = useState('');
     const handleSubmit = async () => {
 
         const hasEmptyValue = previewInvoiceprop.some(row =>
@@ -226,12 +226,11 @@ const Invoice = ({
                     setLoading(true);
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                     if (response.data.status) {
-                        // console.log(response.data);
-                        setInvoiceId(response.data.status);
+                        console.log(response);
+                        setInvoiceId(response.data.invoiceid);
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        alert(response.data);
                         handleDownload1();
-                        // alert(response.data.invoiceid);
-                        // console.log("DATA FROM INVOICE",response.data.invoiceid);
-                        // await sendDataToServer(response.data.invoiceid);
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
@@ -246,11 +245,45 @@ const Invoice = ({
             }
         }
     }
+    const invoiceRef = useRef(null);
+    const handleDownload1 = async () => {
+        console.log("Invoice ID ",invoiceId );
+        try {
+            const canvas = await html2canvas(invoiceRef.current, {
+                scale: 2,
+                useCORS: true,
+                logging: true 
+            });
 
-    // const generatePDF = () => {
-    //     const invoicecontent = document.getElementById('invoiceContent1');
-    //     html2pdf().from(invoicecontent).save();
-    // }
+            // Convert canvas to data URL
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // Generate PDF using jsPDF
+            const pdf = new jsPDF();
+
+            // Add image to PDF
+            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+            const blobData = pdf.output('blob');
+            const formData = new FormData();
+            formData.append('file', blobData, 'Email.pdf');
+            formData.append('companyname', buyercompany);
+            // console.log(buyercompany);
+            axios.post(`${API_URL}save-pdf-server`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then(response => {
+                    console.log('File saved successfully:', response.data);
+                    setInvoiceId(response.data.invoiceid);
+                })
+
+        } catch (error) {
+            console.error('Error:', error);
+
+        }
+    };
+
 
 
     // Convert image to base64
@@ -304,45 +337,7 @@ const Invoice = ({
             console.error('Error:', error);
         }
     }
-
-
-    const invoiceRef = useRef(null);
-    const handleDownload1 = async () => {
-        try {
-            const canvas = await html2canvas(invoiceRef.current, {
-                scale: 2,
-                useCORS: true,
-                logging: true 
-            });
-
-            // Convert canvas to data URL
-            const imageData = canvas.toDataURL('image/jpeg');
-
-            // Generate PDF using jsPDF
-            const pdf = new jsPDF();
-
-            // Add image to PDF
-            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-            const blobData = pdf.output('blob');
-            const formData = new FormData();
-            formData.append('file', blobData, 'Email.pdf');
-            formData.append('companyname', buyercompany);
-            // console.log(buyercompany);
-            axios.post(`${API_URL}save-pdf-server`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-                .then(response => {
-                    console.log('File saved successfully:', response.data);
-
-                })
-          
-        } catch (error) {
-            console.error('Error:', error);
-           
-        }
-    };
+    console.log("Invoice Id--------------", invoiceId);
 
 
 
@@ -351,7 +346,7 @@ const Invoice = ({
             <div className="A4SheetSize" id="invoiceContent1" style={pad} ref={invoiceRef}>
                 <div className="taxInvoiceHead" style={taxInvoiceHead} id="taxInvoiceHead">
                     {generateInvoice ?
-                        <h4>TAX INVOICE {invoiceid}</h4>
+                        <h4>TAX INVOICE </h4>
                         : <h4>
                             PROFORMA INVOICE
                         </h4>
@@ -401,9 +396,15 @@ const Invoice = ({
                         </div>
                         <div className="invoicedetail" style={invoicedetail}>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
-                                <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
-                                    Invoice No.<input value={invoiceId} type='text' style={rawInput} />
-                                </div>
+                                {generateInvoice ?
+                                    <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
+                                        Invoice No : {invoiceId}
+                                    </div> :
+                                    <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
+                                        Invoice No.<input type='text' style={rawInput} />
+                                    </div>
+                                }
+
                                 <div className="row2Invoice" style={{ ...width50, ...padInPx }}>
                                     Date : {inputValuesAboveRows.Date}
                                 </div>
@@ -504,6 +505,7 @@ const Invoice = ({
                     <div style={containerStyle}>
                         {/* Table heading row */}
                         <div style={rowStyle}>
+                            {/* <div className='invoice_table_header' style={{ width: '6%', }}>S.No.</div> */}
                             <div className='invoice_table_header' style={{ width: '6%' }}>S.No.</div>
                             <div className='invoice_table_header' style={{ width: '34%' }}>Description of Goods</div>
                             <div className='invoice_table_header' style={{ width: '13%' }}>HSN NO</div>
@@ -516,8 +518,8 @@ const Invoice = ({
                         {/* Table data  */}
                         {[...previewInvoiceprop, {}, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div className='invoice_table_header' style={{ width: '6%' }}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
-                                <div className='invoice_table_header' style={{ width: '34%' }}>
+                                <div className='invoice_table_header' style={{ width: '6%' , borderBottomColor: '#00000033'}}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
+                                <div className='invoice_table_header' style={{ width: '34%' , borderBottomColor: '#00000033'}}>
                                     {item.productName || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
@@ -544,9 +546,9 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{ width: '13%' }}>{item.hsncode || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '13%' , borderBottomColor: '#00000033'}}>{item.hsncode || ''}</div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div className='invoice_table_header' style={{ width: '10%' }}>
+                                <div className='invoice_table_header' style={{ width: '10%' , borderBottomColor: '#00000033'}}>
                                     {item.Quantity || ''}
                                     {index === previewInvoiceprop.length + 1 &&
                                         <div>
@@ -554,17 +556,17 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{ width: '10%' }}>{unitRate(item.hsncode, item.batchno)}</div>
-                                <div className='invoice_table_header' style={{ width: '10%' }}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
-                                <div className='invoice_table_header' style={{ width: '7%' }}>{item.Discount || ''}</div>
-                                <div className='invoice_table_header' style={{ width: '10%' }}>
+                                <div className='invoice_table_header' style={{ width: '10%' , borderBottomColor: '#00000033'}}>{unitRate(item.hsncode, item.batchno)}</div>
+                                <div className='invoice_table_header' style={{ width: '10%' , borderBottomColor: '#00000033'}}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
+                                <div className='invoice_table_header' style={{ width: '7%' , borderBottomColor: '#00000033'}}>{item.Discount || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '10%' , borderBottomColor: '#00000033'}}>
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
                                             <div className="invoiceRow1 even1">
                                                 {/* CGST */}
                                                 {/* {formatTotal(TotalcgstPercent())} % */}
-                                                <div className="totalVal1">{formatTotal(TotalcgstValue())}</div>
+                                                <div className="totalVal1"style={{borderBottomColor: '#00000033'}}>{formatTotal(TotalcgstValue())}</div>
                                             </div>
                                             <div className="invoiceRow1 even1">
                                                 {/* SGST */}
@@ -651,7 +653,7 @@ const Invoice = ({
                                 </div>
                                 <div style={cellStyle}>
                                     {/* {unitRate(item.hsncode, item.batchno)} */}
-                                    <div className="subGst" style={{ ...subGst, ...df }}>
+                                    <div className="subGst" style={{ ...subGst, ...df}}>
                                         <div className="cgstRate" style={cgstRate}>
                                             {parseInt(getsgst(item.hsncode, item.batchno)) ? parseInt(getsgst(item.hsncode, item.batchno)) + '%' : ''}
                                         </div>
@@ -724,8 +726,8 @@ const Invoice = ({
                     {/* <div className="bussinessQuotes1"
                         style={bussinessQuotes}
                     > */}
-                        {/* <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>This is a Computer Genereated Invoice</div> */}
-                        <div >This is a Computer Genereated Invoice</div>
+                    {/* <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>This is a Computer Genereated Invoice</div> */}
+                    <div >This is a Computer Genereated Invoice</div>
                     {/* </div> */}
                 </div>
             </div>
