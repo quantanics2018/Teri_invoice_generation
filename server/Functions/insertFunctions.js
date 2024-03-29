@@ -43,11 +43,22 @@ async function addUser(req, res) {
     // res.json({ message: "Testing-3" ,status:true});
 
     try {
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [adminid]);
+        console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [adminid]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = adminid
+        }
+
         await userdbInstance.userdb.query('BEGIN');
         // const ueserTable_old = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, altphoneno, aadhar, pan, name, positionid, adminid, pstreetname, pdistrictid, pstateid, ppostalcode,status) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING userid',
         //     [userid, email, mobileNo, mobileNo, aadharNo, panNumber, fName, Positionid, adminid, streetAddress, City, State, pCode, status]);
         const ueserTable = await userdbInstance.userdb.query('INSERT INTO public."user" (userid,email, phno, aadhar, pan, positionid, adminid,status, pstreetname, pdistrictid, pstateid, ppostalcode , cstreetname, cdistrictid,cstateid, cpostalcode,organizationname, gstnno, bussinesstype, fname, lname, upiid,bankname, bankaccno,passbookimg,accholdername,ifsccode,updatedby) VALUES($1, $2, $3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28) RETURNING userid',
-            [userid, email, mobileNo, aadharNo, panNumber, Positionid, adminid, status, streetAddress, City, State, pCode, StreetAddress2, City2, State2, PostalCode2, OrganizationName, gstNumber, bussinessType, fName, lName, upiPaymentNo, accName, accNo, passbookImg, accHolderName, ifscCode, Currentuser]);
+            [userid, email, mobileNo, aadharNo, panNumber, Positionid, belongsto, status, streetAddress, City, State, pCode, StreetAddress2, City2, State2, PostalCode2, OrganizationName, gstNumber, bussinessType, fName, lName, upiPaymentNo, accName, accNo, passbookImg, accHolderName, ifscCode, Currentuser]);
 
         // // console.log(ueserTable.rows[0].userid);
         // // const userid = ueserTable.rows[0].userid

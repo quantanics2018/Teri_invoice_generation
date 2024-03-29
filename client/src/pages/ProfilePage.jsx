@@ -133,12 +133,14 @@ const ProfilePage = () => {
     }, []);
     // console.log("profile data ajax data");
     // console.log(profileInfoRes);
+    console.log(userInfo.positionid);
 
-    if(userInfo.positionid==="1" || userInfo.positionid==="2" || userInfo.positionid==="3"){
+    if(userInfo.positionid===1 || userInfo.positionid===2 || userInfo.positionid===3){
         updatedInputField = userInfoFields.slice(0, userInfoFields.length);            
-    }else if(userInfo.positionid==="4" || userInfo.positionid==="5"){
+    }else if(userInfo.positionid===4 || userInfo.positionid===5){
         updatedInputField = userInfoFields.slice(0, userInfoFields.length - 8);
     }
+
     const userInfoFields = [
         // { label: 'UserId',fieldname:'id'},
         // { label: 'Full name', value: userInfo.fname + {userInfo.lname == null ? '':userInfo.lname}},

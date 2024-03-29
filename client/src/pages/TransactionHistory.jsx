@@ -128,7 +128,15 @@ const TransactionHistory = () => {
         var formattedDate = year + "-" + (month < 10 ? "0" + month : month) + "-" + (day < 10 ? "0" + day : day);
         return formattedDate;
     }
-
+    console.log("userInfo",userInfo);
+    let belongsto;
+    console.log(userInfo.positionid);
+    if (userInfo.positionid == 4 || userInfo.positionid == 5) {
+        belongsto = userInfo.adminid;
+    } else {
+        belongsto = userInfo.userid;
+    }
+    console.log(belongsto);
 
     return (
         <>
@@ -175,7 +183,7 @@ const TransactionHistory = () => {
                                                 {item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
                                                     <td className='text-center'>
                                                         <TextField variant="standard" 
-                                                        disabled={userInfo.userid === item.senderid}
+                                                        disabled={belongsto === item.senderid}
                                                             style={{ marginTop: '10px' }}
                                                             id="outlined-size-small"
                                                             size="small"
@@ -199,12 +207,12 @@ const TransactionHistory = () => {
                                                     {/* onClick={() => deleteRow(row.id)}  */}
                                                     {/* {console.log("values :", textFieldValues[index], index)} */}
                                                     <Button color="secondary">
-                                                        {(item.transactionid && userInfo.userid === item.senderid) ? '🟢' : (userInfo.userid === item.senderid && '🔴')}
+                                                        {(item.transactionid && belongsto === item.senderid) ? '🟢' : (belongsto === item.senderid && '🔴')}
                                                     </Button>
                                                     {/* {console.log("hello", item)} */}
                                                     <Button color="secondary" 
                                                     disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)} 
-                                                    onClick={() => userInfo.userid === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
+                                                    onClick={() => belongsto === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
                                                         ✔
                                                     </Button>
                                                 </td>
