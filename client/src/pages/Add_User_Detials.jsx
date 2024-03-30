@@ -35,6 +35,7 @@ import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import MuiAlert from '@mui/material/Alert';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 import SelectTextFields from '../components/SelectTextFields';
 import InputFileUpload from '../components/SelectTextFields';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -158,7 +159,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 [name]: e.target.files[0], // Use the file from the input
             });
         } else {
-            console.log("Name Value Printinggggggg", name, value);
+            console.log("Name Value Printing", name, value);
             setPostData({
                 ...postData,
                 [name]: value,
@@ -1294,7 +1295,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                     borderRadius: '50px'
                                 }} data-bs-toggle="modal" data-bs-target="#accessControll">
                                     {/* <LockClosedIcon /> */}
-                                    <ErrorOutlineIcon />
+                                    {/* <ErrorOutlineIcon /> */}
+                                    <LockPersonOutlinedIcon />
                                 </Button>
                             </div>
 

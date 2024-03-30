@@ -6,6 +6,12 @@
     text-decoration: none;
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
+
+
+
 /* skeleton loading */
 /* .skeleton-block {
     animation: loadingAnimation 0.2s;
@@ -765,7 +771,7 @@
 
 /* scroll bar */
 .scroll_div {
-    height: calc(100vh - 200px);
+    height: calc(90vh - 200px);
     overflow-y: scroll;
     scroll-behavior: smooth;
 }
