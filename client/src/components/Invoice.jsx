@@ -286,33 +286,31 @@ const Invoice = ({
         statusApiAction();
     }, [signSrc]);
 
-
     const generatePDF = async () => {
         try {
-            const canvas = await html2canvas(invoiceRef.current, {
-                scale: 2,
-                useCORS: true,
-                logging: true
-            });
-            const imageData = canvas.toDataURL('image/jpeg');
-            const pdf = new jsPDF();
-            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-            try {
-                const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
-                console.log(response.data.status);
-                if (response.data.status) {
-                    pdf.save('invoice.pdf');
-                    console.log("performa log : ",response.data.invoiceid);
-                    // navigate('/TransactionHistory');
-                }
-                console.log(response.data.message);
-            } catch (error) {
-                console.log(error);
-            }
-            
+            const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
+            console.log(response.data.status);
+            if (response.data.status) {
+                setInvoiceId(response.data.invoiceid);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                const canvas = await html2canvas(invoiceRef.current, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: true
+                });
+                const imageData = canvas.toDataURL('image/jpeg');
+                const pdf = new jsPDF();
+                pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
 
+                // console.log("performa log : ",response.data.invoiceid);
+                alert(response.data.message);
+                console.log("invoiceId -->: ", invoiceId);
+                pdf.save('invoice.pdf');
+                // navigate('/TransactionHistory');
+            }
+            console.log(response.data.message);
         } catch (error) {
-            console.error('Error:', error);
+            console.log(error);
         }
     }
 
@@ -413,7 +411,10 @@ const Invoice = ({
                         <div className="invoicedetail" style={invoicedetail}>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
                                 <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
-                                    Invoice No.<input value={invoiceId} type='text' style={rawInput} />
+                                    {/* Invoice No.<input value={invoiceId} type='text' style={{...rawInput, width: '170px', lineHeight: 'normal', verticalAlign: 'middle'}} /> */}
+                                    Invoice No.{" "+invoiceId}
+                                    {/* <div style={{ position: 'relative' }}>
+                                    </div> */}
                                 </div>
                                 <div className="row2Invoice" style={{ ...width50, ...padInPx }}>
                                     Date : {inputValuesAboveRows.Date}

@@ -370,7 +370,7 @@ async function ProformaInvoice(req, res) {
                 );
             }
             await userdbInstance.userdb.query('COMMIT');
-            return res.json({ message: "Successfully Invoice Generated", status: true, invoiceid: invoiceid });
+            return res.json({ message: "Successfully Proforma-Invoice Generated", status: true, invoiceid: invoiceid });
         } else {
             console.log("User ID doesn't exist");
             res.json({ message: "User ID doesn't exist" });
