@@ -302,6 +302,7 @@ const Invoice = ({
                 console.log(response.data.status);
                 if (response.data.status) {
                     pdf.save('invoice.pdf');
+                    console.log("performa log : ",response.data.invoiceid);
                     // navigate('/TransactionHistory');
                 }
                 console.log(response.data.message);
