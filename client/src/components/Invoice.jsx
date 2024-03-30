@@ -412,7 +412,7 @@ const Invoice = ({
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
                                 <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
                                     {/* Invoice No.<input value={invoiceId} type='text' style={{...rawInput, width: '170px', lineHeight: 'normal', verticalAlign: 'middle'}} /> */}
-                                    Invoice No.{" "+invoiceId}
+                                    Invoice No.{" " + invoiceId}
                                     {/* <div style={{ position: 'relative' }}>
                                     </div> */}
                                 </div>
@@ -570,8 +570,18 @@ const Invoice = ({
                                 <div className='invoice_table_header' style={{ width: '10%' }}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
                                 <div className='invoice_table_header' style={{ width: '7%' }}>{item.Discount || ''}</div>
                                 <div className='invoice_table_header' style={{ width: '10%' }}>
-                                    {((parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100)).toFixed(2) || ''}
+                                    {/* {((parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100)).toFixed(2) || ''} */}
+                                    {((index !== previewInvoiceprop.length + 1) && index !== previewInvoiceprop.length) && (
+                                        (
+                                            (
+                                                parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)
+                                            ) - (
+                                                (parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100
+                                            )
+                                        ).toFixed(2) || ''
+                                    )}
                                     {index === previewInvoiceprop.length &&
+                                    
                                         <div style={totalgstname}>
                                             <div className="invoiceRow1 even1">
                                                 {/* CGST */}
