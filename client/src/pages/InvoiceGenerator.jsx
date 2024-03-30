@@ -329,6 +329,7 @@ const InvoiceGenerator = () => {
             row.id === id ? { ...row, [column]: value } : row
         );
         setRows(updatedRows);
+        // console.log("updatedRows : ",updatedRows);
         if (column === 'hsncode' || column === 'batchno') {
             // if (rows[id-1].hsncode !=='' && rows[id-1].batchno !=='') {
             const value = productList
@@ -348,7 +349,7 @@ const InvoiceGenerator = () => {
         // console.log("handle change : ", updatedRows[id - 1].hsncode);
         productBatchno = productList.filter(item => item.productid === updatedRows[id - 1].hsncode).map(item => item.batchno);
         setbatchnoOption(productBatchno);
-        // console.log(productBatchno);
+        console.log(productBatchno);
 
         // if (column === 'hsncode') {
         //     // alert(value)
@@ -443,9 +444,6 @@ const InvoiceGenerator = () => {
             } : row
         );
         setRows(updatedRows);
-
-
-
         // const value = productList
         //     .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
         //     .map((product) => product.productname)[0] || '';
@@ -565,10 +563,15 @@ const InvoiceGenerator = () => {
 
             console.log("getsgst : ", getsgst);
 
-
+// calculate with cgst+sgst
+            // const updatedRows = rows.map((row) =>
+            //     row.id === id ? {
+            //         ...row, Total: ((rows[id - 1].Quantity * productPrice) - ((rows[id - 1].Quantity * productPrice) * rows[id - 1].Discount / 100)) + (productPrice * (getcgst / 100)) + (productPrice * (getsgst / 100))
+            //     } : row
+            // );
             const updatedRows = rows.map((row) =>
                 row.id === id ? {
-                    ...row, Total: ((rows[id - 1].Quantity * productPrice) - ((rows[id - 1].Quantity * productPrice) * rows[id - 1].Discount / 100)) + (productPrice * (getcgst / 100)) + (productPrice * (getsgst / 100))
+                    ...row, Total: ((rows[id - 1].Quantity * productPrice) - ((rows[id - 1].Quantity * productPrice) * rows[id - 1].Discount / 100))
                 } : row
             );
 
@@ -618,6 +621,21 @@ const InvoiceGenerator = () => {
         const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
         return formattedTotal;
     }
+
+    const hasEmptyValue = rows.some(row =>
+        Object.values(row).some(value => value === '' || value === null),
+    );
+    const hasEmptyReciverId = Object.values(inputValues).some(value => value === '' || value === null)
+    const [diability,setdiability] = useState(true);
+    
+    useEffect(()=>{
+        if (hasEmptyValue || hasEmptyReciverId) {
+            setdiability(true);
+        }else{
+            setdiability(false)
+        }
+        console.log("diability : ",diability);
+    },[diability,hasEmptyValue,hasEmptyReciverId])
 
 
     return (
@@ -942,7 +960,7 @@ const InvoiceGenerator = () => {
                         <Grid item className='gap-4 d-flex'>
                             <CancelBtnComp />
                             {/* <input type='text' disabled={performInvoiceToggele} /> */}
-                            <SplitButton performInvoiceToggele={performInvoiceToggele} />
+                            <SplitButton performInvoiceToggele={performInvoiceToggele} diability={diability} />
                             {/* <Button variant="outlined" color="primary" onClick={handleSubmit}>
                                 Generate Invoice
                             </Button> */}

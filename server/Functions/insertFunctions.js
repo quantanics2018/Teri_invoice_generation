@@ -281,6 +281,114 @@ async function addInvoice(req, res) {
         return res.json({ message: 'Failed to add Invoice', status: false, error: error.message });
     }
 }
+async function ProformaInvoice(req, res) {
+
+    // const { UserId, senderID, Date } = req.body.invoice;
+    const { Buyer, senderID, Date } = req.body.invoice;
+    const totalSum = req.body.totalValues;
+    console.log(Buyer, senderID, Date);
+    const invoiceItem = req.body.invoiceitem;
+    console.log(totalSum);
+    console.log("senderID", senderID);
+    const Currentuser = senderID;
+    return res.json({ message: "Successfully Proforma-Invoice Generated", status: true, invoiceid: "invoiceid" });
+    // try {
+    //     const getReciverId = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1;', [Buyer]);
+    //     const recivermail = getReciverId.rows[0].email;
+    //     const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [senderID]);
+    //     // console.log(CheckForStaff.rows[0].positionid);
+    //     const res_positionId = CheckForStaff.rows[0].positionid
+    //     console.log("TEst Id position", res_positionId);
+    //     let belongsto;
+    //     if (res_positionId == 4 || res_positionId == 5) {
+    //         const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [senderID]);
+    //         belongsto = getBelongsto.rows[0].adminid
+    //     } else {
+    //         belongsto = senderID
+    //     }
+    //     console.log("belongsto- senderid : ", belongsto);
+
+    //     const checkIsUsernameExist = await userdbInstance.userdb.query('select email from public."user" where email=$1 and adminid=$2;', [recivermail, belongsto]);
+    //     console.log("Check for row exists : ", checkIsUsernameExist.rows);
+    //     if (checkIsUsernameExist.rows != 0) {
+    //         await userdbInstance.userdb.query('BEGIN');
+
+    //         const ForReciverId = await userdbInstance.userdb.query(
+    //             `select userid from public."user" where email=$1`, [recivermail]
+    //         );
+
+    //         const reciverID = ForReciverId.rows[0].userid
+    //         console.log("RECIVERID", reciverID);
+    //         const InvoiceTableResult = await userdbInstance.userdb.query(
+    //             `INSERT INTO public.invoice(
+    //                 senderid,receiverid,senderstatus,date,total,lastupdatedby)
+    //             VALUES ($1,$2,$3,$4,$5,$6) RETURNING invoiceid;`, [belongsto, reciverID, 0, Date, totalSum,Currentuser]
+    //         );
+    //         // console.log(InvoiceTableResult.rows[0].invoiceid);
+    //         const invoiceid = InvoiceTableResult.rows[0].invoiceid;
+    //         // console.log(invoiceid);
+    //         for (const item of invoiceItem) {
+    //             // console.log(item.id);
+    //             // console.log(item.hsncode, " : next : " ,item.batchno );
+    //             // const for_productid = await userdbInstance.userdb.query(
+    //             //     `select productid from public.products WHERE belongsto=$1 and productname=$2`, [senderID, item.productName]
+    //             // );
+    //             // // console.log(for_productid.rows[0].productid);
+    //             // const productIdByName = for_productid.rows[0].productid
+
+    //             // if (productIdByName) {
+    //             //     item.productid = productIdByName
+    //             // }
+    //             const ReduceFromSenderTable = await userdbInstance.userdb.query(
+    //                 `UPDATE products
+    //                 SET quantity = quantity - $1
+    //                 WHERE belongsto=$2 and productid = $3 and batchno = $4;`, [item.Quantity, belongsto, item.hsncode, item.batchno]
+    //             );
+
+    //             const checkProductAlreadyExist = await userdbInstance.userdb.query(
+    //                 `select productid from public.products WHERE belongsto=$1 and productid=$2 and batchno = $3`, [reciverID, item.hsncode, item.batchno]
+    //             );
+    //             // console.log(checkProductAlreadyExist.rows);
+    //             if (checkProductAlreadyExist.rows.length > 0) {
+    //                 // console.log("Yes");
+    //                 const UpdateToRecieverTable = await userdbInstance.userdb.query(
+    //                     `Update public.products SET quantity=quantity+$1 WHERE belongsto=$2 AND productid=$3 AND batchno = $4;`, [item.Quantity, reciverID, item.hsncode, item.batchno]
+    //                 );
+    //             } else {
+    //                 // console.log("No");
+    //                 const getAllOtherDetails = await userdbInstance.userdb.query(
+    //                     `select priceperitem ,cgst , sgst from public.products WHERE belongsto=$1 and productid=$2 and batchno = $3`, [belongsto, item.hsncode, item.batchno]
+    //                 );
+    //                 console.log("Identification", getAllOtherDetails.rows[0]);
+    //                 const priceperitem = getAllOtherDetails.rows[0].priceperitem;
+
+    //                 const cgst = getAllOtherDetails.rows[0].cgst;
+    //                 const sgst = getAllOtherDetails.rows[0].sgst;
+    //                 // console.log("priceperitem : ",priceperitem , cgst,sgst);
+    //                 const AddToRecieverTable = await userdbInstance.userdb.query(
+    //                     `INSERT INTO public.products(
+    //                         productid, quantity,productname,belongsto, status , batchno , priceperitem , cgst , sgst,last_updated_by)
+    //                         VALUES ($1, $2, $3, $4,$5,$6,$7,$8,$9,$10);`, [item.hsncode, item.Quantity, item.productName, reciverID, 0, item.batchno, priceperitem, cgst, sgst,Currentuser]
+    //                 );
+    //             }
+
+    //             const InvoiceItemTableResult = await userdbInstance.userdb.query(
+    //                 `INSERT INTO public.invoiceitem(
+    //                 invoiceid,productid,quantity,discountperitem,cost)
+    //                 VALUES ($1,$2,$3,$4,$5);`, [invoiceid, item.productid, item.Quantity, item.Discount, item.Total]
+    //             );
+    //         }
+    //         await userdbInstance.userdb.query('COMMIT');
+    //         return res.json({ message: "Successfully Invoice Generated", status: true, invoiceid: invoiceid });
+    //     } else {
+    //         console.log("User ID doesn't exist");
+    //         res.json({ message: "User ID doesn't exist" });
+    //     }
+    // } catch (error) {
+    //     console.error('Error executing database query:', error);
+    //     return res.json({ message: 'Failed to add Invoice', status: false, error: error.message });
+    // }
+}
 
 async function addProduct(req, res) {
     // const { hsncode,quantity,priceperitem,userid } = req.body;
@@ -359,4 +467,4 @@ async function addfeedback(req, res) {
     }
 }
 
-module.exports = { addUser, addInvoice, addProduct, addfeedback };
+module.exports = { addUser, addInvoice,ProformaInvoice, addProduct, addfeedback };

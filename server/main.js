@@ -49,7 +49,7 @@ app.post('/verify/:entity(user|credentials)', async (req, res) => {
 });
 
 // add into DB
-app.post('/add/:entity(user|products|invoice|feedback)', upload.single('image'), async (req, res) => {
+app.post('/add/:entity(user|products|invoice|feedback|ProformaInvoice)', upload.single('image'), async (req, res) => {
     const entity = req.params.entity;
     if (entity === 'user') {
         try {
@@ -83,6 +83,14 @@ app.post('/add/:entity(user|products|invoice|feedback)', upload.single('image'),
     if (entity === 'invoice') {
         try {
             const addUser = await addData.addInvoice(req, res);
+        } catch (error) {
+            console.error('Error retrieving products details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
+    if (entity === 'ProformaInvoice') {
+        try {
+            const addUser = await addData.ProformaInvoice(req, res);
         } catch (error) {
             console.error('Error retrieving products details:', error);
             res.status(500).send('Internal Server Error');

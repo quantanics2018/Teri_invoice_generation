@@ -9,7 +9,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const options = ['Tax Invoice', 'Proforma Invoice'];
 
-export default function SplitButton({ performInvoiceToggele }) {
+export default function SplitButton({ performInvoiceToggele,diability }) {
   const [open, setOpen] = React.useState(false);
   const actionRef = React.useRef(null);
   const anchorRef = React.useRef(null);
@@ -42,7 +42,7 @@ export default function SplitButton({ performInvoiceToggele }) {
       <Button
         variant="outlined"
         color="success"
-        // disabled={performInvoiceToggele}
+        disabled={diability}
         // onClick={handleClick} 
         style={{ textTransform: 'uppercase' }}
         data-bs-toggle={options[selectedIndex] === 'Proforma Invoice' ? 'modal' : 'modal'}

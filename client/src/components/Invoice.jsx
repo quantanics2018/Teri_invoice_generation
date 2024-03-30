@@ -38,11 +38,9 @@ const Invoice = ({
     buyercompany,
     generateInvoice
 }) => {
-
-
-    console.log("Data!!!!!!!!!!!!!!generateInvoice",generateInvoice);
-    console.log("Data!!!!!!!!!!!!!!ReciverInvoiceProp",ReciverInvoiceProp);
-    console.log("Data!!!!!!!!!!!!!!invoiceid",invoiceid);
+    console.log("DatagenerateInvoice", generateInvoice);
+    // console.log("DataReciverInvoiceProp",ReciverInvoiceProp);
+    // console.log("Datainvoiceid",invoiceid);
     const navigate = useNavigate();
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
@@ -148,6 +146,7 @@ const Invoice = ({
 
     const unitRate = (hsnno, batchno) => {
         const unitRate = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.priceperitem)[0] || '';
+        // console.log("unitRate : ",unitRate);
         return unitRate;
     }
 
@@ -155,7 +154,7 @@ const Invoice = ({
 
     function TaxableValue() {
         return previewInvoiceprop.reduce((acc, item) => {
-            const unitPrice = parseInt(unitRate(item.hsncode, item.batchno));
+            const unitPrice = parseFloat(unitRate(item.hsncode, item.batchno));
             const totalPrice = (unitPrice * parseInt(item.Quantity)) - ((unitPrice * parseInt(item.Quantity)) * parseInt(item.Discount) / 100);
             return acc + totalPrice;
         }, 0);
@@ -163,7 +162,7 @@ const Invoice = ({
 
     const TotalcgstPercent = () => {
         const total = previewInvoiceprop.reduce((acc, item) => {
-            const Totalcgst = parseInt(getcgst(item.hsncode, item.batchno));
+            const Totalcgst = parseFloat(getcgst(item.hsncode, item.batchno));
             return acc + Totalcgst;
         }, 0);
         return total / previewInvoiceprop.length;
@@ -171,7 +170,7 @@ const Invoice = ({
 
     const TotalsgstPercent = () => {
         const total = previewInvoiceprop.reduce((acc, item) => {
-            const Totalsgst = parseInt(getsgst(item.hsncode, item.batchno));
+            const Totalsgst = parseFloat(getsgst(item.hsncode, item.batchno));
             return acc + Totalsgst;
         }, 0);
         return total / previewInvoiceprop.length;
@@ -204,6 +203,7 @@ const Invoice = ({
         return integerWords.replace(/\b\w/g, firstChar => firstChar.toUpperCase());
     }
 
+
     // Handle submit
     const [loading, setLoading] = useState(false);
     const totalSum = Math.round(formatTotal(grandTotal()))
@@ -213,9 +213,7 @@ const Invoice = ({
         const hasEmptyValue = previewInvoiceprop.some(row =>
             Object.values(row).some(value => value === '' || value === null),
         );
-        const hasEmptyReciverId =
-            Object.values(inputValuesAboveRows).some(value => value === '' || value === null)
-        // );
+        const hasEmptyReciverId = Object.values(inputValuesAboveRows).some(value => value === '' || value === null)
         if (hasEmptyReciverId) {
             alert("Reciver Details can't be Empty");
         } else {
@@ -299,7 +297,16 @@ const Invoice = ({
             const imageData = canvas.toDataURL('image/jpeg');
             const pdf = new jsPDF();
             pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-            pdf.save('invoice.pdf');
+            await pdf.save('invoice.pdf');
+            try {
+                const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
+                console.log(response.data.status);
+                console.log(response.data.message);
+            } catch (error) {
+                console.log(error);
+            }
+            
+
         } catch (error) {
             console.error('Error:', error);
         }
@@ -312,7 +319,7 @@ const Invoice = ({
             const canvas = await html2canvas(invoiceRef.current, {
                 scale: 2,
                 useCORS: true,
-                logging: true 
+                logging: true
             });
 
             // Convert canvas to data URL
@@ -337,10 +344,10 @@ const Invoice = ({
                     console.log('File saved successfully:', response.data);
 
                 })
-          
+
         } catch (error) {
             console.error('Error:', error);
-           
+
         }
     };
 
@@ -558,7 +565,7 @@ const Invoice = ({
                                 <div className='invoice_table_header' style={{ width: '10%' }}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
                                 <div className='invoice_table_header' style={{ width: '7%' }}>{item.Discount || ''}</div>
                                 <div className='invoice_table_header' style={{ width: '10%' }}>
-                                    {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
+                                    {((parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100)).toFixed(2) || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
                                             <div className="invoiceRow1 even1">
@@ -724,8 +731,8 @@ const Invoice = ({
                     {/* <div className="bussinessQuotes1"
                         style={bussinessQuotes}
                     > */}
-                        {/* <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>This is a Computer Genereated Invoice</div> */}
-                        <div >This is a Computer Genereated Invoice</div>
+                    {/* <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>This is a Computer Genereated Invoice</div> */}
+                    <div >This is a Computer Genereated Invoice</div>
                     {/* </div> */}
                 </div>
             </div>
