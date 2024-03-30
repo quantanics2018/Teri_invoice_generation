@@ -297,10 +297,13 @@ const Invoice = ({
             const imageData = canvas.toDataURL('image/jpeg');
             const pdf = new jsPDF();
             pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-            await pdf.save('invoice.pdf');
             try {
                 const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                 console.log(response.data.status);
+                if (response.data.status) {
+                    pdf.save('invoice.pdf');
+                    // navigate('/TransactionHistory');
+                }
                 console.log(response.data.message);
             } catch (error) {
                 console.log(error);
