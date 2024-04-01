@@ -144,96 +144,98 @@ const TransactionHistory = () => {
             <div className="row_with_count_status">
                 <span className='module_tittle'>Transactions Detials</span>
             </div>
-            <div className="container">
-                <br /><br />
-                <div className="row">
-                    <div className="col-12 mb-3 mb-lg-5">
-                        <div className="position-relative card table-nowrap table-card">
-                            <div className="card-header align-items-center">
-                                <h5 className="mb-0">Latest Transactions</h5>
-                                <p className="mb-0 small bg-tint-warning text-warning">{data.filter(item => item.senderstatus === 0).length} Pending</p>
-                            </div>
-                            <div className="table-responsive">
-                                <table className="table mb-0">
-                                    <thead className="small text-uppercase bg-body text-muted text-center">
-                                        <tr>
-                                            <th>Invoice ID</th>
-                                            <th>Transaction ID</th>
-                                            <th>Date</th>
-                                            <th>Name</th>
-                                            <th>Amount</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    {loading && <div>
-                                        <Box sx={{ width: 1100 }}>
-                                            <Skeleton />
-                                            <Skeleton animation="wave" />
-                                            <Skeleton animation="wave" />
-                                            <Skeleton animation="wave" />
-                                            <Skeleton animation="wave" />
-                                        </Box>
-                                    </div>}
-                                    <tbody className='text-center'>
-                                        {data.map((item, index) => (
-                                            <tr key={index} className="align-middle text-center">
-                                                {/* {console.log(item)} */}
-                                                <td className='text-center'>{item.invoiceid}</td>
-                                                {item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
-                                                    <td className='text-center'>
-                                                        <TextField variant="standard" 
-                                                        disabled={belongsto === item.senderid}
-                                                            style={{ marginTop: '10px' }}
-                                                            id="outlined-size-small"
-                                                            size="small"
-                                                            value={textFieldValues[index]}
-                                                            onChange={(e) => handleTextFieldChange(currentPageIndex, index, e.target.value)}
-                                                        />
-                                                    </td>
-                                                )}
-                                                <td className='text-center'>{formatDate(item.invoicedate)}</td>
-                                                <td className='text-center'>{item.email}</td>
-                                                <td className='text-center'>
-                                                    {item.total}
-                                                </td>
-                                                <td className='text-center'>
-                                                    <span className={`badge fs-6 fw-normal ${item.status === 1 ? 'bg-tint-success text-success' : 'bg-tint-warning text-warning'}`}>
-                                                        {(item.senderstatus === 0) && <td className='text-center'>Pending</td>}
-                                                        {(item.senderstatus === 1) && <td className='text-center' style={{ color: 'green' }}>Completed</td>}
-                                                    </span>
-                                                </td>
-                                                <td className='text-center actionTrans'>
-                                                    {/* onClick={() => deleteRow(row.id)}  */}
-                                                    {/* {console.log("values :", textFieldValues[index], index)} */}
-                                                    <Button color="secondary">
-                                                        {(item.transactionid && belongsto === item.senderid) ? '🟢' : (belongsto === item.senderid && '🔴')}
-                                                    </Button>
-                                                    {/* {console.log("hello", item)} */}
-                                                    <Button color="secondary" 
-                                                    disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)} 
-                                                    onClick={() => belongsto === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
-                                                        ✔
-                                                    </Button>
-                                                </td>
+            <div className="container ">
+                
+                    <br /><br />
+                    <div className="row">
+                        <div className="col-12 mb-3 mb-lg-5">
+                            <div className="position-relative card table-nowrap table-card">
+                                <div className="card-header align-items-center">
+                                    <h5 className="mb-0">Latest Transactions</h5>
+                                    <p className="mb-0 small bg-tint-warning text-warning">{data.filter(item => item.senderstatus === 0).length} Pending</p>
+                                </div>
+                                <div className="table-responsive scroll_div" style={{ height: 'calc(78vh - 200px)' }}>
+                                    <table className="table mb-0">
+                                        <thead className="small text-uppercase bg-body text-muted text-center"style={{ position: 'sticky', top: '-1px',zIndex:'999' }}>
+                                            <tr>
+                                                <th>Invoice ID</th>
+                                                <th>Transaction ID</th>
+                                                <th>Date</th>
+                                                <th>Name</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="card-footer text-end">
-                                <div className="btn btn-gray">
-                                    Recent Transation
+                                        </thead>
+                                        {loading && <div>
+                                            <Box sx={{ width: 1100 }}>
+                                                <Skeleton />
+                                                <Skeleton animation="wave" />
+                                                <Skeleton animation="wave" />
+                                                <Skeleton animation="wave" />
+                                                <Skeleton animation="wave" />
+                                            </Box>
+                                        </div>}
+                                        <tbody className='text-center'>
+                                            {data.map((item, index) => (
+                                                <tr key={index} className="align-middle text-center">
+                                                    {/* {console.log(item)} */}
+                                                    <td className='text-center'>{item.invoiceid}</td>
+                                                    {item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
+                                                        <td className='text-center'>
+                                                            <TextField variant="standard"
+                                                                disabled={belongsto === item.senderid}
+                                                                style={{ marginTop: '10px' }}
+                                                                id="outlined-size-small"
+                                                                size="small"
+                                                                value={textFieldValues[index]}
+                                                                onChange={(e) => handleTextFieldChange(currentPageIndex, index, e.target.value)}
+                                                            />
+                                                        </td>
+                                                    )}
+                                                    <td className='text-center'>{formatDate(item.invoicedate)}</td>
+                                                    <td className='text-center'>{item.email}</td>
+                                                    <td className='text-center'>
+                                                        {item.total}
+                                                    </td>
+                                                    <td className='text-center'>
+                                                        <span className={`badge fs-6 fw-normal ${item.status === 1 ? 'bg-tint-success text-success' : 'bg-tint-warning text-warning'}`}>
+                                                            {(item.senderstatus === 0) && <td className='text-center'>Pending</td>}
+                                                            {(item.senderstatus === 1) && <td className='text-center' style={{ color: 'green' }}>Completed</td>}
+                                                        </span>
+                                                    </td>
+                                                    <td className='text-center actionTrans'>
+                                                        {/* onClick={() => deleteRow(row.id)}  */}
+                                                        {/* {console.log("values :", textFieldValues[index], index)} */}
+                                                        <Button color="secondary">
+                                                            {(item.transactionid && belongsto === item.senderid) ? '🟢' : (belongsto === item.senderid && '🔴')}
+                                                        </Button>
+                                                        {/* {console.log("hello", item)} */}
+                                                        <Button color="secondary"
+                                                            disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)}
+                                                            onClick={() => belongsto === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
+                                                            ✔
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="card-footer text-end">
+                                    <div className="btn btn-gray">
+                                        Recent Transation
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {/* <Pagination
+                            {/* <Pagination
                             count={Math.ceil(data.length / rowsPerPage)}
                             page={currentPage}
                             onChange={handleChangePage}
                         /> */}
+                        </div>
                     </div>
-                </div>
+                
             </div>
         </>
     );

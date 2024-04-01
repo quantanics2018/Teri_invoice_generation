@@ -6,6 +6,12 @@
     text-decoration: none;
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
+
+
+
 /* skeleton loading */
 /* .skeleton-block {
     animation: loadingAnimation 0.2s;
@@ -1076,6 +1082,7 @@
     flex-direction: column;
     position: relative;
     min-width: 250px;
+    /* min-width: 250px; */
 }
 
 input {
