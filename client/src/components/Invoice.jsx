@@ -337,8 +337,8 @@ const Invoice = ({
 
                 // console.log("performa log : ",response.data.invoiceid);
                 alert(response.data.message);
-                console.log("invoiceId -->: ", invoiceId);
-                pdf.save('invoice.pdf');
+                // console.log("invoiceId -->: ", invoiceId);
+                pdf.save(`${response.data.invoiceid}.pdf`);
                 // navigate('/TransactionHistory');
             }
             console.log(response.data.message);
@@ -385,7 +385,6 @@ const Invoice = ({
 
         }
     };
-
 
 
     return (

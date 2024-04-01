@@ -32,6 +32,7 @@ import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { SaveBtn } from '../assets/style/cssInlineConfig';
 import MuiAlert from '@mui/material/Alert';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 import CryptoJS from 'crypto-js';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
@@ -1179,7 +1180,8 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                             borderRadius: '50px'
                         }} data-bs-toggle="modal" data-bs-target="#accessControll">
                             {/* <LockClosedIcon /> */}
-                            <ErrorOutlineIcon />
+                            {/* <ErrorOutlineIcon /> */}
+                            <LockPersonOutlinedIcon/>
                         </Button>
 
                     </div>
