@@ -60,7 +60,7 @@ const Invoice = ({
         flex: 1,
         border: '1px solid #000',
         // padding: '20px',
-        textAlign: 'center',
+        textAlign: 'center'
     };
     const totalgstname = {
         height: '100px',
@@ -205,9 +205,9 @@ const Invoice = ({
 
 
     // Handle submit
+    const [invoiceId, setInvoiceId] = useState('');
     const [loading, setLoading] = useState(false);
     const totalSum = Math.round(formatTotal(grandTotal()))
-    const [invoiceId, setInvoiceId] = useState('');
     const handleSubmit = async () => {
 
         const hasEmptyValue = previewInvoiceprop.some(row =>
@@ -224,12 +224,11 @@ const Invoice = ({
                     setLoading(true);
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                     if (response.data.status) {
-                        // console.log(response.data);
-                        setInvoiceId(response.data.status);
+                        console.log(response);
+                        setInvoiceId(response.data.invoiceid);
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        alert(response.data);
                         handleDownload1();
-                        // alert(response.data.invoiceid);
-                        // console.log("DATA FROM INVOICE",response.data.invoiceid);
-                        // await sendDataToServer(response.data.invoiceid);
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
@@ -244,11 +243,45 @@ const Invoice = ({
             }
         }
     }
+    const invoiceRef = useRef(null);
+    const handleDownload1 = async () => {
+        console.log("Invoice ID ",invoiceId );
+        try {
+            const canvas = await html2canvas(invoiceRef.current, {
+                scale: 2,
+                useCORS: true,
+                logging: true 
+            });
 
-    // const generatePDF = () => {
-    //     const invoicecontent = document.getElementById('invoiceContent1');
-    //     html2pdf().from(invoicecontent).save();
-    // }
+            // Convert canvas to data URL
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // Generate PDF using jsPDF
+            const pdf = new jsPDF();
+
+            // Add image to PDF
+            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+            const blobData = pdf.output('blob');
+            const formData = new FormData();
+            formData.append('file', blobData, 'Email.pdf');
+            formData.append('companyname', buyercompany);
+            // console.log(buyercompany);
+            axios.post(`${API_URL}save-pdf-server`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then(response => {
+                    console.log('File saved successfully:', response.data);
+                    setInvoiceId(response.data.invoiceid);
+                })
+
+        } catch (error) {
+            console.error('Error:', error);
+
+        }
+    };
+
 
 
     // Convert image to base64
@@ -360,7 +393,7 @@ const Invoice = ({
             <div className="A4SheetSize" id="invoiceContent1" style={pad} ref={invoiceRef}>
                 <div className="taxInvoiceHead" style={taxInvoiceHead} id="taxInvoiceHead">
                     {generateInvoice ?
-                        <h4>TAX INVOICE {invoiceid}</h4>
+                        <h4>TAX INVOICE </h4>
                         : <h4>
                             PROFORMA INVOICE
                         </h4>
@@ -374,7 +407,7 @@ const Invoice = ({
                             <div className="invoiceDetial1"
                                 style={{ ...invoiceDetial, ...padInPx }}
                             >
-                                <pre style={textwarp}>
+                                <pre style={{...textwarp,padding:'3px'}}>
                                     <div className="organizationName" style={{ fontWeight: 900, fontSize: '20px' }}>
                                         {SenderInvoiceProp[0].organizationname}
                                     </div>
@@ -394,7 +427,7 @@ const Invoice = ({
                                 <div className="billToBody"
                                     style={padInPx}
                                 >
-                                    <pre style={{ ...reciverBill, ...textwarp }}>
+                                    <pre style={{ ...reciverBill, ...textwarp,padding:'3px'}}>
                                         Buyer:(Bill To) <br />
                                         {ReciverInvoiceProp[0].organizationname}<br />
                                         {ReciverInvoiceProp[0].cstreetname}<br />
@@ -403,12 +436,12 @@ const Invoice = ({
                                         Ph : {ReciverInvoiceProp[0].phno}<br />
                                         GSTIN/UIN : {ReciverInvoiceProp[0].gstnno}<br />
                                         State Name : {ReciverInvoiceProp[0].cstateid}<br />
-                                        E-Mail : {ReciverInvoiceProp[0].email}<br /><br />
+                                        E-Mail : {ReciverInvoiceProp[0].email}<br />
                                     </pre>
                                 </div>
                             </div>
                         </div>
-                        <div className="invoicedetail" style={invoicedetail}>
+                        <div className="invoicedetail" style={{...invoicedetail,padding:'3px'}}>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
                                 <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
                                     {/* Invoice No.<input value={invoiceId} type='text' style={{...rawInput, width: '170px', lineHeight: 'normal', verticalAlign: 'middle'}} /> */}
@@ -516,7 +549,8 @@ const Invoice = ({
                     <div style={containerStyle}>
                         {/* Table heading row */}
                         <div style={rowStyle}>
-                            <div className='invoice_table_header' style={{ width: '6%' }}>S.No.</div>
+                            {/* <div className='invoice_table_header' style={{ width: '6%', }}>S.No.</div> */}
+                            <div className='invoice_table_header' style={{ width: '6%',padding: '3px' }}>S.No.</div>
                             <div className='invoice_table_header' style={{ width: '34%' }}>Description of Goods</div>
                             <div className='invoice_table_header' style={{ width: '13%' }}>HSN NO</div>
                             <div className='invoice_table_header' style={{ width: '10%' }}>Quantity</div>
@@ -528,7 +562,7 @@ const Invoice = ({
                         {/* Table data  */}
                         {[...previewInvoiceprop, {}, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div className='invoice_table_header' style={{ width: '6%' }}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
+                                <div className='invoice_table_header' style={{ width: '6%' ,padding: '3px'}}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
                                 <div className='invoice_table_header' style={{ width: '34%' }}>
                                     {item.productName || ''}
                                     {index === previewInvoiceprop.length &&
@@ -551,7 +585,7 @@ const Invoice = ({
                                         </div>
                                     }
                                     {index === previewInvoiceprop.length + 1 &&
-                                        <div>
+                                        <div style={{padding:'3px'}}>
                                             <b>Total</b>
                                         </div>
                                     }
@@ -609,8 +643,8 @@ const Invoice = ({
                             </div>
                         )}
                     </div>
-                    <div className="numberinWord" style={numberinWord}>
-                        <div className="amountHeading" style={{ ...amountHeading, ...df }}>
+                    <div className="numberinWord" style={{...numberinWord,padding:'3px'}}>
+                        <div className="amountHeading" style={{ ...amountHeading, ...df}}>
                             <div className="changeablecontent">Amount Changeable (in words)</div>
                             <div className="oe"><b>E & O.E</b></div>
                         </div>
@@ -673,7 +707,7 @@ const Invoice = ({
                                 </div>
                                 <div style={cellStyle}>
                                     {/* {unitRate(item.hsncode, item.batchno)} */}
-                                    <div className="subGst" style={{ ...subGst, ...df }}>
+                                    <div className="subGst" style={{ ...subGst, ...df}}>
                                         <div className="cgstRate" style={cgstRate}>
                                             {parseInt(getsgst(item.hsncode, item.batchno)) ? parseInt(getsgst(item.hsncode, item.batchno)) + '%' : ''}
                                         </div>

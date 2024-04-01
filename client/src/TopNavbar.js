@@ -23,9 +23,9 @@ const TopNavbar = () => {
         <MenuIcon />
       </IconButton> */}
       <div className='usernameProfile'>
-        <Chip label={userInfo.email} variant="outlined" />
+        <Chip label={userInfo.email} variant="outlined" style={{marginRight:'11px'}}/>
         {/* <Badge color='success' variant='dot' overlap='circular' anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} > */}
-          <Avatar sx={{ bgcolor: red[500] }} alt={(userInfo.email).toUpperCase()} src="/static/images/avatar/1.jpg" />
+          {/* <Avatar sx={{ bgcolor: red[500] }} alt={(userInfo.email).toUpperCase()} src="/static/images/avatar/1.jpg" /> */}
         {/* </Badge> */}
       </div>
 
