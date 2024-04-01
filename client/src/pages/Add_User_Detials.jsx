@@ -896,7 +896,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 </div>
                 {/* <ImageUpload /> */}
                 <div className="add_device_container1">
-                    <div className="new_device_content scroll_div">
+                    <div className="new_device_content scroll_div "style={{ height: 'calc(90vh - 200px)' }}>
                         <div className="row_one display-flex">
                             <div className="adding_new_device uppercase bold">
                                 Add
@@ -977,11 +977,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         flexDirection: 'column', // Change the direction for small screens
                                                         '& .MuiTextField-root': {
                                                             m: 1,
-                                                            width: field.name === 'bussinessType' ? '28ch' : '100%',
+                                                            width: field.name === 'bussinessType' ? '29ch' : '100%',
                                                         },
                                                     }}
                                                 >
-                                                    {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                     <TextField
                                                         label={
                                                             <span>{`${field.label}`}</span>
@@ -989,18 +988,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         type="text"
                                                         className="form-control-loc"
                                                         value={field.value}
-                                                        // onChange={(e) => handleInputChange(e, field.name)}
                                                         onChange={handleInputChange}
                                                         name={field.name}
                                                         id={`input${index + 1}`}
                                                         select={field.name === 'bussinessType' && true}
-                                                        // labelClassName="required"
-                                                        // {!(Positionid_val !== 3)&&
-                                                        //     InputLabelProps={{
-                                                        //         className: 'required-label',
-                                                        //         required: true
-                                                        //     }}
-                                                        // }
                                                         InputLabelProps={
                                                             (!((field.name === 'OrganizationName') && (Positionid_val === 3) )) &&{
                                                                 className: 'required-label',
@@ -1010,8 +1001,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         
                                                                     
                                                         InputProps={{
-                                                            startAdornment: field.name === 'mobileNo' ? <InputAdornment position="start">+91</InputAdornment> : null
+                                                            startAdornment: field.name === 'mobileNo' ? <InputAdornment position="start"></InputAdornment> : null,
+                                                            placeholder: field.name === 'mobileNo' ? '+91' : null    
                                                         }}
+                                                        style={{ width: field.name === 'OrganizationName' ? '100%' : '100%' }}
+                                                        
                                                     >
 
                                                         {currencies.map((option) => (
