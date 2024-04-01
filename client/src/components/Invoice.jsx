@@ -319,6 +319,33 @@ const Invoice = ({
         statusApiAction();
     }, [signSrc]);
 
+    // const generatePDF = async () => {
+    //     try {
+    //         const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
+    //         console.log(response.data.status);
+    //         if (response.data.status) {
+    //             setInvoiceId(response.data.invoiceid);
+    //             await new Promise(resolve => setTimeout(resolve, 1000));
+    //             const canvas = await html2canvas(invoiceRef.current, {
+    //                 scale: 2,
+    //                 useCORS: true,
+    //                 logging: true
+    //             });
+    //             const imageData = canvas.toDataURL('image/jpeg');
+    //             const pdf = new jsPDF();
+    //             pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+    //             // console.log("performa log : ",response.data.invoiceid);
+    //             alert(response.data.message);
+    //             console.log("invoiceId -->: ", invoiceId);
+    //             pdf.save('invoice.pdf');
+    //             // navigate('/TransactionHistory');
+    //         }
+    //         console.log(response.data.message);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
     const generatePDF = async () => {
         try {
             const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
