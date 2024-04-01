@@ -156,7 +156,7 @@ const TransactionHistory = () => {
                                 </div>
                                 <div className="table-responsive scroll_div" style={{ height: 'calc(78vh - 200px)' }}>
                                     <table className="table mb-0">
-                                        <thead className="small text-uppercase bg-body text-muted text-center"style={{ position: 'sticky', top: '-1px',zIndex:'999' }}>
+                                        <thead className="small text-uppercase bg-body text-muted text-center"style={{ position: 'sticky', top: '-1px',zIndex:'1' }}>
                                             <tr>
                                                 <th>Invoice ID</th>
                                                 <th>Transaction ID</th>
