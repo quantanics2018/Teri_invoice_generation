@@ -351,6 +351,7 @@ const Invoice = ({
     const invoiceRef = useRef(null);
     const handleDownload1 = async () => {
         try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
             const canvas = await html2canvas(invoiceRef.current, {
                 scale: 2,
                 useCORS: true,
