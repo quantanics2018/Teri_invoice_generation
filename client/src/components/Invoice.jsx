@@ -348,45 +348,88 @@ const Invoice = ({
     }
 
 
+    // const invoiceRef = useRef(null);
+    // const handleDownload1 = async () => {
+    //     try {
+
+    //         const canvas = await html2canvas(invoiceRef.current, {
+    //             scale: 2,
+    //             useCORS: true,
+    //             logging: true
+    //         });
+
+    //         // Convert canvas to data URL
+    //         const imageData = canvas.toDataURL('image/jpeg');
+
+    //         // Generate PDF using jsPDF
+    //         const pdf = new jsPDF();
+
+    //         // Add image to PDF
+    //         pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+    //         const blobData = pdf.output('blob');
+    //         const formData = new FormData();
+    //         formData.append('file', blobData, 'Email.pdf');
+    //         formData.append('companyname', buyercompany);
+    //         // console.log(buyercompany);
+    //         axios.post(`${API_URL}save-pdf-server`, formData, {
+    //             headers: {
+    //                 'Content-Type': 'multipart/form-data',
+    //             },
+    //         })
+    //             .then(response => {
+    //                 console.log('File saved successfully:', response.data);
+
+    //             })
+
+    //     } catch (error) {
+    //         console.error('Error:', error);
+
+    //     }
+    // };
     const invoiceRef = useRef(null);
-    const handleDownload1 = async () => {
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            const canvas = await html2canvas(invoiceRef.current, {
-                scale: 2,
-                useCORS: true,
-                logging: true
-            });
 
-            // Convert canvas to data URL
-            const imageData = canvas.toDataURL('image/jpeg');
-
-            // Generate PDF using jsPDF
-            const pdf = new jsPDF();
-
-            // Add image to PDF
-            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-            const blobData = pdf.output('blob');
-            const formData = new FormData();
-            formData.append('file', blobData, 'Email.pdf');
-            formData.append('companyname', buyercompany);
-            // console.log(buyercompany);
-            axios.post(`${API_URL}save-pdf-server`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
+    const handleDownload1 = () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                
+                setTimeout(() => {
+                    resolve();
+                }, 1500);
+    
+                const canvas = await html2canvas(invoiceRef.current, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: true
+                });
+    
+                // Convert canvas to data URL
+                const imageData = canvas.toDataURL('image/jpeg');
+    
+                // Generate PDF using jsPDF
+                const pdf = new jsPDF();
+    
+                // Add image to PDF
+                pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+                const blobData = pdf.output('blob');
+                const formData = new FormData();
+                formData.append('file', blobData, 'Email.pdf');
+                formData.append('companyname', buyercompany);
+                // console.log(buyercompany);
+                axios.post(`${API_URL}save-pdf-server`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                })
                 .then(response => {
                     console.log('File saved successfully:', response.data);
-
-                })
-
-        } catch (error) {
-            console.error('Error:', error);
-
-        }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                reject(error);
+            }
+        });
     };
-
+    
 
     return (
         <div className="fullPage">
