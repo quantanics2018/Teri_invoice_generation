@@ -38,7 +38,7 @@ const Invoice = ({
     buyercompany,
     generateInvoice
 }) => {
-    console.log("DatagenerateInvoice", generateInvoice);
+    // console.log("DatagenerateInvoice", generateInvoice);
     // console.log("DataReciverInvoiceProp",ReciverInvoiceProp);
     // console.log("Datainvoiceid",invoiceid);
     const navigate = useNavigate();
@@ -239,7 +239,7 @@ const Invoice = ({
                         const pdf = new jsPDF();
                         pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
                         // pdf.save("email.pdf");
-                        pdf.save(`${response.data.invoiceid}.pdf`);
+                        // pdf.save(`${response.data.invoiceid}.pdf`);
 
 
                         const blobData = pdf.output('blob');
@@ -273,7 +273,7 @@ const Invoice = ({
             }
         }
     }
-    console.log("invoiceId : ", invoiceId);
+    // console.log("invoiceId : ", invoiceId);
 
     // const invoiceRef = useRef(null);
     // const handleDownload1 = async () => {
@@ -374,11 +374,11 @@ const Invoice = ({
                 pdf.save(`${response.data.invoiceid}.pdf`);
                 // navigate('/TransactionHistory');
             }
-            console.log(response.data.message);
+            // console.log(response.data.message);
         } catch (error) {
             console.log(error);
         }
-        console.log("Hello nithi");
+        // console.log("Hello nithi");
     }
 
 
