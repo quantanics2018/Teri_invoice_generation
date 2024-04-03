@@ -226,9 +226,9 @@ const Invoice = ({
                     if (response.data.status) {
                         console.log(response);
                         setInvoiceId(response.data.invoiceid);
-                        await new Promise(resolve => setTimeout(resolve, 100));
+                        // await new Promise(resolve => setTimeout(resolve, 1000));
                         // alert(response.data);
-                        handleDownload1();
+                        handleDownload1(response.data.invoiceid);
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
@@ -345,91 +345,97 @@ const Invoice = ({
         } catch (error) {
             console.log(error);
         }
+        console.log("Hello nithi");
     }
 
+const [TAXinvoiceIdstate,setTAXinvoiceIdstate] = useState('');
 
-    // const invoiceRef = useRef(null);
-    // const handleDownload1 = async () => {
-    //     try {
-
-    //         const canvas = await html2canvas(invoiceRef.current, {
-    //             scale: 2,
-    //             useCORS: true,
-    //             logging: true
-    //         });
-
-    //         // Convert canvas to data URL
-    //         const imageData = canvas.toDataURL('image/jpeg');
-
-    //         // Generate PDF using jsPDF
-    //         const pdf = new jsPDF();
-
-    //         // Add image to PDF
-    //         pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-    //         const blobData = pdf.output('blob');
-    //         const formData = new FormData();
-    //         formData.append('file', blobData, 'Email.pdf');
-    //         formData.append('companyname', buyercompany);
-    //         // console.log(buyercompany);
-    //         axios.post(`${API_URL}save-pdf-server`, formData, {
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data',
-    //             },
-    //         })
-    //             .then(response => {
-    //                 console.log('File saved successfully:', response.data);
-
-    //             })
-
-    //     } catch (error) {
-    //         console.error('Error:', error);
-
-    //     }
-    // };
     const invoiceRef = useRef(null);
+    const handleDownload1 = async (TAXinvoiceId) => {
+        console.log("TAXinvoiceId",TAXinvoiceId);
+        try {
+            setTAXinvoiceIdstate(TAXinvoiceId);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            console.log("INside TRY",invoiceRef.current);
+            const canvas = await html2canvas(invoiceRef.current, {
+                scale: 2,
+                useCORS: true,
+                logging: true
+            });
+            console.log("Canvas",canvas);
 
-    const handleDownload1 = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                
-                setTimeout(() => {
-                    resolve();
-                }, 1500);
-    
-                const canvas = await html2canvas(invoiceRef.current, {
-                    scale: 2,
-                    useCORS: true,
-                    logging: true
-                });
-    
-                // Convert canvas to data URL
-                const imageData = canvas.toDataURL('image/jpeg');
-    
-                // Generate PDF using jsPDF
-                const pdf = new jsPDF();
-    
-                // Add image to PDF
-                pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-                const blobData = pdf.output('blob');
-                const formData = new FormData();
-                formData.append('file', blobData, 'Email.pdf');
-                formData.append('companyname', buyercompany);
-                // console.log(buyercompany);
-                axios.post(`${API_URL}save-pdf-server`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                })
+            // Convert canvas to data URL
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // Generate PDF using jsPDF
+            const pdf = new jsPDF();
+
+            // Add image to PDF
+            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+            const blobData = pdf.output('blob');
+            const formData = new FormData();
+            formData.append('file', blobData, 'Email.pdf');
+            formData.append('companyname', buyercompany);
+            // console.log(buyercompany);
+            axios.post(`${API_URL}save-pdf-server`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
                 .then(response => {
                     console.log('File saved successfully:', response.data);
-                });
-            } catch (error) {
-                console.error('Error:', error);
-                reject(error);
-            }
-        });
+
+                })
+
+        } catch (error) {
+            console.error('Error:', error);
+
+        }
     };
-    
+    // const invoiceRef = useRef(null);
+
+    // const handleDownload1 = () => {
+    //     return new Promise(async (resolve, reject) => {
+    //         try {
+
+    //             setTimeout(() => {
+    //                 resolve();
+    //             }, 1500);
+
+    //             const canvas = await html2canvas(invoiceRef.current, {
+    //                 scale: 2,
+    //                 useCORS: true,
+    //                 logging: true
+    //             });
+
+    //             // Convert canvas to data URL
+    //             const imageData = canvas.toDataURL('image/jpeg');
+
+    //             // Generate PDF using jsPDF
+    //             const pdf = new jsPDF();
+
+    //             // Add image to PDF
+    //             pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+    //             const blobData = pdf.output('blob');
+    //             const formData = new FormData();
+    //             formData.append('file', blobData, 'Email.pdf');
+    //             formData.append('companyname', buyercompany);
+    //             // console.log(buyercompany);
+    //             axios.post(`${API_URL}save-pdf-server`, formData, {
+    //                 headers: {
+    //                     'Content-Type': 'multipart/form-data',
+    //                 },
+    //             })
+    //             .then(response => {
+    //                 console.log('File saved successfully:', response.data);
+    //             });
+    //         } catch (error) {
+    //             console.error('Error:', error);
+    //             reject(error);
+    //         }
+    //     });
+    // };
+
 
     return (
         <div className="fullPage">
@@ -450,7 +456,7 @@ const Invoice = ({
                             <div className="invoiceDetial1"
                                 style={{ ...invoiceDetial, ...padInPx }}
                             >
-                                <pre style={{...textwarp,padding:'3px'}}>
+                                <pre style={{ ...textwarp, padding: '3px' }}>
                                     <div className="organizationName" style={{ fontWeight: 900, fontSize: '20px' }}>
                                         {SenderInvoiceProp[0].organizationname}
                                     </div>
@@ -470,7 +476,7 @@ const Invoice = ({
                                 <div className="billToBody"
                                     style={padInPx}
                                 >
-                                    <pre style={{ ...reciverBill, ...textwarp,padding:'3px'}}>
+                                    <pre style={{ ...reciverBill, ...textwarp, padding: '3px' }}>
                                         Buyer:(Bill To) <br />
                                         {ReciverInvoiceProp[0].organizationname}<br />
                                         {ReciverInvoiceProp[0].cstreetname}<br />
@@ -484,13 +490,21 @@ const Invoice = ({
                                 </div>
                             </div>
                         </div>
-                        <div className="invoicedetail" style={{...invoicedetail,padding:'3px'}}>
+                        <div className="invoicedetail" style={{ ...invoicedetail, padding: '3px' }}>
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
                                 <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
                                     {/* Invoice No.<input value={invoiceId} type='text' style={{...rawInput, width: '170px', lineHeight: 'normal', verticalAlign: 'middle'}} /> */}
                                     Invoice No.{" " + invoiceId}
-                                    {/* <div style={{ position: 'relative' }}>
-                                    </div> */}
+                                    Invoice No.{" " + TAXinvoiceIdstate}
+                                   {/* {generateInvoice ? (
+                                    <div>
+                                        Invoice No.{" " + invoiceId}
+                                    </div>
+                                   ):(
+                                    <div>
+                                        Invoice No.{" " + TAXinvoiceIdstate}
+                                    </div>
+                                   )} */}
                                 </div>
                                 <div className="row2Invoice" style={{ ...width50, ...padInPx }}>
                                     Date : {inputValuesAboveRows.Date}
@@ -593,7 +607,7 @@ const Invoice = ({
                         {/* Table heading row */}
                         <div style={rowStyle}>
                             {/* <div className='invoice_table_header' style={{ width: '6%', }}>S.No.</div> */}
-                            <div className='invoice_table_header' style={{ width: '6%',padding: '3px' }}>S.No.</div>
+                            <div className='invoice_table_header' style={{ width: '6%', padding: '3px' }}>S.No.</div>
                             <div className='invoice_table_header' style={{ width: '34%' }}>Description of Goods</div>
                             <div className='invoice_table_header' style={{ width: '13%' }}>HSN NO</div>
                             <div className='invoice_table_header' style={{ width: '10%' }}>Quantity</div>
@@ -605,7 +619,7 @@ const Invoice = ({
                         {/* Table data  */}
                         {[...previewInvoiceprop, {}, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div className='invoice_table_header' style={{ width: '6%' ,padding: '3px'}}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
+                                <div className='invoice_table_header' style={{ width: '6%', padding: '3px' }}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
                                 <div className='invoice_table_header' style={{ width: '34%' }}>
                                     {item.productName || ''}
                                     {index === previewInvoiceprop.length &&
@@ -628,7 +642,7 @@ const Invoice = ({
                                         </div>
                                     }
                                     {index === previewInvoiceprop.length + 1 &&
-                                        <div style={{padding:'3px'}}>
+                                        <div style={{ padding: '3px' }}>
                                             <b>Total</b>
                                         </div>
                                     }
@@ -658,7 +672,7 @@ const Invoice = ({
                                         ).toFixed(2) || ''
                                     )}
                                     {index === previewInvoiceprop.length &&
-                                    
+
                                         <div style={totalgstname}>
                                             <div className="invoiceRow1 even1">
                                                 {/* CGST */}
@@ -686,8 +700,8 @@ const Invoice = ({
                             </div>
                         )}
                     </div>
-                    <div className="numberinWord" style={{...numberinWord,padding:'3px'}}>
-                        <div className="amountHeading" style={{ ...amountHeading, ...df}}>
+                    <div className="numberinWord" style={{ ...numberinWord, padding: '3px' }}>
+                        <div className="amountHeading" style={{ ...amountHeading, ...df }}>
                             <div className="changeablecontent">Amount Changeable (in words)</div>
                             <div className="oe"><b>E & O.E</b></div>
                         </div>
@@ -750,7 +764,7 @@ const Invoice = ({
                                 </div>
                                 <div style={cellStyle}>
                                     {/* {unitRate(item.hsncode, item.batchno)} */}
-                                    <div className="subGst" style={{ ...subGst, ...df}}>
+                                    <div className="subGst" style={{ ...subGst, ...df }}>
                                         <div className="cgstRate" style={cgstRate}>
                                             {parseInt(getsgst(item.hsncode, item.batchno)) ? parseInt(getsgst(item.hsncode, item.batchno)) + '%' : ''}
                                         </div>
