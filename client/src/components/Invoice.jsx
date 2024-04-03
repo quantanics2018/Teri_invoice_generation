@@ -227,9 +227,9 @@ const Invoice = ({
                     // setLoading(true);
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                     if (response.data.status) {
-                        alert(response.data.invoiceid);
+                        // alert(response.data.invoiceid);
                         setInvoiceId(response.data.invoiceid);
-                        // await new Promise(resolve => setTimeout(resolve, 1000));
+                        await new Promise(resolve => setTimeout(resolve, 1000));
                         const canvas = await html2canvas(invoiceRef.current, {
                             scale: 2,
                             useCORS: true,
@@ -265,6 +265,7 @@ const Invoice = ({
                     setLoading(false);
                     if (response.data.status) {
                         navigate('/TransactionHistory');
+                        window.location.reload();
                     }
                 } catch (error) {
                     console.error('Error sending data:', error);
@@ -355,7 +356,7 @@ const Invoice = ({
             const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
             // console.log(response.data.status);
             if (response.data.status) {
-                alert(response.data.invoiceid);
+                // alert(response.data.invoiceid);
                 setInvoiceId(response.data.invoiceid);
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const canvas = await html2canvas(invoiceRef.current, {
@@ -527,7 +528,11 @@ const Invoice = ({
                                 <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
                                     {/* Invoice No.<input value={invoiceId} type='text' style={{...rawInput, width: '170px', lineHeight: 'normal', verticalAlign: 'middle'}} /> */}
                                     {/* Invoice No.{" " + invoiceId} */}
-                                    {invoiceId !== '' ? (invoiceId) : ("invoice id  not available")}
+                                    {invoiceId !== '' ? (<div>
+                                        Invoice No.{invoiceId}
+                                    </div>) : (
+                                        <div> Invoice No.</div>
+                                    )}
                                     {/* Invoice No.{" " + TAXinvoiceIdstate} */}
                                     {/* {generateInvoice ? (
                                     <div>
@@ -878,7 +883,9 @@ const Invoice = ({
             <div className="actions" style={actions}>
                 <CancelBtnComp dataBsDismiss="modal" />
                 {generateInvoice ? (
-                    <Button data-bs-dismiss="modal" variant="outlined" color="primary"
+                    <Button
+                        //  data-bs-dismiss="modal"
+                        variant="outlined" color="primary"
                         onClick={handleSubmit}
                     // onClick={handleDownload1}
                     >
