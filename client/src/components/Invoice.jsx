@@ -205,6 +205,7 @@ const Invoice = ({
 
 
     // Handle submit
+    const [Closemodel, setClosemodel] = useState(false);
     const [invoiceId, setInvoiceId] = useState('');
     const [TAXinvoiceIdstate, setTAXinvoiceIdstate] = useState('');
     const [loading, setLoading] = useState(false);
@@ -262,10 +263,12 @@ const Invoice = ({
                     } else {
                         alert(response.data.message);
                     }
+
                     setLoading(false);
                     if (response.data.status) {
-                        navigate('/TransactionHistory');
-                        window.location.reload();
+                            // navigate('/TransactionHistory');
+                        
+                        // window.location.reload(); 
                     }
                 } catch (error) {
                     console.error('Error sending data:', error);
@@ -881,10 +884,11 @@ const Invoice = ({
                 </div>
             </div>
             <div className="actions" style={actions}>
-                <CancelBtnComp dataBsDismiss="modal" />
+                <CancelBtnComp dataBsDismiss="modal"/>
                 {generateInvoice ? (
                     <Button
-                        //  data-bs-dismiss="modal"
+                        // data-bs-dismiss={Closemodel ? "modal" : undefined}
+                        //  data-bs-dismiss={Closemodel}
                         variant="outlined" color="primary"
                         onClick={handleSubmit}
                     // onClick={handleDownload1}
