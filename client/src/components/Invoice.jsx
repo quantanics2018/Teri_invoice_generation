@@ -206,6 +206,7 @@ const Invoice = ({
 
     // Handle submit
     const [invoiceId, setInvoiceId] = useState('');
+    const [TAXinvoiceIdstate, setTAXinvoiceIdstate] = useState('');
     const [loading, setLoading] = useState(false);
     const totalSum = Math.round(formatTotal(grandTotal()))
     const handleSubmit = async () => {
@@ -216,19 +217,47 @@ const Invoice = ({
         const hasEmptyReciverId = Object.values(inputValuesAboveRows).some(value => value === '' || value === null)
         if (hasEmptyReciverId) {
             alert("Reciver Details can't be Empty");
-        } else {
+        }
+        else {
             if (hasEmptyValue) {
                 alert('Please fill in all fields in each row before submitting.');
-            } else {
+            }
+            else {
                 try {
-                    setLoading(true);
+                    // setLoading(true);
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                     if (response.data.status) {
-                        console.log(response);
+                        alert(response.data.invoiceid);
                         setInvoiceId(response.data.invoiceid);
                         // await new Promise(resolve => setTimeout(resolve, 1000));
-                        // alert(response.data);
-                        handleDownload1(response.data.invoiceid);
+                        const canvas = await html2canvas(invoiceRef.current, {
+                            scale: 2,
+                            useCORS: true,
+                            logging: true
+                        });
+                        const imageData = canvas.toDataURL('image/jpeg');
+                        const pdf = new jsPDF();
+                        pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+                        // pdf.save("email.pdf");
+                        pdf.save(`${response.data.invoiceid}.pdf`);
+
+
+                        const blobData = pdf.output('blob');
+                        const formData = new FormData();
+                        formData.append('file', blobData, 'Email.pdf');
+                        formData.append('companyname', buyercompany);
+                        // console.log(buyercompany);
+                        axios.post(`${API_URL}save-pdf-server`, formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        })
+                            .then(response => {
+                                console.log('File saved successfully:', response.data);
+
+                            })
+
+
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
@@ -243,6 +272,8 @@ const Invoice = ({
             }
         }
     }
+    console.log("invoiceId : ", invoiceId);
+
     // const invoiceRef = useRef(null);
     // const handleDownload1 = async () => {
     //     console.log("Invoice ID ",invoiceId );
@@ -322,8 +353,9 @@ const Invoice = ({
     const generatePDF = async () => {
         try {
             const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
-            console.log(response.data.status);
+            // console.log(response.data.status);
             if (response.data.status) {
+                alert(response.data.invoiceid);
                 setInvoiceId(response.data.invoiceid);
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const canvas = await html2canvas(invoiceRef.current, {
@@ -348,49 +380,49 @@ const Invoice = ({
         console.log("Hello nithi");
     }
 
-const [TAXinvoiceIdstate,setTAXinvoiceIdstate] = useState('');
 
     const invoiceRef = useRef(null);
-    const handleDownload1 = async (TAXinvoiceId) => {
-        console.log("TAXinvoiceId",TAXinvoiceId);
-        try {
-            setTAXinvoiceIdstate(TAXinvoiceId);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log("INside TRY",invoiceRef.current);
-            const canvas = await html2canvas(invoiceRef.current, {
-                scale: 2,
-                useCORS: true,
-                logging: true
-            });
-            console.log("Canvas",canvas);
+    const handleDownload1 = async () => {
+        // await new Promise(resolve => setTimeout(resolve, 1000));
+        // console.log("TAXinvoiceId", TAXinvoiceIdstate);
 
-            // Convert canvas to data URL
-            const imageData = canvas.toDataURL('image/jpeg');
+        // try {
+        //     // setTAXinvoiceIdstate(TAXinvoiceId);
+        //     const canvas = await html2canvas(invoiceRef.current, {
+        //         scale: 2,
+        //         useCORS: true,
+        //         logging: true
+        //     });
+        //     console.log("Canvas", canvas);
 
-            // Generate PDF using jsPDF
-            const pdf = new jsPDF();
+        //     // Convert canvas to data URL
+        //     const imageData = canvas.toDataURL('image/jpeg');
 
-            // Add image to PDF
-            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-            const blobData = pdf.output('blob');
-            const formData = new FormData();
-            formData.append('file', blobData, 'Email.pdf');
-            formData.append('companyname', buyercompany);
-            // console.log(buyercompany);
-            axios.post(`${API_URL}save-pdf-server`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-                .then(response => {
-                    console.log('File saved successfully:', response.data);
+        //     // Generate PDF using jsPDF
+        //     const pdf = new jsPDF();
 
-                })
+        //     // Add image to PDF
+        //     pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+        //     const blobData = pdf.output('blob');
+        //     const formData = new FormData();
+        //     formData.append('file', blobData, 'Email.pdf');
+        //     formData.append('companyname', buyercompany);
+        //     // console.log(buyercompany);
+        //     axios.post(`${API_URL}save-pdf-server`, formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data',
+        //         },
+        //     })
+        //         .then(response => {
+        //             console.log('File saved successfully:', response.data);
 
-        } catch (error) {
-            console.error('Error:', error);
+        //         })
 
-        }
+        // } catch (error) {
+        //     console.error('Error:', error);
+
+        // }
+
     };
     // const invoiceRef = useRef(null);
 
@@ -494,15 +526,16 @@ const [TAXinvoiceIdstate,setTAXinvoiceIdstate] = useState('');
                             <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
                                 <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx }}>
                                     {/* Invoice No.<input value={invoiceId} type='text' style={{...rawInput, width: '170px', lineHeight: 'normal', verticalAlign: 'middle'}} /> */}
-                                    Invoice No.{" " + invoiceId}
-                                    Invoice No.{" " + TAXinvoiceIdstate}
-                                   {/* {generateInvoice ? (
+                                    {/* Invoice No.{" " + invoiceId} */}
+                                    {invoiceId !== '' ? (invoiceId) : ("invoice id  not available")}
+                                    {/* Invoice No.{" " + TAXinvoiceIdstate} */}
+                                    {/* {generateInvoice ? (
                                     <div>
-                                        Invoice No.{" " + invoiceId}
+                                       hai.{invoiceId}
                                     </div>
                                    ):(
                                     <div>
-                                        Invoice No.{" " + TAXinvoiceIdstate}
+                                        Invoice No.{" " + invoiceId}
                                     </div>
                                    )} */}
                                 </div>
