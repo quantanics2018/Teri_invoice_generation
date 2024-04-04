@@ -252,13 +252,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
         // const isImagePresent = isImageValid(file);
 
-        const isImagePresent = Positionid_val !== 3 ? isImageValid(file) : true;
+        // const isImagePresent = Positionid_val !== 3 ? isImageValid(file) : true;
 
-        console.log("isImagePresent : ", isImagePresent);
+        // console.log("isImagePresent : ", isImagePresent);
 
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
 
-            console.log("Hello From Staff");
+            // console.log("Hello From Staff");
 
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
                 // Inner Level
@@ -295,8 +295,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
                     & isValidupiPaymentNo & isValidaccName & isValidaccHolderName & isValidaccNo & isValidifscCode
                     // & isValidpAddress 
-                    // ((Positionid_val !== 3) && isImagePresent) 
-                    & isImagePresent
+                    // & isImagePresent
                     & isValidstreetAddress & isValidCity & isValidState & isValidpCode
                     // & isValidCommunicationAddress 
                     & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
@@ -378,11 +377,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setresAlert("Enter Valid IFSC Name");
                         setSubmitted(true);
                     }
-                    // else if (Positionid_val !== 3 && !isImagePresent) {
-                    else if (!isImagePresent) {
-                        setresAlert("Only PNG format is allowed & Image size should be less than 10MB.");
-                        setSubmitted(true);
-                    }
+                    // else if (!isImagePresent) {
+                    //     setresAlert("Only PNG format is allowed & Image size should be less than 10MB.");
+                    //     setSubmitted(true);
+                    // }
+
                     // else if (!isValidpAddress) {
                     //     setresAlert("Enter Valid Permenant Address");
                     //     setSubmitted(true);
@@ -426,8 +425,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     }
                 }
             } else {
-                // if (Positionid_val !== 3 && isImagePresent) {
-                if (isImagePresent) {
+                // if (isImagePresent) {
                     try {
                         setLoading(true);
                         const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues, Currentuser: userInfo.userid });
@@ -453,10 +451,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     } catch (error) {
                         console.error('Error sending data:', error);
                     }
-                }
-                else {
-                    alert("Wrong Image format:Image should be png")
-                }
+                // }
+                // else {
+                //     alert("Wrong Image format:Image should be png")
+                // }
                 setLoading(false);
             }
         }
@@ -1133,13 +1131,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 ))}
                             </div>
                             {/* Sign */}
-                            {(Positionid_val !== 3) && (
+                            {/* {(Positionid_val !== 3) && (
                                 <Box sx={{ display: 'flex', direction: 'row', alignItems: 'center', justfiyContent: 'center' }}>
                                     <Typography sx={{ marginLeft: '0.5rem', marginRight: '1rem' }}>Upload Signature</Typography>
                                     <input type="file" onChange={handleFileChanges} />
-                                    {/* <button onClick={handleUpload}>Upload Image</button> */}
                                 </Box>
-                            )}
+                            )} */}
+                            {/* <button onClick={handleUpload}>Upload Image</button> */}
 
 
                             {!(Positionid_val === 4 || Positionid_val === 5) && (

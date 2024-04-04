@@ -229,6 +229,7 @@ const Invoice = ({
                     const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                     if (response.data.status) {
                         // alert(response.data.invoiceid);
+                        // alert(response.data.invoiceid);
                         setInvoiceId(response.data.invoiceid);
                         await new Promise(resolve => setTimeout(resolve, 1000));
                         const canvas = await html2canvas(invoiceRef.current, {
@@ -248,28 +249,36 @@ const Invoice = ({
                         formData.append('file', blobData, 'Email.pdf');
                         formData.append('companyname', buyercompany);
                         // console.log(buyercompany);
-                        axios.post(`${API_URL}save-pdf-server`, formData, {
+
+                        // axios.post(`${API_URL}save-pdf-server`, formData, {
+                        //     headers: {
+                        //         'Content-Type': 'multipart/form-data',
+                        //     },
+                        // })
+                        //     .then(response => {
+                        //         console.log('File saved successfully:', response.data);
+
+                        //     })
+
+                        const responseAfterMail = await axios.post(`${API_URL}save-pdf-server`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data',
                             },
-                        })
-                            .then(response => {
-                                console.log('File saved successfully:', response.data);
-
-                            })
-
-
+                        });
+                        console.log('File saved successfully:', responseAfterMail.data);
+                        if (responseAfterMail.data.status) {
+                            navigate('/TransactionHistory');
+                            window.location.reload();
+                        }
                         alert(response.data.message);
                     } else {
                         alert(response.data.message);
                     }
 
                     setLoading(false);
-                    if (response.data.status) {
-                            // navigate('/TransactionHistory');
-                        
-                        // window.location.reload(); 
-                    }
+                    // if (response.data.status) {
+                    //     navigate('/TransactionHistory');
+                    // }
                 } catch (error) {
                     console.error('Error sending data:', error);
                 }
@@ -884,7 +893,7 @@ const Invoice = ({
                 </div>
             </div>
             <div className="actions" style={actions}>
-                <CancelBtnComp dataBsDismiss="modal"/>
+                <CancelBtnComp dataBsDismiss="modal" />
                 {generateInvoice ? (
                     <Button
                         // data-bs-dismiss={Closemodel ? "modal" : undefined}

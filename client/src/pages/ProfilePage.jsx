@@ -42,12 +42,12 @@ const ProfilePage = () => {
         btype: '',
         pcode: '',
 
-        bname:'',
-        acno:'',
-        ifsc_code:'',
-        achname:'',
-        upi_id:'',
-        gstno:'',  
+        bname: '',
+        acno: '',
+        ifsc_code: '',
+        achname: '',
+        upi_id: '',
+        gstno: '',
 
 
     })
@@ -85,12 +85,12 @@ const ProfilePage = () => {
                         position: res.data.data[0].position,
                         positionid: res.data.data[0].positionid,
 
-                        bname:res.data.data[0].bankname,
-                        acno:res.data.data[0].bankaccno,
-                        ifsc_code:res.data.data[0].ifsccode,
-                        achname:res.data.data[0].accholdername,
-                        upi_id:res.data.data[0].upiid,
-                        gstno:res.data.data[0].gstnno,
+                        bname: res.data.data[0].bankname,
+                        acno: res.data.data[0].bankaccno,
+                        ifsc_code: res.data.data[0].ifsccode,
+                        achname: res.data.data[0].accholdername,
+                        upi_id: res.data.data[0].upiid,
+                        gstno: res.data.data[0].gstnno,
                     });
 
 
@@ -114,14 +114,14 @@ const ProfilePage = () => {
                         console.log("position id is not manufacturer");
                     }
 
-                    if(res.data.data[0].positionid==="1" || res.data.data[0].positionid==="2" || res.data.data[0].positionid==="3"){
+                    if (res.data.data[0].positionid === "1" || res.data.data[0].positionid === "2" || res.data.data[0].positionid === "3") {
                         setInputChange(true);
                     }
-                    else if(res.data.data[0].positionid==="4" || res.data.data[0].positionid==="5"){
+                    else if (res.data.data[0].positionid === "4" || res.data.data[0].positionid === "5") {
                         setInputChange(false);
                     }
 
-                  
+
                 });
 
             } catch (error) {
@@ -135,9 +135,9 @@ const ProfilePage = () => {
     // console.log(profileInfoRes);
     console.log(userInfo.positionid);
 
-    if(userInfo.positionid===1 || userInfo.positionid===2 || userInfo.positionid===3){
-        updatedInputField = userInfoFields.slice(0, userInfoFields.length);            
-    }else if(userInfo.positionid===4 || userInfo.positionid===5){
+    if (userInfo.positionid === 1 || userInfo.positionid === 2 || userInfo.positionid === 3) {
+        updatedInputField = userInfoFields.slice(0, userInfoFields.length);
+    } else if (userInfo.positionid === 4 || userInfo.positionid === 5) {
         updatedInputField = userInfoFields.slice(0, userInfoFields.length - 8);
     }
 
@@ -157,17 +157,18 @@ const ProfilePage = () => {
         { label: 'Bussiness Type', fieldname: 'btype' },
         { label: 'Postal code', fieldname: 'pcode' },
 
-        {label: 'Bank Name', fieldname:'bname'},
-        {label: 'Account No' , fieldname:'acno'},
-        {label: 'IFSC Code' , fieldname:'ifsc_code'},
-        {label: 'Account Holder Name', fieldname:'achname'},
-        {label: 'UPI Id', fieldname:'upi_id'},
-        {label: 'GST Number' , fieldname:'gstno'},
+        { label: 'Bank Name', fieldname: 'bname' },
+        { label: 'Account No', fieldname: 'acno' },
+        { label: 'IFSC Code', fieldname: 'ifsc_code' },
+        { label: 'Account Holder Name', fieldname: 'achname' },
+        { label: 'UPI Id', fieldname: 'upi_id' },
+        { label: 'GST Number', fieldname: 'gstno' },
+        { label: 'Signature', fieldname: 'Signature', fieldType: 'file' },
 
         // Add more fields as needed
     ];
     const staff_input_fields = [
-         { label: 'First Name', fieldname: 'fname' },
+        { label: 'First Name', fieldname: 'fname' },
         { label: 'Last Name', fieldname: 'lname' },
         { label: 'Email', fieldname: 'email' },
         { label: 'Mobile Number', fieldname: 'mobile' },
@@ -256,26 +257,26 @@ const ProfilePage = () => {
         } else {
 
             const fiedl_validation_arr = [
-                {isValid: isValiduserid, message: 'Valid UserID !!'},
-                {isValid: isValidaadharNo, message: 'Valid Aadhar Number !!'},
-                {isValid: isValidfName, message: 'Valid First Name !!'},
-                {isValid: isValidlName, message: 'Valid Last Name !!'},
-                {isValid: isValidemail, message: 'Valid Email !!'},
-                {isValid: isValidMobileNo, message: 'Valid Mobile Number !!'},
-                {isValid: isValidbussinessType, message: 'Valid BussinessType !!'},
-                {isValid: isValidOrgName, message: 'Valid Organization !!'},
-                {isValid: isValidpanNumber, message: 'Valid Pan Number !!'},
-                {isValid: isValidstreetAddress, message: 'Valid Street Name !!'},
-                {isValid: isValidCity, message: 'Valid City !!'},
-                {isValid: isValidState, message: 'Valid State !!'},
-                {isValid: isValidpCode, message: 'Valid Postal Code'},
+                { isValid: isValiduserid, message: 'Valid UserID !!' },
+                { isValid: isValidaadharNo, message: 'Valid Aadhar Number !!' },
+                { isValid: isValidfName, message: 'Valid First Name !!' },
+                { isValid: isValidlName, message: 'Valid Last Name !!' },
+                { isValid: isValidemail, message: 'Valid Email !!' },
+                { isValid: isValidMobileNo, message: 'Valid Mobile Number !!' },
+                { isValid: isValidbussinessType, message: 'Valid BussinessType !!' },
+                { isValid: isValidOrgName, message: 'Valid Organization !!' },
+                { isValid: isValidpanNumber, message: 'Valid Pan Number !!' },
+                { isValid: isValidstreetAddress, message: 'Valid Street Name !!' },
+                { isValid: isValidCity, message: 'Valid City !!' },
+                { isValid: isValidState, message: 'Valid State !!' },
+                { isValid: isValidpCode, message: 'Valid Postal Code' },
 
-                {isValid: isValidupiPaymentNo, message: 'Valid UPI ID Number'},
-                {isValid: isValidaccName, message: 'Valid Bank Name'},
-                {isValid: isValidaccHolderName, message: 'Valid Account Holder Namer'},
-                {isValid: isValidaccNo, message: 'Valid Account Number'},
-                {isValid: isValidifscCode, message: 'Valid IFSC Code Number'},
-                {isValid: isValidgstNumber, message: 'Valid GST Number'},
+                { isValid: isValidupiPaymentNo, message: 'Valid UPI ID Number' },
+                { isValid: isValidaccName, message: 'Valid Bank Name' },
+                { isValid: isValidaccHolderName, message: 'Valid Account Holder Namer' },
+                { isValid: isValidaccNo, message: 'Valid Account Number' },
+                { isValid: isValidifscCode, message: 'Valid IFSC Code Number' },
+                { isValid: isValidgstNumber, message: 'Valid GST Number' },
 
             ];
 
@@ -286,7 +287,7 @@ const ProfilePage = () => {
                     setSubmitted(true);
                 }
             });
-           
+
         }
 
     }
@@ -299,7 +300,51 @@ const ProfilePage = () => {
     const [submitted, setSubmitted] = useState(false);
 
     const [ismanufacture, setmanufacture] = useState(false);
-    const [isInputchange,setInputChange] = useState(true);
+    const [isInputchange, setInputChange] = useState(true);
+    const [file, setFile] = useState(null);
+
+    const isImageValid = (file) => {
+        // console.log(file); 
+        if (!file) {
+            return false; // No file present
+        }
+        if (typeof file === 'string') {
+            const allowedFormats = ['png'];
+            const fileExtension = file.split('.').pop().toLowerCase();
+            if (!allowedFormats.includes(fileExtension)) {
+                return false; // File format not allowed
+            }
+        } else {
+            const allowedFormats = ['png'];
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            if (!allowedFormats.includes(fileExtension)) {
+                return false; // File format not allowed
+            }
+            const maxSizeInBytes = 10 * 1024 * 1024; // 10 MB
+            if (file.size > maxSizeInBytes) {
+                return false; // File size exceeds the limit
+            }
+        }
+        return true;
+    };
+
+    const handleFileChanges = (e) => {
+        setFile(e.target.files[0]);
+    };
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('imageName', userInfo.userid);
+
+    const updateSignApi = async () => {
+        const isImagePresent = isImageValid(file);
+        console.log("isImagePresent :", isImagePresent);
+        if (isImagePresent) {
+            const response = await axios.post(`${API_URL}upload`,
+                formData
+            );
+        }
+    }
+
 
     return (
         <>
@@ -310,6 +355,33 @@ const ProfilePage = () => {
                     {resAlert}
                 </MuiAlert>
             </Snackbar>
+            {/* End  of snack bar */}
+            {/* Start Sign popup modal */}
+            <div class="modal fade" id="SignatureModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <Box sx={{ display: 'flex', direction: 'row', alignItems: 'center', justfiyContent: 'center' }}>
+                                <Typography sx={{ marginLeft: '0.5rem', marginRight: '1rem' }}>Upload Signature</Typography>
+                                <input type="file" onChange={handleFileChanges} />
+                                {/* <button onClick={handleUpload}>Upload Image</button> */}
+                            </Box>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onClick={updateSignApi} data-bs-dismiss="modal" >Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {/* end Sign popup modal */}
+
             <Container style={{ marginLeft: '53px' }}>
                 <Grid container spacing={3} style={{ marginTop: '1rem' }}>
 
@@ -374,27 +446,32 @@ const ProfilePage = () => {
                                         </Grid>
 
                                         {isInputchange && userInfoFields.map((field, index) => (
-                                          
+
                                             <Grid item xs={12} md={6} key={index} >
-                                                <TextField
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    margin="dense"
-                                                    InputLabelProps={{ shrink: true }}
-                                                    value={profileInfoRes[field.fieldname]}
-                                                    defaultValue={profileInfoRes[field.fieldname]}
-                                                    // onChange={(e)=>{setprofileInfoRes({[field.fieldname] : e.target.value})}}
-                                                    onChange={handleInputchange}
-                                                    name={field.fieldname}
-                                                    label={field.label}
-                                                    disabled={!ismanufacture}
-                                                />
+                                                {field.fieldType === 'file' ? (
+                                                    <Button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SignatureModal"> Update sign </Button>
+
+                                                ) : (
+                                                    <TextField
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        margin="dense"
+                                                        InputLabelProps={{ shrink: true }}
+                                                        value={profileInfoRes[field.fieldname]}
+                                                        defaultValue={profileInfoRes[field.fieldname]}
+                                                        // onChange={(e)=>{setprofileInfoRes({[field.fieldname] : e.target.value})}}
+                                                        onChange={handleInputchange}
+                                                        name={field.fieldname}
+                                                        label={field.label}
+                                                        disabled={!ismanufacture}
+                                                    />
+                                                )}
+
                                             </Grid>
                                         ))}
 
                                         {/* if staff login and view profile page it does not show entire field is list out some fields only */}
                                         {!isInputchange && staff_input_fields.map((field, index) => (
-                                          
                                             <Grid item xs={12} md={6} key={index} >
                                                 <TextField
                                                     fullWidth
@@ -410,7 +487,7 @@ const ProfilePage = () => {
                                                     disabled={!ismanufacture}
                                                 />
                                             </Grid>
-                                          
+
                                         ))}
 
                                     </Grid>

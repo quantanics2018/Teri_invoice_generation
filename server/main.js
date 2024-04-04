@@ -439,7 +439,7 @@ app.post('/save-pdf-server', upload.single('file'), async(req, res) => {
               }
             });
   
-            res.send('Email sent successfully');
+            res.send({status:true,message:'Email sent successfully'});
           });
         });
       }
