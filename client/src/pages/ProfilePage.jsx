@@ -310,7 +310,7 @@ const ProfilePage = () => {
                     {resAlert}
                 </MuiAlert>
             </Snackbar>
-            <Container style={{ marginLeft: '53px' }}>
+            <Container >
                 <Grid container spacing={3} style={{ marginTop: '1rem' }}>
 
                     {/* Top Section */}
