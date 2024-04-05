@@ -773,35 +773,35 @@ const Invoice = ({
                     <div style={containerStyle}>
                         {/* Table heading row */}
                         <div style={rowStyle}>
-                            <div style={cellStyle}>HSN/SAC</div>
-                            <div style={cellStyle}>Taxable Value</div>
-                            <div style={cellStyle}>
+                            <div style={{...cellStyle,borderRight:'none',borderBottom:'none',padding: '3px'}}>HSN/SAC</div>
+                            <div style={{...cellStyle,borderRight:'none',borderBottom:'none'}}>Taxable Value</div>
+                            <div style={{...cellStyle,borderRight:'none',borderBottom:'none'}}>
                                 <div className="cgst">CGST</div>
-                                <div className="subGst" style={{ ...subGst, ...df }}>
+                                <div className="subGst" style={{ ...subGst, ...df,borderBottom:'none' }}>
                                     <div className="cgstRate" style={cgstRate}>Rate</div>
                                     <div className="cgstAmount" style={cgstAmount}>Amount</div>
                                 </div>
                             </div>
-                            <div style={cellStyle}>
+                            <div style={{...cellStyle,borderRight:'none',borderBottom:'none'}}>
                                 <div className="cgst">SGST/UTGST</div>
                                 <div className="subGst" style={{ ...subGst, ...df }}>
-                                    <div className="cgstRate" style={cgstRate}>Rate</div>
+                                    <div className="cgstRate" style={{...cgstRate,borderBottom:'none'}}>Rate</div>
                                     <div className="cgstAmount" style={cgstAmount}>Amount</div>
                                 </div>
                             </div>
-                            <div style={cellStyle}>Total Tax Amount</div>
+                            <div style={{...cellStyle,borderBottom:'none'}}>Total Tax Amount</div>
                         </div>
                         {[...previewInvoiceprop, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div style={cellStyle}>
+                                <div style={{...cellStyle,borderRight:'none',borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black',padding: '3px'}}>
                                     {item.hsncode || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div>
-                                            <b>Total</b>
+                                            <b >Total</b>
                                         </div>
                                     }
                                 </div>
-                                <div style={cellStyle}>
+                                <div style={{...cellStyle,borderRight:'none',borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black'}}>
                                     {/* {item.hsncode || ''} */}
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
                                     {index === previewInvoiceprop.length &&
@@ -811,7 +811,7 @@ const Invoice = ({
                                     }
                                 </div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div style={cellStyle}>
+                                <div style={{...cellStyle,borderRight:'none',borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black'}}>
                                     {/* {item.Quantity || ''} */}
                                     <div className="subGst" style={{ ...subGst, ...df }}>
                                         <div className="cgstRate" style={cgstRate}>
@@ -825,7 +825,7 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div style={cellStyle}>
+                                <div style={{...cellStyle,borderRight:'none',borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black'}}>
                                     {/* {unitRate(item.hsncode, item.batchno)} */}
                                     <div className="subGst" style={{ ...subGst, ...df }}>
                                         <div className="cgstRate" style={cgstRate}>
@@ -839,7 +839,7 @@ const Invoice = ({
                                         }
                                     </div>
                                 </div>
-                                <div style={cellStyle}>
+                                <div style={{...cellStyle,borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black'}}>
                                     {/* {item.Discount || ''} */}
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal((((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100)
                                         + (((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100))
