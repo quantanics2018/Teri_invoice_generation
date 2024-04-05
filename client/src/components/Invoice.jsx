@@ -481,6 +481,19 @@ const Invoice = ({
     //     });
     // };
 
+    const roundoff = () => {
+        // console.log("test : ",formatTotal(grandTotal()) - Math.round(formatTotal(grandTotal())));
+        if (formatTotal(grandTotal()) > Math.round(formatTotal(grandTotal()))) {
+            let total = formatTotal(grandTotal()) - Math.round(formatTotal(grandTotal()));
+            console.log("total : ",total);
+            return formatTotal(total)*-1;
+        } else {
+            let total = Math.round(formatTotal(grandTotal())) - formatTotal(grandTotal());
+            // console.log("total : ",total);
+            return formatTotal(total);
+        }
+    }
+
 
     return (
         <div className="fullPage">
@@ -737,7 +750,7 @@ const Invoice = ({
                                             <div className="invoiceRow1 even1">
                                                 {/* Round Off */}
                                                 {/* {formatTotal(TotalcgstPercent())} % */}
-                                                <div className="totalVal1">{0}</div>
+                                                <div className="totalVal1">{roundoff()}</div>
                                             </div>
                                         </div>
                                     }
