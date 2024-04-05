@@ -867,7 +867,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                     {/* <FormLabel component="legend">Rows</FormLabel> */}
                                     {updatedAccessHead.map((row, rowIndex) => (
                                         <div key={rowIndex} className='accessControlHeadwithVal'>
-                                            <FormLabel component="legend" className='acc_head'>{`${row.label}`}</FormLabel>
+                                            <FormLabel component="legend" className='acc_head' style={{color : 'black'}}>{`${row.label}`}</FormLabel>
                                             <RadioGroup row
                                                 className='acc_val'
                                                 value={accessValues[row.label]}
