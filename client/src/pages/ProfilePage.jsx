@@ -388,7 +388,8 @@ const ProfilePage = () => {
 
             {/* end Sign popup modal */}
 
-            <Container style={{ marginLeft: '53px' }}>
+            {/* <Container style={{ marginLeft: '53px' }}> */}
+            <Container>
                 <Grid container spacing={3} style={{ marginTop: '1rem' }}>
 
                     {/* Top Section */}
