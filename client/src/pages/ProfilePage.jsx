@@ -163,7 +163,7 @@ const ProfilePage = () => {
         { label: 'Account Holder Name', fieldname: 'achname' },
         { label: 'UPI Id', fieldname: 'upi_id' },
         { label: 'GST Number', fieldname: 'gstno' },
-        { label: 'Signature', fieldname: 'Signature', fieldType: 'file' },
+        // { label: 'Signature', fieldname: 'Signature', fieldType: 'file' },
 
         // Add more fields as needed
     ];
