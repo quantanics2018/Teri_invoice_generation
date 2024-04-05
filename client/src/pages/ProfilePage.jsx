@@ -448,9 +448,9 @@ const ProfilePage = () => {
                                                 value={userid}
                                                 label="UserId"
                                                 disabled={true}
-
                                             />
                                         </Grid>
+                                        {console.log("mathan : ",userInfo.positionid==="3")}
 
                                         {isInputchange && userInfoFields.map((field, index) => (
 
@@ -469,9 +469,10 @@ const ProfilePage = () => {
                                                         // onChange={(e)=>{setprofileInfoRes({[field.fieldname] : e.target.value})}}
                                                         onChange={handleInputchange}
                                                         name={field.fieldname}
-                                                        label={field.label}
-                                                        disabled={!ismanufacture}
-                                                    />
+                                                        label={`${field.label}`}
+                                                        // disabled={!ismanufacture && !isdistributor && field.fieldname== 'fname'}
+                                                        disabled={((ismanufacture && (field.fieldname === 'email'))||(isdistributor && (field.fieldname === 'fname' || field.fieldname === 'lname' || field.fieldname === 'orgname' || field.fieldname === 'btype' || field.fieldname === 'gstno'|| field.fieldname === 'email' )))||(userInfo.positionid ==="3" || userInfo.positionid === "4" || userInfo.positionid === "5" )}
+                                                        />
                                                 )}
 
                                             </Grid>
@@ -492,6 +493,8 @@ const ProfilePage = () => {
                                                     name={field.fieldname}
                                                     label={field.label}
                                                     disabled={!ismanufacture}
+
+                                                    
                                                 />
                                             </Grid>
 
@@ -510,7 +513,7 @@ const ProfilePage = () => {
                                     }
                                     {isdistributor &&
                                         <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button variant="contained" width={'100%'}>Update Dataa</Button>
+                                            <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
                                         </Box>
                                     }
 
