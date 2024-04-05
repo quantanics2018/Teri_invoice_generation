@@ -48,12 +48,6 @@ const ProfilePage = () => {
         achname: '',
         upi_id: '',
         gstno: '',
-        bname: '',
-        acno: '',
-        ifsc_code: '',
-        achname: '',
-        upi_id: '',
-        gstno: '',
 
 
     })
@@ -97,12 +91,6 @@ const ProfilePage = () => {
                         achname: res.data.data[0].accholdername,
                         upi_id: res.data.data[0].upiid,
                         gstno: res.data.data[0].gstnno,
-                        bname: res.data.data[0].bankname,
-                        acno: res.data.data[0].bankaccno,
-                        ifsc_code: res.data.data[0].ifsccode,
-                        achname: res.data.data[0].accholdername,
-                        upi_id: res.data.data[0].upiid,
-                        gstno: res.data.data[0].gstnno,
                     });
 
 
@@ -120,15 +108,10 @@ const ProfilePage = () => {
                     // userInfoFields.value = 'hao'
                     if (res.data.data[0].positionid === "1") {
                         setmanufacture(true);
-                        // console.log("position id is  manufacturer");
+                        console.log("position id is  manufacturer");
                     } else {
                         setmanufacture(false);
-                        // console.log("position id is not manufacturer");
-                    }
-                    if (res.data.data[0].positionid === "2") {
-                        setdistributor(true);
-                    } else {
-                        setdistributor(false);
+                        console.log("position id is not manufacturer");
                     }
 
                     if (res.data.data[0].positionid === "1" || res.data.data[0].positionid === "2" || res.data.data[0].positionid === "3") {
@@ -152,9 +135,6 @@ const ProfilePage = () => {
     // console.log(profileInfoRes);
     console.log(userInfo.positionid);
 
-    if (userInfo.positionid === 1 || userInfo.positionid === 2 || userInfo.positionid === 3) {
-        updatedInputField = userInfoFields.slice(0, userInfoFields.length);
-    } else if (userInfo.positionid === 4 || userInfo.positionid === 5) {
     if (userInfo.positionid === 1 || userInfo.positionid === 2 || userInfo.positionid === 3) {
         updatedInputField = userInfoFields.slice(0, userInfoFields.length);
     } else if (userInfo.positionid === 4 || userInfo.positionid === 5) {
@@ -290,26 +270,7 @@ const ProfilePage = () => {
                 { isValid: isValidCity, message: 'Valid City !!' },
                 { isValid: isValidState, message: 'Valid State !!' },
                 { isValid: isValidpCode, message: 'Valid Postal Code' },
-                { isValid: isValiduserid, message: 'Valid UserID !!' },
-                { isValid: isValidaadharNo, message: 'Valid Aadhar Number !!' },
-                { isValid: isValidfName, message: 'Valid First Name !!' },
-                { isValid: isValidlName, message: 'Valid Last Name !!' },
-                { isValid: isValidemail, message: 'Valid Email !!' },
-                { isValid: isValidMobileNo, message: 'Valid Mobile Number !!' },
-                { isValid: isValidbussinessType, message: 'Valid BussinessType !!' },
-                { isValid: isValidOrgName, message: 'Valid Organization !!' },
-                { isValid: isValidpanNumber, message: 'Valid Pan Number !!' },
-                { isValid: isValidstreetAddress, message: 'Valid Street Name !!' },
-                { isValid: isValidCity, message: 'Valid City !!' },
-                { isValid: isValidState, message: 'Valid State !!' },
-                { isValid: isValidpCode, message: 'Valid Postal Code' },
 
-                { isValid: isValidupiPaymentNo, message: 'Valid UPI ID Number' },
-                { isValid: isValidaccName, message: 'Valid Bank Name' },
-                { isValid: isValidaccHolderName, message: 'Valid Account Holder Namer' },
-                { isValid: isValidaccNo, message: 'Valid Account Number' },
-                { isValid: isValidifscCode, message: 'Valid IFSC Code Number' },
-                { isValid: isValidgstNumber, message: 'Valid GST Number' },
                 { isValid: isValidupiPaymentNo, message: 'Valid UPI ID Number' },
                 { isValid: isValidaccName, message: 'Valid Bank Name' },
                 { isValid: isValidaccHolderName, message: 'Valid Account Holder Namer' },
@@ -326,7 +287,6 @@ const ProfilePage = () => {
                     setSubmitted(true);
                 }
             });
-
 
         }
 
@@ -487,7 +447,6 @@ const ProfilePage = () => {
 
                                         {isInputchange && userInfoFields.map((field, index) => (
 
-
                                             <Grid item xs={12} md={6} key={index} >
                                                 {field.fieldType === 'file' ? (
                                                     <Button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SignatureModal"> Update sign </Button>
@@ -532,22 +491,11 @@ const ProfilePage = () => {
                                         ))}
 
                                     </Grid>
-                                    {/* {(ismanufacture || isdistributor) &&
-                                        <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
-                                        </Box>
-                                    } */}
                                     {ismanufacture &&
                                         <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                             <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
                                         </Box>
                                     }
-                                    {isdistributor &&
-                                        <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button variant="contained" width={'100%'}>Update Dataa</Button>
-                                        </Box>
-                                    }
-
 
                                 </form>
                             </CardContent>
