@@ -929,7 +929,8 @@ const InvoiceGenerator = () => {
                                                 // value={200}
                                                 // value={row.Total}
                                                 InputProps={{
-                                                    endAdornment: <InputAdornment position="end">₹</InputAdornment>,
+                                                    startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                                                    endAdornment: <InputAdornment position="end"></InputAdornment>,
                                                 }}
                                             // onChange={(e) => handleInputChange(row.id, 'Total', e.target.value)}
                                             />

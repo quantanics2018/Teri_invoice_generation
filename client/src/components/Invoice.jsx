@@ -901,7 +901,7 @@ const Invoice = ({
                         style={bussinessQuotes}
                     > */}
                     {/* <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>This is a Computer Genereated Invoice</div> */}
-                    <div >This is a Computer Genereated Invoice</div>
+                    <div style={{display: 'flex' , justifyContent:'center'}}>This is a Computer Genereated Invoice</div>
                     {/* </div> */}
                 </div>
             </div>
