@@ -113,6 +113,11 @@ const ProfilePage = () => {
                         setmanufacture(false);
                         console.log("position id is not manufacturer");
                     }
+                    if (res.data.data[0].positionid === "2") {
+                        setdistributor(true);
+                    } else {
+                        setdistributor(false);
+                    }
 
                     if (res.data.data[0].positionid === "1" || res.data.data[0].positionid === "2" || res.data.data[0].positionid === "3") {
                         setInputChange(true);
@@ -299,6 +304,7 @@ const ProfilePage = () => {
     const navigate = useNavigate();
     const [submitted, setSubmitted] = useState(false);
 
+    const [isdistributor, setdistributor] = useState(false);
     const [ismanufacture, setmanufacture] = useState(false);
     const [isInputchange, setInputChange] = useState(true);
     const [file, setFile] = useState(null);
@@ -491,9 +497,19 @@ const ProfilePage = () => {
                                         ))}
 
                                     </Grid>
+                                    {/* {ismanufacture &&
+                                        <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
+                                        </Box>
+                                    } */}
                                     {ismanufacture &&
                                         <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                             <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
+                                        </Box>
+                                    }
+                                    {isdistributor &&
+                                        <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Button variant="contained" width={'100%'}>Update Dataa</Button>
                                         </Box>
                                     }
 
