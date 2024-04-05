@@ -793,7 +793,7 @@ const Invoice = ({
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div>
-                                            <b>{TaxableValue()}</b>
+                                            <b>{formatTotal(TaxableValue())}</b>
                                         </div>
                                     }
                                 </div>
