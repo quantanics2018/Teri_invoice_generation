@@ -53,11 +53,25 @@ async function getStateData(req, res) {
 }
 async function getDistrictData(req, res) {
     try {
-        
-        console.log("TEEEEEESSSSSSSSSSSTTTTTTT");
         const userdistrictResult = await userdbInstance.userdb.query('SELECT districtname FROM public.district;');
         res.json({ message: "Successfully Data Fetched", data: userdistrictResult.rows });
         
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+async function getSignExistance(req, res) {
+    const currentUser  = req.body.currentUser;
+    console.log("currecntUser : ", currentUser);
+
+    try {
+        const userSignResult = await userdbInstance.userdb.query(`SELECT signature FROM public."user" where userid = $1;`,[currentUser]);
+        console.log("userSignResult.rows :- ",userSignResult.rows);
+        if (userSignResult.rows[0].signature == null) {
+        return res.json({ message: "Signature Absent", status: false });
+        }
+        res.json({ message: "Signature Present", status: true });
     } catch (error) {
         console.error('Error executing database query:', error);
         res.status(500).json({ message: "Internal Server Error" });
@@ -281,4 +295,4 @@ async function getProductDataIndividual(req, res) {
 }
 
 
-module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData,getDistrictData};
+module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData,getSignExistance,getDistrictData};

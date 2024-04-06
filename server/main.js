@@ -99,7 +99,7 @@ app.post('/add/:entity(user|products|invoice|feedback|ProformaInvoice)', upload.
 })
 app.use('/images', express.static(path.join(__dirname, 'uploads')));
 // Get Data From DB
-app.post('/get/:entity(user|credentials|product|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo|SenderDataInvoiceAddress|ReciverDataInvoiceAddress|signature)', async (req, res) => {
+app.post('/get/:entity(user|credentials|product|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo|SenderDataInvoiceAddress|ReciverDataInvoiceAddress|signature|getSignExistance)', async (req, res) => {
     const entity = req.params.entity;
     const requestData = req.body;
     if (entity === 'user') {
@@ -123,6 +123,15 @@ app.post('/get/:entity(user|credentials|product|products|state|district|access_c
     if (entity === 'district') {
         try {
             var userdata = await getData.getDistrictData(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'getSignExistance') {
+        try {
+            var userdata = await getData.getSignExistance(req, res);
         }
         catch (error) {
             res.send("error");

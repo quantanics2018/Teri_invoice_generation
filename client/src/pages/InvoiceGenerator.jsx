@@ -8,7 +8,7 @@ import html2pdf from 'html2pdf.js';
 import ReactDOMServer from 'react-dom/server';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import {df} from '../assets/style/mailInlineCss';
+import { df } from '../assets/style/mailInlineCss';
 
 import {
     Table,
@@ -635,6 +635,7 @@ const InvoiceGenerator = () => {
     const hasEmptyReciverId = Object.values(inputValues).some(value => value === '' || value === null)
     const [diability, setdiability] = useState(true);
 
+
     useEffect(() => {
         if (hasEmptyValue || hasEmptyReciverId) {
             setdiability(true);
@@ -642,12 +643,36 @@ const InvoiceGenerator = () => {
             setdiability(false)
         }
         console.log("diability : ", diability);
+
     }, [diability, hasEmptyValue, hasEmptyReciverId])
-    const isSignaturePresent = (userInfo.signature == null);
-    const [open, setOpen] = useState(isSignaturePresent);
+
+    // const isSignaturePresent = (userInfo.signature == null);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const navigateProfilePage = () =>{
+    useEffect(() => {
+        const getSign = async () => {
+            const currentUserVar = userInfo.userid;
+            // console.log(currentUser);
+            try {
+                // Assuming `axios` is properly imported
+                const SignRes = await axios.post(`${API_URL}get/getSignExistance`, { currentUser: currentUserVar });
+                console.log(SignRes.data.status);
+                if (SignRes.data.status) {
+                    setOpen(false);
+                }else{
+                    setOpen(true);
+                }
+                // Handle response data here
+            } catch (error) {
+                console.error('Error fetching sign:', error);
+                // Handle error here
+            }
+        };
+        getSign();
+    }, [open])
+    
+    const navigateProfilePage = () => {
         setOpen(false);
         const modal = document.querySelector('.modal');
         if (modal) {
@@ -684,7 +709,7 @@ const InvoiceGenerator = () => {
                             Efficiently update signatures to Performa and seamlessly generate invoices
                         </Typography>
                         <br />
-                        <div className="updatebtn" style={{...df,justifyContent: 'flex-end'}}>
+                        <div className="updatebtn" style={{ ...df, justifyContent: 'flex-end' }}>
                             <Button variant="outlined" onClick={navigateProfilePage}>Update Sign</Button>
                         </div>
                     </Box>
