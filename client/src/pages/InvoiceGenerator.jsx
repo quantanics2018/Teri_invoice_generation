@@ -650,6 +650,7 @@ const InvoiceGenerator = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [SignExistanceDB , setSignExistanceDB] = useState(false);
     useEffect(() => {
         const getSign = async () => {
             const currentUserVar = userInfo.userid;
@@ -658,9 +659,12 @@ const InvoiceGenerator = () => {
                 // Assuming `axios` is properly imported
                 const SignRes = await axios.post(`${API_URL}get/getSignExistance`, { currentUser: currentUserVar });
                 console.log(SignRes.data.status);
+
                 if (SignRes.data.status) {
+                    setSignExistanceDB(true);
                     setOpen(false);
                 }else{
+                    setSignExistanceDB(false)
                     setOpen(true);
                 }
                 // Handle response data here
@@ -670,8 +674,8 @@ const InvoiceGenerator = () => {
             }
         };
         getSign();
-    }, [open])
-    
+    }, [])
+
     const navigateProfilePage = () => {
         setOpen(false);
         const modal = document.querySelector('.modal');
@@ -736,7 +740,7 @@ const InvoiceGenerator = () => {
                                 generateInvoice={false}
                                 buyercompany={inputValues.Buyer}
                                 setOpen={setOpen}
-                                navigateProfilePage={navigateProfilePage}
+                                SignExistanceDB={SignExistanceDB}
                             />
 
                         </div>
@@ -774,6 +778,7 @@ const InvoiceGenerator = () => {
                                 generateInvoice={true}
                                 buyercompany={inputValues.Buyer}
                                 setOpen={setOpen}
+                                SignExistanceDB={SignExistanceDB}
                             />
                         </div>
                         {/* <div class="modal-footer gap-4">

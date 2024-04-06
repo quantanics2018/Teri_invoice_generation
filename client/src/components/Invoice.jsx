@@ -44,7 +44,8 @@ const Invoice = ({
     buyercompany,
     generateInvoice,
     setOpen,
-    navigateProfilePage
+    navigateProfilePage,
+    SignExistanceDB
 }) => {
     // console.log("DatagenerateInvoice", generateInvoice);
     // console.log("DataReciverInvoiceProp",ReciverInvoiceProp);
@@ -211,7 +212,7 @@ const Invoice = ({
         return integerWords.replace(/\b\w/g, firstChar => firstChar.toUpperCase());
     }
 
-    const isSignatureAbsent = (userInfo.signature == null);
+    const isSignatureAbsent = !SignExistanceDB;
     console.log(isSignatureAbsent);
 
     // Handle submit
@@ -235,8 +236,10 @@ const Invoice = ({
             }
             else {
                 if (isSignatureAbsent) {
-                    // setOpen(true)
-                    alert("Siganature Required");
+                    setOpen(true);
+                    document.body.style.overflow = 'auto';
+
+                    // alert("Siganature Required");
 
                 }
                 else {
@@ -283,18 +286,18 @@ const Invoice = ({
                             });
                             console.log('File saved successfully:', responseAfterMail.data);
                             // if (responseAfterMail.data.status) {
-                                const modal = document.querySelector('.modal');
-                                if (modal) {
-                                    modal.classList.remove('show');
-                                    modal.setAttribute('aria-hidden', 'true');
-                                    modal.setAttribute('style', 'display: none');
-                                    const modalBackdrop = document.querySelector('.modal-backdrop');
-                                    if (modalBackdrop) {
-                                        modalBackdrop.remove();
-                                    }
+                            const modal = document.querySelector('.modal');
+                            if (modal) {
+                                modal.classList.remove('show');
+                                modal.setAttribute('aria-hidden', 'true');
+                                modal.setAttribute('style', 'display: none');
+                                const modalBackdrop = document.querySelector('.modal-backdrop');
+                                if (modalBackdrop) {
+                                    modalBackdrop.remove();
                                 }
-                                navigate('/TransactionHistory');
-                                // window.location.reload();
+                            }
+                            navigate('/TransactionHistory');
+                            // window.location.reload();
                             // }
                             alert(response.data.message);
                         } else {
