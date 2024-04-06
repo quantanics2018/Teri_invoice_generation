@@ -10,12 +10,14 @@ const AddUserBtn = ({ adduserFun, value }) => {
         </Button>
     )
 }
-const CancelBtnComp = ({ CancelBtnFun ,dataBsDismiss}) => {
+const CancelBtnComp = ({ CancelBtnFun, dataBsDismiss , loading}) => {
     return (
-        <Button variant="outlined"
+        <Button
+            variant="outlined"
             onClick={CancelBtnFun}
-            style={CancelBtn}
+            style={loading ? {width:'100px'}:CancelBtn}
             data-bs-dismiss={dataBsDismiss}
+            disabled ={loading}
         >
             Cancel
         </Button>

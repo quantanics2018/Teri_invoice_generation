@@ -350,16 +350,21 @@ app.post('/upload', upload.single('image'), (req, res) => {
     const file = req.file;
     const { imageName } = req.body;
     // console.log("outer : ",imageName);
-
-    fs.rename(file.path, './uploads/' + (imageName + path.extname(file.originalname)), function (err) {
+    console.log("okkk api");
+    const currentUser = imageName;
+    const SignName = `${imageName}.png`;
+// console.log(currentUser ," ",SignName);
+    fs.rename(file.path, './uploads/' + (imageName + path.extname(file.originalname)), async function (err) {
         if (err) {
             return res.status(500).json({ success: false, message: 'Error renaming file' });
         }
+        try {
+            const userDeleteResult = await userdbInstance.userdb.query(`UPDATE public."user" SET signature =$1 where userid=$2;`, [SignName,currentUser]);
+        } catch (error) {
+            return res.status(500).json({ success: false, message: 'Error querying user database' });
+        }
         res.json({ status: true, message: `Photo Uploaded Successfully ${imageName}`, filename: imageName });
     });
-
-    // res.json({ status: true, message: 'Photo Uploaded Successfully' });
-    // res.json({ success: true, filename });
 });
 
 //Mathan - email

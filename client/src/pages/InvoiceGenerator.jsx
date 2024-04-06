@@ -6,6 +6,10 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import html2pdf from 'html2pdf.js';
 import ReactDOMServer from 'react-dom/server';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import {df} from '../assets/style/mailInlineCss';
+
 import {
     Table,
     TableBody,
@@ -25,6 +29,8 @@ import Loader from '../components/Loader';
 import QrCode from '../components/QrCode';
 import { invoicecontent } from '../assets/style/mailInlineCss';
 import MailSendingContent from '../components/MailSendingContent';
+import SpringModal, { modalStyle, style } from '../components/BasicModal';
+import BasicModal from '../components/BasicModal';
 
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 let gag = 55;
@@ -45,6 +51,7 @@ const pName = {
 const InvoiceGenerator = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
+    console.log(userInfo);
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -563,7 +570,7 @@ const InvoiceGenerator = () => {
 
             console.log("getsgst : ", getsgst);
 
-// calculate with cgst+sgst
+            // calculate with cgst+sgst
             // const updatedRows = rows.map((row) =>
             //     row.id === id ? {
             //         ...row, Total: ((rows[id - 1].Quantity * productPrice) - ((rows[id - 1].Quantity * productPrice) * rows[id - 1].Discount / 100)) + (productPrice * (getcgst / 100)) + (productPrice * (getsgst / 100))
@@ -626,28 +633,71 @@ const InvoiceGenerator = () => {
         Object.values(row).some(value => value === '' || value === null),
     );
     const hasEmptyReciverId = Object.values(inputValues).some(value => value === '' || value === null)
-    const [diability,setdiability] = useState(true);
-    
-    useEffect(()=>{
+    const [diability, setdiability] = useState(true);
+
+    useEffect(() => {
         if (hasEmptyValue || hasEmptyReciverId) {
             setdiability(true);
-        }else{
+        } else {
             setdiability(false)
         }
-        console.log("diability : ",diability);
-    },[diability,hasEmptyValue,hasEmptyReciverId])
-
-
+        console.log("diability : ", diability);
+    }, [diability, hasEmptyValue, hasEmptyReciverId])
+    const isSignaturePresent = (userInfo.signature == null);
+    const [open, setOpen] = useState(isSignaturePresent);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const navigateProfilePage = () =>{
+        setOpen(false);
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+            modal.setAttribute('style', 'display: none');
+            const modalBackdrop = document.querySelector('.modal-backdrop');
+            if (modalBackdrop) {
+                modalBackdrop.remove();
+                document.body.style.overflow = 'auto';
+            }
+        }
+        navigate('/ProfilePage');
+    }
     return (
         <>
             {loading && <Loader />}
+            {/* <BasicModal /> */}
+            {/* Signature Alert Modal start */}
+            <div>
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box
+                        sx={style}
+                    >
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Signature Update
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            Efficiently update signatures to Performa and seamlessly generate invoices
+                        </Typography>
+                        <br />
+                        <div className="updatebtn" style={{...df,justifyContent: 'flex-end'}}>
+                            <Button variant="outlined" onClick={navigateProfilePage}>Update Sign</Button>
+                        </div>
+                    </Box>
+                </Modal>
+            </div>
+            {/* Signature Alert Modal End */}
             {/* Preview Modal Start */}
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            {/* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> */}
                         </div>
                         <div id="invoiceContent" class="modal-body pdf-height">
                             <Invoice
@@ -660,10 +710,12 @@ const InvoiceGenerator = () => {
                                 productList={productList}
                                 generateInvoice={false}
                                 buyercompany={inputValues.Buyer}
+                                setOpen={setOpen}
+                                navigateProfilePage={navigateProfilePage}
                             />
-                           
+
                         </div>
-                       
+
                         {/* <div class="modal-footer gap-4">
                             <CancelBtnComp dataBsDismiss="modal" />
                             <Button variant="outlined" style={SaveBtn} 
@@ -683,7 +735,7 @@ const InvoiceGenerator = () => {
                     <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            {/* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> */}
                         </div>
                         <div id="invoiceContent" class="modal-body pdf-height">
                             <Invoice
@@ -696,6 +748,7 @@ const InvoiceGenerator = () => {
                                 productList={productList}
                                 generateInvoice={true}
                                 buyercompany={inputValues.Buyer}
+                                setOpen={setOpen}
                             />
                         </div>
                         {/* <div class="modal-footer gap-4">

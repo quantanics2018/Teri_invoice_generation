@@ -168,7 +168,7 @@ const ProfilePage = () => {
         { label: 'Account Holder Name', fieldname: 'achname' },
         { label: 'UPI Id', fieldname: 'upi_id' },
         { label: 'GST Number', fieldname: 'gstno' },
-        // { label: 'Signature', fieldname: 'Signature', fieldType: 'file' },
+        { label: 'Signature', fieldname: 'Signature', fieldType: 'file' },
 
         // Add more fields as needed
     ];
@@ -178,6 +178,8 @@ const ProfilePage = () => {
         { label: 'Email', fieldname: 'email' },
         { label: 'Mobile Number', fieldname: 'mobile' },
         { label: 'Aadhar Number', fieldname: 'aadhar' },
+        { label: 'Signature', fieldname: 'Signature', fieldType: 'file' },
+
     ]
     const data = [
         { label: 'UPI ID', value: profileInfoRes ? `${profileInfoRes.upiid || ''}` : '' },
@@ -450,7 +452,7 @@ const ProfilePage = () => {
                                                 disabled={true}
                                             />
                                         </Grid>
-                                        {console.log("mathan : ",userInfo.positionid==="3")}
+                                        {console.log("mathan : ", userInfo.positionid === "3")}
 
                                         {isInputchange && userInfoFields.map((field, index) => (
 
@@ -471,8 +473,8 @@ const ProfilePage = () => {
                                                         name={field.fieldname}
                                                         label={`${field.label}`}
                                                         // disabled={!ismanufacture && !isdistributor && field.fieldname== 'fname'}
-                                                        disabled={((ismanufacture && (field.fieldname === 'email'))||(isdistributor && (field.fieldname === 'fname' || field.fieldname === 'lname' || field.fieldname === 'orgname' || field.fieldname === 'btype' || field.fieldname === 'gstno'|| field.fieldname === 'email' )))||(userInfo.positionid ==="3" || userInfo.positionid === "4" || userInfo.positionid === "5" )}
-                                                        />
+                                                        disabled={((ismanufacture && (field.fieldname === 'email')) || (isdistributor && (field.fieldname === 'fname' || field.fieldname === 'lname' || field.fieldname === 'orgname' || field.fieldname === 'btype' || field.fieldname === 'gstno' || field.fieldname === 'email'))) || (userInfo.positionid === "3" || userInfo.positionid === "4" || userInfo.positionid === "5")}
+                                                    />
                                                 )}
 
                                             </Grid>
@@ -481,21 +483,24 @@ const ProfilePage = () => {
                                         {/* if staff login and view profile page it does not show entire field is list out some fields only */}
                                         {!isInputchange && staff_input_fields.map((field, index) => (
                                             <Grid item xs={12} md={6} key={index} >
-                                                <TextField
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    margin="dense"
-                                                    InputLabelProps={{ shrink: true }}
-                                                    value={profileInfoRes[field.fieldname]}
-                                                    defaultValue={profileInfoRes[field.fieldname]}
-                                                    // onChange={(e)=>{setprofileInfoRes({[field.fieldname] : e.target.value})}}
-                                                    onChange={handleInputchange}
-                                                    name={field.fieldname}
-                                                    label={field.label}
-                                                    disabled={!ismanufacture}
+                                                {field.fieldType === 'file' ? (
+                                                    <Button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SignatureModal"> Update sign </Button>
+                                                ) : (
+                                                    <TextField
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        margin="dense"
+                                                        InputLabelProps={{ shrink: true }}
+                                                        value={profileInfoRes[field.fieldname]}
+                                                        defaultValue={profileInfoRes[field.fieldname]}
+                                                        // onChange={(e)=>{setprofileInfoRes({[field.fieldname] : e.target.value})}}
+                                                        onChange={handleInputchange}
+                                                        name={field.fieldname}
+                                                        label={field.label}
+                                                        disabled={!ismanufacture}
+                                                    />
+                                                )}
 
-                                                    
-                                                />
                                             </Grid>
 
                                         ))}

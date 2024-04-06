@@ -18,10 +18,16 @@ import { useNavigate } from 'react-router-dom';
 
 import { SaveBtn } from '../assets/style/cssInlineConfig';
 import { CancelBtnComp } from './AddUserBtn';
-
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+// import { df } from '../assets/style/mailInlineCss';
+import { Typography } from '@mui/material';
 // import '/home/quantanics/Desktop/teri/client/src/assets/style/main.css';
 import '../assets/style/main.css'
 import React, { useRef } from 'react';
+import { style } from './BasicModal';
+import Loader from './Loader';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 // import htmlPdf from 'html-pdf';
 
@@ -36,7 +42,9 @@ const Invoice = ({
     productList, invoiceid,
     selectedIndex,
     buyercompany,
-    generateInvoice
+    generateInvoice,
+    setOpen,
+    navigateProfilePage
 }) => {
     // console.log("DatagenerateInvoice", generateInvoice);
     // console.log("DataReciverInvoiceProp",ReciverInvoiceProp);
@@ -203,6 +211,8 @@ const Invoice = ({
         return integerWords.replace(/\b\w/g, firstChar => firstChar.toUpperCase());
     }
 
+    const isSignatureAbsent = (userInfo.signature == null);
+    console.log(isSignatureAbsent);
 
     // Handle submit
     const [Closemodel, setClosemodel] = useState(false);
@@ -224,64 +234,82 @@ const Invoice = ({
                 alert('Please fill in all fields in each row before submitting.');
             }
             else {
-                try {
-                    // setLoading(true);
-                    const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
-                    if (response.data.status) {
-                        // alert(response.data.invoiceid);
-                        // alert(response.data.invoiceid);
-                        setInvoiceId(response.data.invoiceid);
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                        const canvas = await html2canvas(invoiceRef.current, {
-                            scale: 2,
-                            useCORS: true,
-                            logging: true
-                        });
-                        const imageData = canvas.toDataURL('image/jpeg');
-                        const pdf = new jsPDF();
-                        pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-                        // pdf.save("email.pdf");
-                        // pdf.save(`${response.data.invoiceid}.pdf`);
+                if (isSignatureAbsent) {
+                    // setOpen(true)
+                    alert("Siganature Required");
 
-
-                        const blobData = pdf.output('blob');
-                        const formData = new FormData();
-                        formData.append('file', blobData, 'Email.pdf');
-                        formData.append('companyname', buyercompany);
-                        // console.log(buyercompany);
-
-                        // axios.post(`${API_URL}save-pdf-server`, formData, {
-                        //     headers: {
-                        //         'Content-Type': 'multipart/form-data',
-                        //     },
-                        // })
-                        //     .then(response => {
-                        //         console.log('File saved successfully:', response.data);
-
-                        //     })
-
-                        const responseAfterMail = await axios.post(`${API_URL}save-pdf-server`, formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                            },
-                        });
-                        console.log('File saved successfully:', responseAfterMail.data);
-                        if (responseAfterMail.data.status) {
-                            navigate('/TransactionHistory');
-                            window.location.reload();
-                        }
-                        alert(response.data.message);
-                    } else {
-                        alert(response.data.message);
-                    }
-
-                    setLoading(false);
-                    // if (response.data.status) {
-                    //     navigate('/TransactionHistory');
-                    // }
-                } catch (error) {
-                    console.error('Error sending data:', error);
                 }
+                else {
+                    try {
+                        setLoading(true);
+                        const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
+                        if (response.data.status) {
+                            // alert(response.data.invoiceid);
+                            // alert(response.data.invoiceid);
+                            setInvoiceId(response.data.invoiceid);
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            const canvas = await html2canvas(invoiceRef.current, {
+                                scale: 2,
+                                useCORS: true,
+                                logging: true
+                            });
+                            const imageData = canvas.toDataURL('image/jpeg');
+                            const pdf = new jsPDF();
+                            pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+                            // pdf.save("email.pdf");
+                            // pdf.save(`${response.data.invoiceid}.pdf`);
+
+
+                            const blobData = pdf.output('blob');
+                            const formData = new FormData();
+                            formData.append('file', blobData, 'Email.pdf');
+                            formData.append('companyname', buyercompany);
+                            // console.log(buyercompany);
+
+                            // axios.post(`${API_URL}save-pdf-server`, formData, {
+                            //     headers: {
+                            //         'Content-Type': 'multipart/form-data',
+                            //     },
+                            // })
+                            //     .then(response => {
+                            //         console.log('File saved successfully:', response.data);
+
+                            //     })
+
+                            const responseAfterMail = await axios.post(`${API_URL}save-pdf-server`, formData, {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                },
+                            });
+                            console.log('File saved successfully:', responseAfterMail.data);
+                            // if (responseAfterMail.data.status) {
+                                const modal = document.querySelector('.modal');
+                                if (modal) {
+                                    modal.classList.remove('show');
+                                    modal.setAttribute('aria-hidden', 'true');
+                                    modal.setAttribute('style', 'display: none');
+                                    const modalBackdrop = document.querySelector('.modal-backdrop');
+                                    if (modalBackdrop) {
+                                        modalBackdrop.remove();
+                                    }
+                                }
+                                navigate('/TransactionHistory');
+                                // window.location.reload();
+                            // }
+                            alert(response.data.message);
+                        } else {
+                            alert(response.data.message);
+                        }
+
+                        setLoading(false);
+                        // if (response.data.status) {
+                        //     navigate('/TransactionHistory');
+                        // }
+                    } catch (error) {
+                        console.error('Error sending data:', error);
+                    }
+                }
+
             }
         }
     }
@@ -364,32 +392,53 @@ const Invoice = ({
     }, [signSrc]);
 
     const generatePDF = async () => {
-        try {
-            const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
-            // console.log(response.data.status);
-            if (response.data.status) {
-                // alert(response.data.invoiceid);
-                setInvoiceId(response.data.invoiceid);
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                const canvas = await html2canvas(invoiceRef.current, {
-                    scale: 2,
-                    useCORS: true,
-                    logging: true
-                });
-                const imageData = canvas.toDataURL('image/jpeg');
-                const pdf = new jsPDF();
-                pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+        if (isSignatureAbsent) {
+            setOpen(true)
+            document.body.style.overflow = 'auto';
+            // alert("Siganature Required");
+            // navigateProfilePage();
+        } else {
+            try {
+                setLoading(true);
+                const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
+                // console.log(response.data.status);
+                if (response.data.status) {
+                    // alert(response.data.invoiceid);
+                    setInvoiceId(response.data.invoiceid);
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    const canvas = await html2canvas(invoiceRef.current, {
+                        scale: 2,
+                        useCORS: true,
+                        logging: true
+                    });
+                    const imageData = canvas.toDataURL('image/jpeg');
+                    const pdf = new jsPDF();
+                    pdf.addImage(imageData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
 
-                // console.log("performa log : ",response.data.invoiceid);
-                alert(response.data.message);
-                // console.log("invoiceId -->: ", invoiceId);
-                pdf.save(`${response.data.invoiceid}.pdf`);
-                // navigate('/TransactionHistory');
+                    // console.log("performa log : ",response.data.invoiceid);
+                    alert(response.data.message);
+                    // console.log("invoiceId -->: ", invoiceId);
+                    pdf.save(`${response.data.invoiceid}.pdf`);
+                    const modal = document.querySelector('.modal');
+                    if (modal) {
+                        modal.classList.remove('show');
+                        modal.setAttribute('aria-hidden', 'true');
+                        modal.setAttribute('style', 'display: none');
+                        const modalBackdrop = document.querySelector('.modal-backdrop');
+                        if (modalBackdrop) {
+                            modalBackdrop.remove();
+                            document.body.style.overflow = 'auto';
+                        }
+                    }
+                    // navigate('/TransactionHistory');
+                }
+                setLoading(false);
+                // console.log(response.data.message);
+            } catch (error) {
+                console.log(error);
             }
-            // console.log(response.data.message);
-        } catch (error) {
-            console.log(error);
         }
+
         // console.log("Hello nithi");
     }
 
@@ -485,8 +534,8 @@ const Invoice = ({
         // console.log("test : ",formatTotal(grandTotal()) - Math.round(formatTotal(grandTotal())));
         if (formatTotal(grandTotal()) > Math.round(formatTotal(grandTotal()))) {
             let total = formatTotal(grandTotal()) - Math.round(formatTotal(grandTotal()));
-            console.log("total : ",total);
-            return formatTotal(total)*-1;
+            console.log("total : ", total);
+            return formatTotal(total) * -1;
         } else {
             let total = Math.round(formatTotal(grandTotal())) - formatTotal(grandTotal());
             // console.log("total : ",total);
@@ -773,27 +822,27 @@ const Invoice = ({
                     <div style={containerStyle}>
                         {/* Table heading row */}
                         <div style={rowStyle}>
-                            <div style={{...cellStyle,borderRight:'none',borderBottom:'none',padding: '3px'}}>HSN/SAC</div>
-                            <div style={{...cellStyle,borderRight:'none',borderBottom:'none'}}>Taxable Value</div>
-                            <div style={{...cellStyle,borderRight:'none',borderBottom:'none'}}>
+                            <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none', padding: '3px' }}>HSN/SAC</div>
+                            <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>Taxable Value</div>
+                            <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>
                                 <div className="cgst">CGST</div>
-                                <div className="subGst" style={{ ...subGst, ...df,borderBottom:'none' }}>
+                                <div className="subGst" style={{ ...subGst, ...df, borderBottom: 'none' }}>
                                     <div className="cgstRate" style={cgstRate}>Rate</div>
                                     <div className="cgstAmount" style={cgstAmount}>Amount</div>
                                 </div>
                             </div>
-                            <div style={{...cellStyle,borderRight:'none',borderBottom:'none'}}>
+                            <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>
                                 <div className="cgst">SGST/UTGST</div>
                                 <div className="subGst" style={{ ...subGst, ...df }}>
-                                    <div className="cgstRate" style={{...cgstRate,borderBottom:'none'}}>Rate</div>
+                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none' }}>Rate</div>
                                     <div className="cgstAmount" style={cgstAmount}>Amount</div>
                                 </div>
                             </div>
-                            <div style={{...cellStyle,borderBottom:'none'}}>Total Tax Amount</div>
+                            <div style={{ ...cellStyle, borderBottom: 'none' }}>Total Tax Amount</div>
                         </div>
                         {[...previewInvoiceprop, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div style={{...cellStyle,borderRight:'none',borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black',padding: '3px'}}>
+                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black', padding: '3px' }}>
                                     {item.hsncode || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div>
@@ -801,7 +850,7 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div style={{...cellStyle,borderRight:'none',borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black'}}>
+                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
                                     {/* {item.hsncode || ''} */}
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
                                     {index === previewInvoiceprop.length &&
@@ -811,7 +860,7 @@ const Invoice = ({
                                     }
                                 </div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div style={{...cellStyle,borderRight:'none',borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black'}}>
+                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
                                     {/* {item.Quantity || ''} */}
                                     <div className="subGst" style={{ ...subGst, ...df }}>
                                         <div className="cgstRate" style={cgstRate}>
@@ -825,21 +874,21 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div style={{...cellStyle,borderRight:'none',borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black'}}>
+                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
                                     {/* {unitRate(item.hsncode, item.batchno)} */}
                                     <div className="subGst" style={{ ...subGst, ...df }}>
                                         <div className="cgstRate" style={cgstRate}>
                                             {parseInt(getsgst(item.hsncode, item.batchno)) ? parseInt(getsgst(item.hsncode, item.batchno)) + '%' : ''}
                                         </div>
                                         <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100) : ''}</div>
-                                        {index === previewInvoiceprop.length &&
-                                            <div>
-                                                <b>{formatTotal(TotalsgstValue())}</b>
-                                            </div>
-                                        }
                                     </div>
+                                    {index === previewInvoiceprop.length &&
+                                        // <div>
+                                        <b>{formatTotal(TotalsgstValue())}</b>
+                                        // </div>
+                                    }
                                 </div>
-                                <div style={{...cellStyle,borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black'}}>
+                                <div style={{ ...cellStyle, borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
                                     {/* {item.Discount || ''} */}
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal((((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100)
                                         + (((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100))
@@ -891,7 +940,7 @@ const Invoice = ({
 
                             <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
                                 <div className="pvtName" style={PVTname}>For {SenderInvoiceProp[0].organizationname}</div>
-                                <img src={signSrc} style={Signature} alt="signature" height={10} width={300} />
+                                <img src={signSrc} style={Signature} alt="Signature Required" height={30} width={300} />
                                 <div className="authSign" style={AuthSign}>Authorized Sign.</div>
                             </div>
                         </div>
@@ -901,26 +950,54 @@ const Invoice = ({
                         style={bussinessQuotes}
                     > */}
                     {/* <div className='bussinessContent1' style={{ ...bussinessContent, ...pad }}>This is a Computer Genereated Invoice</div> */}
-                    <div style={{display: 'flex' , justifyContent:'center'}}>This is a Computer Genereated Invoice</div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>This is a Computer Genereated Invoice</div>
                     {/* </div> */}
                 </div>
             </div>
             <div className="actions" style={actions}>
-                <CancelBtnComp dataBsDismiss="modal" />
+                <CancelBtnComp dataBsDismiss="modal" loading={loading} />
                 {generateInvoice ? (
-                    <Button
-                        // data-bs-dismiss={Closemodel ? "modal" : undefined}
-                        //  data-bs-dismiss={Closemodel}
-                        variant="outlined" color="primary"
-                        onClick={handleSubmit}
-                    // onClick={handleDownload1}
-                    >
-                        Generate Invoice
-                    </Button>
+
+                    loading ?
+                        <LoadingButton
+                            // onClick={handleClick}
+                            endIcon={"hai"}
+                            loading={loading}
+                            loadingPosition="end"
+                            variant="contained"
+                        >
+                            <span>Processing</span>
+                        </LoadingButton>
+                        :
+                        <Button
+                            // data-bs-dismiss={Closemodel ? "modal" : undefined}
+                            //  data-bs-dismiss={Closemodel}
+                            variant="outlined" color="primary"
+                            onClick={handleSubmit}
+                        // onClick={handleDownload1}
+                        >
+                            Generate Invoice
+                        </Button>
+
                 ) : (
-                    <Button variant="outlined" style={SaveBtn}
-                        onClick={generatePDF}
-                    >PDF</Button>
+
+                    loading ?
+                        <LoadingButton
+                            // onClick={handleClick}
+                            endIcon={"hai"}
+                            loading={loading}
+                            loadingPosition="end"
+                            variant="contained"
+                        >
+                            <span>Processing</span>
+                        </LoadingButton>
+                        :
+                        <Button variant="outlined" style={loading ? { width: '100px' } : SaveBtn}
+                            onClick={generatePDF}
+                            disabled={loading}
+                        >PDF</Button>
+
+
                 )}
 
             </div>
