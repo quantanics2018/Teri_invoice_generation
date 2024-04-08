@@ -359,7 +359,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
     const file = req.file;
     const { imageName } = req.body;
     // console.log("outer : ",imageName);
-    console.log("okkk api");
+    // console.log("okkk api");
     const currentUser = imageName;
     const SignName = `${imageName}.png`;
 // console.log(currentUser ," ",SignName);
@@ -368,7 +368,13 @@ app.post('/upload', upload.single('image'), (req, res) => {
             return res.status(500).json({ success: false, message: 'Error renaming file' });
         }
         try {
-            const userDeleteResult = await userdbInstance.userdb.query(`UPDATE public."user" SET signature =$1 where userid=$2;`, [SignName,currentUser]);
+            const userupdateResult = await userdbInstance.userdb.query(`UPDATE public."user" SET signature =$1 where userid=$2;`, [SignName,currentUser]);
+            // if (userupdateResult.rowCount === 1) {
+            //     res.json({ success: true, message: `Signature Updated Successfully`, filename: imageName });
+            // } else {
+            //     // If no rows were affected by the update (likely due to incorrect currentUser)
+            //     res.status(404).json({ success: false, message: 'User not found or signature not updated' });
+            // }
         } catch (error) {
             return res.status(500).json({ success: false, message: 'Error querying user database' });
         }

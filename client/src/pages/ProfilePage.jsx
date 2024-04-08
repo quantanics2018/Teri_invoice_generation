@@ -191,7 +191,7 @@ const ProfilePage = () => {
         // { label: 'Image',value:profileInfoRes ? `${profileInfoRes.passbookimg || ''}` : '' },
     ];
 
-
+    const [disablityUpdate, setdisablityUpdate] = useState(false)
     // handle input change
     const handleInputchange = (event) => {
         const { name, value, type } = event.target;
@@ -199,6 +199,7 @@ const ProfilePage = () => {
             ...profileInfoRes,
             [name]: event.target.value, // Use the file from the input
         });
+        setdisablityUpdate(true);
     }
 
 
