@@ -191,7 +191,7 @@ const ProfilePage = () => {
         // { label: 'Image',value:profileInfoRes ? `${profileInfoRes.passbookimg || ''}` : '' },
     ];
 
-    const [disablityUpdate, setdisablityUpdate] = useState(false)
+    const [disablityUpdate, setdisablityUpdate] = useState(true)
     // handle input change
     const handleInputchange = (event) => {
         const { name, value, type } = event.target;
@@ -199,7 +199,7 @@ const ProfilePage = () => {
             ...profileInfoRes,
             [name]: event.target.value, // Use the file from the input
         });
-        setdisablityUpdate(true);
+        setdisablityUpdate(false);
     }
 
 
@@ -253,6 +253,7 @@ const ProfilePage = () => {
                     if (response.data.status) {
                         // setTimeout(() => {
                         setLoading(false);
+                        setdisablityUpdate(true);
                         // alert("Update Profile Data");
                         // }, 1000);
                     }
@@ -403,7 +404,7 @@ const ProfilePage = () => {
 
     return (
         <>
-            {loading && <Loader />}
+            {/* {loading && <Loader />} */}
             {/* Snack bar */}
             <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}>
                 <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
@@ -604,16 +605,16 @@ const ProfilePage = () => {
                                             <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
                                         </Box>
                                     } */}
-                                    {ismanufacture &&
+                                    {(ismanufacture || isdistributor) &&
+                                        <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Button variant="contained" width={'100%'} disabled={disablityUpdate} onClick={(e) => handleSubmit(e)}>Update Data</Button>
+                                        </Box>
+                                    }
+                                    {/* {isdistributor &&
                                         <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                             <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
                                         </Box>
-                                    }
-                                    {isdistributor &&
-                                        <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
-                                        </Box>
-                                    }
+                                    } */}
 
                                 </form>
                             </CardContent>
