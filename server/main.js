@@ -372,7 +372,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
         } catch (error) {
             return res.status(500).json({ success: false, message: 'Error querying user database' });
         }
-        res.json({ status: true, message: `Photo Uploaded Successfully ${imageName}`, filename: imageName });
+        res.json({ status: true, message: `Signature Updated Successfully`, filename: imageName });
     });
 });
 

@@ -173,19 +173,21 @@ async function addInvoice(req, res) {
     // const { UserId, senderID, Date } = req.body.invoice;
     const { Buyer, senderID, Date } = req.body.invoice;
     const totalSum = req.body.totalValues;
-    console.log(Buyer, senderID, Date);
     // const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
-
+    
+    console.log(Buyer, senderID, Date);
     console.log(totalSum);
-    // console.log("recivermail : ", recivermail);
-    console.log("senderID", senderID);
+    // console.log("senderID", senderID);
     // console.log(invoiceItem);
     const Currentuser = senderID;
+    // res.send("hai");
     try {
-        const getReciverId = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1;', [Buyer]);
+        const getReciverId = await userdbInstance.userdb.query('select email,userid from public."user" where organizationname=$1;', [Buyer]);
         const recivermail = getReciverId.rows[0].email;
-        // console.log("recivermail : ",recivermail);
+        const reciveruserid = getReciverId.rows[0].userid;
+        console.log("recivermail : ",recivermail);
+        console.log("reciveruserid : ",reciveruserid);
 
         const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [senderID]);
         // console.log(CheckForStaff.rows[0].positionid);

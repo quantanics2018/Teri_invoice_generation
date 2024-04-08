@@ -12,6 +12,9 @@ import { Button, Box, Snackbar } from '@mui/material';
 import Loader from '../components/Loader';
 import MuiAlert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
+import bootstrapMin from 'bootstrap/dist/js/bootstrap.min';
+import { df } from '../assets/style/mailInlineCss';
+import { SaveBtn } from '../assets/style/cssInlineConfig';
 
 
 
@@ -346,10 +349,42 @@ const ProfilePage = () => {
     const updateSignApi = async () => {
         const isImagePresent = isImageValid(file);
         console.log("isImagePresent :", isImagePresent);
+
         if (isImagePresent) {
             const response = await axios.post(`${API_URL}upload`,
                 formData
             );
+            console.log(response.data.status);
+            if (response.data.status) {
+                const modal = document.querySelector('.modal');
+                if (modal) {
+                    modal.classList.remove('show');
+                    modal.setAttribute('aria-hidden', 'true');
+                    modal.setAttribute('style', 'display: none');
+                    const modalBackdrop = document.querySelector('.modal-backdrop');
+                    if (modalBackdrop) {
+                        modalBackdrop.remove();
+                        document.body.style.overflow = 'auto';
+                    }
+                }
+                setresAlert(response.data.message);
+                setSubmitted(true);
+            }
+        } else {
+            alert("File type should be PNG and less than 10mb")
+        }
+    }
+    const [UpdateBtnSts, SetUpdateBtnStatus] = useState(true);
+
+    const acceptanceCheckBox = () => {
+        // SetUpdateBtnStatus(!e.target.checked);
+        const checkbox = document.querySelector('#acceptance');
+        console.log(file !== null);
+        console.log(checkbox.checked);
+        if (checkbox.checked) {
+            SetUpdateBtnStatus(false)
+        } else {
+            SetUpdateBtnStatus(true)
         }
     }
 
@@ -359,29 +394,69 @@ const ProfilePage = () => {
             {loading && <Loader />}
             {/* Snack bar */}
             <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}>
-                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
                     {resAlert}
                 </MuiAlert>
             </Snackbar>
             {/* End  of snack bar */}
             {/* Start Sign popup modal */}
             <div class="modal fade" id="SignatureModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+                <div class="modal-dialog" >
+                    <div class="modal-content" 
+                    // style={{ width: '80vw', marginLeft: '-15rem' }}
+                    >
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Terms and conditions for obtaining a digital signature</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <Box sx={{ display: 'flex', direction: 'row', alignItems: 'center', justfiyContent: 'center' }}>
-                                <Typography sx={{ marginLeft: '0.5rem', marginRight: '1rem' }}>Upload Signature</Typography>
-                                <input type="file" onChange={handleFileChanges} />
+                                <Typography sx={{ marginLeft: '0.5rem', marginRight: '1rem' }} style={{ fontSize: "12px" }}>
+                                    1. <b>Digital Signature Acceptance:</b> By providing your digital signature, you acknowledge that it has the same legal standing as your handwritten signature and signifies your acceptance of the document or transaction.
+                                    <br /><br />
+                                    2. <b>Authorization and Consent:</b> You authorize <b>Terion Organization</b> to use your digital signature for the specified purpose outlined in the document. Your digital signature confirms your agreement to the terms and conditions associated with the document.
+                                    <br /><br />
+                                    3. <b>Security Responsibilities:</b> We are responsible for maintaining the security and confidentiality of your digital signature. Do not share or disclose your digital signature to any unauthorized person or entity.
+                                    <br /><br />
+                                    4. <b>Legal Validity:</b> Your digital signature meets legal requirements for authenticity and integrity. It may be relied upon as evidence of your identity and agreement to contractual terms.
+                                    <br /><br />
+                                    5. <b>Revocation and Termination:</b> You have the right to revoke or terminate your digital signature at any time by following the procedures specified by <b>Terion Organization</b>. Upon revocation or termination, certain services may be restricted.
+                                    <br /><br />
+                                    6. <b>Limitation of Liability:</b> <b>Terion Organization</b> shall not be liable for damages arising from the unauthorized use of your digital signature. You agree to indemnify and hold <b>Terion Organization</b> harmless from any claims arising from such use.
+                                    <br /><br />
+                                    7. <b>Governing Law:</b> This agreement is <span style={{ color: "red" }}>Governed by the laws of Indian Constituion.</span> Disputes shall be resolved exclusively by the courts of Indian Constituion.
+                                    <br /><br />
+                                    8. <b>Usage Instructions:</b> Upon providing your digital signature, please proceed to [specific instructions on what action to take next, e.g., submit the form, complete the transaction, etc.].
+                                    <br /><br />
+                                    9. <b>Confirmation Email:</b> Once your digital signature is received and processed, you will receive a confirmation email containing details of the transaction and a copy of the signed document for your records.
+                                    <br /><br />
+                                    10. <b>Data Protection:</b> We are committed to protecting your personal information. Any data collected during the digital signature process will be handled in accordance with our [Privacy Policy](link-to-privacy-policy).
+                                    <br /><br />
+                                    11. <b>Feedback and Support:</b> Your feedback is valuable to us. If you encounter any issues or have suggestions for improvement regarding the digital signature process, please feel free to [contact our support team](support-contact-info).
+                                    <br /><br />
+                                    12. <b>Continued Use:</b> By providing your digital signature, you acknowledge that you have read, understood, and agreed to abide by our [Terms of Service](link-to-terms-of-service) and all relevant policies and agreements.
+                                    <br /><br />
+                                    Thank you once again for choosing <b>Terion Organization</b>. We appreciate your trust and confidence in our services.
+                                    <br /><br />
+                                    <input type="checkbox" name="acceptance" id="acceptance" onChange={acceptanceCheckBox} /> {'  '}
+                                    By providing your digital signature, you indicate your <span style={{ color: "red" }}>understanding and acceptance of these terms and conditions.</span> If you do not agree with any part of this agreement, please refrain from providing your digital signature.
+                                    <br /><br />
+
+
+                                    <input type="file" onChange={handleFileChanges} />
+                                </Typography>
                                 {/* <button onClick={handleUpload}>Upload Image</button> */}
                             </Box>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onClick={updateSignApi} data-bs-dismiss="modal" >Update</button>
+                        <div class="modal-footer" style={{ ...df, gap: '1rem' }}>
+                            {/* <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button> */}
+                            <Button type="button" variant='outlined' color='warning' data-bs-dismiss="modal">Cancel</Button>
+                            <Button type="button" variant='outlined' color='success' onClick={updateSignApi}
+                                //  data-bs-dismiss="modal"
+                                disabled={UpdateBtnSts}>Update</Button>
+                            {/* <button type="button" className="btn btn-primary" onClick={updateSignApi}
+                                //  data-bs-dismiss="modal"
+                                disabled={UpdateBtnSts}>Update</button> */}
                         </div>
                     </div>
                 </div>
@@ -452,14 +527,12 @@ const ProfilePage = () => {
                                                 disabled={true}
                                             />
                                         </Grid>
-                                        {console.log("mathan : ", userInfo.positionid === "3")}
 
                                         {isInputchange && userInfoFields.map((field, index) => (
 
                                             <Grid item xs={12} md={6} key={index} >
                                                 {field.fieldType === 'file' ? (
-                                                    <Button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SignatureModal"> Update sign </Button>
-
+                                                    <Button type="button" variant='outlined' data-bs-toggle="modal" data-bs-target="#SignatureModal" style={{ marginTop: '20px' }}> Update sign </Button>
                                                 ) : (
                                                     <TextField
                                                         fullWidth
@@ -484,7 +557,7 @@ const ProfilePage = () => {
                                         {!isInputchange && staff_input_fields.map((field, index) => (
                                             <Grid item xs={12} md={6} key={index} >
                                                 {field.fieldType === 'file' ? (
-                                                    <Button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SignatureModal"> Update sign </Button>
+                                                    <Button type="button" variant='outlined' data-bs-toggle="modal" data-bs-target="#SignatureModal"> Update sign </Button>
                                                 ) : (
                                                     <TextField
                                                         fullWidth
