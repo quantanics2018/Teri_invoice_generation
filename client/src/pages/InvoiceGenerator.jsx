@@ -884,7 +884,7 @@ const InvoiceGenerator = () => {
                             Add Row
                         </Button>
                     </div>
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper}  style={{userSelect:'none'}}>
                         <Table>
                             <TableHead>
                                 <TableRow>
