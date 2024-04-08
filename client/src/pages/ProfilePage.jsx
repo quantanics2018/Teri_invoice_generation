@@ -389,6 +389,16 @@ const ProfilePage = () => {
     }
 
 
+    const dailoge = {
+        // maxWidth: 'auto',
+        marginRight: '0',
+        marginLeft: '0',
+        backgroundColor:'red',
+        position :'absolute',
+        // top :'50%',
+        left :'20%'
+    }
+
     return (
         <>
             {loading && <Loader />}
@@ -401,8 +411,10 @@ const ProfilePage = () => {
             {/* End  of snack bar */}
             {/* Start Sign popup modal */}
             <div class="modal fade" id="SignatureModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content" 
+                <div class="modal-dialog" 
+                // style={dailoge}
+                >
+                    <div class="modal-content"
                     // style={{ width: '80vw', marginLeft: '-15rem' }}
                     >
                         <div class="modal-header">
@@ -430,7 +442,7 @@ const ProfilePage = () => {
                                     <br /><br />
                                     9. <b>Confirmation Email:</b> Once your digital signature is received and processed, you will receive a confirmation email containing details of the transaction and a copy of the signed document for your records.
                                     <br /><br />
-                                    10. <b>Data Protection:</b> We are committed to protecting your personal information. Any data collected during the digital signature process will be handled in accordance with our Privacy Policy 
+                                    10. <b>Data Protection:</b> We are committed to protecting your personal information. Any data collected during the digital signature process will be handled in accordance with our Privacy Policy
                                     {/* (link-to-privacy-policy). */}
                                     <br /><br />
                                     11. <b>Feedback and Support:</b> Your feedback is valuable to us. If you encounter any issues or have suggestions for improvement regarding the digital signature process, please feel free to contact our support team

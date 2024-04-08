@@ -45,7 +45,7 @@ const Invoice = ({
     generateInvoice,
     setOpen,
     navigateProfilePage,
-    SignExistanceDB
+    SignExistanceDB,
 }) => {
     // console.log("DatagenerateInvoice", generateInvoice);
     // console.log("DataReciverInvoiceProp",ReciverInvoiceProp);

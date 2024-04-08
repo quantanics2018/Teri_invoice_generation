@@ -726,7 +726,7 @@ const InvoiceGenerator = () => {
                     <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
-                            {/* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> */}
+                            {/* <button type="button" class="btn-close" disabled={true} data-bs-dismiss="modal" aria-label="Close"></button> */}
                         </div>
                         <div id="invoiceContent" class="modal-body pdf-height">
                             <Invoice
