@@ -401,7 +401,7 @@ const ProfilePage = () => {
             {/* End  of snack bar */}
             {/* Start Sign popup modal */}
             <div class="modal fade" id="SignatureModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" >
+                <div class="modal-dialog">
                     <div class="modal-content" 
                     // style={{ width: '80vw', marginLeft: '-15rem' }}
                     >
@@ -430,11 +430,15 @@ const ProfilePage = () => {
                                     <br /><br />
                                     9. <b>Confirmation Email:</b> Once your digital signature is received and processed, you will receive a confirmation email containing details of the transaction and a copy of the signed document for your records.
                                     <br /><br />
-                                    10. <b>Data Protection:</b> We are committed to protecting your personal information. Any data collected during the digital signature process will be handled in accordance with our [Privacy Policy](link-to-privacy-policy).
+                                    10. <b>Data Protection:</b> We are committed to protecting your personal information. Any data collected during the digital signature process will be handled in accordance with our Privacy Policy 
+                                    {/* (link-to-privacy-policy). */}
                                     <br /><br />
-                                    11. <b>Feedback and Support:</b> Your feedback is valuable to us. If you encounter any issues or have suggestions for improvement regarding the digital signature process, please feel free to [contact our support team](support-contact-info).
+                                    11. <b>Feedback and Support:</b> Your feedback is valuable to us. If you encounter any issues or have suggestions for improvement regarding the digital signature process, please feel free to contact our support team
+                                    {/* (support-contact-info). */}
                                     <br /><br />
-                                    12. <b>Continued Use:</b> By providing your digital signature, you acknowledge that you have read, understood, and agreed to abide by our [Terms of Service](link-to-terms-of-service) and all relevant policies and agreements.
+                                    12. <b>Continued Use:</b> By providing your digital signature, you acknowledge that you have read, understood, and agreed to abide by our Terms of Service
+                                    {/* (link-to-terms-of-service)  */}
+                                    and all relevant policies and agreements.
                                     <br /><br />
                                     Thank you once again for choosing <b>Terion Organization</b>. We appreciate your trust and confidence in our services.
                                     <br /><br />
