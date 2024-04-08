@@ -3,6 +3,8 @@ import companyLogo from './assets/logo/invoiceLogo.png'
 import { Avatar, Badge, Button, Chip, Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu'
 import { deepOrange, red } from '@mui/material/colors';
+import { useNavigate } from 'react-router-dom';
+
 const TopNavbar = () => {
 
 
@@ -13,6 +15,11 @@ const TopNavbar = () => {
   const userInfoString = sessionStorage.getItem("UserInfo");
   const userInfo = JSON.parse(userInfoString);
   // console.log(userInfo.email);
+  const navigate = useNavigate();
+
+  const navigateProfileInfo = () =>{
+    navigate('/ProfilePage')
+  }
   return (
     <nav className='top-nav flex-class align-center'>
       {/* Product Logo */}
@@ -23,7 +30,7 @@ const TopNavbar = () => {
         <MenuIcon />
       </IconButton> */}
       <div className='usernameProfile'>
-        <Chip label={userInfo.email} variant="outlined" style={{marginRight:'11px'}}/>
+        <Chip label={userInfo.email} variant="outlined" style={{marginRight:'11px'}} onClick={() => navigateProfileInfo()} />
         {/* <Badge color='success' variant='dot' overlap='circular' anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} > */}
           {/* <Avatar sx={{ bgcolor: red[500] }} alt={(userInfo.email).toUpperCase()} src="/static/images/avatar/1.jpg" /> */}
         {/* </Badge> */}

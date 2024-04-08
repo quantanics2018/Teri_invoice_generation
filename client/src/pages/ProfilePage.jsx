@@ -393,11 +393,12 @@ const ProfilePage = () => {
         // maxWidth: 'auto',
         marginRight: '0',
         marginLeft: '0',
-        backgroundColor:'red',
-        position :'absolute',
+        backgroundColor: 'red',
+        position: 'absolute',
         // top :'50%',
-        left :'20%'
+        left: '20%'
     }
+    // console.log(userInfo.positionid);
 
     return (
         <>
@@ -411,7 +412,7 @@ const ProfilePage = () => {
             {/* End  of snack bar */}
             {/* Start Sign popup modal */}
             <div class="modal fade" id="SignatureModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" 
+                <div class="modal-dialog"
                 // style={dailoge}
                 >
                     <div class="modal-content"
@@ -515,9 +516,11 @@ const ProfilePage = () => {
 
                                     <Typography variant="h4">{fixed_data.fname} {fixed_data.lname}</Typography>
                                     <Typography variant="body1" style={{ color: 'black' }}>User ID: {userid}</Typography>
-                                    <Typography variant="body2" style={{ color: 'black' }}>
-                                        {fixed_data.streetname} {fixed_data.dname} , {fixed_data.sname} - {fixed_data.pcode}
-                                    </Typography>
+                                    {(userInfo.positionid !== '4' && userInfo.positionid !== '5') &&
+                                        <Typography variant="body2" style={{ color: 'black' }}>
+                                            {fixed_data.streetname} {fixed_data.dname} , {fixed_data.sname} - {fixed_data.pcode}
+                                        </Typography>
+                                    }
                                 </div>
                             </CardContent>
                         </Grid>

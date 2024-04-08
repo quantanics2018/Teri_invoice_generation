@@ -52,7 +52,7 @@ const App = () => {
   // };
   const userInfoString = sessionStorage.getItem("UserInfo");
   const userInfo = JSON.parse(userInfoString);
-  // console.log(userInfo.distributer);
+  // console.log(userInfo.positionid);
   const currentLoc = window.location.href;
 
 
