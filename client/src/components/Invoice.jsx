@@ -46,6 +46,7 @@ const Invoice = ({
     setOpen,
     navigateProfilePage,
     SignExistanceDB,
+    sendDataToParent
 }) => {
     // console.log("DatagenerateInvoice", generateInvoice);
     // console.log("DataReciverInvoiceProp",ReciverInvoiceProp);
@@ -244,6 +245,7 @@ const Invoice = ({
                 }
                 else {
                     try {
+                        sendDataToParent(true);
                         setLoading(true);
                         const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                         if (response.data.status) {
@@ -304,7 +306,7 @@ const Invoice = ({
                         } else {
                             alert(response.data.message);
                         }
-
+                        sendDataToParent(false);
                         setLoading(false);
                         // if (response.data.status) {
                         //     navigate('/TransactionHistory');
@@ -403,6 +405,7 @@ const Invoice = ({
             // navigateProfilePage();
         } else {
             try {
+                sendDataToParent(true);
                 setLoading(true);
                 const response = await axios.post(`${API_URL}add/ProformaInvoice`, { invoice: inputValuesAboveRows, invoiceitem: previewInvoiceprop, totalValues: totalSum });
                 // console.log(response.data.status);
@@ -436,6 +439,7 @@ const Invoice = ({
                     }
                     // navigate('/TransactionHistory');
                 }
+                sendDataToParent(false);
                 setLoading(false);
                 // console.log(response.data.message);
             } catch (error) {

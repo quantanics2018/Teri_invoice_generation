@@ -691,6 +691,10 @@ const InvoiceGenerator = () => {
         }
         navigate('/ProfilePage');
     }
+    const [dataFromChild, setDataFromChild] = useState(false);
+    const handleDataFromChild = (data) => {
+        setDataFromChild(data);
+      };
     return (
         <>
             {loading && <Loader />}
@@ -726,7 +730,7 @@ const InvoiceGenerator = () => {
                     <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
-                            {/* <button type="button" class="btn-close" disabled={true} data-bs-dismiss="modal" aria-label="Close"></button> */}
+                            <button type="button" class="btn-close" disabled={dataFromChild} data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div id="invoiceContent" class="modal-body pdf-height">
                             <Invoice
@@ -741,6 +745,7 @@ const InvoiceGenerator = () => {
                                 buyercompany={inputValues.Buyer}
                                 setOpen={setOpen}
                                 SignExistanceDB={SignExistanceDB}
+                                sendDataToParent={handleDataFromChild}
                             />
 
                         </div>
@@ -765,6 +770,8 @@ const InvoiceGenerator = () => {
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
                             {/* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> */}
+                            <button type="button" class="btn-close" disabled={dataFromChild} data-bs-dismiss="modal" aria-label="Close"></button>
+
                         </div>
                         <div id="invoiceContent" class="modal-body pdf-height">
                             <Invoice
@@ -779,6 +786,7 @@ const InvoiceGenerator = () => {
                                 buyercompany={inputValues.Buyer}
                                 setOpen={setOpen}
                                 SignExistanceDB={SignExistanceDB}
+                                sendDataToParent={handleDataFromChild}
                             />
                         </div>
                         {/* <div class="modal-footer gap-4">
