@@ -1,0 +1,68 @@
+/* Add your original CSS styles here */
+#notfound {
+    position: relative;
+    height: 100vh;
+  }
+  
+  .notfound {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .notfound .notfound-404 {
+    position: relative;
+    height: 200px;
+    margin-bottom: 20px;
+    z-index: -1;
+  }
+  
+  .notfound .notfound-404 h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 236px;
+    font-weight: 200;
+    margin: 0px;
+    color: #211b19;
+    text-transform: uppercase;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .notfound .notfound-404 h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #211b19;
+    background: #fff;
+    padding: 10px 5px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    line-height: 60px;
+  }
+  
+  .notfound a {
+    font-family: 'Montserrat', sans-serif;
+    display: inline-block;
+    font-weight: 700;
+    text-decoration: none;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 13px 23px;
+    background: #ff6300;
+    font-size: 18px;
+    border-radius: 40px;
+    margin: 20px auto;
+    transition: 0.5s;
+  }
+  
+  .notfound a:hover {
+    background: #434343;
+    color: #fff;
+  }
+  

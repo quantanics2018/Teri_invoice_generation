@@ -28,6 +28,7 @@ import AddProducts from './pages/Add_Products.jsx';
 import EditProduct from './pages/EditProduct.jsx';
 import FeedbackForm from './pages/FeedbackForm.jsx';
 import { API_URL_CLIENT } from './config.js';
+import PageNotFound from './components/PageNotFound.jsx';
 
 const App = () => {
   const handleLogout = () => {
@@ -54,101 +55,111 @@ const App = () => {
   const userInfo = JSON.parse(userInfoString);
   // console.log(userInfo.positionid);
   const currentLoc = window.location.href;
+  // const isPageNotFound = false;
+  // const location = useLocation();
+  // const showNavbarAndSidebar = location.pathname !== '*';
 
-
+  // const showNavbarAndSidebar = ( currentLoc !== 'Staff_Details');
+  // console.log("currentLoc : ", currentLoc);
+  // console.log("showNavbarAndSidebar : ", showNavbarAndSidebar);
   return (
     <BrowserRouter>
       {(window.location.href !== `${API_URL_CLIENT}` && userInfo) ? (
         <div>
           <TopNavbar />
           <Sidebar handleLogout={handleLogout} />
-          {userInfo.staff > 0 && (
-            <div style={{ marginLeft: '50px' }}>
-              <Routes>
-                {/* Staff module */}
-                <Route path='/Staff_Details' element={<StaffDetails position={4} Positionid_val={4} />} />
-                <Route path='/Staff_Details/Edit_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={4} />} />
-                <Route path='/Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={4} />} />
-              </Routes>
-            </div>
-          )}
-
-
-          {userInfo.distributer > 0 && (
-            <div style={{ marginLeft: '50px' }}>
-              <Routes>
-                {/* Distributer module */}
-                <Route path='/Distributer_Details' element={<StaffDetails position={2} Positionid_val={2} />} />
-                <Route path='/Distributer_Details/Edit_Distributer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={2} />} />
-                <Route path='/Distributer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={2} />} />
-              </Routes>
-            </div>
-          )}
-
-          {userInfo.d_staff > 0 && (
-            <div style={{ marginLeft: '50px' }}>
-              <Routes>
-                {/* D_Staff_Detials module */}
-                <Route path='/D_Staff_Details' element={<StaffDetails position={5} Positionid_val={5} />} />
-                <Route path='/D_Staff_Details/Edit_D_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={5} />} />
-                <Route path='/D_Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={5} />} />
-              </Routes>
-            </div>
-          )}
-
-          {userInfo.customer > 0 && (
-            <div style={{ marginLeft: '50px' }}>
-              <Routes>
-                {/* Customer module */}
-                <Route path='/Customer_Details' element={<StaffDetails position={3} Positionid_val={3} />} />
-                <Route path='/Customer_Details/Edit_Customer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={3} />} />
-                <Route path='/Customer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={3} />} />
-              </Routes>
-            </div>
-          )}
-
-          {userInfo.product > 0 && (
-            <div style={{ marginLeft: '50px' }}>
-              <Routes>
-                {/* Products Module */}
-                <Route path='/Products' element={<Products />} />
-                <Route path='/Products/Add_Products' element={<AddProducts />} />
-                <Route path='/Products/Edit_Product_Details/:productid/:productBatch' element={<EditProduct />} />
-              </Routes>
-            </div>
-          )}
-
-          {userInfo.invoicegenerator > 0 && (
-            <div style={{ marginLeft: '50px' }}>
-              <Routes>
-                {/* Invoice Module */}
-                <Route path='InvoiceGenerator' element={<InvoiceGenerator />} />
-              </Routes>
-            </div>
-          )}
-          {userInfo.invoicepayslip > 0 && (
-            <div style={{ marginLeft: '50px' }}>
-              <Routes>
-                {/* Invoice Module */}
-                <Route path='TransactionHistory' element={<TransactionHistory />} />
-              </Routes>
-            </div>
-          )}
-          <Routes>
-            <Route path='ProfilePage' element={<ProfilePage />} />
-            <Route path='feedback' element={<FeedbackForm />} />
-            {/* <Route path='Invoice' element={<Invoice />} /> */}
-          </Routes>
-        </div>
+          {/* {showNavbarAndSidebar && (
+            <>
+              <TopNavbar />
+              <Sidebar handleLogout={handleLogout} />
+            </>
+          )} */}
+          <div style={{ marginLeft: '50px' }}>
+            <Routes>
+              {userInfo.staff > 0 && (
+                /* Staff module */
+                <>
+                  <Route path='/Staff_Details' element={<StaffDetails position={4} Positionid_val={4} />} />
+                  <Route path='/Staff_Details/Edit_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={4} />} />
+                  <Route path='/Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={4} />} />
+                  {/* <Route path='/Staff_Details/*' element={"looooooooooooooool"} /> */}
+                </>
+              )}
+              {
+                userInfo.distributer > 0 && (
+                  <>
+                    {/* Distributer module */}
+                    <Route path='/Distributer_Details' element={<StaffDetails position={2} Positionid_val={2} />} />
+                    <Route path='/Distributer_Details/Edit_Distributer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={2} />} />
+                    <Route path='/Distributer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={2} />} />
+                  </>
+                )
+              }
+              {
+                userInfo.d_staff > 0 && (
+                  <>
+                    {/* D_Staff_Detials module */}
+                    <Route path='/D_Staff_Details' element={<StaffDetails position={5} Positionid_val={5} />} />
+                    <Route path='/D_Staff_Details/Edit_D_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={5} />} />
+                    <Route path='/D_Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={5} />} />
+                  </>
+                )
+              }
+              {
+                userInfo.customer > 0 && (
+                  <>
+                    {/* Customer module */}
+                    <Route path='/Customer_Details' element={<StaffDetails position={3} Positionid_val={3} />} />
+                    <Route path='/Customer_Details/Edit_Customer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={3} />} />
+                    <Route path='/Customer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={3} />} />
+                  </>
+                )
+              }
+              {
+                userInfo.product > 0 && (
+                  <>
+                    {/* Products Module */}
+                    <Route path='/Products' element={<Products />} />
+                    <Route path='/Products/Add_Products' element={<AddProducts />} />
+                    <Route path='/Products/Edit_Product_Details/:productid/:productBatch' element={<EditProduct />} />
+                  </>
+                )
+              }
+              {
+                userInfo.invoicegenerator > 0 && (
+                  <>
+                    {/* Invoice Module */}
+                    <Route path='InvoiceGenerator' element={<InvoiceGenerator />} />
+                  </>
+                )
+              }
+              {
+                userInfo.invoicepayslip > 0 && (
+                  <>
+                    {/* Invoice Module */}
+                    <Route path='TransactionHistory' element={<TransactionHistory />} />
+                  </>
+                )
+              }
+              <Route path='ProfilePage' element={<ProfilePage />} />
+              <Route path='feedback' element={<FeedbackForm />} />
+              {/* <Route path='Invoice' element={<Invoice />} /> */}
+              <Route path='/' element={<ProfilePage />} />
+              {/* <Route path='*' element={<PageNotFound />} /> */}
+            </Routes>
+          </div>
+        </div >
       ) : (
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='UpdatePassword' element={<UpdatePassword />} />
+          <Route path='*' element={<PageNotFound />} />
         </Routes>
-      )}
+      )
+      }
       {/* {(currentLoc === `${API_URL_CLIENT}` || currentLoc === `${API_URL_CLIENT}/UpdatePassword`) && ( */}
       {/* )}  */}
-    </BrowserRouter>
+    </BrowserRouter >
 
   );
 
