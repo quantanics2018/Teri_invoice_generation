@@ -153,7 +153,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='UpdatePassword' element={<UpdatePassword />} />
-          <Route path='*' element={<PageNotFound />} />
+          {/* <Route path='*' element={<PageNotFound />} /> */}
         </Routes>
       )
       }
