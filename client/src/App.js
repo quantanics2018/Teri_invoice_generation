@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './assets/style/App.css'
 import './assets/style/main.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 // import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -26,6 +26,8 @@ import UpdatePassword from './pages/UpdatePassword.jsx';
 import StaffDetails from './pages/Staff_Detials.jsx';
 import AddProducts from './pages/Add_Products.jsx';
 import EditProduct from './pages/EditProduct.jsx';
+import FeedbackForm from './pages/FeedbackForm.jsx';
+import { API_URL_CLIENT } from './config.js';
 
 const App = () => {
   const handleLogout = () => {
@@ -43,31 +45,30 @@ const App = () => {
   //   isLoggedIn: true,
   //   name: "admin",
   //   phno: "123456789",
-  //   position: "manifacture",
+  //   position: "Manufacturer",
   //   product: "3",
   //   userid: "123",
   //   userprofile: "1"
   // };
   const userInfoString = sessionStorage.getItem("UserInfo");
   const userInfo = JSON.parse(userInfoString);
-  // console.log(userInfo.distributer);
+  // console.log(userInfo.positionid);
+  const currentLoc = window.location.href;
+
 
   return (
-    // http://localhost:3001/
-    // https://terion.quantanics.in/
     <BrowserRouter>
-      {window.location.href !== 'http://localhost:3001/' && userInfo.isLoggedIn && (
+      {(window.location.href !== `${API_URL_CLIENT}` && userInfo) ? (
         <div>
           <TopNavbar />
-          <Sidebar handleLogout={handleLogout}>
-          </Sidebar>
+          <Sidebar handleLogout={handleLogout} />
           {userInfo.staff > 0 && (
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Staff module */}
-                <Route path='Staff_Detials' element={<StaffDetails position={4} />} />
-                <Route path='Staff_Detials/Edit_Staff_Detials/:userid' element={<EditDistributerDetails />} />
-                <Route path='Staff_Detials/Add_User_Detials' element={<AddUserDetails />} />
+                <Route path='/Staff_Details' element={<StaffDetails position={4} Positionid_val={4} />} />
+                <Route path='/Staff_Details/Edit_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={4} />} />
+                <Route path='/Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={4} />} />
               </Routes>
             </div>
           )}
@@ -77,9 +78,20 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Distributer module */}
-                <Route path='Distributer_Detials' element={<StaffDetails position={2} />} />
-                <Route path='Distributer_Detials/Edit_Distributer_Detials/:userid' element={<EditDistributerDetails />} />
-                <Route path='Distributer_Detials/Add_User_Detials' element={<AddUserDetails />} />
+                <Route path='/Distributer_Details' element={<StaffDetails position={2} Positionid_val={2} />} />
+                <Route path='/Distributer_Details/Edit_Distributer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={2} />} />
+                <Route path='/Distributer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={2} />} />
+              </Routes>
+            </div>
+          )}
+
+          {userInfo.d_staff > 0 && (
+            <div style={{ marginLeft: '50px' }}>
+              <Routes>
+                {/* D_Staff_Detials module */}
+                <Route path='/D_Staff_Details' element={<StaffDetails position={5} Positionid_val={5} />} />
+                <Route path='/D_Staff_Details/Edit_D_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={5} />} />
+                <Route path='/D_Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={5} />} />
               </Routes>
             </div>
           )}
@@ -88,9 +100,9 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Customer module */}
-                <Route path='Customer_Detials' element={<StaffDetails position={3} />} />
-                <Route path='Customer_Detials/Add_User_Detials' element={<AddUserDetails />} />
-                <Route path='Edit_Distributer_Detials/:userid' element={<EditDistributerDetails />} />
+                <Route path='/Customer_Details' element={<StaffDetails position={3} Positionid_val={3} />} />
+                <Route path='/Customer_Details/Edit_Customer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={3} />} />
+                <Route path='/Customer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={3} />} />
               </Routes>
             </div>
           )}
@@ -99,35 +111,43 @@ const App = () => {
             <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Products Module */}
-                <Route path='Products' element={<Products />} />
-                <Route path='Products/Add_Products' element={<AddProducts />} />
-                <Route path='Products/Edit_Product_Detials/:productid' element={<EditProduct />} />
+                <Route path='/Products' element={<Products />} />
+                <Route path='/Products/Add_Products' element={<AddProducts />} />
+                <Route path='/Products/Edit_Product_Details/:productid/:productBatch' element={<EditProduct />} />
               </Routes>
             </div>
-
           )}
 
-          {userInfo.invoice > 0 && (
-            <div style={{ marginLeft: '50px'}}>
+          {userInfo.invoicegenerator > 0 && (
+            <div style={{ marginLeft: '50px' }}>
               <Routes>
                 {/* Invoice Module */}
-                <Route path='Invoice' element={<Invoice />} />
                 <Route path='InvoiceGenerator' element={<InvoiceGenerator />} />
-                <Route path='ProfilePage' element={<ProfilePage />} />
+              </Routes>
+            </div>
+          )}
+          {userInfo.invoicepayslip > 0 && (
+            <div style={{ marginLeft: '50px' }}>
+              <Routes>
+                {/* Invoice Module */}
                 <Route path='TransactionHistory' element={<TransactionHistory />} />
               </Routes>
             </div>
-
           )}
+          <Routes>
+            <Route path='ProfilePage' element={<ProfilePage />} />
+            <Route path='feedback' element={<FeedbackForm />} />
+            {/* <Route path='Invoice' element={<Invoice />} /> */}
+          </Routes>
         </div>
-      )}
-
-      {window.location.href === 'http://localhost:3001/' && (
+      ) : (
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='UpdatePassword' element={<UpdatePassword />} />
         </Routes>
       )}
+      {/* {(currentLoc === `${API_URL_CLIENT}` || currentLoc === `${API_URL_CLIENT}/UpdatePassword`) && ( */}
+      {/* )}  */}
     </BrowserRouter>
 
   );

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A4 Page with QR Code</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .a4-container {
+            width: 21cm;
+            height: 29.7cm;
+            margin: 1cm auto;
+            background-color: rgb(221, 255, 28);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "InrNumber InrNumber Qr"
+                "reciverAddress reciverAddress Invoicedetials"
+                "SenderAddress SenderAddress Invoicedetials";
+        }
+
+        .Qr {
+            grid-area: Qr;
+            margin-left: 100px;
+        }
+
+        .InrNumber {
+            grid-area: InrNumber;
+        }
+
+        .reciverAddress {
+            grid-area: reciverAddress;
+        }
+
+        .Invoicedetials {
+            grid-area: Invoicedetials;
+        }
+
+        .SenderAddress {
+            grid-area: SenderAddress;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="a4-container">
+        <div class="container" style="background-color: green;">
+            <div class="Qr">Qr</div>
+            <div class="InrNumber">i</div>
+            <div class="reciverAddress">R</div>
+            <div class="Invoicedetials">I</div>
+            <div class="SenderAddress">S</div>
+        </div>
+        <div id="qrCodeContainer"></div>
+        <p>hai hello</p>
+    </div>
+
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script>
+        const generateQR = async () => {
+            const amount = '1.00';
+            const currency = 'INR';
+            const upiId = 'nitheshwaran003@okicici';
+            try {
+                const razorpayLink = `upi://pay?pa=${upiId}&am=${amount}&cu=${currency}`;
+
+                // Create a new QRCode instance
+                const qrcode = new QRCode(document.getElementById('qrCodeContainer'), {
+                    text: razorpayLink,
+                    width: 128,
+                    height: 128,
+                });
+
+                return '<img src="' + qrcode.toDataURL() + '" alt="Razorpay QR Code" />';
+            } catch (err) {
+                console.error('Error generating QR code:', err);
+                throw new Error('Error generating QR code');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const generatedQR = await generateQR();
+                document.getElementById('qrCodeContainer').innerHTML = generatedQR;
+            } catch (error) {
+                console.error('Error displaying QR code:', error);
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+<!-- 
+        <img src="data:image/png;base64,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"
+            alt="QR Code" class="qr-code"> -->

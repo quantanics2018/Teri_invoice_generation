@@ -3,6 +3,7 @@ import { MdDelete } from 'react-icons/md';
 import { IoIosAdd } from 'react-icons/io';
 import axios from 'axios';
 import Invoice from './Invoice'
+import { API_URL } from '../config';
 const InvoiceGenerator = () => {
   const [rows, setRows] = useState([
     {

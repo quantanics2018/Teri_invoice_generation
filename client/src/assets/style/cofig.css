@@ -1,7 +1,7 @@
 :root {
   --THEME_COLOUR: rgba(241, 7, 7, 0.925);    /* SIDEBAR COLOUR                                        011D63 */
   --INNER_COLOUR: #ffffff;    
-  --HOVER_COLOUR:#9f9595b4;     /* SIDEBAR HOVER COLOUR FOR BACKGROUND                       rgb(129, 222, 248)*/
+  --HOVER_COLOUR:#b0a4a472;     /* SIDEBAR HOVER COLOUR FOR BACKGROUND                       rgb(129, 222, 248)*/
   --HOVER_COLOUR_FOR_ACTIVE:#757875e8;     /* SIDEBAR COLOUR FOR ACTIVE CONTENT                                    */
   --SIDEBAR_HEADING_COLOUR:#042e9a; /*   SIDEBAR HEADING COLOUR                                                                      rgb(96, 164, 236)*/
   --COLOR_BEFORE_HOVER: #fff;    /* COLOUR IN HOVERABLE CONTENT BEFORE HOVERING         154fdf*/

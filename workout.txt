@@ -1,0 +1,140 @@
+For Gst : 
+^[0-9]{2}: The first two digits represent the state code, and they must be numeric.
+[A-Z]{5}: The next five characters represent the PAN (Permanent Account Number) of the business, and they must be uppercase alphabets.
+[0-9]{4}: The next four digits represent a unique identification number for the business.
+[A-Z]{1}: The thirteenth character represents the entity type, and it must be an uppercase alphabet.
+[1-9A-Z]{1}: The fourteenth character is a default 'Z' but can also be any digit from 1 to 9 or an uppercase alphabet.
+Z: The fifteenth character is 'Z'.
+[0-9A-Z]{1}$: The last character is a check code, and it can be any digit from 0 to 9 or an uppercase alphabet.
+
+ex: 29ABCDE2000A1Z9
+
+Pan Number : 
+[A-Z]{5}: The first five characters are uppercase alphabets, representing the first five letters of the last name or entity name.
+[0-9]{4}: The next four characters are numeric, representing the four-digit unique number.
+[A-Z]{1}: The last character is an uppercase alphabet, which is usually an alphabetic check code.
+
+ex : pan_number = "ABCDE1234F"
+
+  "start": "nodemon ./services/QrGeneration.js",
+ const downloadPdf = () => {
+        const htmlTemplate = `
+            <html>
+                <body>
+                    <div className="invoicecontent">
+                    <div className="billDetial">
+                        <div className="addressWithInvoice">
+                            <div className="addressDetials">
+                                <div className="billTo">
+                                    <div className="billToTittle">
+                                        Bill To:(Seller)
+                                    </div>
+                                    <div className="billToBody">
+                                        <ul className='listData'>
+                                            <li>
+                                                Terion Customer code, name
+                                            </li>
+                                            <li>
+                                                TERION INFOTECHNOLOGIES LTD.
+                                            </li>
+                                            <li>
+                                                Plot No.-35, Sector - 67,
+                                            </li>
+                                            <li>
+                                                GSTIN : 27272727272727
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div className="shipTo">
+                                    <div className="billToTittle">
+                                        Ship To:(Buyer)
+                                    </div>
+                                    <div className="billToBody">
+                                        <ul className='listData'>
+                                            <li>
+                                                xxxxx xxxxx xx
+                                            </li>
+                                            <li>
+                                                Sector-100, Noida, U.P.
+                                            </li>
+                                            <li>
+                                                Uttar Pradesh
+                                            </li>
+                                            <li>
+                                                Phone : 8888888888
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="invoiceNo">
+                                Invoice Number : 4649845 <br />
+                                Invoice Date : 08-03-2021
+                            </div>
+                        </div>
+                        <br />
+                        <table border="1">
+                            <thead className='invoiceHead'>
+                                <tr>
+                                    <th className='th'>S.No.</th>
+                                    <th className='th'>DESCRIPTION</th>
+                                    <th className='th'>HSN NO.</th>
+                                    <th className='th'>QTY.</th>
+                                    <th className='th'>RATE</th>
+                                    <th className='th'>AMOUNT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[1,2,3].map((item, index) => (
+                                    <tr key={index}>
+                                        <td className='td'>{index + 1}</td>
+                                        <td className='td'>{item.productid || ''}</td>
+                                        <td className='td'>{item.productName || ''}</td>
+                                        <td className='td'>{item.qty || ''}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <br />
+                        <div className="paymentDetials">
+                            <div className="paymentQrSession">
+                                <div className="makePaymetToTittle">Discription of Goods
+                                </div>
+                            </div>
+                            <div className="detialAboutPayment">
+                                <div className="alternating-rows-container">
+                                    <div className="invoiceRow odd">TOTAL</div>
+                                    <div className="invoiceRow even">DISCOUNT @</div>
+                                    <div className="invoiceRow odd">TAXABLE AMOUNT</div>
+                                    <div className="invoiceRow even">SGST RATE @ </div>
+                                    <div className="invoiceRow odd">CGST RATE @</div>
+                                    <div className="invoiceRow even">PAYABLE AMOUNT</div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        we declare that this invoice shows the actual price of the goods <br />
+                        described and tht all particulars are true and correct.
+                        <hr />
+                        <br />
+                        <br />
+                        Authorized Sign.
+                        <br />
+                        <br />
+                        <br />
+                        <div className="bussinessQuotes">
+                            <h5 className='bussinessContent'>THANK YOU ! WE APPRECIATE YOUR BUSINESS</h5>
+                        </div>
+
+                    </div>
+                </div>
+                </body>
+            </html>
+        `;
+
+        const pdfOptions = { format: 'Letter' };
+        html2pdf().from(htmlTemplate).set(pdfOptions).save();
+    };

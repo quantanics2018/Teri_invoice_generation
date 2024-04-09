@@ -11,21 +11,33 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useState, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL } from '../config';
-import { Button } from '@mui/material';
-import { UserActionBtn } from '../assets/style/cssInlineConfig';
+import { API_URL, SECRET_KEY } from '../config';
+// import { Button } from '@mui/material';
+import { UserActionBtn, padding_top } from '../assets/style/cssInlineConfig';
 import { AddUserBtn } from '../components/AddUserBtn';
 import Example from '../components/Example';
 import EditDistributerDetails from './Edit_Distributer_Detials';
+import {
+    Button,
+    Snackbar,
+} from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
+import CryptoJS from 'crypto-js';
+import ActionButton from '../components/ActionButton';
 
 const Staff_Detials = (props) => {
+    const { Positionid_val, position } = props;
+    // console.log(Positionid_val);
     // console.log(props.position);
     //states
     const [rotatedIndex, setRotatedIndex] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState('1');
     const [selectedOption, setSelectedOption] = useState('All');
-
+    const [submitted, setSubmitted] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
 
     const [isOpen3, setIsOpen3] = useState(false);
     const [isDropdownOpen3, setIsDropdownOpen3] = useState(false);
@@ -39,22 +51,12 @@ const Staff_Detials = (props) => {
     // //Navigate to Add Device Page
     const navigate = useNavigate();
     const handleclick = () => {
-        navigate(`Add_User_Detials`);
+        navigate(`Add_User_Details`);
     }
     const [alldata, setAlldate] = useState([]);
-    useEffect(() => {
-        const adminid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
-        axios.post(`${API_URL}get/user`, { adminid: adminid, position: props.position })
-            .then(response => {
-                console.log(response.data.data);
-                setAlldate(response.data.data)
-            })
-            .catch(error => {
-                console.error("Error fetching user data:", error);
-            });
-    }, []);
+
     const userInfo = JSON.parse(sessionStorage.getItem("UserInfo"));
-    console.log(userInfo);
+    // console.log(userInfo);
     // const handleIconClick = () => {
     //     // userInfo.staff
     //     if (userInfo.staff > 2) {
@@ -65,12 +67,12 @@ const Staff_Detials = (props) => {
 
     // };
     const handleIconClick = (index) => {
-        if (userInfo.staff > 2) {
-            setRotatedIndex(!rotatedIndex);
-            setRotatedIndex(rotatedIndex === index ? null : index);
-        } else {
-            alert("Option Disabled")
-        }
+        // if (userInfo.staff > 2) {
+        setRotatedIndex(!rotatedIndex);
+        setRotatedIndex(rotatedIndex === index ? null : index);
+        // } else {
+        //     alert("Option Disabled")
+        // }
     };
 
     const handleDivClick = () => {
@@ -83,11 +85,21 @@ const Staff_Detials = (props) => {
 
     //navigate to edit page
     const Staff_Detials_edit_page = async (data) => {
-        if (props.position === 4) {
-            navigate(`Edit_Staff_Detials/${data}`);
-        }
+        const secretKey = `${SECRET_KEY}`;
+        const encryptedText = CryptoJS.AES.encrypt(data, secretKey).toString();
+        // console.log(encryptedText);
+        const encodedText = encodeURIComponent(encryptedText);
         if (props.position === 2) {
-            navigate(`Edit_Distributer_Detials/${data}`);
+            navigate(`Edit_Distributer_Details/${encodedText}`);
+        }
+        if (props.position === 3) {
+            navigate(`Edit_Customer_Details/${encodedText}`);
+        }
+        if (props.position === 4) {
+            navigate(`Edit_Staff_Details/${encodedText}`);
+        }
+        if (props.position === 5) {
+            navigate(`Edit_D_Staff_Details/${encodedText}`);
         }
 
     }
@@ -107,6 +119,18 @@ const Staff_Detials = (props) => {
     }, [setInactivateAlert]);
 
     const updateUserStatus = async (userid, currentstatus, index) => {
+        const fetchAllUser = () => {
+            const adminid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
+            axios.post(`${API_URL}get/user`, { adminid: adminid, position: props.position })
+                .then(response => {
+                    // console.log(response.data.data);
+                    setRotatedIndex(rotatedIndex === index ? null : index);
+                    setAlldate(response.data.data)
+                })
+                .catch(error => {
+                    console.error("Error fetching user data:", error);
+                });
+        }
         try {
             const statusApiAction = async () => {
                 const response = await axios.put(`${API_URL}update/userremove`, {
@@ -114,6 +138,7 @@ const Staff_Detials = (props) => {
                 });
                 console.log(response.data.resStatus);
                 if (response.data.qos === "success") {
+                    fetchAllUser();
                     setAlldate((prevData) => {
                         const newData = [...prevData];
                         newData[index].status = response.data.resStatus;
@@ -122,23 +147,48 @@ const Staff_Detials = (props) => {
                     console.log("success : ", alldata)
                 }
             }
-            if (currentstatus == 1) {
-                currentstatus = 0;
-                const confirmed = window.confirm("Are you sure?");
-                // setInactivateAlert(true)
-                if (confirmed) {
+            // console.log(userInfo.distributer);
+            if (userInfo.distributer > 2) {
+                // alert("Can edit")
+                if (currentstatus == 1) {
+                    currentstatus = 0;
+                    const confirmed = window.confirm("Are You Sure! You Want to Delete the User?");
+                    // setInactivateAlert(true)
+                    if (confirmed) {
+                        statusApiAction();
+                    }
+                }
+                else {
+                    currentstatus = 1
                     statusApiAction();
+                    setSubmitted(true);
                 }
             }
             else {
-                currentstatus = 1
-                statusApiAction();
+                alert("You don't have permission to do this action.")
             }
+
         } catch (error) {
             console.error('Error updating user status:', error);
         }
     }
+    useEffect(() => {
+        const fetchAllUser = () => {
+            const adminid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
+            axios.post(`${API_URL}get/user`, { adminid: adminid, position: props.position })
+                .then(response => {
+                    // console.log(response.data.data);
+                    setAlldate(response.data.data)
+                })
+                .catch(error => {
+                    console.error("Error fetching user data:", error);
+                });
+        }
+        fetchAllUser();
+    }, []);
+
     // alert(props.position===4)
+
     return (
         <div className='bar'>
             {/* Start Modal */}
@@ -151,7 +201,6 @@ const Staff_Detials = (props) => {
                         </div>
                         <div class="modal-body">
                             {/* <EditDistributerDetails /> */}
-                            h
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -166,16 +215,34 @@ const Staff_Detials = (props) => {
                 <div className="device_mangement_main_content">
                     <div className="row_with_count_status">
                         <span className='module_tittle'>
+                            {props.position === 5 &&
+                                "D_Staff Details"
+                            }
                             {props.position === 4 &&
-                                "Staff Detials"
+                                "Staff Details"
+                            }
+                            {props.position === 3 &&
+                                "Customer Details"
                             }
                             {props.position === 2 &&
-                                "Distibutor Detials"
+                                "Distibutor Details"
                             }
                         </span>
+                        <Button variant="contained"
+                            onClick={handleclick}
+                            // style={{...UserActionBtn,marginLeft: '100px'}}
+                            className='user_action_buttons'
+                            style={UserActionBtn}
+                            
+                        >
+                            {(props.position === 2) && "Add Distributor"}
+                            {(props.position === 3) && "Add Customer"}
+                            {(props.position === 4) && "Add Staff"}
+                            {(props.position === 5) && "Add D_Staff"}
+                        </Button>
                     </div>
 
-                    <div className='filters display-flex' >
+                    {/* <div className='filters display-flex' >
                         <div className="pagination_with_filters">
                             <div class="pagination display-flex" onClick={handleDivClick}>
                                 <div className="focus-page">
@@ -195,7 +262,7 @@ const Staff_Detials = (props) => {
                                 </div>
                             </div>
 
-                            {/* <div className='move_head'>
+                            <div className='move_head'>
                                 <div className='filters1 display-flex'>
                                     <div class="dropdown-filter"
                                         ref={dropdownRef3}
@@ -246,109 +313,110 @@ const Staff_Detials = (props) => {
                                         )}
                                     </div>
                                 </div>
-                            </div> */}
+                            </div>
                         </div>
-                        {/* <Button variant="contained"
+                        <Button variant="contained"
                             onClick={handleclick}
                             style={UserActionBtn}
                         >
-                            Add User
-                        </Button> */}
-                        <AddUserBtn adduserFun={handleclick} />
+                            {(props.position === 2) && "Add Distributor"}
+                            {(props.position === 3) && "Add Customer"}
+                            {(props.position === 4) && "Add Staff"}
+                            {(props.position === 5) && "Add D_Staff"}
+                        </Button>
 
-                        {/* <div className='filters2 display-flex' onClick={handleclick}>
+                        <div className='filters2 display-flex' onClick={handleclick}>
                             <button className='btn btn-fill'>Add User</button>
-                        </div> */}
-                    </div>
+                        </div>
+                    </div> */}
 
-
-                    <div className='col-headings'>
-                        <div className="col-head">Registration ID</div>
-                        <div className="col-head">Distributer Name</div>
-                        <div className="col-head">Aadhar Number</div>
-                        <div className="col-head">PAN Number</div>
-                        <div className="col-head">Postal Code </div>
-                        <div className="col-head">Email</div>
-                        <div className="col-head">Contact Number</div>
-                        <div className="col-head">Action</div>
-                    </div>
-                    <div className="scroll_div">
-                        {alldata.map((data, index) => (
-                            <div className="datas skeleton-block">
-                                <div className="col-head">{data.userid}</div>
-                                <div className="col-head">{data.name}</div>
-                                <div className="col-head">{data.aadhar}</div>
-                                <div className="col-head">{data.pan}</div>
-                                <div className="col-head">{data.ppostalcode}</div>
-                                <div className="col-head" title="Quantanics@gmail.com">{data.email}</div>
-                                <div className="col-head">
-                                    {data.phno}
-                                </div>
-                                <div className="col-head display-flex device_action_dropdown_parent">
-                                    <div className="sts_icon"
-                                        onClick={() => handleIconClick(index)}
-                                    >
-                                        <Icon icon={ic_label_important} style={{ transform: rotatedIndex === index ? 'rotate(90deg)' : 'rotate(0)', color: rotatedIndex === index ? '#08c6cd' : 'lightgray', }} className='device_content_arrow' size={25} />
-                                    </div>
-                                    <div>{(rotatedIndex === index) &&
-                                        (<div className='device_action_dropdown'>
-                                            <div className='display-flex device_action_dropdown1 dropdown_action'
-                                                // data-bs-toggle="modal" data-bs-target="#EditDetials"
-                                                onClick={() => Staff_Detials_edit_page(data.userid)}
-                                            >
-                                                <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
-                                                <div className='device_content_dropdown display-flex'
-
-                                                >Edit {props.position === 4 &&
-                                                    "Staff "
-                                                    }
-                                                    {props.position === 2 &&
-                                                        "Distibutor "
-                                                    }
-                                                    Detials</div>
-                                            </div>
-
-                                            <div className='display-flex device_action_dropdown2 dropdown_action'
-                                                onClick={() => updateUserStatus(data.userid, data.status, index)}
-                                                ref={modalRef}>
-                                                <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
-                                                {data.status == 1 ? (
-                                                    <div className='device_content_dropdown display-flex'
-                                                    // onClick={() => setInactivateAlert(true)}
-                                                    // updateUserStatus(data.userid, 0, index
-                                                    >Inactivate {props.position === 4 &&
-                                                        "Staff "
-                                                        }
-                                                        {props.position === 2 &&
-                                                            "Distibutor "
-                                                        }
-                                                        {inactivateAlert && (
-                                                            <Example />
-                                                            // ConformMsg={() => updateUserStatus(data.userid, 1, index)}
-                                                        )}
-                                                    </div>
-                                                ) : (
-                                                    <div className='device_content_dropdown display-flex'
-                                                    // onClick={() => updateUserStatus(data.userid, 1, index)}
-                                                    >Activate {props.position === 4 &&
-                                                        "Staff "
-                                                        }
-                                                        {props.position === 2 &&
-                                                            "Distibutor "
-                                                        }
-                                                    </div>
-                                                )}
-
-                                            </div>
-                                        </div>
-                                        )}
-                                    </div>
-                                </div>
+                    {(Positionid_val === 4 || Positionid_val === 5) ? (
+                        <div className='col-headings'>
+                            <div className="col-head">Registration ID</div>
+                            <div className="col-head">
+                                {props.position === 2 && "Distributor "
+                                }
+                                {props.position === 3 && "Customer "
+                                }
+                                {props.position === 4 && "Staff "
+                                }
+                                {props.position === 5 && "D_Staff "
+                                }
+                                Name
                             </div>
+                            <div className="col-head">Aadhar Number</div>
+                            <div className="col-head">Email</div>
+                            <div className="col-head">Contact Number</div>
+                            <div className="col-head col-headAction">Action</div>
+                        </div>
+                    ) : (
+                        <div className='col-headings'>
+                            <div className="col-head">Registration ID</div>
+                            <div className="col-head">
+                                {props.position === 2 && "Distributor "
+                                }
+                                {props.position === 3 && "Customer "
+                                }
+                                {props.position === 4 && "Staff "
+                                }
+                                {props.position === 5 && "D_Staff "
+                                }
+                                Name
+                            </div>
+
+                            <div className="col-head">Aadhar Number</div>
+                            <div className="col-head">Organization</div>
+                            <div className="col-head">Postal Code </div>
+                            <div className="col-head">Email</div>
+                            <div className="col-head">Contact Number</div>
+                            <div className="col-head">Action</div>
+                        </div>
+                    )}
+
+
+                    <div className="scroll_div" style={padding_top}>
+                        {/* {console.log(alldata)} */}
+                        {alldata.map((data, index) => (
+                            (Positionid_val === 4 || Positionid_val === 5) ? (
+                                <div>
+                                    <div className="datas skeleton-block">
+                                        <div className="col-head">{data.userid}</div>
+                                        <div className="col-head">{data.fname}</div>
+                                        <div className="col-head">{data.aadhar}</div>
+                                        <div className="col-head" title={data.email}>{data.email}</div>
+                                        <div className="col-head">
+                                            {data.phno}
+                                        </div>
+                                        <ActionButton fun_to_rotate_btn={() => handleIconClick(index)} index={index} rotatedIndex={rotatedIndex} data={data} updateUserStatus={() => updateUserStatus(data.userid, data.status, index)} props={props} StaffDetialsEditPage={() => Staff_Detials_edit_page(data.userid)} />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>
+                                    <div className="datas skeleton-block">
+                                        <div className="col-head">{data.userid}</div>
+                                        <div className="col-head">{data.fname}</div>
+                                        <div className="col-head">{data.aadhar}</div>
+                                        <div className="col-head">{data.organizationname}</div>
+                                        <div className="col-head">{data.cpostalcode}</div>
+                                        <div className="col-head" title={data.email}>{data.email}</div>
+                                        <div className="col-head">
+                                            {data.phno}
+                                        </div>
+                                        <ActionButton fun_to_rotate_btn={() => handleIconClick(index)} index={index} rotatedIndex={rotatedIndex} data={data} updateUserStatus={() => updateUserStatus(data.userid, data.status, index)} props={props} StaffDetialsEditPage={() => Staff_Detials_edit_page(data.userid)} />
+
+                                    </div>
+                                </div>
+                            )
+
                         ))}
                     </div>
                 </div>
             </div>
+            <Snackbar open={submitted} autoHideDuration={2500} onClose={handleSnackbarClose}>
+                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    Successfully Activated
+                </MuiAlert>
+            </Snackbar>
         </div>
     );
 };

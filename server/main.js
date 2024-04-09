@@ -3,14 +3,38 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const fs = require('fs');  // Require the 'fs' module to read files
 const path = require('path');
+const bodyParser = require('body-parser');
 const app = express();
 app.use(cors());
+app.use(bodyParser.text({ type: 'text/html' }));
 app.use(express.json());
 const addData = require('./Functions/insertFunctions');
 const verifyData = require('./Functions/verifyFunction');
 const deleteData = require('./Functions/deletefunctions');
 const getData = require('./Functions/getFunctions');
 const updateData = require('./Functions/updateFunctions');
+// const { emailservice } = require('./services/emailservice');
+const { UpdatePasswordmailservice } = require('./services/emailservice');
+const { sendInvoice } = require('./services/emailservice');
+const { generateQR } = require('./services/QrGeneration');
+const multer = require('multer');
+const userdbInstance = require('./instances/dbInstance');
+// var upload = multer({ dest: './uploads/' });
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Specify the upload directory
+    },
+    filename: function (req, file, cb) {
+        console.log("print helo Inside : ");
+        // const imageName = req.body.imageName;
+        console.log("Inner : ", req.body);
+        cb(null, 'PassbookImg' + 'userid' + path.extname(file.originalname)); // Set unique filename
+    },
+});
+const upload = multer({ storage: storage });
+app.use('/uploads', express.static('uploads'));
 
 
 app.post('/verify/:entity(user|credentials)', async (req, res) => {
@@ -25,10 +49,15 @@ app.post('/verify/:entity(user|credentials)', async (req, res) => {
 });
 
 // add into DB
-app.post('/add/:entity(user|products|invoice)', async (req, res) => {
+app.post('/add/:entity(user|products|invoice|feedback|ProformaInvoice)', upload.single('image'), async (req, res) => {
     const entity = req.params.entity;
     if (entity === 'user') {
         try {
+            // const passbookImg  = req.body.SignatureImage;
+            // console.log(passbookImg);
+            // res.json({ message: "Testing-1" });
+            console.log("image is ");
+            console.log(req.body.image);
             const addUser = await addData.addUser(req, res);
         } catch (error) {
             console.error('Error retrieving user details:', error);
@@ -43,6 +72,14 @@ app.post('/add/:entity(user|products|invoice)', async (req, res) => {
             res.status(500).send('Internal Server Error');
         }
     }
+    if (entity === 'feedback') {
+        try {
+            const addUser = await addData.addfeedback(req, res);
+        } catch (error) {
+            console.error('Error Adding feedback details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
     if (entity === 'invoice') {
         try {
             const addUser = await addData.addInvoice(req, res);
@@ -51,10 +88,18 @@ app.post('/add/:entity(user|products|invoice)', async (req, res) => {
             res.status(500).send('Internal Server Error');
         }
     }
+    if (entity === 'ProformaInvoice') {
+        try {
+            const addUser = await addData.ProformaInvoice(req, res);
+        } catch (error) {
+            console.error('Error retrieving products details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
 })
-
+app.use('/images', express.static(path.join(__dirname, 'uploads')));
 // Get Data From DB
-app.post('/get/:entity(user|credentials|products|state|district|access_control|transactionHistory)', async (req, res) => {
+app.post('/get/:entity(user|credentials|product|products|state|district|access_control|transactionHistory|productList|getUserList|profileInfo|SenderDataInvoiceAddress|ReciverDataInvoiceAddress|signature|getSignExistance)', async (req, res) => {
     const entity = req.params.entity;
     const requestData = req.body;
     if (entity === 'user') {
@@ -65,6 +110,98 @@ app.post('/get/:entity(user|credentials|products|state|district|access_control|t
             res.send("error");
             console.error("Error retrieving data");
         }
+    }
+    if (entity === 'state') {
+        try {
+            var userdata = await getData.getStateData(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'district') {
+        try {
+            var userdata = await getData.getDistrictData(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'getSignExistance') {
+        try {
+            var userdata = await getData.getSignExistance(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'SenderDataInvoiceAddress') {
+        try {
+            var userdata = await getData.SenderDataInvoiceAddress(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'signature') {
+        try {
+            const { userid } = req.body;
+            console.log("senderid - : ", userid);
+            const folderPath = '../uploads'; // Change this to the path of your folder
+            const fileName = userid;
+            const filePath = path.join(folderPath, fileName);
+           
+
+            const allowedExtensions = ['jpeg', 'jpg', 'png'];
+            
+
+            res.send({ src: `images/${userid}.png` });
+
+
+            // // Find the first matching extension from the allowed list
+            // const matchedExtension = allowedExtensions.find(ext => {
+            //     const imagePath = `images/${userid}.${ext}`;
+            //     // Check if the file exists
+            //     return fs.existsSync(imagePath);
+            // });
+            // if (matchedExtension) {
+            //     res.send({ src: `images/${userid}.${matchedExtension}` });
+            // } else {
+            //     res.status(404).send({ error: 'Image not found' });
+            // }
+
+            // res.sendFile(path.join(__dirname, 'uploads', `${userid}.jpeg`));
+            // var userdata = await getData.GetSignature(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'ReciverDataInvoiceAddress') {
+        try {
+            var userdata = await getData.ReciverDataInvoiceAddress(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'profileInfo') {
+        try {
+            var userdata = await getData.getprofileInfo(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'product') {
+        var userdata = await getData.getProductDataIndividual(req, res);
     }
     if (entity === 'products') {
         try {
@@ -84,6 +221,24 @@ app.post('/get/:entity(user|credentials|products|state|district|access_control|t
             console.error("Error retrieving data");
         }
     }
+    if (entity === 'productList') {
+        try {
+            var userdata = await getData.getProductList(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
+    if (entity === 'getUserList') {
+        try {
+            var userdata = await getData.getUserList(req, res);
+        }
+        catch (error) {
+            res.send("error");
+            console.error("Error retrieving data");
+        }
+    }
     // else {
     //     res.status(400).send('Invalid elements value');
     // }
@@ -91,13 +246,13 @@ app.post('/get/:entity(user|credentials|products|state|district|access_control|t
 
 app.get('/get/:entity(user|product)/:id', async (req, res) => {
     const entity = req.params.entity;
-    const {id} = req.params;
+    const { id } = req.params;
     if (entity === 'user') {
         var userdata = await getData.getUserDataIndividual(req, res);
     }
-    else if (entity === 'product') {
-        var userdata = await getData.getProductDataIndividual(req, res);
-    }
+    // else if (entity === 'product') {
+    //     var userdata = await getData.getProductDataIndividual(req, res);
+    // }
     else {
         res.status(400).send('Invalid elements value');
     }
@@ -106,7 +261,7 @@ app.get('/get/:entity(user|product)/:id', async (req, res) => {
 
 
 // Update Data from DB
-app.put('/update/:entity(user|product|productremove|userremove|password)', async (req, res) => {
+app.put('/update/:entity(user|product|productremove|userremove|password|productQuantity|reciverStatus|senderStatus)', async (req, res) => {
     const entity = req.params.entity;
     if (entity === 'user') {
         var userdata = await updateData.updateUserDataIndividual(req, res);
@@ -117,14 +272,36 @@ app.put('/update/:entity(user|product|productremove|userremove|password)', async
     else if (entity === 'productremove') {
         var userdata = await updateData.updateProducts(req, res);
     }
+    else if (entity === 'productQuantity') {
+        var userdata = await updateData.productQuantity(req, res);
+    }
     else if (entity === 'userremove') {
         var userdata = await updateData.updateStatusToRemove(req, res);
     }
     else if (entity === 'password') {
         var userdata = await updateData.updateUserPassword(req, res);
     }
+    else if (entity === 'reciverStatus') {
+        var userdata = await updateData.updatereciverStatus(req, res);
+    }
+    else if (entity === 'senderStatus') {
+        var userdata = await updateData.updatesenderStatus(req, res);
+    }
 });
 
+// user profile update url controlling 
+app.put('/profile_udpate/:entity(user)',async (req, res) =>{
+    const entity = req.params.entity;
+
+    if (entity==="user") {
+        const result_data = await updateData.update_user_profile(req,res);
+
+    }
+    console.log("profile updation request data");
+    console.log(entity);
+
+    
+});
 // Delete data
 app.post('/delete/:entity(user|products)', async (req, res) => {
     const entity = req.params.entity;
@@ -146,156 +323,150 @@ app.post('/delete/:entity(user|products)', async (req, res) => {
     }
 })
 
-app.post('/send-email', async (req, res) => {
-    console.log("mail service");
-    res.send("mail service")
+app.post('/send-email/:entity(updatePassword|generateQR|sendInvoice)', async (req, res) => {
+    // emailservice
+    const entity = req.params.entity;
+    if (entity === 'updatePassword') {
+        try {
+            const deleteUser = await UpdatePasswordmailservice(req, res);
+        } catch (error) {
+            console.error('Error retrieving user details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
+    if (entity === 'generateQR') {
+        try {
+            const generateQRResult = await generateQR(req, res);
+        } catch (error) {
+            console.error('Error retrieving user details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
+    if (entity === 'sendInvoice') {
+        try {
+            // const htmlString = req.body;
+            // console.log("test1");
+            const generateQRResult = await sendInvoice(req, res);
+        } catch (error) {
+            console.error('Error retrieving user details:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
 });
+
+// Example route to handle image upload
+app.post('/upload', upload.single('image'), (req, res) => {
+    const file = req.file;
+    const { imageName } = req.body;
+    // console.log("outer : ",imageName);
+    // console.log("okkk api");
+    const currentUser = imageName;
+    const SignName = `${imageName}.png`;
+// console.log(currentUser ," ",SignName);
+    fs.rename(file.path, './uploads/' + (imageName + path.extname(file.originalname)), async function (err) {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Error renaming file' });
+        }
+        try {
+            const userupdateResult = await userdbInstance.userdb.query(`UPDATE public."user" SET signature =$1 where userid=$2;`, [SignName,currentUser]);
+            // if (userupdateResult.rowCount === 1) {
+            //     res.json({ success: true, message: `Signature Updated Successfully`, filename: imageName });
+            // } else {
+            //     // If no rows were affected by the update (likely due to incorrect currentUser)
+            //     res.status(404).json({ success: false, message: 'User not found or signature not updated' });
+            // }
+        } catch (error) {
+            return res.status(500).json({ status: false, message: 'Error querying user database' });
+        }
+        res.json({ status: true, message: `Signature Updated Successfully`, filename: imageName });
+    });
+});
+
+//Mathan - email
+
+// Nodemailer configuration
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587, // or 465
+    secure: false,
+    auth: {
+      user: 'terionorganization@gmail.com',
+      pass: 'imkq rydg xtla lvmx'
+    }
+  });
+
+const invoicesDir = path.join(__dirname, 'EmailPdfContent');
+
+// Ensure the invoices directory exists
+if (!fs.existsSync(invoicesDir)) {
+  fs.mkdirSync(invoicesDir);
+}
+console.log(invoicesDir);
+
+// Define a route to handle saving PDF files
+app.post('/save-pdf-server', upload.single('file'), async(req, res) => {
+    // Check if file exists in the request
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+  
+    const tempPath = req.file.path;
+    const targetPath = path.join(invoicesDir, 'Email.pdf');
+    const recivermail = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1', [req.body.companyname]);
+    console.log("email to : ",recivermail.rows[0].email);
+    const to = recivermail.rows[0].email;
+    console.log(to);
+    fs.rename(tempPath, targetPath, err => {
+      if (err) {
+        console.error('Error saving file:', err);
+        res.status(500).json({ message: 'Error saving file'});
+      } else {
+        // Read the PDF file
+        fs.readFile(targetPath, (err, data) => {
+          if (err) {
+            console.error('Error reading PDF file:', err);
+            return res.status(500).send('Error reading PDF file');
+          }
+          
+          // Mail options
+          const mailOptions = {
+            from: 'terionorganization@gmail.com',
+            to: to,
+            subject: 'Official mail from Terion Organization',
+            text: 'INVOICE FROM TERION',
+            attachments: [
+              {
+                filename: 'Email.pdf',
+                content: data
+              }
+            ]
+          };
+  
+          // Send mail
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+              return res.status(500).send('Error sending email');
+            }
+            console.log('Email sent: ' + info.response);
+            
+            // After email is sent successfully, delete the PDF file
+            fs.unlink(targetPath, err => {
+              if (err) {
+                console.error('Error deleting PDF file:', err);
+              } else {
+                console.log('PDF file deleted successfully');
+              }
+            });
+  
+            res.send({status:true,message:'Email sent successfully'});
+          });
+        });
+      }
+    });
+  });
 
 app.listen(4000, () => {
     console.log("server is running on port 4000");
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// dont change
-// POST endpoint to insert data
-// app.post('/admin/insert', async (req, res) => {
-//     try {
-//         const {
-//             MF_Id,
-//             M_Email,
-//             M_Phone_No,
-//             M_Pan_Number,
-//             M_Aadhar_Number,
-//             M_Name,
-//             M_Position,
-//             M_Alternate_Phone_No,
-//             M_User_Name,
-//             M_Password,
-//             M_Business_Type,
-//             M_GST_Number,
-//             M_Organization_Name,
-//             M_Account_Name,
-//             M_Account_Number,
-//             M_Linked_Phone_no,
-//             M_Pass_Img,
-//             M_Upi_Id,
-//             M_PR_Street_Address,
-//             M_PR_City,
-//             M_PR_State,
-//             M_PR_PostalCode,
-//             M_CD_Street_Address,
-//             M_CD_City,
-//             M_CD_State,
-//             M_CD_PostalCode,
-//             M_DS_Id,
-//             M_Amount,
-//             M_Updated_By
-//         } = req.body; // Use req.body to get values from the request body
-//         console.log("HII Hello", MF_Id, M_Email)
-//         const result = await User_db_connection.query(`
-//             INSERT INTO public.manufacturer(
-//                 "MF_Id", "M_Email", "M_Phone_No", "M_Pan_Number", "M_Aadhar_Number",
-//                 "M_Name", "M_Position", "M_Alternate_Phone_No", "M_User_Name",
-//                 "M_Password", "M_Business_Type", "M_GST_Number", "M_Organization_Name",
-//                 "M_Account_Name", "M_Account_Number", "M_Linked_Phone_no", "M_Pass_Img",
-//                 "M_Upi_Id", "M_PR_Street_Address", "M_PR_City", "M_PR_State", "M_PR_PostalCode",
-//                 "M_CD_Street_Address", "M_CD_City", "M_CD_State", "M_CD_PostalCode", "M_DS_Id",
-//                 "M_Amount","M_Updated_By"
-//             )
-//             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29)
-//             RETURNING *;
-//         `, [
-//             MF_Id,
-//             M_Email,
-//             M_Phone_No,
-//             M_Pan_Number,
-//             M_Aadhar_Number,
-//             M_Name,
-//             M_Position,
-//             M_Alternate_Phone_No,
-//             M_User_Name,
-//             M_Password,
-//             M_Business_Type,
-//             M_GST_Number,
-//             M_Organization_Name,
-//             M_Account_Name,
-//             M_Account_Number,
-//             M_Linked_Phone_no,
-//             M_Pass_Img,
-//             M_Upi_Id,
-//             M_PR_Street_Address,
-//             M_PR_City,
-//             M_PR_State,
-//             M_PR_PostalCode,
-//             M_CD_Street_Address,
-//             M_CD_City,
-//             M_CD_State,
-//             M_CD_PostalCode,
-//             M_DS_Id,
-//             M_Amount,
-//             M_Updated_By
-//         ]);
-
-//         console.log(result.rows);
-//         res.json(result.rows);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// });

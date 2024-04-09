@@ -16,8 +16,13 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { AddUserBtn } from '../components/AddUserBtn';
+import { Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
+import { overflow_visible, padding_top, position_initial } from '../assets/style/cssInlineConfig';
 
 const Products = () => {
+    const userInfoString = sessionStorage.getItem("UserInfo");
+    const userInfo = JSON.parse(userInfoString);
     //states
     const [allnetdata, setnetwork] = useState([]);
     const [allupdatedata, setdevice_updated_on] = useState([]);
@@ -113,51 +118,167 @@ const Products = () => {
     const Products_edit_page = async () => {
         navigate(`Edit_Products`);
     }
-    const Product_edit_page = (data) =>{
-        navigate(`Edit_Product_Detials/${data}`);
+    // console.log(userInfo.position);
+
+    const Product_edit_page = (data) => {
+        // console.log(data);
+        // const dataString = encodeURIComponent(JSON.stringify(data));
+        // if (props.position === 2) {
+        //     navigate(`Edit_Distributer_Details/${encodedText}`);
+        // }
+        // if (props.position === 3) {
+        //     navigate(`Edit_Customer_Details/${encodedText}`);
+        // }
+        // if (props.position === 4) {
+        //     navigate(`Edit_Staff_Details/${encodedText}`);
+        // }
+        // if (props.position === 5) {
+        //     navigate(`Edit_D_Staff_Details/${encodedText}`);
+        // }
+
+        navigate(`Edit_Product_Details/${data.productid}/${data.batchno}`);
     }
     const [alldata, setAlldate] = useState([]);
-    useEffect(() => {
-        const userid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
-        // console.log(userid);
-        axios.post(`${API_URL}get/products`, { userid })
-            .then(response => {
-                setAlldate(response.data.data);
-            })
-            .catch(error => {
-                console.error("Error fetching user data:", error);
-            });
-    }, []);
-    // console.log(alldata);
-
-    const updateUserStatus = async (productid, currentstatus, index) => {
+    const fetchData = async () => {
         try {
-            console.log(productid);
-            const response = await axios.put(`${API_URL}update/productremove`, {
-                productid: productid, status: currentstatus
-            });
-            console.log(response.data.resStatus); // Assuming the API sends back a response
-            if (response.data.qos === "success") {
+            const userid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
+            const response = await axios.post(`${API_URL}get/products`, { userid });
+            setAlldate(response.data.data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const currentUserid = userInfo.userid
+    const updateUserStatus = async (productdetial, currentstatus, index) => {
+        const conformation = window.confirm("Are You Sure  Want To Remove This Product?");
+        if (conformation) {
+            try {
+                // console.log(productid);
+                const response = await axios.put(`${API_URL}update/productremove`, {
+                    productDetial: productdetial, currentUserId: currentUserid, status: currentstatus
+                });
+                // console.log(response); 
+                if (response.data.qos === "success") {
+                    setRotatedIndex(rotatedIndex === index ? null : index);
+                    setAlldate((prevData) => {
+                        const newData = [...prevData];
+                        newData[index].status = response.data.resStatus;
+                        return newData;
+                    });
+                    fetchData();
+                }
+            } catch (error) {
+                console.error('Error updating user status:', error);
+            }
+        }
+        // const userInfoString = sessionStorage.getItem("UserInfo");
+        // const userInfo = JSON.parse(userInfoString);
+    }
+    const [editableIndex, setEditableIndex] = useState(null);
+    const updateInDb = async (id, batchno,quantity, index) => {
+        setEditableIndex(null)
+        // console.log(id, "call update api", quantity);
+        const UpdateProductQuantityApi = async () => {
+            try {
+                const response = await axios.put(`${API_URL}update/productQuantity`, {
+                    hsncode: id, batchno:batchno , currentUserUserid: userInfo.userid, Quantity: quantity
+                });
+                console.log(response);
+                if (response.data.qos === "success") {
+                    // setAlldate((prevData) => {
+                    //     const newData = [...prevData];
+                    //     newData[index].status = response.data.resStatus;
+                    //     return newData;
+                    // });
+                    setsubmittedSuccess(true);
+                    setresAlert(response.data.resStatus);
+                    // alert(response.data.resStatus);
+                }
+            } catch (error) {
+                setsubmitted(true);
+                setresAlert("Error updating user status !");
+                console.error('Error updating user status:', error);
+            }
+        }
+
+
+        if (currectQuantity !== quantity) {
+            const confirmation = window.confirm("Are you sure you want to update the quantity?");
+            if (confirmation) {
+                UpdateProductQuantityApi()
+            } else {
                 setAlldate((prevData) => {
                     const newData = [...prevData];
-                    newData[index].status = response.data.resStatus;
+                    console.log(newData[index]);
+                    newData[index].quantity = currectQuantity;
                     return newData;
+                    // const newData = [...prevData];
+                    // console.log(newData[index]);
+                    // return newData;
                 });
-                console.log("success : ", alldata)
             }
-        } catch (error) {
-            console.error('Error updating user status:', error);
         }
+
     }
+    const [currectQuantity, setcurrectQuantity] = useState(null)
+    const handleDoubleClick = (index, currectQuantity) => {
+        setEditableIndex(index);
+        setcurrectQuantity(currectQuantity);
+        // const dataString = alldata.map(obj => JSON.stringify(obj)).join(',');
+        // console.log(`hai: ${dataString}`);
+    };
+
+    const getTheValue = (event) => {
+        alert(event.target.value)
+    }
+    const handleQuantityChange = (event, index) => {
+        const newQuantity = event.target.value;
+        const newData = [...alldata];
+        newData[index].quantity = newQuantity;
+        setAlldate(newData);
+        // console.log(`Quantity changed for index ${index}: ${newQuantity}`);
+    };
+    const [resAlert, setresAlert] = useState(null);
+    const [submittedSuccess, setsubmittedSuccess] = useState(false);
+    const [setsubmitted, setsetsubmitted] = useState(false);
+    const handleSnackbarClose = () => {
+        setsubmittedSuccess(false);
+        setsetsubmitted(false);
+    };
 
     return (
         <div className='bar'>
+            {/* Snackbar start */}
+            <Snackbar open={submittedSuccess} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
+            <Snackbar open={setsubmitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
             <div className='status-bar'>
                 <div className="device_mangement_main_content">
                     <div className="row_with_count_status">
-                        <span className='module_tittle'>Products</span>
+                        <span className='module_tittle'>Products </span>
+                        {((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) &&
+                            <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
+                        }
+                             {/* <h5 style={{color: 'red'}}>Hello{userInfo.position}</h5> */}
                     </div>
-                    <div className='filters display-flex' >
+                    {/* <div className='filters display-flex' >
                         <div className="pagination_with_filters">
                             <div class="pagination display-flex" onClick={handleDivClick}>
                                 <div className="focus-page">
@@ -179,7 +300,7 @@ const Products = () => {
 
                             <div className='move_head'>
                                 <div className='filters1 display-flex'>
-                                    {/* <div class="dropdown-filter"
+                                    <div class="dropdown-filter"
                                     // ref={dropdownRef1}
                                     >
                                         <div class="device_filters" onClick={dropdown1}>
@@ -212,8 +333,8 @@ const Products = () => {
                                                 ))}
                                             </div>
                                         )}
-                                    </div> */}
-                                    {/* <div class="dropdown-filter"
+                                    </div>
+                                    <div class="dropdown-filter"
                                         ref={dropdownRef3}
                                     >
                                         <div class="device_filters" onClick={dropdown3}>
@@ -260,107 +381,79 @@ const Products = () => {
                                                 </div>
                                             </div>
                                         )}
-                                    </div> */}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <AddUserBtn adduserFun={handleclick} value={"Add Products"}/>
+                        Manufacturer
+                        {console.log("test",((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')))}
+                        {((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) &&
+                            <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
+                        }
 
-                        {/* <div className='filters2 display-flex' onClick={handleclick}>
+                        <div className='filters2 display-flex' onClick={handleclick}>
                             <button className='btn btn-fill'>Add Products</button>
-                        </div> */}
-                    </div>
+                        </div>
+                    </div> */}
                     <div className='col-headings'>
-                        <div className="col-head">Product ID</div>
+                        <div className="col-head">HSN Code</div>
+                        <div className="col-head">Batch No</div>
                         <div className="col-head">Product Name</div>
-                        <div className="col-head">Product Count</div>
+                        <div className="col-head">Quantity</div>
                         <div className="col-head">Product Price</div>
-                        <div className="col-head">Action</div>
+                        <div className="col-head col-headAction">Action</div>
                     </div>
                     <div className="scroll_div">
-                        {/* <div className="datas skeleton-block">
-                            <div className="col-head">84199090</div>
-                            <div className="col-head">Ink Machine</div>
-                            <div className="col-head">Education</div>
-                            <div className="col-head">Reuseability</div>
-                            <div className="col-head">507</div>
-                            <div className="col-head">$1500</div>
-                            <div className="col-head display-flex device_action_dropdown_parent">
-                                <div className="sts_icon"
-                                    onClick={() => true && handleIconClick()}
-                                >
-                                    <Icon icon={ic_label_important} style={{ transform: rotatedIndex == true ? 'rotate(90deg)' : 'rotate(0)', color: rotatedIndex == true ? '#08c6cd' : 'lightgray', }} className='device_content_arrow' size={25} />
-                                </div>
-                                <div>{(rotatedIndex) &&
-                                    (<div className='device_action_dropdown'>
-                                        <div className='display-flex device_action_dropdown1 dropdown_action'>
-                                            <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
-                                            <div className='device_content_dropdown display-flex'
-                                                onClick={() => Products_edit_page()}
-                                            >Edit Product Count</div>
-                                        </div>
-                                        <div className='display-flex device_action_dropdown2 dropdown_action'>
-                                            <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
-                                            <div className='device_content_dropdown display-flex'
-                                            // onClick={() => { Editinactivedata(data, index) }}
-                                            >Remove Product</div>
-                                        </div>
-                                    </div>)}
-                                </div>
-                            </div>
-                        </div> */}
                         {alldata.map((data, index) => (
                             <div className="datas skeleton-block">
-                                {/* {JSON.stringify(data)} */}
                                 <div className="col-head" key={index}>{data.productid}</div>
+                                <div className="col-head" key={index}>{data.batchno}</div>
                                 <div className="col-head" key={index}>{data.productname}</div>
-                                <div className="col-head" key={index}>{data.quantity}</div>
+                                {/* <div className="col-head" key={index}>{data.quantity}</div> */}
+                                {/* {console.log(data.productid)} */}
+                                {editableIndex === index ? (
+                                    <input
+                                        type="number"
+                                        className='col-head'
+                                        autoFocus={((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff'))}
+                                        value={data.quantity}
+                                        onBlur={() => (((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) && updateInDb(data.productid, data.batchno,data.quantity, index))}
+                                        onChange={(event) => (((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) && handleQuantityChange(event, index))}
+                                    />
+                                ) : (
+                                    <div
+                                        className="col-head editable"
+                                        onDoubleClick={() => (((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) && handleDoubleClick(index, data.quantity))}
+                                    >
+                                        {data.quantity}
+                                    </div>
+                                )}
                                 <div className="col-head" key={index}>{data.priceperitem}</div>
-                                <div className="col-head display-flex device_action_dropdown_parent">
+                                <div className="col-head display-flex device_action_dropdown_parent" style={overflow_visible}>
                                     <div className="sts_icon"
                                         onClick={() => handleIconClick(index)}
                                     >
                                         <Icon icon={ic_label_important} style={{ transform: rotatedIndex === index ? 'rotate(90deg)' : 'rotate(0)', color: rotatedIndex === index ? '#08c6cd' : 'lightgray', }} className='device_content_arrow' size={25} />
                                     </div>
-                                    {/* <div key={index}>{(rotatedIndex === index) &&
-                                        (<div className='device_action_dropdown'>
-                                            <div className='display-flex device_action_dropdown1 dropdown_action'>
-                                                <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
-                                                <div className='device_content_dropdown display-flex'
-                                                // onClick={() => Device_edit_page(data)}
-                                                onClick={() => Product_edit_page(data.productid)}
-
-                                                >Edit Detials</div>
-                                            </div>
-                                            <div className='display-flex device_action_dropdown2 dropdown_action'>
-                                                <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
-                                                <div className='device_content_dropdown display-flex'
-                                                // onClick={() => { Editinactivedata(data, index) }}
-                                                >Remove Product</div>
-                                            </div>
-                                        </div>)}
-                                    </div> */}
+                                    {/* {console.log(data)} */}
                                     <div key={index}>{(rotatedIndex === index) &&
-                                        (<div className='device_action_dropdown'>
+                                        (<div className='device_action_dropdown' style={position_initial}>
                                             <div className='display-flex device_action_dropdown1 dropdown_action'>
                                                 <FontAwesomeIcon className='device_content_arrows' icon={faAnglesDown} size='lg' />
-                                                {/* <div className='device_content_dropdown display-flex' data-bs-toggle="modal" data-bs-target="#device_status_action"
-                                                onClick={() => Product_edit_page(data.productid)}
-                                                >Edit Product Details</div> */}
-                                                 <div className='device_content_dropdown display-flex'
-                                                   onClick={() => Product_edit_page(data.productid)}
-                                                >Edit Product Detials</div>
+                                                <div className='device_content_dropdown display-flex'
+                                                    onClick={() => Product_edit_page(data)}
+                                                >Edit Product Details</div>
                                             </div>
                                             <div className='display-flex device_action_dropdown2 dropdown_action'>
                                                 <FontAwesomeIcon icon={faAnglesDown} className='device_content_arrows' size='lg' />
                                                 {data.status == 1 ? (
                                                     <div className='device_content_dropdown display-flex'
-                                                        onClick={() => updateUserStatus(data.productid, 0, index)}
-                                                    >Inactivate Product
+                                                        onClick={() => updateUserStatus(data, 0, index)}
+                                                    >Delete Product
                                                     </div>
                                                 ) : (
                                                     <div className='device_content_dropdown display-flex'
-                                                        onClick={() => updateUserStatus(data.productid, 1, index)}
+                                                        onClick={() => updateUserStatus(data, 1, index)}
                                                     >Activate Product
                                                     </div>
                                                 )}
@@ -383,7 +476,7 @@ const Products = () => {
                 </div>
             </div>
 
-            {/* Edit Device detials */}
+            {/* Edit Device details */}
             <div class="modal fade device_status_action" id="device_status_action" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">

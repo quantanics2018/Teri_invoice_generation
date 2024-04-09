@@ -27,11 +27,18 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
+import { Box, InputAdornment, Snackbar, TextField } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 
 
 const EditProduct = () => {
-    const { productid } = useParams();
+    const { productid, productBatch } = useParams();
+    // console.log(productBatch);
+    // const { productInfo } = useParams();
+    // console.log(productInfo.productid);
+    const userInfoString = sessionStorage.getItem("UserInfo");
+    const userInfo = JSON.parse(userInfoString);
     // console.log(productid);
 
     // set var
@@ -67,7 +74,7 @@ const EditProduct = () => {
 
     // cancel script
     function handleCancel() {
-        navigate('/Products');
+        navigate(-1);
     }
     //redirect to device content page
     const navigate = useNavigate();
@@ -78,34 +85,35 @@ const EditProduct = () => {
     //     productname: '',
     // });
     const [inputValues, setInputValues] = useState({
-        belongsto: "",
-        priceperitem: "",
-        productid: "",
-        productname: "",
-        quantity: "",
-        rno: "",
-        status: "",
-        updatedon: "",
+        productid: '',
+        productname: '',
+        quantity: '',
+        priceperitem: '',
+        batchno: '',
+        CGST: '',
+        SGCT: '',
     });
+    // console.log(userInfo.userid);
+    const userid = userInfo.userid;
     useEffect(() => {
         const device_user_data = async () => {
             // console.log(API_URL);
             try {
-                const response = await fetch(`${API_URL}get/product/${productid}`);
-                const data = await response.json();
+                const response = await axios.post(`${API_URL}get/product`, { userid, productid: productid, batchno: productBatch });
+                const data = response.data;
                 // console.log(data.data.productid);
                 // all_data_fun(data)
                 const item = data.data;
+                // console.log(item);
                 setInputValues((prevValues) => ({
                     ...prevValues,
-                    belongsto: "",
                     priceperitem: item.priceperitem,
                     productid: item.productid,
                     productname: item.productname,
                     quantity: item.quantity,
-                    rno: "",
-                    status: "",
-                    updatedon: ""
+                    batchno: item.batchno,
+                    CGST: item.cgst,
+                    SGCT: item.sgst
                 }));
                 // console.log(inputValues);
 
@@ -116,12 +124,15 @@ const EditProduct = () => {
         device_user_data();
     }, [productid]);
 
-
+    // console.log(!(userInfo.position === 'staff' || userInfo.position === 'Manufacturer'));
     const inputFields = [
-        { label: "HSN Code", name: "productid", value: inputValues.productid, icon: ic_home_work, readOnly: true },
+        { label: "HSN Code", name: "productid", value: inputValues.productid, icon: ic_home_work, disabled: true },
+        { label: "Batch No", name: "batchno", value: inputValues.batchno, icon: person, disabled: true },
         { label: "Product Name", name: "productname", value: inputValues.productname, icon: person },
-        { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person },
+        { label: "Quantity", name: "quantity", value: inputValues.quantity, icon: person, disabled: !(userInfo.position === 'staff' || userInfo.position === 'Manufacturer') },
         { label: "Price Per Item", name: "priceperitem", value: inputValues.priceperitem, icon: person },
+        { label: "CGST", name: "CGST", value: inputValues.CGST, icon: person },
+        { label: "SGCT", name: "SGCT", value: inputValues.SGCT, icon: person }
     ]
 
     // const handleInputChange = (name, value) => {
@@ -139,38 +150,94 @@ const EditProduct = () => {
     //     }));
     //     console.log(fieldName, value);
     // };
-    const handleInputChange = (index, value) => {
-        const fieldName = inputFields[index].name;
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        // alert(name);
+        // const fieldName = inputFields[index].name;
         setInputValues((prevValues) => ({
             ...prevValues,
-            [fieldName]: value,
+            [name]: value,
         }));
     };
     // console.log(inputValues);
-    const userInfoString = sessionStorage.getItem("UserInfo");
-    const userInfo = JSON.parse(userInfoString);
 
+    const [resAlert, setresAlert] = useState(null)
+    const [submitted, setSubmitted] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
     // validation
     const handleClick = async () => {
-        const isValidhsncode = /^[0-9]+$/.test(inputValues.productid);
-        // console.log(isValidhsncode);
-        if (isValidhsncode) {
+        const isValidhsncode = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(inputValues.productid);
+        const isValidbatchno = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(inputValues.batchno);
+
+        // const isValidhsncode = /^[0-9]+$/.test(inputValues.productid);
+        // const isValidbatchno = /^[0-9]+$/.test(inputValues.batchno);
+        
+        const isValidproductname = (inputValues.productname.trim() !== '');
+        const isValidQuantityNo = /^[0-9]+$/.test(inputValues.quantity);
+        // const isValidpriceperitem = /^\d+(\.\d{2})?$/.test(postData.priceperitem);
+        const isValidpriceperitem = /^\d+(\.\d{2})?$/.test(inputValues.priceperitem);
+        const isValidCGST = /^[0-9]+$/.test(inputValues.CGST);
+        const isValidSGCT = /^[0-9]+$/.test(inputValues.SGCT);
+        if (isValidhsncode & isValidbatchno & isValidproductname & isValidQuantityNo & isValidpriceperitem & isValidCGST & isValidSGCT) {
             try {
-                console.log("hai", inputValues);
-                const response = await axios.put(`${API_URL}update/product`, { productdetial: inputValues, updator: userInfo.userid });
+                // console.log("hai", inputValues);
+                const response = await axios.put(`${API_URL}update/product`, { productdetial: inputValues, updator: userInfo.userid, batchno: productBatch });
+                // alert("response.data.message");
+                console.log("ajax response");
+                console.log(response)
+                console.log(response.data.status);
                 if (response.data.status) {
-                    // handleClear()
-                    alert(response.data.message);
+                    setresAlert(response.data.message);
+                    setSubmitted(true);
+                    if (response.data.status) {
+                        setTimeout(() => {
+                            navigate(-1);
+                        }, 1000);
+                    }
                 } else {
-                    alert("Product Dosn't Updated properly")
+                    alert(response.data.message)
                 }
             } catch (error) {
                 console.error('Error sending data:', error);
             }
         }
         else {
-            if (isValidhsncode == false) {
-                alert("Enter a valid HSN Code")
+            if (isValidhsncode === false) {
+                setresAlert("Enter a valid HSN Code")
+                setSubmitted(true);
+                // alert("Enter a valid HSN Code")
+            }
+            else if (isValidbatchno === false) {
+                setresAlert("Enter a valid Batch Number")
+                setSubmitted(true);
+                // alert("Enter a valid Batch Number")
+            }
+            else if (isValidproductname === false) {
+                setresAlert("Enter a valid Product Name")
+                setSubmitted(true);
+                // alert("Enter a valid Product Name")
+            }
+            else if (isValidQuantityNo === false) {
+                setresAlert("Enter a valid Quantity Number")
+                setSubmitted(true);
+                // alert("Enter a valid Quantity Number")
+            }
+            else if (isValidpriceperitem === false) {
+                setresAlert("Enter a valid Price Detail")
+                setSubmitted(true);
+                // alert("Enter a valid Price Detail")
+            }
+            else if (isValidCGST === false) {
+                setresAlert("Enter a valid CGST")
+                setSubmitted(true);
+                // alert("Enter a valid CGST")
+            }
+            else if (isValidSGCT === false) {
+                setresAlert("Enter a valid SGST")
+                setSubmitted(true);
+                // alert("Enter a valid SGST")
             }
         }
     }
@@ -178,94 +245,114 @@ const EditProduct = () => {
 
 
     return (
-        <div className='Add_device1 '>
-            <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable custom-modal-dialog">
-                    <div className="modal-content width_of_model height_of_modal_content">
-                        <div className="modal-header-confirm">
-                            <h5 className="modal-title" id="exampleModalLabel">CONFIRMATION</h5>
-                        </div>
-                        <div className="modal-main-confirm">
-                            <h5 className="modal-title ">Are you sure you want Exit?</h5>
-                        </div>
-                        <div className="modal-footer-confirm">
-                            <button type="button" className="btn-loc active-loc" data-bs-dismiss="modal" onClick={handleCancel}>YES</button>
-                            <button type="button" className="btn-loc inactive-loc" data-bs-dismiss="modal">NO</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="device_management display-flex page_top_box box-shadow">
-                <span className='module_tittle '>Product Detials</span>
-            </div>
-            <div className="add_device_container1">
-                <div className="new_device_content scroll_div">
-                    <div className="row_one display-flex">
-                        <div className="adding_new_device uppercase bold">Add Product Detials </div>
-                    </div>
-
-                    <div className="row_two display-flex padding-loc">
-                        <div className="device_info uppercase light-grey mb-loc-5">
-                            Product info
-                        </div>
-                        <div className="input-boxes">
-                            <div className="cmpny_and_site_name display-flex">
-                                {/* {inputFields} */}
-                                {inputFields.slice(0, 4).map((field, index) => (
-                                    <div key={index} className="inputbox display-flex input">
-                                        <div className="dsa_1st_input">
-                                            <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label>
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
-                                                <input
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    // onChange={handleInputChange}
-                                                    onChange={(e) => handleInputChange(index, e.target.value)}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                    readOnly={field.readOnly || false}
-                                                // style={field.readOnly ? { cursor: "not-allowed" } : {}}
-                                                />
-                                                {/* Add error handling if needed */}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
+        <>
+            <div className='Add_device1 '>
+                {/* Snack bar */}
+                <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}>
+                    <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                        {resAlert}
+                    </MuiAlert>
+                </Snackbar>
+                <div className="modal fade boot-modals" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable custom-modal-dialog">
+                        <div className="modal-content width_of_model height_of_modal_content">
+                            <div className="modal-header-confirm">
+                                <h5 className="modal-title" id="exampleModalLabel">CONFIRMATION</h5>
                             </div>
-                            {/* <div className="cmpny_and_site_name display-flex">
-                                {inputFields.slice(4, 8).map((field, index) => (
-                                    <div key={index} className="inputbox display-flex input">
-                                        <div className="dsa_1st_input">
-                                            <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label>
-                                            <div className="inputs-group display-flex">
-                                                <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span>
-                                                <input
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={handleInputChange}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div> */}
-                        </div>
-                    </div>
-
-                    <div className="operating_buttons display-flex padding-loc">
-                        <div className="save_cancel_btn display-flex site_button gap-4">
-                            <CancelBtnComp CancelBtnFun={handleCancel} />
-                            <SaveBtnComp SaveBtnFun={() => handleClick()} />
+                            <div className="modal-main-confirm">
+                                <h5 className="modal-title ">Are you sure you want Exit?</h5>
+                            </div>
+                            <div className="modal-footer-confirm">
+                                <button type="button" className="btn-loc active-loc" data-bs-dismiss="modal" onClick={handleCancel}>YES</button>
+                                <button type="button" className="btn-loc inactive-loc" data-bs-dismiss="modal">NO</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div >
+                <div className="device_management display-flex page_top_box box-shadow">
+                    <span className='module_tittle '>Product Detials</span>
+                </div>
+                <div className="add_device_container1">
+                    <div className="new_device_content scroll_div">
+                        <div className="row_one display-flex">
+                            <div className="adding_new_device uppercase bold">Add Product Detials </div>
+                        </div>
+
+                        <div className="row_two display-flex padding-loc">
+                            <div className="device_info uppercase light-grey mb-loc-5">
+                                Product info
+                            </div>
+                            <div className="input-boxes">
+                                <div className="cmpny_and_site_name display-flex">
+                                    {inputFields.slice(0, 4).map((field, index) => (
+                                        <div key={index} className="inputbox display-flex input">
+                                            <div className="dsa_1st_input">
+                                                <Box className="inputs-group display-flex">
+                                                    <TextField
+                                                        label={`${field.label}`}
+                                                        type="text"
+                                                        className="form-control-loc"
+                                                        value={field.value}
+                                                        onChange={handleInputChange}
+                                                        name={field.name}
+                                                        id={`input${index + 1}`}
+                                                        disabled={field.disabled}
+                                                        InputLabelProps={{
+                                                            className: 'required-label',
+                                                            required: true
+                                                        }}
+                                                    />
+                                                </Box>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="cmpny_and_site_name display-flex">
+                                    {inputFields.slice(4, 8).map((field, index) => (
+                                        <div key={index} className="inputbox display-flex input">
+                                            <div className="dsa_1st_input">
+                                                <Box className="inputs-group display-flex">
+                                                    <TextField
+                                                        label={`${field.label}`}
+                                                        type="text"
+                                                        className="form-control-loc"
+                                                        value={field.value}
+                                                        onChange={handleInputChange}
+                                                        name={field.name}
+                                                        id={`input${index + 1}`}
+                                                        readOnly={field.readOnly || false}
+                                                        InputLabelProps={{
+                                                            className: 'required-label',
+                                                            required: true
+                                                        }}
+                                                        InputProps={{
+                                                            endAdornment:
+                                                                (field.label === 'CGST' || field.label === 'SGCT') ? <InputAdornment position="end">%</InputAdornment> :
+                                                                    (field.label === 'Price Per Item') ? <InputAdornment position="end">₹</InputAdornment> :
+                                                                        null
+                                                        }}
+                                                    />
+                                                </Box>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                        <div className="operating_buttons display-flex padding-loc">
+                            <div className="save_cancel_btn display-flex site_button gap-4">
+                                <CancelBtnComp CancelBtnFun={handleCancel} />
+                                <SaveBtnComp SaveBtnFun={() => handleClick()} />
+                            </div>
+                        </div>
+                </div>
+            </div >
+        </>
 
     );
 };

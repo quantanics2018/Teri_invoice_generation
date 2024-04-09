@@ -5,8 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/system';
-import { Button } from '@mui/material';
-import {UserActionBtn} from '../assets/style/cssInlineConfig';
+import { Button, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar } from '@mui/material';
+import { UserActionBtn } from '../assets/style/cssInlineConfig';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
+import MuiAlert from '@mui/material/Alert';
+import Loader from '../components/Loader';
 const Login = (props) => {
     const theme = useTheme();
 
@@ -17,7 +21,7 @@ const Login = (props) => {
     const [inactive_site, setinactive_site] = useState(false);
     const [username_empty, setusername_empty] = useState(false);
     const [password_empty, setpassword_empty] = useState(false);
-
+    const [loading, setLoading] = useState(false);
 
     const handleUserName = (event) => {
         const Username = event.target.value;
@@ -47,55 +51,112 @@ const Login = (props) => {
             setpassword_empty(true)
         }
     }
+    const [resAlert, setresAlert] = useState(null)
     const validate_login = async () => {
         const body = { username, password };
         body.username = body.username.trim();
         body.password = body.password.trim();
-        try {
-            const response = await axios.post(`${API_URL}verify/credentials`,
-                {
-                    username: username,
-                    password: password,
-                }
-            );
-            // console.log(response);
-            if (response.data.success) {
-                sessionStorage.setItem("UserInfo", JSON.stringify({ ...response.data.data, "isLoggedIn": true }));
-                console.log(response.data);
-                if (response.data.data.position === "manifacture") {
-                    navigate("/Staff_Detials");
-                }
-                else if (response.data.data.position === "staff") {
-                    navigate('/Distributer_Detials');
-                }
-                else if (response.data.data.position === "distributor") {
-                    navigate('/Customer_Detials');
+        const isValidUserName = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.username);
+        // const isValidUserName = true;
+        const isValidPassword = body.password.trim() !== '';
+
+        if (isValidUserName && isValidPassword) {
+            await checkCredentials();
+        } else {
+            if (!isValidUserName) {
+                setresAlert("Enter vaild Username");
+                setSubmitted(true);
+                // alert("Enter vaild Username")
+            } 
+            else if(!isValidPassword){
+                setresAlert("Enter vaild Password");
+                setSubmitted(true);
+                // alert('Enter Valid Password')
+            }
+        }
+
+        async function checkCredentials() {
+            try {
+                const response = await axios.post(`${API_URL}verify/credentials`,
+                    {
+                        username: username,
+                        password: password,
+                    }
+                );
+                // console.log(response);
+                // console.log(response.data.message);
+                setresAlert(response.data.message);
+                setSubmitted(true);
+                if (response.data.success) {
+                    sessionStorage.setItem("UserInfo", JSON.stringify({ ...response.data.data, "isLoggedIn": true }));
+                    // console.log(response.data);
+                    // const expirationTimeInMinutes = 1;
+                    // const expirationMilliseconds = expirationTimeInMinutes * 60 * 1000;
+                    // setTimeout(() => {
+                    //     alert("Session Expired! Please Log in Again.");
+                    //     sessionStorage.removeItem("UserInfo");
+                    // }, expirationMilliseconds);
+                    if (response.data.data.position === "Manufacturer") {
+                        navigate("/Staff_Details");
+                    }
+                    else if (response.data.data.position === "staff") {
+                        navigate('/Distributer_Details');
+                    }
+                    else if (response.data.data.position === "distributor") {
+                        navigate('/D_Staff_Details');
+                    }
+                    else {
+                        navigate('/profilePage');
+                    }
+                    window.location.reload();
                 }
                 else {
-                    navigate('/profilePage');
+                    if (response.data.password === null) {
+                        setLoading(true);
+                        const setPasswordMail = await axios.post(`${API_URL}send-email/updatePassword`, { username });
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        setLoading(false);
+                        console.log(setPasswordMail.data.success);
+                        if (setPasswordMail.data.success) {
+                            setresAlert(setPasswordMail.data.message);
+                            setSubmitted(true);
+                            alert("Check your Mail");
+                            setUsername('');
+                            setPassword('');
+                        } else {
+                            setresAlert(setPasswordMail.data.message);
+                            setSubmitted(true);
+                            alert("Check Your Internet Connection");
+                        }
+                        // navigate('/UpdatePassword');
+                    }
+                    // alert(response.data.message);
                 }
-                window.location.reload();
+            } catch (error) {
+                console.error('Login failed:', error.message);
             }
-            else {
-                if (response.data.password === null) {
-                    navigate('/UpdatePassword');
-                }
-                alert(response.data.message);
-            }
-        } catch (error) {
-            console.error('Login failed:', error.message);
         }
     };
     // useEffect(() => {
     //     validate_login();
     // }, []);
+    
     // const btnStyle = { backgroundColor: 'red', color: 'white', borderRadius: '7px', width: '100px' }
+    const [showPassword, setShowPassword] = useState(false);
 
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
+    const [submitted, setSubmitted] = useState(false);
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
     return (
         <>
-            <br />
-            <br />
+            {loading && <Loader />}
             <div className='content'>
                 <div className='digital_scan'>
                     <div className="all_inputs">
@@ -103,31 +164,80 @@ const Login = (props) => {
                             <img src={invoiceLogo} alt="Logo" />
                         </div>
                         <div className="credentials" >
-                            <div className='login_input_div'>
-                                {/* <input type="text" placeholder='Email' className='login_inputs_individual' value={username} onChange={handleUserName} onBlur={LoginUsername} /> */}
-                                <TextField
-                                    label="Username"
-                                    type="text"
-                                    className="form-control-loc"
-                                    onBlur={LoginUsername}
-                                    value={username} onChange={handleUserName}
-                                // value={field.value}
-                                // onChange={(e) => handleInputChange(index, e.target.value)}
-                                />
-                                <div className="login_error-message">{username_empty && "Enter Valid Email"}</div>
-                            </div>
-                            <div className='login_input_div'>
-                                {/* <input type="password" placeholder='Password' className='login_inputs_individual' value={password} onChange={handlepassword} onBlur={LoginPassword} /> */}
+                            <FormControl sx={{ m: 1, width: '30ch' }} variant="outlined" className="credentials" >
+                                <div className='login_input_div'>
+                                    <TextField
+                                        label="Username"
+                                        type="text"
+                                        className="form-control-loc"
+                                        onBlur={LoginUsername}
+                                        value={username} onChange={handleUserName}
+                                        sx={{ m: 0, width: '30ch' }}
+                                    />
+                                    <div className="login_error-message">{username_empty && "Enter Valid Email"}</div>
+                                </div>
+                                <div className='login_input_div'>
+                                    <TextField
+                                        label="Password"
+                                        // type="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        className="form-control-loc"
+                                        value={password} onChange={handlepassword} onBlur={LoginPassword}
+                                        sx={{ m: 0, width: '30ch' }}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        onMouseDown={handleMouseDownPassword}
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                    <div className="login_error-message">{password_empty && "Enter Valid Password"}</div>
+                                </div>
+                            </FormControl>
+                            {/* <div className='login_input_div'>
                                 <TextField
                                     label="Password"
                                     type="password"
                                     className="form-control-loc"
                                     value={password} onChange={handlepassword} onBlur={LoginPassword}
-                                // value={field.value}
-                                // onChange={(e) => handleInputChange(index, e.target.value)}
                                 />
                                 <div className="login_error-message">{password_empty && "Enter Valid Password"}</div>
-                            </div>
+                            </div> */}
+                            {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <FormControl sx={{ m: 1, width: '30ch' }} variant="outlined">
+                                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                                    <OutlinedInput
+                                        id="outlined-adornment-password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        value={password}
+                                        onChange={handlepassword}
+                                        onBlur={LoginPassword}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                        label="Password"
+                                    />
+                                </FormControl>
+                                <div className="login_error-message">{password_empty && "Enter Valid Password"}</div>
+                            </div> */}
+
                         </div>
                         <div className='error_forgot display-flex'>
                             <div className=' error_msg_login'>
@@ -141,9 +251,9 @@ const Login = (props) => {
                                     <span className='display-flex' style={{ justifyContent: "start" }}>Inactive Site</span>
                                 )}
                             </div>
-                            <Button color="secondary">
+                            {/* <Button color="secondary">
                                 Forgot Password
-                            </Button>
+                            </Button> */}
                             {/* <div className="forget">
                                 <span className='display-flex' style={{ justifyContent: "end" }}>Forgot Password</span>
                             </div> */}
@@ -161,7 +271,16 @@ const Login = (props) => {
 
                 </div>
             </div>
+            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
         </>
     )
 }
 export default Login;
+

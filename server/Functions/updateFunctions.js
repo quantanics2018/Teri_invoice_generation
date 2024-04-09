@@ -9,35 +9,131 @@ async function updateUserDataIndividual(req, res) {
         aadharNo,
         fName,
         lName,
+        Positionid,
         email,
         mobileNo,
+        adminid,
         upiPaymentNo,
         accName,
         accNo,
         passbookImg,
+
         pAddress,
         streetAddress,
         City,
         State,
         pCode,
+
         CommunicationAddress,
         StreetAddress2,
         City2,
         State2,
         PostalCode2
     } = req.body.inputValues;
-    const hi = req.body.inputValues;
+    const AccessOptions = req.body.AccessOptions;
+    console.log(AccessOptions.D_Staff);
     try {
+        await userdbInstance.userdb.query('BEGIN');
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public."user"
-        SET phno=$1, altphoneno=$2, aadhar=$3, pan=$4, name=$5, pstreetname=$6, pdistrictid=$7, pstateid=$8,ppostalcode=$9, cstreetname=$10, cdistrictid=$11, cstateid=$12, cpostalcode=$13
-        WHERE userid=$14;`, [mobileNo, mobileNo, aadharNo, panNumber, fName, streetAddress, City, State, pCode, StreetAddress2, City2, State2, PostalCode2, userid]);
+        SET email=$1, phno=$2, aadhar=$3, pan=$4, pstreetname=$5, pdistrictid=$6, pstateid=$7, ppostalcode=$8 , cstreetname=$9, cdistrictid=$10,cstateid=$11, cpostalcode=$12,organizationname=$13, gstnno=$14, bussinesstype=$15, fname=$16, lname=$17, upiid=$18,bankname=$19, bankaccno=$20,passbookimg=$21 WHERE userid=$22;`, [email, mobileNo, aadharNo, panNumber, streetAddress, City, State, pCode, StreetAddress2, City2, State2, PostalCode2, OrganizationName, gstNumber, bussinessType, fName, lName, upiPaymentNo, accName, accNo, passbookImg, userid]);
+
+        // Staff Controls
+        if (AccessOptions['Staff'] === 'No access') {
+            Staff_uc = 0;
+        } else if (AccessOptions['Staff'] === 'View') {
+            Staff_uc = 1;
+        }
+        else if (AccessOptions['Staff'] === 'Edit') {
+            Staff_uc = 2;
+        }
+        else if (AccessOptions['Staff'] === 'All') {
+            Staff_uc = 3;
+        }
+        // Distributor Controls
+        if (AccessOptions['Distributor'] === 'No access') {
+            Distributor_uc = 0;
+        } else if (AccessOptions['Distributor'] === 'View') {
+            Distributor_uc = 1;
+        }
+        else if (AccessOptions['Distributor'] === 'Edit') {
+            Distributor_uc = 2;
+        }
+        else if (AccessOptions['Distributor'] === 'All') {
+            Distributor_uc = 3;
+        }
+        // D_Staff Controls
+        if (AccessOptions['D_Staff'] === 'No access') {
+            D_Staff_uc = 0;
+        } else if (AccessOptions['D_Staff'] === 'View') {
+            D_Staff_uc = 1;
+        }
+        else if (AccessOptions['D_Staff'] === 'Edit') {
+            D_Staff_uc = 2;
+        }
+        else if (AccessOptions['D_Staff'] === 'All') {
+            D_Staff_uc = 3;
+        }
+        // Customer Controls
+        if (AccessOptions['Customer'] === 'No access') {
+            customer_uc = 0;
+        } else if (AccessOptions['Customer'] === 'View') {
+            customer_uc = 1;
+        }
+        else if (AccessOptions['Customer'] === 'Edit') {
+            customer_uc = 2;
+        }
+        else if (AccessOptions['Customer'] === 'All') {
+            customer_uc = 3;
+        }
+        // Products Controls
+        if (AccessOptions['Products'] === 'No access') {
+            Products_uc = 0;
+        } else if (AccessOptions['Products'] === 'View') {
+            Products_uc = 1;
+        }
+        else if (AccessOptions['Products'] === 'Edit') {
+            Products_uc = 2;
+        }
+        else if (AccessOptions['Products'] === 'All') {
+            Products_uc = 3;
+        }
+        // Invoice Generator Controls
+        if (AccessOptions['Invoice Generator'] === 'No access') {
+            InvoiceGenerator_uc = 0;
+        } else if (AccessOptions['Invoice Generator'] === 'View') {
+            InvoiceGenerator_uc = 1;
+        }
+        else if (AccessOptions['Invoice Generator'] === 'Edit') {
+            InvoiceGenerator_uc = 2;
+        }
+        else if (AccessOptions['Invoice Generator'] === 'All') {
+            InvoiceGenerator_uc = 3;
+        }
+        // Invoice PaySlip Controls
+        if (AccessOptions['Invoice PaySlip'] === 'No access') {
+            InvoicePaySlip_uc = 0;
+        } else if (AccessOptions['Invoice PaySlip'] === 'View') {
+            InvoicePaySlip_uc = 1;
+        }
+        else if (AccessOptions['Invoice PaySlip'] === 'Edit') {
+            InvoicePaySlip_uc = 2;
+        }
+        else if (AccessOptions['Invoice PaySlip'] === 'All') {
+            InvoicePaySlip_uc = 3;
+        }
+
+        const UpdateAccessControll = await userdbInstance.userdb.query(`UPDATE public.accesscontroll
+        SET  distributer=$1, product=$2, invoicegenerator=$3,customer=$4, staff=$5, invoicepayslip=$6 , d_staff=$7
+        WHERE userid=$8;`, [Distributor_uc, Products_uc, InvoiceGenerator_uc, customer_uc, Staff_uc, InvoicePaySlip_uc, D_Staff_uc, userid]);
+        await userdbInstance.userdb.query('COMMIT');
+
         if (userUpdateResult.rowCount === 1) {
             // The update was successful
             console.log("updated successfully");
-            res.json({ message: "Successfully Updated" });
+            res.json({ message: "Successfully Updated", status: true });
         } else {
             // No rows were updated, handle accordingly
-            res.status(404).json({ message: "User not found" });
+            res.status(404).json({ message: "User not found", status: false });
         }
     } catch (error) {
         console.error('Error executing database query:', error);
@@ -50,22 +146,43 @@ async function updateProductDataIndividual(req, res) {
     const { priceperitem,
         productid,
         productname,
-        quantity } = req.body.productdetial;
-    // console.log(quantity);
+        quantity,
+        batchno,
+        CGST,
+        SGCT
+    } = req.body.productdetial;
+    const { updator } = req.body;
+    // const batchnoInt = Number(batchno); 
+    console.log("Update the Apropriate Product : ", batchno,CGST,SGCT);
+
     try {
+
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [updator]);
+        console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [updator]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = updator
+        }
+        // console.log("belongsto : ", belongsto);
+
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
-        SET quantity=$1, priceperitem=$2,productname=$3
-        WHERE productid=$4;`, [quantity, priceperitem, productname, productid]);
+        SET quantity=$1, priceperitem=$2,productname=$3,batchno=$4,cgst=$5,sgst=$6
+        WHERE productid=$7 and belongsto=$8 and batchno=$9; `, [quantity, priceperitem, productname, batchno, CGST, SGCT, productid, belongsto,batchno]);
+        console.log("sucess", userUpdateResult);
         if (userUpdateResult.rowCount === 1) {
             // The update was successful
             res.json({ message: "Successfully Updated", status: true });
         } else {
             // No rows were updated, handle accordingly
-            res.status(404).json({ message: "User not found", status: false });
+            res.json({ message: "Oops! Something Went Wrong", status: false });
         }
     } catch (error) {
         console.error('Error executing database query:', error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.json({ message: "Internal Server Error", status: false });
     }
 }
 async function updateStatusToRemove(req, res) {
@@ -88,7 +205,7 @@ async function updateStatusToRemove(req, res) {
 }
 
 async function updateUserPassword(req, res) {
-    const {username , password} = req.body;
+    const { username, password } = req.body;
     console.log(password, username);
     try {
         const checkIsUsernameExist = await userdbInstance.userdb.query('select username from public.credentials where username=$1;', [username]);
@@ -98,7 +215,7 @@ async function updateUserPassword(req, res) {
             WHERE username=$2;`, [password, username]);
             if (userUpdateResult.rowCount === 1) {
                 // The update was successful
-                res.json({ resStatus: "Password Updated Successfully", qos: "success" });
+                res.json({ message: "Password Updated Successfully", qos: "success" });
             } else {
                 // No rows were updated, handle accordingly
                 res.status(404).json({ message: "Not Updated Properly" });
@@ -106,7 +223,52 @@ async function updateUserPassword(req, res) {
         }
         else {
             console.log("Username doesn't exist");
-            res.send({ message: `${username} Username doesn't exist` , status:'notExist'});
+            res.send({ message: `${username} Username doesn't exist`, status: 'notExist' });
+        }
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+async function updatereciverStatus(req, res) {
+    const { invoiceId, textVal } = req.body;
+    // console.log(invoiceId, textVal);
+    try {
+        const reciverStatusResult = await userdbInstance.userdb.query(`UPDATE public.invoice
+            SET reciverstatus=$1, transactionid=$2
+            WHERE invoiceid=$3;`, ['1', textVal, invoiceId]);
+        if (reciverStatusResult.rowCount === 1) {
+            res.json({ message: "Status Updated Successfully", qos: "success" });
+        } else {
+            res.status(404).json({ message: "Not Updated Properly" });
+        }
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+async function updatesenderStatus(req, res) {
+    const { invoiceId, belongsto } = req.body;
+    // const {}  = req.body;
+    console.log(belongsto);
+    try {
+        const senderStatusResult = await userdbInstance.userdb.query(`UPDATE public.invoice
+            SET senderstatus=$1
+            WHERE invoiceid=$2;`, ['1', invoiceId]);
+
+        const getuserid = await userdbInstance.userdb.query(`SELECT userid from public."user" where email=$1;`, [belongsto]);
+        // console.log(getuserid.rows[0].userid);
+        const getuseridRes = getuserid.rows[0].userid;
+
+        const updateProductStatus = await userdbInstance.userdb.query(`UPDATE public.products
+        SET status=$1
+        WHERE belongsto=$2;`, ['1', getuseridRes]);
+        
+        if (senderStatusResult.rowCount === 1) {
+            res.json({ message: "Status Updated Successfully", qos: "success" });
+        } else {
+            res.status(404).json({ message: "Not Updated Properly" });
         }
     } catch (error) {
         console.error('Error executing database query:', error);
@@ -115,14 +277,35 @@ async function updateUserPassword(req, res) {
 }
 
 async function updateProducts(req, res) {
-    const { productid, status } = req.body;
-    console.log(productid, status);
+    const { productid, batchno } = req.body.productDetial;
+    const currentUser = req.body.currentUserId;
+    const { productdetial, status } = req.body;
+    console.log(status, currentUser);
+
     try {
         const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
         SET status=$1
-        WHERE productid=$2;`, [status, productid]);
+        WHERE productid=$2 and  batchno=$3 and belongsto=$4;`, [status, productid, batchno, currentUser]);
         if (userUpdateResult.rowCount === 1) {
             res.json({ resStatus: status, qos: "success" });
+        } else {
+            console.log("sending response");
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+async function productQuantity(req, res) {
+    const { hsncode,batchno, currentUserUserid, Quantity } = req.body;
+    // console.log(hsncode,batchno, currentUserUserid, Quantity);
+    try {
+        const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public.products
+        SET quantity=$1
+        WHERE productid=$2 and belongsto=$3 and batchno=$4;`, [Quantity, hsncode, currentUserUserid,batchno]);
+        if (userUpdateResult.rowCount === 1) {
+            res.json({ resStatus: "Updated successfully", qos: "success" });
         } else {
             res.status(404).json({ message: "User not found" });
         }
@@ -133,4 +316,53 @@ async function updateProducts(req, res) {
 }
 
 
-module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword };
+
+async function update_user_profile(req,res){
+    const userid = req.body.userId;
+
+    const {
+        fname,
+        lname,
+        email,
+        mobile,
+        aadhar,
+        pannumber,
+        streetname,
+        dname,
+        sname,
+        orgname,
+        btype,
+        pcode,
+
+        bname,
+        acno,
+        ifsc_code,
+        achname,
+        upi_id,
+        gstno,  
+
+
+    } = req.body.userDetails;
+
+    try{
+        const userUpdateResult = await userdbInstance.userdb.query(`UPDATE public."user"
+        SET email=$1, phno=$2, aadhar=$3, pan=$4, pstreetname=$5, pdistrictid=$6, pstateid=$7, ppostalcode=$8 , cstreetname=$9, cdistrictid=$10,cstateid=$11, cpostalcode=$12,organizationname=$13,  bussinesstype=$14, fname=$15, lname=$16  , gstnno=$17 , upiid=$18 , bankname=$19, bankaccno=$20 , accholdername=$21 , ifsccode=$22 WHERE userid=$23;`, [email,  mobile,  aadhar,  pannumber, streetname, dname, sname, pcode, streetname, dname, sname, pcode,orgname, btype,fname,lname,gstno,upi_id,bname,acno,achname,ifsc_code,userid]);
+        
+        if (userUpdateResult.rowCount === 1) {
+            res.json({ message: "Successfully Updated", status: true });
+            console.log("db updation is okay");
+        } else {
+            res.json({ message: "Oops! Something Went Wrong DB Updation side", status: false });
+            
+            console.log("404 error db error");
+        }
+
+    }
+    catch(error){
+        console.log("error message for user profile updation in db handling file");
+        res.status(500).json({message:'profile updation query error'});
+    }
+}
+
+
+module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword, updatereciverStatus, updatesenderStatus, productQuantity,update_user_profile };
