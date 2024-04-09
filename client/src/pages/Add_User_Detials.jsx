@@ -262,11 +262,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber);
 
                 // Upi Bank Detials
-                const isValidupiPaymentNo = postData.upiPaymentNo.trim() !== '';
-                const isValidaccName = postData.accName.trim() !== '';
-                const isValidaccHolderName = postData.accHolderName.trim() !== '';
-                const isValidaccNo = (/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
-                const isValidifscCode = postData.ifscCode.trim() !== '';
+
+                const isValidupiPaymentNo = (postData.upiPaymentNo.trim()=== '')?true:postData.upiPaymentNo.trim() !== '';
+                const isValidaccName = (postData.accName.trim()=== '')?true:postData.accName.trim() !== '';
+                const isValidaccHolderName = (postData.accHolderName.trim() === '')?true:postData.accHolderName.trim() !== '';
+                const isValidaccNo = (postData.accNo.trim() === '')?true:(/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
+                const isValidifscCode = (postData.ifscCode.trim() === '')?true:postData.ifscCode.trim() !== '';
+
                 // alert(isValidaccNo)
                 // const isValidpAddress = postData.pAddress.trim() !== '';
 
