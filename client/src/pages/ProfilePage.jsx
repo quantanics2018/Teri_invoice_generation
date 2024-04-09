@@ -27,8 +27,6 @@ const ProfilePage = () => {
 
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
-    console.log("user info in session");
-    console.log(userInfo);
     const userid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
     const [profileInfoRes, setprofileInfoRes] = useState({
         // id:userid,
@@ -69,8 +67,7 @@ const ProfilePage = () => {
             try {
                 // const userid = JSON.parse(sessionStorage.getItem("UserInfo")).userid;
                 await axios.post(`${API_URL}get/profileInfo`, { userid }).then(res => {
-                    console.log("ajax data");
-                    console.log(res.data.data[0]);
+                    // console.log(res.data.data[0]);
                     setprofileInfoRes({
                         ...profileInfoRes,
                         fname: res.data.data[0].fname,
@@ -111,10 +108,8 @@ const ProfilePage = () => {
                     // userInfoFields.value = 'hao'
                     if (res.data.data[0].positionid === "1") {
                         setmanufacture(true);
-                        console.log("position id is  manufacturer");
                     } else {
                         setmanufacture(false);
-                        console.log("position id is not manufacturer");
                     }
                     if (res.data.data[0].positionid === "2") {
                         setdistributor(true);
@@ -141,7 +136,7 @@ const ProfilePage = () => {
     }, []);
     // console.log("profile data ajax data");
     // console.log(profileInfoRes);
-    console.log(userInfo.positionid);
+    // console.log(userInfo.positionid);
 
     if (userInfo.positionid === 1 || userInfo.positionid === 2 || userInfo.positionid === 3) {
         updatedInputField = userInfoFields.slice(0, userInfoFields.length);
@@ -245,8 +240,7 @@ const ProfilePage = () => {
 
                 setLoading(true);
                 const response = await axios.put(`${API_URL}profile_udpate/user`, { userId: userId, userDetails: profileInfoRes });
-                console.log("ajax response for profile updation");
-                console.log(response.data.status);
+                // console.log(response.data.status);
                 if (response.data.status) {
                     setresAlert(response.data.message);
                     setSubmitted(true);
@@ -262,7 +256,6 @@ const ProfilePage = () => {
                 }
             }
             catch (error) {
-                console.log("profile page updation ajax error");
                 console.log(error);
             }
 
@@ -350,13 +343,13 @@ const ProfilePage = () => {
 
     const updateSignApi = async () => {
         const isImagePresent = isImageValid(file);
-        console.log("isImagePresent :", isImagePresent);
+        // console.log("isImagePresent :", isImagePresent);
 
         if (isImagePresent) {
             const response = await axios.post(`${API_URL}upload`,
                 formData
             );
-            console.log(response.data.status);
+            // console.log(response.data.status);
             if (response.data.status) {
                 const modal = document.querySelector('.modal');
                 if (modal) {
@@ -381,8 +374,8 @@ const ProfilePage = () => {
     const acceptanceCheckBox = () => {
         // SetUpdateBtnStatus(!e.target.checked);
         const checkbox = document.querySelector('#acceptance');
-        console.log(file !== null);
-        console.log(checkbox.checked);
+        // console.log(file !== null);
+        // console.log(checkbox.checked);
         if (checkbox.checked) {
             SetUpdateBtnStatus(false)
         } else {
@@ -514,7 +507,7 @@ const ProfilePage = () => {
                                         {fixed_data.positionid=== '5' && 'Distributor Staff'} */}
                                         {fixed_data.position}
                                     </Typography>
-                                    {console.log("user info data position:\t" + fixed_data.position)}
+                                    {/* {console.log("user info data position:\t" + fixed_data.position)} */}
 
                                     <Typography variant="h4">{fixed_data.fname} {fixed_data.lname}</Typography>
                                     <Typography variant="body1" style={{ color: 'black' }}>User ID: {userid}</Typography>

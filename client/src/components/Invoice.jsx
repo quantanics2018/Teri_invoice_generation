@@ -214,7 +214,7 @@ const Invoice = ({
     }
 
     const isSignatureAbsent = !SignExistanceDB;
-    console.log(isSignatureAbsent);
+    // console.log(isSignatureAbsent);
 
     // Handle submit
     const [Closemodel, setClosemodel] = useState(false);

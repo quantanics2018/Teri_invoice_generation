@@ -51,7 +51,6 @@ const pName = {
 const InvoiceGenerator = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
-    console.log(userInfo);
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -109,7 +108,7 @@ const InvoiceGenerator = () => {
     ]);
     // console.log("program : ");
     const verifyKeysHaveValues = (array) => {
-        console.log(array);
+        // console.log(array);
         for (const obj of array) {
             for (const key in obj) {
                 if (!obj[key]) {
@@ -123,7 +122,7 @@ const InvoiceGenerator = () => {
 
     const addRow = () => {
         const result = verifyKeysHaveValues(rows);
-        console.log(result);
+        // console.log(result);
         if (result) {
             const newRow = { id: rows.length + 1, hsncode: '', batchno: '', productName: '', Quantity: '', Discount: '', Total: '' };
             setRows([...rows, newRow]);
@@ -294,7 +293,7 @@ const InvoiceGenerator = () => {
                 const dropDownUserResponse = await axios.post(`${API_URL}get/getUserList`, { inputValues });
                 const users = dropDownUserResponse.data.data.map(item => item.organizationname);
                 setuserNameoptions(users);
-                console.log(users);
+                // console.log(users);
                 // const checkForUndefined = users.map(item => item === undefined);
                 // console.log(checkForUndefined.includes('quantanics1'));
 
@@ -356,7 +355,7 @@ const InvoiceGenerator = () => {
         // console.log("handle change : ", updatedRows[id - 1].hsncode);
         productBatchno = productList.filter(item => item.productid === updatedRows[id - 1].hsncode).map(item => item.batchno);
         setbatchnoOption(productBatchno);
-        console.log(productBatchno);
+        // console.log(productBatchno);
 
         // if (column === 'hsncode') {
         //     // alert(value)
@@ -529,8 +528,7 @@ const InvoiceGenerator = () => {
         // console.log("enteredQuantity : ", enteredQuantity);
         // console.log("enteredDiscount : ", enteredDiscount);
 
-        console.log("hsncode : ", rows[id - 1].hsncode, typeof rows[id - 1].hsncode);
-        console.log("batchno : ", rows[id - 1].batchno, typeof String(rows[id - 1].batchno));
+        // onsole.log("batchno : ", rows[id - 1].batchno, typeof String(rows[id - 1].batchno));
 
         // console.log("Quantity : ",rows[id-1].Quantity);
         // console.log("discount : ",rows[id-1].Discount);
@@ -543,12 +541,12 @@ const InvoiceGenerator = () => {
             .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
             .map((product) => product.priceperitem)[0] || '';
 
-        console.log("productPrice : ", productPrice);
+        // console.log("productPrice : ", productPrice);
 
         const availableQuantity = productList
             .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
             .map((product) => product.quantity)[0] || '';
-        console.log("availableQuantity :", availableQuantity);
+        // console.log("availableQuantity :", availableQuantity);
         if (availableQuantity < rows[id - 1].Quantity) {
             const updatedRows = [...rows];
             // Update the Quantity of the specific row
@@ -562,13 +560,13 @@ const InvoiceGenerator = () => {
                 .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
                 .map((product) => product.cgst)[0] || '';
 
-            console.log("getcgst : ", getcgst);
+            // console.log("getcgst : ", getcgst);
 
             const getsgst = productList
                 .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
                 .map((product) => product.sgst)[0] || '';
 
-            console.log("getsgst : ", getsgst);
+            // console.log("getsgst : ", getsgst);
 
             // calculate with cgst+sgst
             // const updatedRows = rows.map((row) =>
@@ -582,7 +580,7 @@ const InvoiceGenerator = () => {
                 } : row
             );
 
-            console.log("updatedRows : ", rows);
+            // console.log("updatedRows : ", rows);
             setRows(updatedRows);
         }
 
@@ -600,11 +598,11 @@ const InvoiceGenerator = () => {
         // console.log("get : ", customerName, value);
         const getReciverData = async () => {
             const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: value });
-            console.log(getReciverDataRequest.data.status);
+            // console.log(getReciverDataRequest.data.status);
             if (getReciverDataRequest.data.status) {
                 const reciveridObj = getReciverDataRequest.data.data;
                 setReciverIdRes(reciveridObj);
-                console.log(reciveridObj);
+                // console.log(reciveridObj);
             } else {
                 // alert("ahi")
                 console.log("err");
@@ -642,7 +640,7 @@ const InvoiceGenerator = () => {
         } else {
             setdiability(false)
         }
-        console.log("diability : ", diability);
+        // console.log("diability : ", diability);
 
     }, [diability, hasEmptyValue, hasEmptyReciverId])
 
@@ -658,7 +656,7 @@ const InvoiceGenerator = () => {
             try {
                 // Assuming `axios` is properly imported
                 const SignRes = await axios.post(`${API_URL}get/getSignExistance`, { currentUser: currentUserVar });
-                console.log(SignRes.data.status);
+                // console.log(SignRes.data.status);
 
                 if (SignRes.data.status) {
                     setSignExistanceDB(true);

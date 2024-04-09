@@ -128,7 +128,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
             try {
                 const dropDownUserResponse = await axios.post(`${API_URL}get/state`);
                 const statedata = (dropDownUserResponse.data.data.map(item => item.statename))
-                console.log(dropDownUserResponse.data.data.map(item => item.statename));
+                // console.log(dropDownUserResponse.data.data.map(item => item.statename));
                 setstate(statedata);
             } catch (error) {
                 console.error('Error in processing data:', error);
@@ -138,9 +138,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
         const fetchdistrict = async () => {
             try {
                 const dropDownUserResponse = await axios.post(`${API_URL}get/district`);
-                console.log(dropDownUserResponse);
+                // console.log(dropDownUserResponse);
                 const districtdata = (dropDownUserResponse.data.data.map(item => item.districtname))
-                console.log(dropDownUserResponse.data.data.map(item => item.districtname));
+                // console.log(dropDownUserResponse.data.data.map(item => item.districtname));
                 setdistrict(districtdata);
             } catch (error) {
                 console.error('Error in processing data:', error);
@@ -159,13 +159,12 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 [name]: e.target.files[0], // Use the file from the input
             });
         } else {
-            console.log("Name Value Printing", name, value);
+            // console.log("Name Value Printing", name, value);
             setPostData({
                 ...postData,
                 [name]: value,
             });
         }
-        console.log("PostDataaaaaaaaaa", postData);
     };
 
     // Access control
@@ -194,15 +193,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
     formData.append('type', 'single');
     formData.append('imageName', postData.userid);
 
-    // console.log(postData.passbookImg);
-    // formData.append('userDetials', postData);
-    // formData.append('AccessControls', accessValues);
-    // for (const entry of formData.entries()) {
-    //     console.log(entry);
-    // }
 
     const isImageValid = (file) => {
-        console.log(file); // Logging the parameter passed to the function
+        // console.log(file); // Logging the parameter passed to the function
         if (!file) {
             return false; // No file present
         }
@@ -231,7 +224,6 @@ const Add_User_Detials = ({ Positionid_val }) => {
         return true;
     };
 
-    // console.log("User_________id",userInfo.userid);
     // const userInfoString = sessionStorage.getItem("UserInfo");
     // const userInfo = JSON.parse(userInfoString);
     const [loading, setLoading] = useState(false);
@@ -284,7 +276,6 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
                 const isValidState = postData.State.trim() !== '';
-                // console.log("qqqqqqqqqqqqqqqqqqqqq",isValidState);
                 const isValidpCode = postData.pCode.trim() !== '';
                 // const isValidCommunicationAddress = postData.CommunicationAddress.trim() !== '';
                 const isValidStreetAddress2 = postData.StreetAddress2.trim() !== '';
@@ -313,12 +304,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setSubmitted(true);
                         if (response.data.status) {
                             // alert("add signature")
-                            console.log("uploading image");
                             if (Positionid_val !== 3) {
                                 const response = await axios.post(`${API_URL}upload`,
                                     formData
                                 );
-                                console.log(response.data.status);
+                                // console.log(response.data.status);
                                 if (response.data.status) {
                                     handleClear();
                                     navigate(-1);
@@ -436,12 +426,12 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             const response = await axios.post(`${API_URL}upload`,
                                 formData
                             );
-                            console.log(response.data.status);
+                            // console.log(response.data.status);
                             if (response.data.status) {
-                                setTimeout(() => {
-                                    handleClear();
-                                    navigate(-1);
-                                }, 1000);
+                                handleClear();
+                                navigate(-1);
+                                // setTimeout(() => {
+                                // }, 1000);
                                 console.log(' staff addingFile uploaded successfully:', response.data);
                             } else {
                                 console.error('staff adding Failed to upload file:', response.statusText);
@@ -555,7 +545,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
     const [selectedUser, setSelectedUser] = useState(null);
     // var Positionid_val;
-    console.log(Positionid_val);
+    // console.log(Positionid_val);
     // const handleUserChange = async (event) => {
     //     setSelectedUser(event.target.value);
     //     if (event.target.value == "select user") {
@@ -606,9 +596,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         { label: 'Invoice Generator', disableHead: false },
         { label: 'Invoice PaySlip', disableHead: false },
     ]
-    console.log(Positionid_val);
     let updatedAccessHead = [...accessHead];
-    console.log(userInfo.position === 'Manufacturer');
     if (userInfo.position === 'Manufacturer') {
         let labelsToUpdate
         if (Positionid_val === 4) {
@@ -932,7 +920,6 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
                                                     {/* signature input */}
-                                                    {console.log("signature input")}
 
                                                     <TextField
                                                         label={

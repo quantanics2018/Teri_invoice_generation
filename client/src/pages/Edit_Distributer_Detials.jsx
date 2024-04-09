@@ -98,7 +98,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
 
     const all_data_fun = (data) => {
         if (data) {
-            console.log(data);
+            // console.log(data);
             const item = data.data;
             const AccessItem = data.getuserAccessControl;
             setInputValues((prevValues) => ({

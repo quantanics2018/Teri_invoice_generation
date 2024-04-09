@@ -140,6 +140,7 @@ const Login = (props) => {
     // useEffect(() => {
     //     validate_login();
     // }, []);
+    
     // const btnStyle = { backgroundColor: 'red', color: 'white', borderRadius: '7px', width: '100px' }
     const [showPassword, setShowPassword] = useState(false);
 

@@ -34,7 +34,7 @@ import MuiAlert from '@mui/material/Alert';
 
 const EditProduct = () => {
     const { productid, productBatch } = useParams();
-    console.log(productBatch);
+    // console.log(productBatch);
     // const { productInfo } = useParams();
     // console.log(productInfo.productid);
     const userInfoString = sessionStorage.getItem("UserInfo");
@@ -124,7 +124,7 @@ const EditProduct = () => {
         device_user_data();
     }, [productid]);
 
-    console.log(!(userInfo.position === 'staff' || userInfo.position === 'Manufacturer'));
+    // console.log(!(userInfo.position === 'staff' || userInfo.position === 'Manufacturer'));
     const inputFields = [
         { label: "HSN Code", name: "productid", value: inputValues.productid, icon: ic_home_work, disabled: true },
         { label: "Batch No", name: "batchno", value: inputValues.batchno, icon: person, disabled: true },

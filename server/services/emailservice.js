@@ -119,11 +119,11 @@ function decryptString(encryptedText, secretKey) {
     return decryptedText;
 }
 
-const encryptedText = 'VTJGc2RHVmtYMTlNb2g5ZmhyckxBbW5LOG5FTm9UQ01wUTRIUExkOGNFWjRmaTAxVW9hcU5QN0JzYmVic1A3WQ%3D%3D';
-const secretKey = 'edf6537e67f256578bbb90b2adb1617622d6cbe49702b832c99c6feb8cce817c';
+// const encryptedText = 'VTJGc2RHVmtYMTlNb2g5ZmhyckxBbW5LOG5FTm9UQ01wUTRIUExkOGNFWjRmaTAxVW9hcU5QN0JzYmVic1A3WQ%3D%3D';
+// const secretKey = 'edf6537e67f256578bbb90b2adb1617622d6cbe49702b832c99c6feb8cce817c';
 
-const decryptedText = decryptString(encryptedText, secretKey);
-console.log('Decrypted Text:', decryptedText);
+// const decryptedText = decryptString(encryptedText, secretKey);
+// console.log('Decrypted Text:', decryptedText);
 
 async function UpdatePasswordmailservice(req, res) {
     const { username } = req.body

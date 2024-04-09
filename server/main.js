@@ -376,7 +376,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
             //     res.status(404).json({ success: false, message: 'User not found or signature not updated' });
             // }
         } catch (error) {
-            return res.status(500).json({ success: false, message: 'Error querying user database' });
+            return res.status(500).json({ status: false, message: 'Error querying user database' });
         }
         res.json({ status: true, message: `Signature Updated Successfully`, filename: imageName });
     });

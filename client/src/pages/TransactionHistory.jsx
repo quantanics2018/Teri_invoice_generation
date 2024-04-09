@@ -128,15 +128,15 @@ const TransactionHistory = () => {
         var formattedDate = year + "-" + (month < 10 ? "0" + month : month) + "-" + (day < 10 ? "0" + day : day);
         return formattedDate;
     }
-    console.log("userInfo",userInfo);
+    // console.log("userInfo",userInfo);
     let belongsto;
-    console.log(userInfo.positionid);
+    // console.log(userInfo.positionid);
     if (userInfo.positionid == 4 || userInfo.positionid == 5) {
         belongsto = userInfo.adminid;
     } else {
         belongsto = userInfo.userid;
     }
-    console.log(belongsto);
+    // console.log(belongsto);
 
     return (
         <>

@@ -319,7 +319,7 @@ const Add_Products = () => {
                                                                     null
                                                     }}
                                                 />
-                                                {console.log(field.label)}
+                                                {/* {console.log(field.label)} */}
                                                 {/* Add error handling if needed */}
                                             </Box>
                                         </div>
