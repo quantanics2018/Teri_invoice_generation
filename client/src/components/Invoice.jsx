@@ -833,17 +833,17 @@ const Invoice = ({
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none', padding: '3px' }}>HSN/SAC</div>
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>Taxable Value</div>
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>
-                                <div className="cgst">CGST</div>
+                                <div className="cgst" style={{paddingBottom:'3px'}}>CGST</div>
                                 <div className="subGst" style={{ ...subGst, ...df, borderBottom: 'none' }}>
-                                    <div className="cgstRate" style={cgstRate}>Rate</div>
-                                    <div className="cgstAmount" style={cgstAmount}>Amount</div>
+                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none', paddingBottom:'3px' }}>Rate</div>
+                                    <div className="cgstAmount" style={{...cgstAmount,paddingBottom:'3px'}}>Amount</div>
                                 </div>
                             </div>
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>
-                                <div className="cgst">SGST/UTGST</div>
+                                <div className="cgst" style={{paddingBottom:'3px'}}>SGST/UTGST</div>
                                 <div className="subGst" style={{ ...subGst, ...df }}>
-                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none' }}>Rate</div>
-                                    <div className="cgstAmount" style={cgstAmount}>Amount</div>
+                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none', paddingBottom:'3px' }}>Rate</div>
+                                    <div className="cgstAmount" style={{...cgstAmount,paddingBottom:'3px'}}>Amount</div>
                                 </div>
                             </div>
                             <div style={{ ...cellStyle, borderBottom: 'none' }}>Total Tax Amount</div>
