@@ -256,7 +256,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 // Inner Level
                 const isValidbussinessType = (postData.bussinessType === 'Organization' || postData.bussinessType === 'Individual');
                 // const isValidOrgName = postData.OrganizationName.trim() !== '';
-                const isValidOrgName =  Positionid_val !== 3 ? postData.OrganizationName.trim() !== '': true;
+                const isValidOrgName = Positionid_val !== 3 ? postData.OrganizationName.trim() !== '' : true;
                 // Positionid_val !== 3 ? isImageValid(file) : true;
                 const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(postData.gstNumber);
                 const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber);
@@ -293,7 +293,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 ) {
 
                     try {
-                        // setLoading(true);
+                        setLoading(true);
 
                         const response = await axios.post(`${API_URL}add/user`,
                             // formData
@@ -303,28 +303,28 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setresAlert(response.data.message)
                         setSubmitted(true);
                         if (response.data.status) {
-                            // alert("add signature")
-                            if (Positionid_val !== 3) {
-                                const response = await axios.post(`${API_URL}upload`,
-                                    formData
-                                );
-                                // console.log(response.data.status);
-                                if (response.data.status) {
-                                    handleClear();
-                                    navigate(-1);
-                                    console.log('File uploaded successfully:', response.data);
-                                } else {
-                                    console.error('Failed to upload file:', response.statusText);
-                                }
-                            }
-                            else{
-                                handleClear();
-                                navigate(-1);
-                            }
+                            handleClear();
+                            navigate(-1);
+                            // if (Positionid_val !== 3) {
+                            //     const response = await axios.post(`${API_URL}upload`,
+                            //         formData
+                            //     );
+                            //     if (response.data.status) {
+                            //         handleClear();
+                            //         navigate(-1);
+                            //         console.log('File uploaded successfully:', response.data);
+                            //     } else {
+                            //         console.error('Failed to upload file:', response.statusText);
+                            //     }
+                            // }
+                            // else {
+                            //     handleClear();
+                            //     navigate(-1);
+                            // }
 
                         }
 
-                        // setLoading(false);
+                        setLoading(false);
                     } catch (error) {
                         console.error('Error sending data:', error);
                     }
@@ -416,31 +416,30 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 }
             } else {
                 // if (isImagePresent) {
-                    try {
-                        setLoading(true);
-                        const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues, Currentuser: userInfo.userid });
-                        // alert(response.data.message);
-                        setresAlert(response.data.message)
-                        setSubmitted(true);
-                        if (response.data.status) {
-                            const response = await axios.post(`${API_URL}upload`,
-                                formData
-                            );
-                            // console.log(response.data.status);
-                            if (response.data.status) {
-                                handleClear();
-                                navigate(-1);
-                                // setTimeout(() => {
-                                // }, 1000);
-                                console.log(' staff addingFile uploaded successfully:', response.data);
-                            } else {
-                                console.error('staff adding Failed to upload file:', response.statusText);
-                            }
+                try {
+                    setLoading(true);
+                    const response = await axios.post(`${API_URL}add/user`, { userDetials: postData, AccessControls: accessValues, Currentuser: userInfo.userid });
+                    // alert(response.data.message);
+                    setresAlert(response.data.message)
+                    setSubmitted(true);
+                    if (response.data.status) {
+                        handleClear();
+                        navigate(-1);
+                        // const response = await axios.post(`${API_URL}upload`,
+                        //     formData
+                        // );
+                        // if (response.data.status) {
+                        //     handleClear();
+                        //     navigate(-1);
+                        //     console.log(' staff addingFile uploaded successfully:', response.data);
+                        // } else {
+                        //     console.error('staff adding Failed to upload file:', response.statusText);
+                        // }
 
-                        }
-                    } catch (error) {
-                        console.error('Error sending data:', error);
                     }
+                } catch (error) {
+                    console.error('Error sending data:', error);
+                }
                 // }
                 // else {
                 //     alert("Wrong Image format:Image should be png")
@@ -853,7 +852,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                     {/* <FormLabel component="legend">Rows</FormLabel> */}
                                     {updatedAccessHead.map((row, rowIndex) => (
                                         <div key={rowIndex} className='accessControlHeadwithVal'>
-                                            <FormLabel component="legend" className='acc_head' style={{color : 'black'}}>{`${row.label}`}</FormLabel>
+                                            <FormLabel component="legend" className='acc_head' style={{ color: 'black' }}>{`${row.label}`}</FormLabel>
                                             <RadioGroup row
                                                 className='acc_val'
                                                 value={accessValues[row.label]}
@@ -882,7 +881,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 </div>
                 {/* <ImageUpload /> */}
                 <div className="add_device_container1">
-                    <div className="new_device_content scroll_div "style={{ height: 'calc(90vh - 200px)' }}>
+                    <div className="new_device_content scroll_div " style={{ height: 'calc(90vh - 200px)' }}>
                         <div className="row_one display-flex">
                             <div className="adding_new_device uppercase bold">
                                 Add
@@ -978,19 +977,19 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         id={`input${index + 1}`}
                                                         select={field.name === 'bussinessType' && true}
                                                         InputLabelProps={
-                                                            (!((field.name === 'OrganizationName') && (Positionid_val === 3) )) &&{
+                                                            (!((field.name === 'OrganizationName') && (Positionid_val === 3))) && {
                                                                 className: 'required-label',
                                                                 required: true
                                                             }
                                                         }
-                                                        
-                                                                    
+
+
                                                         InputProps={{
                                                             startAdornment: field.name === 'mobileNo' ? <InputAdornment position="start"></InputAdornment> : null,
-                                                            placeholder: field.name === 'mobileNo' ? '+91' : null    
+                                                            placeholder: field.name === 'mobileNo' ? '+91' : null
                                                         }}
                                                         style={{ width: field.name === 'OrganizationName' ? '100%' : '100%' }}
-                                                        
+
                                                     >
 
                                                         {currencies.map((option) => (
