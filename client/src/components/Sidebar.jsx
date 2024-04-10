@@ -65,7 +65,7 @@ const Sidebar = ({ children, handleLogout }) => {
                     { url: '/Products', text: 'Products', condition: userInfo.product > 0 },
                     { url: '/InvoiceGenerator', text: 'Invoice Generator', condition: userInfo.invoicegenerator > 0 },
                     // !(userInfo.position === "customer")
-                    { url: '/TransactionHistory', text: 'PaySlip Log', condition: userInfo.invoicepayslip > 0 },
+                    { url: '/TransactionHistory', text: 'Transaction Details', condition: userInfo.invoicepayslip > 0 },
                     // { url: '/Invoice', text: 'Invoice', condition: userInfo.invoicegenerator > 0 },
                 ],
                 condition: true

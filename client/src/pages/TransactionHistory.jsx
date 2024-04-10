@@ -142,7 +142,7 @@ const TransactionHistory = () => {
         <>
             {/* {loading && <Loader />} */}
             <div className="row_with_count_status">
-                <span className='module_tittle'>Transactions Detials</span>
+                <span className='module_tittle'>Transactions Details</span>
             </div>
             <div className="container ">
                 

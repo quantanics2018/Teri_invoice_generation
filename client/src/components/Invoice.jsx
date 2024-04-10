@@ -163,10 +163,20 @@ const Invoice = ({
 
 
     function TaxableValue() {
+        // return previewInvoiceprop.reduce((acc, item) => {
+        //     const unitPrice = parseFloat(unitRate(item.hsncode, item.batchno));
+        //     console.log("unitPrice :",unitPrice);
+        //     const totalPrice = (unitPrice * parseInt(item.Quantity)) - ((unitPrice * parseInt(item.Quantity)) * parseInt(item.Discount) / 100);
+        //     console.log("hai",totalPrice);
+        //     return acc + totalPrice;
+        // }, 0);
         return previewInvoiceprop.reduce((acc, item) => {
             const unitPrice = parseFloat(unitRate(item.hsncode, item.batchno));
-            const totalPrice = (unitPrice * parseInt(item.Quantity)) - ((unitPrice * parseInt(item.Quantity)) * parseInt(item.Discount) / 100);
-            return acc + totalPrice;
+            // console.log("unitPrice :", unitPrice);
+            const totalPrice = (unitPrice * parseFloat(item.Quantity)) - ((unitPrice * parseInt(item.Quantity)) * parseFloat(item.Discount) / 100);
+            // console.log("hai",Math.floor(totalPrice * 100) / 100);
+            // console.log("hai", Math.floor(totalPrice * 100) / 100);
+            return acc + (Math.floor(totalPrice * 100) / 100);
         }, 0);
     }
 
@@ -192,6 +202,9 @@ const Invoice = ({
         return TaxableValue() * TotalsgstPercent() / 100;
     }
     const grandTotal = () => {
+        // console.log("test -() :", (Math.floor(TaxableValue() * 100) / 100));
+        // const withoutTwoDigit = (Math.floor(TotalcgstValue() * 100) / 100)+(Math.floor(TotalsgstValue() * 100) / 100)+ (Math.floor(TaxableValue() * 100) / 100);
+        // console.log("withoutTwoDigit",Math.floor(withoutTwoDigit * 100) / 100);
         return TaxableValue() + TotalcgstValue() + TotalsgstValue();
     }
     function formatTotal(total) {
@@ -540,13 +553,25 @@ const Invoice = ({
 
     const roundoff = () => {
         // console.log("test : ",formatTotal(grandTotal()) - Math.round(formatTotal(grandTotal())));
-        if (formatTotal(grandTotal()) > Math.round(formatTotal(grandTotal()))) {
-            let total = formatTotal(grandTotal()) - Math.round(formatTotal(grandTotal()));
-            console.log("total : ", total);
+
+        // console.log("test :  ", Math.floor(grandTotal() * 100) / 100);
+
+        // console.log("test :  ",Math.floor(grandTotal() * 100) / 100);
+        // console.log("test 1:  ", Math.round(grandTotal()).toFixed(2));
+        // console.log("test 1:  ",(Math.round(grandTotal()).toFixed(2))- Math.floor(grandTotal() * 100) / 100);
+
+        // if (formatTotal(grandTotal()) > Math.round(formatTotal(grandTotal()))) {
+        if ((grandTotal()) > Math.round((grandTotal()))) {
+            // let total = formatTotal(grandTotal()) - Math.round(formatTotal(grandTotal()));
+            let total = (Math.floor(grandTotal() * 100) / 100) - Math.round(grandTotal()).toFixed(2);
+            // console.log("total : ", total);
+            // return formatTotal(total) * -1;
             return formatTotal(total) * -1;
         } else {
-            let total = Math.round(formatTotal(grandTotal())) - formatTotal(grandTotal());
+            // let total = Math.round(formatTotal(grandTotal())) - formatTotal(grandTotal());
+            let total = Math.round(grandTotal()).toFixed(2) - (Math.floor(grandTotal() * 100) / 100);
             // console.log("total : ",total);
+            // return formatTotal(total);
             return formatTotal(total);
         }
     }
@@ -783,13 +808,34 @@ const Invoice = ({
                                 <div className='invoice_table_header' style={{ width: '10%' }}>
                                     {/* {((parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100)).toFixed(2) || ''} */}
                                     {((index !== previewInvoiceprop.length + 1) && index !== previewInvoiceprop.length) && (
-                                        (
+                                        // (
+                                        //     (
+                                        //         parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)
+                                        //     ) - (
+                                        //         (parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100
+                                        //     )
+                                        // )
+                                        //  || ''
+
+
+                                        Math.floor(
                                             (
-                                                parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)
-                                            ) - (
-                                                (parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100
+                                                (
+                                                    parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)
+                                                ) - (
+                                                    (parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100
+                                                )
                                             )
-                                        ).toFixed(2) || ''
+                                            * 100) / 100
+
+                                        // (
+                                        //     (
+                                        //         parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)
+                                        //     ) - (
+                                        //         (parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100
+                                        //     )
+                                        // )
+                                        || ''
                                     )}
                                     {index === previewInvoiceprop.length &&
 
@@ -833,17 +879,17 @@ const Invoice = ({
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none', padding: '3px' }}>HSN/SAC</div>
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>Taxable Value</div>
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>
-                                <div className="cgst" style={{paddingBottom:'3px'}}>CGST</div>
+                                <div className="cgst" style={{ paddingBottom: '3px' }}>CGST</div>
                                 <div className="subGst" style={{ ...subGst, ...df, borderBottom: 'none' }}>
-                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none', paddingBottom:'3px' }}>Rate</div>
-                                    <div className="cgstAmount" style={{...cgstAmount,paddingBottom:'3px'}}>Amount</div>
+                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none', paddingBottom: '3px' }}>Rate</div>
+                                    <div className="cgstAmount" style={{ ...cgstAmount, paddingBottom: '3px' }}>Amount</div>
                                 </div>
                             </div>
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>
-                                <div className="cgst" style={{paddingBottom:'3px'}}>SGST/UTGST</div>
+                                <div className="cgst" style={{ paddingBottom: '3px' }}>SGST/UTGST</div>
                                 <div className="subGst" style={{ ...subGst, ...df }}>
-                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none', paddingBottom:'3px' }}>Rate</div>
-                                    <div className="cgstAmount" style={{...cgstAmount,paddingBottom:'3px'}}>Amount</div>
+                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none', paddingBottom: '3px' }}>Rate</div>
+                                    <div className="cgstAmount" style={{ ...cgstAmount, paddingBottom: '3px' }}>Amount</div>
                                 </div>
                             </div>
                             <div style={{ ...cellStyle, borderBottom: 'none' }}>Total Tax Amount</div>
@@ -888,7 +934,7 @@ const Invoice = ({
                                     {/* {unitRate(item.hsncode, item.batchno)} */}
                                     {index !== previewInvoiceprop.length &&
                                         <div className="subGst" style={{ ...subGst, ...df }}>
-                                            <div className="cgstRate" style={{ ...cgstRate, height:'30px', ...df, justifyContent:'center' , alignItems:'center'}}>
+                                            <div className="cgstRate" style={{ ...cgstRate, height: '30px', ...df, justifyContent: 'center', alignItems: 'center' }}>
                                                 {parseInt(getsgst(item.hsncode, item.batchno)) ? parseInt(getsgst(item.hsncode, item.batchno)) + '%' : ''}
                                             </div>
                                             <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100) : ''}</div>
