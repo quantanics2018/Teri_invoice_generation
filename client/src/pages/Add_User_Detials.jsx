@@ -278,12 +278,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
                 const isValidState = postData.State.trim() !== '';
-                const isValidpCode = postData.pCode.trim() !== '';
+                const isValidpCode = /^\d{6}$/.test(postData.pCode);
+                // const isValidpCode = postData.pCode.trim() !== '';
                 // const isValidCommunicationAddress = postData.CommunicationAddress.trim() !== '';
                 const isValidStreetAddress2 = postData.StreetAddress2.trim() !== '';
                 const isValidCity2 = postData.City2.trim() !== '';
                 const isValidState2 = postData.State2.trim() !== '';
-                const isValidPostalCode2 = postData.PostalCode2.trim() !== '';
+                const isValidPostalCode2 = /^\d{6}$/.test(postData.PostalCode2);
                 // alert("hai da")
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
                     & isValidupiPaymentNo & isValidaccName & isValidaccHolderName & isValidaccNo & isValidifscCode

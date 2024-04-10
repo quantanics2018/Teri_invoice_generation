@@ -82,7 +82,6 @@ const App = () => {
                   <Route path='/Staff_Details' element={<StaffDetails position={4} Positionid_val={4} />} />
                   <Route path='/Staff_Details/Edit_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={4} />} />
                   <Route path='/Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={4} />} />
-                  {/* <Route path='/Staff_Details/*' element={"looooooooooooooool"} /> */}
                 </>
               )}
               {

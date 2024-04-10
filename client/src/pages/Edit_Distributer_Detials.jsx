@@ -316,7 +316,8 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 const isValidStreetAddress2 = typeof inputValues.StreetAddress2 === 'string' && inputValues.StreetAddress2.trim() !== '';
                 const isValidCity2 = typeof inputValues.City2 === 'string' && inputValues.City2.trim() !== '';
                 const isValidState2 = typeof inputValues.State2 === 'string' && inputValues.State2.trim() !== '';
-                const isValidPostalCode2 = typeof inputValues.PostalCode2 === 'string' && inputValues.PostalCode2.trim() !== '';
+                const isValidPostalCode2 = /^\d{6}$/.test(inputValues.PostalCode2);
+                // const isValidPostalCode2 = typeof inputValues.PostalCode2 === 'string' && inputValues.PostalCode2.trim() !== '';
                 // console.log(inputValues);
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
                     // & isValidupiPaymentNo & isValidaccName & isValidaccNo
@@ -545,7 +546,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
 
         { label: "Communication Address", name: "CommunicationAddress", value: inputValues.CommunicationAddress, icon: pen_3 },
         { label: "Street Address", name: "StreetAddress2", value: inputValues.StreetAddress2, icon: pen_3 },
-        { label: "City", name: "City2", value: inputValues.City2, icon: pen_3 },
+        { label: "District", name: "City2", value: inputValues.City2, icon: pen_3 },
         { label: "State", name: "State2", value: inputValues.State2, icon: pen_3 },
         { label: "Postal Code", name: "PostalCode2", value: inputValues.PostalCode2, icon: pen_3 },
     ];
@@ -571,15 +572,16 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         // { label: "Pass Book image", name: "passbookImg", value: inputValues.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         // 3. Address Details:
         { label: "Permanent Address", name: "pAddress", value: inputValues.pAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "Street Address", name: "streetAddress", value: inputValues.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "City", name: "City", value: inputValues.City, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        
         { label: "State", name: "State", value: inputValues.State, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "District", name: "City", value: inputValues.City, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Street Address", name: "streetAddress", value: inputValues.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Postal Code", name: "pCode", value: inputValues.pCode, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
 
         // { label: "Communication Address", name: "CommunicationAddress", value: inputValues.CommunicationAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "Street Address", name: "StreetAddress2", value: inputValues.StreetAddress2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        { label: "City", name: "City2", value: inputValues.City2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "State", name: "State2", value: inputValues.State2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "District", name: "City2", value: inputValues.City2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
+        { label: "Street Address", name: "StreetAddress2", value: inputValues.StreetAddress2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Postal Code", name: "PostalCode2", value: inputValues.PostalCode2, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
     ];
 
@@ -1072,7 +1074,64 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
 
                         {!(Positionid_val === 4 || Positionid_val === 5) && (
                             <div className="device_info uppercase light-grey mb-loc-5">
-                                Address Details
+                                Permanent Address Details
+                            </div>
+                        )}
+
+                        <div className="dsa_row_3 display-flex">
+                            {inputFields.slice(14, 18).map((field, index) => (
+                                !(field.isStaff) && (
+                                    <div key={index} className="inputbox display-flex input">
+                                        <Box className="dsa_1st_input"
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column', // Change the direction for small screens
+                                                '& .MuiTextField-root': {
+                                                    m: 1,
+                                                    width: field.name === 'bussinessType' ? '28ch' : '100%',
+                                                },
+                                            }}
+                                        >
+                                            {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
+                                            <TextField
+                                                label={
+                                                    <span>{`${field.label}`}</span>
+                                                }
+                                                type="text"
+                                                className="form-control-loc"
+                                                value={field.value}
+                                                // onChange={(e) => handleInputChange(e, field.name)}
+                                                // onChange={handleInputChange}
+                                                // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                onChange={handleInputChange}
+                                                name={field.name}
+                                                id={`input${index + 1}`}
+                                                select={field.name === 'bussinessType' && true}
+                                                disabled={field.disabled}
+                                                labelClassName="required"
+                                                InputLabelProps={{
+                                                    className: 'required-label',
+                                                    required: true
+                                                }}
+                                            >
+                                                {currencies.map((option) => (
+                                                    <MenuItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            {field.error ? 'Error' : ''}
+
+                                            {/* Add error handling if needed */}
+                                        </Box>
+                                    </div>
+                                )
+                            ))}
+                        </div>
+
+                        {!(Positionid_val === 4 || Positionid_val === 5) && (
+                            <div className="device_info uppercase light-grey mb-loc-5">
+                                Communication Address Details
                             </div>
                         )}
 

@@ -205,7 +205,9 @@ const Invoice = ({
         // console.log("test -() :", (Math.floor(TaxableValue() * 100) / 100));
         // const withoutTwoDigit = (Math.floor(TotalcgstValue() * 100) / 100)+(Math.floor(TotalsgstValue() * 100) / 100)+ (Math.floor(TaxableValue() * 100) / 100);
         // console.log("withoutTwoDigit",Math.floor(withoutTwoDigit * 100) / 100);
-        return TaxableValue() + TotalcgstValue() + TotalsgstValue();
+        console.log(TaxableValue());
+        // console.log(Math.floor(TotalcgstValue() * 100) / 100);
+        return TaxableValue() + (Math.floor(TotalcgstValue() * 100) / 100) + (Math.floor(TotalsgstValue() * 100) / 100);
     }
     function formatTotal(total) {
         const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
@@ -843,12 +845,14 @@ const Invoice = ({
                                             <div className="invoiceRow1 even1">
                                                 {/* CGST */}
                                                 {/* {formatTotal(TotalcgstPercent())} % */}
-                                                <div className="totalVal1">{formatTotal(TotalcgstValue())}</div>
+                                                {/* <div className="totalVal1">{formatTotal(TotalcgstValue())}</div> */}
+                                                <div className="totalVal1">{Math.floor(TotalcgstValue() * 100) / 100}</div>
                                             </div>
                                             <div className="invoiceRow1 even1">
                                                 {/* SGST */}
                                                 {/* {formatTotal(TotalcgstPercent())} % */}
-                                                <div className="totalVal1">{formatTotal(TotalsgstValue())}</div>
+                                                {/* <div className="totalVal1">{formatTotal(TotalsgstValue())}</div> */}
+                                                <div className="totalVal1">{Math.floor(TotalsgstValue() * 100) / 100}</div>
                                             </div>
                                             <div className="invoiceRow1 even1">
                                                 {/* Round Off */}

@@ -648,7 +648,7 @@ const InvoiceGenerator = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [SignExistanceDB , setSignExistanceDB] = useState(false);
+    const [SignExistanceDB, setSignExistanceDB] = useState(false);
     useEffect(() => {
         const getSign = async () => {
             const currentUserVar = userInfo.userid;
@@ -661,7 +661,7 @@ const InvoiceGenerator = () => {
                 if (SignRes.data.status) {
                     setSignExistanceDB(true);
                     setOpen(false);
-                }else{
+                } else {
                     setSignExistanceDB(false)
                     setOpen(true);
                 }
@@ -692,7 +692,7 @@ const InvoiceGenerator = () => {
     const [dataFromChild, setDataFromChild] = useState(false);
     const handleDataFromChild = (data) => {
         setDataFromChild(data);
-      };
+    };
     return (
         <>
             {loading && <Loader />}
@@ -882,7 +882,7 @@ const InvoiceGenerator = () => {
                             Add Row
                         </Button>
                     </div>
-                    <TableContainer component={Paper}  style={{userSelect:'none'}}>
+                    <TableContainer component={Paper} style={{ userSelect: 'none' }}>
                         <Table>
                             <TableHead>
                                 <TableRow>

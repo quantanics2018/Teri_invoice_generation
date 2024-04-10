@@ -221,7 +221,8 @@ const ProfilePage = () => {
         const isValidstreetAddress = profileInfoRes.streetname.trim() !== '';
         const isValidCity = profileInfoRes.dname.trim() !== '';
         const isValidState = profileInfoRes.sname.trim() !== '';
-        const isValidpCode = profileInfoRes.pcode.trim() !== '';
+        const isValidpCode = /^\d{6}$/.test(profileInfoRes.pcode);
+        // const isValidpCode = profileInfoRes.pcode.trim() !== '';
 
         const isValidupiPaymentNo = profileInfoRes.upi_id.trim() !== '';
         const isValidaccName = profileInfoRes.bname.trim() !== '';
@@ -546,7 +547,8 @@ const ProfilePage = () => {
 
                                             <Grid item xs={12} md={6} key={index} >
                                                 {field.fieldType === 'file' ? (
-                                                    <Button type="button" variant='outlined' data-bs-toggle="modal" data-bs-target="#SignatureModal" style={{ marginTop: '20px' }}> Update sign </Button>
+                                                    (ismanufacture || isdistributor) &&
+                                                    <Button type="button" variant='outlined' data-bs-toggle="modal" data-bs-target="#SignatureModal" style={{ marginTop: '20px' }}> Update sign</Button>
                                                 ) : (
                                                     <TextField
                                                         fullWidth
@@ -560,7 +562,7 @@ const ProfilePage = () => {
                                                         name={field.fieldname}
                                                         label={`${field.label}`}
                                                         // disabled={!ismanufacture && !isdistributor && field.fieldname== 'fname'}
-                                                        disabled={((ismanufacture && (field.fieldname === 'email')) || (isdistributor && (field.fieldname === 'fname' || field.fieldname === 'lname' || field.fieldname === 'orgname' || field.fieldname === 'btype' || field.fieldname === 'gstno' || field.fieldname === 'email'))) || (userInfo.positionid === "3" || userInfo.positionid === "4" || userInfo.positionid === "5")}
+                                                        disabled={((ismanufacture && (field.fieldname === 'email')) || (isdistributor && (field.fieldname === 'fname' || field.fieldname === 'lname' || field.fieldname === 'orgname' || field.fieldname === 'btype' || field.fieldname === 'gstno' || field.fieldname === 'email' || field.fieldname === 'pannumber' || field.fieldname === 'pcode'))) || (userInfo.positionid === "3" || userInfo.positionid === "4" || userInfo.positionid === "5")}
                                                     />
                                                 )}
 
@@ -571,6 +573,7 @@ const ProfilePage = () => {
                                         {!isInputchange && staff_input_fields.map((field, index) => (
                                             <Grid item xs={12} md={6} key={index} >
                                                 {field.fieldType === 'file' ? (
+                                                    (ismanufacture || isdistributor) && 
                                                     <Button type="button" variant='outlined' data-bs-toggle="modal" data-bs-target="#SignatureModal"> Update sign </Button>
                                                 ) : (
                                                     <TextField

@@ -66,7 +66,20 @@ async function getSignExistance(req, res) {
     console.log("currecntUser : ", currentUser);
 
     try {
-        const userSignResult = await userdbInstance.userdb.query(`SELECT signature FROM public."user" where userid = $1;`,[currentUser]);
+
+        const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [currentUser]);
+        console.log(CheckForStaff.rows[0].positionid);
+        const res_positionId = CheckForStaff.rows[0].positionid
+        let belongsto;
+        if (res_positionId == 4 || res_positionId == 5) {
+            const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [currentUser]);
+            belongsto = getBelongsto.rows[0].adminid
+        } else {
+            belongsto = currentUser
+        }
+        console.log("belongsto : ", belongsto);
+
+        const userSignResult = await userdbInstance.userdb.query(`SELECT signature FROM public."user" where userid = $1;`,[belongsto]);
         console.log("userSignResult.rows :- ",userSignResult.rows);
         if (userSignResult.rows[0].signature == null) {
         return res.json({ message: "Signature Absent", status: false });

@@ -150,16 +150,28 @@ app.post('/get/:entity(user|credentials|product|products|state|district|access_c
     if (entity === 'signature') {
         try {
             const { userid } = req.body;
-            console.log("senderid - : ", userid);
+
+            const CheckForStaff = await userdbInstance.userdb.query(`select positionid from public."user" where userid=$1;`, [userid]);
+            console.log(CheckForStaff.rows[0].positionid);
+            const res_positionId = CheckForStaff.rows[0].positionid
+            let belongsto;
+            if (res_positionId == 4 || res_positionId == 5) {
+                const getBelongsto = await userdbInstance.userdb.query(`select adminid from public."user" where userid=$1;`, [userid]);
+                belongsto = getBelongsto.rows[0].adminid
+            } else {
+                belongsto = userid
+            }
+
+            console.log("belongsto nithi verify - : ", belongsto);
             const folderPath = '../uploads'; // Change this to the path of your folder
-            const fileName = userid;
+            const fileName = belongsto;
             const filePath = path.join(folderPath, fileName);
-           
+
 
             const allowedExtensions = ['jpeg', 'jpg', 'png'];
-            
 
-            res.send({ src: `images/${userid}.png` });
+
+            res.send({ src: `images/${fileName}.png` });
 
 
             // // Find the first matching extension from the allowed list
@@ -290,17 +302,17 @@ app.put('/update/:entity(user|product|productremove|userremove|password|productQ
 });
 
 // user profile update url controlling 
-app.put('/profile_udpate/:entity(user)',async (req, res) =>{
+app.put('/profile_udpate/:entity(user)', async (req, res) => {
     const entity = req.params.entity;
 
-    if (entity==="user") {
-        const result_data = await updateData.update_user_profile(req,res);
+    if (entity === "user") {
+        const result_data = await updateData.update_user_profile(req, res);
 
     }
     console.log("profile updation request data");
     console.log(entity);
 
-    
+
 });
 // Delete data
 app.post('/delete/:entity(user|products)', async (req, res) => {
@@ -362,13 +374,13 @@ app.post('/upload', upload.single('image'), (req, res) => {
     // console.log("okkk api");
     const currentUser = imageName;
     const SignName = `${imageName}.png`;
-// console.log(currentUser ," ",SignName);
+    // console.log(currentUser ," ",SignName);
     fs.rename(file.path, './uploads/' + (imageName + path.extname(file.originalname)), async function (err) {
         if (err) {
             return res.status(500).json({ success: false, message: 'Error renaming file' });
         }
         try {
-            const userupdateResult = await userdbInstance.userdb.query(`UPDATE public."user" SET signature =$1 where userid=$2;`, [SignName,currentUser]);
+            const userupdateResult = await userdbInstance.userdb.query(`UPDATE public."user" SET signature =$1 where userid=$2;`, [SignName, currentUser]);
             // if (userupdateResult.rowCount === 1) {
             //     res.json({ success: true, message: `Signature Updated Successfully`, filename: imageName });
             // } else {
@@ -390,81 +402,81 @@ const transporter = nodemailer.createTransport({
     port: 587, // or 465
     secure: false,
     auth: {
-      user: 'terionorganization@gmail.com',
-      pass: 'imkq rydg xtla lvmx'
+        user: 'terionorganization@gmail.com',
+        pass: 'imkq rydg xtla lvmx'
     }
-  });
+});
 
 const invoicesDir = path.join(__dirname, 'EmailPdfContent');
 
 // Ensure the invoices directory exists
 if (!fs.existsSync(invoicesDir)) {
-  fs.mkdirSync(invoicesDir);
+    fs.mkdirSync(invoicesDir);
 }
 console.log(invoicesDir);
 
 // Define a route to handle saving PDF files
-app.post('/save-pdf-server', upload.single('file'), async(req, res) => {
+app.post('/save-pdf-server', upload.single('file'), async (req, res) => {
     // Check if file exists in the request
     if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+        return res.status(400).json({ message: 'No file uploaded' });
     }
-  
+
     const tempPath = req.file.path;
     const targetPath = path.join(invoicesDir, 'Email.pdf');
     const recivermail = await userdbInstance.userdb.query('select email from public."user" where organizationname=$1', [req.body.companyname]);
-    console.log("email to : ",recivermail.rows[0].email);
+    console.log("email to : ", recivermail.rows[0].email);
     const to = recivermail.rows[0].email;
     console.log(to);
     fs.rename(tempPath, targetPath, err => {
-      if (err) {
-        console.error('Error saving file:', err);
-        res.status(500).json({ message: 'Error saving file'});
-      } else {
-        // Read the PDF file
-        fs.readFile(targetPath, (err, data) => {
-          if (err) {
-            console.error('Error reading PDF file:', err);
-            return res.status(500).send('Error reading PDF file');
-          }
-          
-          // Mail options
-          const mailOptions = {
-            from: 'terionorganization@gmail.com',
-            to: to,
-            subject: 'Official mail from Terion Organization',
-            text: 'INVOICE FROM TERION',
-            attachments: [
-              {
-                filename: 'Email.pdf',
-                content: data
-              }
-            ]
-          };
-  
-          // Send mail
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.error('Error sending email:', error);
-              return res.status(500).send('Error sending email');
-            }
-            console.log('Email sent: ' + info.response);
-            
-            // After email is sent successfully, delete the PDF file
-            fs.unlink(targetPath, err => {
-              if (err) {
-                console.error('Error deleting PDF file:', err);
-              } else {
-                console.log('PDF file deleted successfully');
-              }
+        if (err) {
+            console.error('Error saving file:', err);
+            res.status(500).json({ message: 'Error saving file' });
+        } else {
+            // Read the PDF file
+            fs.readFile(targetPath, (err, data) => {
+                if (err) {
+                    console.error('Error reading PDF file:', err);
+                    return res.status(500).send('Error reading PDF file');
+                }
+
+                // Mail options
+                const mailOptions = {
+                    from: 'terionorganization@gmail.com',
+                    to: to,
+                    subject: 'Official mail from Terion Organization',
+                    text: 'INVOICE FROM TERION',
+                    attachments: [
+                        {
+                            filename: 'Email.pdf',
+                            content: data
+                        }
+                    ]
+                };
+
+                // Send mail
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        console.error('Error sending email:', error);
+                        return res.status(500).send('Error sending email');
+                    }
+                    console.log('Email sent: ' + info.response);
+
+                    // After email is sent successfully, delete the PDF file
+                    fs.unlink(targetPath, err => {
+                        if (err) {
+                            console.error('Error deleting PDF file:', err);
+                        } else {
+                            console.log('PDF file deleted successfully');
+                        }
+                    });
+
+                    res.send({ status: true, message: 'Email sent successfully' });
+                });
             });
-  
-            res.send({status:true,message:'Email sent successfully'});
-          });
-        });
-      }
+        }
     });
-  });
+});
 
 app.listen(4000, () => {
     console.log("server is running on port 4000");
