@@ -1003,7 +1003,11 @@ const Invoice = ({
 
                             <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
                                 <div className="pvtName" style={PVTname}>For {SenderInvoiceProp[0].organizationname}</div>
-                                <img src={signSrc} style={Signature} alt="Signature Required" height={30} width={300} />
+                                <img src={signSrc} 
+                                style={{ ...Signature, maxHeight: '80px', maxWidth: '300px', width: '70%', height: '90%' }}
+                                alt="Signature Required" 
+                                // height={10} width={30} 
+                                />
                                 <div className="authSign" style={AuthSign}>Authorized Sign.</div>
                             </div>
                         </div>
