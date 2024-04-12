@@ -119,7 +119,22 @@ const Add_User_Detials = ({ Positionid_val }) => {
             ...prevValues,
             [fieldName]: value,
         }));
+        if (sameAddress) {
 
+            if (fieldName === 'State') {
+                fieldName = 'State2';
+                setPostData((prevValues) => ({
+                    ...prevValues,
+                    [fieldName]: value,
+                }));
+            } else if (fieldName === 'City') {
+                fieldName = 'City2';
+                setPostData((prevValues) => ({
+                    ...prevValues,
+                    [fieldName]: value,
+                }));
+            }
+        }
     };
     const [state, setstate] = useState([]);
     const [district, setdistrict] = useState([]);
@@ -150,7 +165,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
     }, []);
 
     const handleInputChange = (e) => {
-        const { name, value, type } = e.target;
+        let { name, value, type } = e.target;
 
         // Check if the input is a file input
         if (type === 'file') {
@@ -164,6 +179,23 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 ...postData,
                 [name]: value,
             });
+
+            if (sameAddress) {
+                if (name === 'streetAddress') {
+                    console.log("same address", name);
+                    name = 'StreetAddress2';
+                    setPostData((prevValues) => ({
+                        ...prevValues,
+                        [name]: value,
+                    }));
+                } else if (name === 'pCode') {
+                    name = 'PostalCode2';
+                    setPostData((prevValues) => ({
+                        ...prevValues,
+                        [name]: value,
+                    }));
+                }
+            }
         }
     };
 
@@ -263,11 +295,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
                 // Upi Bank Detials
 
-                const isValidupiPaymentNo = (postData.upiPaymentNo.trim()=== '')?true:postData.upiPaymentNo.trim() !== '';
-                const isValidaccName = (postData.accName.trim()=== '')?true:postData.accName.trim() !== '';
-                const isValidaccHolderName = (postData.accHolderName.trim() === '')?true:postData.accHolderName.trim() !== '';
-                const isValidaccNo = (postData.accNo.trim() === '')?true:(/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
-                const isValidifscCode = (postData.ifscCode.trim() === '')?true:postData.ifscCode.trim() !== '';
+                const isValidupiPaymentNo = (postData.upiPaymentNo.trim() === '') ? true : postData.upiPaymentNo.trim() !== '';
+                const isValidaccName = (postData.accName.trim() === '') ? true : postData.accName.trim() !== '';
+                const isValidaccHolderName = (postData.accHolderName.trim() === '') ? true : postData.accHolderName.trim() !== '';
+                const isValidaccNo = (postData.accNo.trim() === '') ? true : (/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
+                const isValidifscCode = (postData.ifscCode.trim() === '') ? true : postData.ifscCode.trim() !== '';
 
                 // alert(isValidaccNo)
                 // const isValidpAddress = postData.pAddress.trim() !== '';
@@ -1131,7 +1163,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
 
                             {!(Positionid_val === 4 || Positionid_val === 5) && (
                                 <div className="device_info uppercase light-grey mb-loc-5">
-                                    Address Details
+                                    Permanent Address Details
                                 </div>
                             )}
 
@@ -1155,6 +1187,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                             <Autocomplete
                                                                 options={field.name === 'State' ? state : district}
                                                                 onChange={(e, value) => handleInputChangeInvoice(field.name, value)}
+                                                                value={field.value}
                                                                 renderInput={(params) => (
                                                                     <TextField {...params}
                                                                         value={field.value}
@@ -1193,7 +1226,17 @@ const Add_User_Detials = ({ Positionid_val }) => {
                             </div>
 
                             {!(Positionid_val === 4 || Positionid_val === 5) && (
-                                <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
+                                <div className="device_info uppercase light-grey mb-loc-5">
+                                    Communication Address Details
+                                </div>
+                            )}
+                            {!(Positionid_val === 4 || Positionid_val === 5) && (
+                                // <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
+                                <div style={{ userSelect: 'none' }}>
+                                    <Checkbox checked={sameAddress} onChange={handleCheckboxChange} />
+                                    <span>Same - Permanent Address</span>
+                                </div>
+
                             )}
                             <div className="dsa_row_3 display-flex">
                                 {inputFields.slice(21, 25).map((field, index) => (
@@ -1211,20 +1254,45 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                     }}
                                                 >
                                                     {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                    <TextField
-                                                        label={`${field.label}`}
-                                                        type="text"
-                                                        className="form-control-loc"
-                                                        value={field.value}
-                                                        onChange={(e) => handleInputChange(e, field.name)}
-                                                        name={field.name}
-                                                        id={`input${index + 1}`}
-                                                        disabled={sameAddress}
-                                                        InputLabelProps={{
-                                                            className: 'required-label',
-                                                            required: true
-                                                        }}
-                                                    />
+
+                                                    {field.name == 'State2' || field.name == 'City2' ? (
+                                                        <>
+                                                            <Autocomplete
+                                                                options={field.name === 'State2' ? state : district}
+                                                                onChange={(e, value) => handleInputChangeInvoice(field.name, value)}
+                                                                value={field.value}
+                                                                disabled ={sameAddress}
+                                                                renderInput={(params) => (
+                                                                    <TextField {...params}
+                                                                        value={field.value}
+                                                                        label={`${field.label}`}
+                                                                        variant="outlined"
+                                                                        InputLabelProps={{
+                                                                            className: 'required-label',
+                                                                            required: true
+                                                                        }}
+                                                                    />
+                                                                )}
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <TextField
+                                                                label={`${field.label}`}
+                                                                type="text"
+                                                                className="form-control-loc"
+                                                                value={field.value}
+                                                                onChange={(e) => handleInputChange(e, field.name)}
+                                                                name={field.name}
+                                                                id={`input${index + 1}`}
+                                                                disabled={sameAddress}
+                                                                InputLabelProps={{
+                                                                    className: 'required-label',
+                                                                    required: true
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
                                                     {/* Add error handling if needed */}
                                                 </Box>
                                             )}

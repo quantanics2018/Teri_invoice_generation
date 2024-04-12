@@ -27,7 +27,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
-import { Box, Button, FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Snackbar } from '@mui/material';
+import { Autocomplete, Checkbox, Box, Button, FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Snackbar } from '@mui/material';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import { SaveBtn } from '../assets/style/cssInlineConfig';
 import MuiAlert from '@mui/material/Alert';
@@ -287,7 +287,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         e.preventDefault();
         // top level
         const userId = inputValues.userid.trim();
-        const isValiduserid = userId !== '' &&  /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(userId);
+        const isValiduserid = userId !== '' && /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(userId);
         // const isValiduserid = inputValues.userid.trim() !== '';
         const isValidaadharNo = /^\d{12}$/.test(inputValues.aadharNo)
         const isValidfName = /^[A-Za-z\s'-]+$/.test(inputValues.fName)
@@ -308,10 +308,12 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 // const isValidaccNo = (/^\d*$/.test(inputValues.accNo) & inputValues.accNo.trim() !== '');
                 // alert(isValidaccNo)
                 // const isValidpAddress = inputValues.pAddress.trim() !== '';
-                // const isValidstreetAddress = inputValues.streetAddress.trim() !== '';
-                // const isValidCity = inputValues.City.trim() !== '';
-                // const isValidState = inputValues.State.trim() !== '';
-                // const isValidpCode = inputValues.pCode.trim() !== '';
+
+                const isValidstreetAddress = typeof inputValues.streetAddress === 'string' && inputValues.streetAddress.trim() !== '';
+                const isValidCity = typeof inputValues.City === 'string' && inputValues.City.trim() !== '';
+                const isValidState = typeof inputValues.State === 'string' && inputValues.State.trim() !== '';
+                const isValidpCode = /^\d{6}$/.test(inputValues.pCode);
+
                 // const isValidCommunicationAddress = inputValues.CommunicationAddress.trim() !== '';
                 const isValidStreetAddress2 = typeof inputValues.StreetAddress2 === 'string' && inputValues.StreetAddress2.trim() !== '';
                 const isValidCity2 = typeof inputValues.City2 === 'string' && inputValues.City2.trim() !== '';
@@ -321,7 +323,9 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 // console.log(inputValues);
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
                     // & isValidupiPaymentNo & isValidaccName & isValidaccNo
-                    // & isValidpAddress & isValidstreetAddress & isValidCity & isValidState & isValidpCode & isValidCommunicationAddress
+                    // & isValidpAddress 
+                    & isValidstreetAddress & isValidCity & isValidState & isValidpCode
+                    // & isValidCommunicationAddress
                     & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
                 ) {
                     console.log(accessValues);
@@ -375,22 +379,22 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                     //     setresAlert("Enter Valid Permenant Address");
                     //     setSubmitted(true);
                     // }
-                    // else if (!isValidstreetAddress) {
-                    //     setresAlert("Enter Valid Street Adress");
-                    //     setSubmitted(true);
-                    // }
-                    // else if (!isValidCity) {
-                    //     setresAlert("Enter Valid City Name");
-                    //     setSubmitted(true);
-                    // }
-                    // else if (!isValidState) {
-                    //     setresAlert("Enter Valid State Name");
-                    //     setSubmitted(true);
-                    // }
-                    // else if (!isValidpCode) {
-                    //     setresAlert("Enter Valid Postal code");
-                    //     setSubmitted(true);
-                    // }
+                    else if (!isValidstreetAddress) {
+                        setresAlert("Enter Valid Street Adress");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidCity) {
+                        setresAlert("Select Valid District Name");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidState) {
+                        setresAlert("Enter Valid State Name");
+                        setSubmitted(true);
+                    }
+                    else if (!isValidpCode) {
+                        setresAlert("Enter Valid Postal code");
+                        setSubmitted(true);
+                    }
                     // else if (!isValidCommunicationAddress) {
                     //     setresAlert("Enter Valid Communication Address");
                     //     setSubmitted(true);
@@ -518,39 +522,6 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         setSelected_value(value);
     }
 
-    const inputFields1 = [
-        { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, disabled: true },
-        { label: "Aadhar Number", name: "aadharNo", value: inputValues.aadharNo, icon: pen_3 },
-        { label: "First Name", name: "fName", value: inputValues.fName, icon: pen_3 },
-        { label: "Last Name", name: "lName", value: inputValues.lName, icon: pen_3 },
-        { label: "Email", name: "email", value: inputValues.email, icon: pen_3, disabled: true },
-        { label: "Mobile Number", name: "mobileNo", value: inputValues.mobileNo, icon: pen_3 },
-        { label: "Bussiness Type", name: "bussinessType", value: inputValues.bussinessType, icon: person },
-        { label: "Organization Name", name: "OrganizationName", value: inputValues.OrganizationName, icon: person },
-        { label: "GST Number", name: "gstNumber", value: inputValues.gstNumber, icon: pen_3 },
-        { label: "PAN Number", name: "panNumber", value: inputValues.panNumber, icon: ic_wysiwyg },
-        // Add more input field objects as needed
-        // { label: "Position", name: "Position", value: inputValues.Position, icon: pen_3 },
-        // row 3
-        // 2. UPI Payment Details:
-        { label: "UPI ID", name: "upiPaymentNo", value: inputValues.upiPaymentNo, icon: pen_3 },
-        { label: "Bank Name", name: "accName", value: inputValues.accName, icon: pen_3 },
-        { label: "Bank Account Number", name: "accNo", value: inputValues.accNo, icon: pen_3 },
-        { label: "Pass Book image", name: "passbookImg", value: inputValues.passbookImg, icon: pen_3, inputType: "file" },
-        // 3. Address Details:
-        { label: "Permanent Address", name: "pAddress", value: inputValues.pAddress, icon: pen_3 },
-        { label: "Street Address", name: "streetAddress", value: inputValues.streetAddress, icon: pen_3 },
-        { label: "City", name: "City", value: inputValues.City, icon: pen_3 },
-        { label: "State", name: "State", value: inputValues.State, icon: pen_3 },
-        { label: "Postal Code", name: "pCode", value: inputValues.pCode, icon: pen_3 },
-
-        { label: "Communication Address", name: "CommunicationAddress", value: inputValues.CommunicationAddress, icon: pen_3 },
-        { label: "Street Address", name: "StreetAddress2", value: inputValues.StreetAddress2, icon: pen_3 },
-        { label: "District", name: "City2", value: inputValues.City2, icon: pen_3 },
-        { label: "State", name: "State2", value: inputValues.State2, icon: pen_3 },
-        { label: "Postal Code", name: "PostalCode2", value: inputValues.PostalCode2, icon: pen_3 },
-    ];
-
     const inputFields = [
         { label: "User ID", name: "userid", value: inputValues.userid, icon: ic_home_work, disabled: true },
         { label: "Aadhar Number", name: "aadharNo", value: inputValues.aadharNo, icon: pen_3 },
@@ -572,7 +543,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         // { label: "Pass Book image", name: "passbookImg", value: inputValues.passbookImg, icon: pen_3, inputType: "file", isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         // 3. Address Details:
         { label: "Permanent Address", name: "pAddress", value: inputValues.pAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
-        
+
         { label: "State", name: "State", value: inputValues.State, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "District", name: "City", value: inputValues.City, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
         { label: "Street Address", name: "streetAddress", value: inputValues.streetAddress, icon: pen_3, isStaff: (Positionid_val === 4 || Positionid_val === 5) },
@@ -586,11 +557,27 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     ];
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
         setInputValues({
             ...inputValues,
             [name]: value,
         });
+        if (sameAddress) {
+            if (name === 'streetAddress') {
+                console.log("same address", name);
+                name = 'StreetAddress2';
+                setInputValues((prevValues) => ({
+                    ...prevValues,
+                    [name]: value,
+                }));
+            } else if (name === 'pCode') {
+                name = 'PostalCode2';
+                setInputValues((prevValues) => ({
+                    ...prevValues,
+                    [name]: value,
+                }));
+            }
+        }
     };
 
 
@@ -772,6 +759,99 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         // Render loading or placeholder while decryption is in progress
         return <div>Loading...</div>;
     }
+
+    const [state, setstate] = useState([])
+    const [district, setdistrict] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const dropDownUserResponse = await axios.post(`${API_URL}get/state`);
+                const statedata = (dropDownUserResponse.data.data.map(item => item.statename))
+                // console.log(dropDownUserResponse.data.data.map(item => item.statename));
+                setstate(statedata);
+            } catch (error) {
+                console.error('Error in processing data:', error);
+            }
+        };
+        fetchData();
+        const fetchdistrict = async () => {
+            try {
+                const dropDownUserResponse = await axios.post(`${API_URL}get/district`);
+                // console.log(dropDownUserResponse);
+                const districtdata = (dropDownUserResponse.data.data.map(item => item.districtname))
+                // console.log(dropDownUserResponse.data.data.map(item => item.districtname));
+                setdistrict(districtdata);
+            } catch (error) {
+                console.error('Error in processing data:', error);
+            }
+        };
+        fetchdistrict();
+    }, []);
+
+
+    const handleInputChangeInvoice = (fieldName, value) => {
+        setInputValues((prevValues) => ({
+            ...prevValues,
+            [fieldName]: value,
+        }));
+        if (sameAddress) {
+
+            if (fieldName === 'State') {
+                fieldName = 'State2';
+                setInputValues((prevValues) => ({
+                    ...prevValues,
+                    [fieldName]: value,
+                }));
+            } else if (fieldName === 'City') {
+                fieldName = 'City2';
+                setInputValues((prevValues) => ({
+                    ...prevValues,
+                    [fieldName]: value,
+                }));
+            }
+        }
+    };
+
+    const [sameAddress, setSameAddress] = useState(false);
+
+    const handleCheckboxChange = () => {
+        setSameAddress(!sameAddress);
+    };
+    useEffect(() => {
+        if (sameAddress) {
+            // console.log(postData);
+            setInputValues({
+                ...inputValues,
+                // CommunicationAddress: inputValues.pAddress,
+                StreetAddress2: inputValues.streetAddress,
+                City2: inputValues.City,
+                State2: inputValues.State,
+                PostalCode2: inputValues.pCode,
+            });
+        }
+        // else {
+        //     setInputValues({
+        //         ...inputValues,
+        //         // CommunicationAddress: '',
+        //         StreetAddress2: inputValues.cstreetname,
+        //         City2: '',
+        //         State2: '',
+        //         PostalCode2: '',
+        //     });
+        // }
+    }, [sameAddress])
+    // if (!sameAddress) {
+    //     setInputValues({
+    //         ...inputValues,
+    //         // CommunicationAddress: '',
+    //         StreetAddress2: inputValues.cstreetname,
+    //         City2: '',
+    //         State2: '',
+    //         PostalCode2: '',
+    //     });
+    // }
+
     return (
         <div className='Add_device1 '>
             {/* Snack bar */}
@@ -809,7 +889,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 </div>
             </div>
             {/* Access controll start */}
-            <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{overflow:'hidden'}}>
+            <div class="modal fade boot-modals accessmodal" id="accessControll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ overflow: 'hidden' }}>
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -852,7 +932,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
             <div className="add_device_container1">
                 <div className="new_device_content scroll_div">
                     <div className="row_one display-flex">
-                        <div className="adding_new_device uppercase bold">Edit 
+                        <div className="adding_new_device uppercase bold">Edit
                             {(Positionid_val === 2) && " Distributor "}
                             {(Positionid_val === 3) && " Customer "}
                             {(Positionid_val === 4) && " Staff "}
@@ -1093,34 +1173,57 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                             }}
                                         >
                                             {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                            <TextField
-                                                label={
-                                                    <span>{`${field.label}`}</span>
-                                                }
-                                                type="text"
-                                                className="form-control-loc"
-                                                value={field.value}
-                                                // onChange={(e) => handleInputChange(e, field.name)}
-                                                // onChange={handleInputChange}
-                                                // onChange={(e) => handleInputChange(index, e.target.value)}
-                                                onChange={handleInputChange}
-                                                name={field.name}
-                                                id={`input${index + 1}`}
-                                                select={field.name === 'bussinessType' && true}
-                                                disabled={field.disabled}
-                                                labelClassName="required"
-                                                InputLabelProps={{
-                                                    className: 'required-label',
-                                                    required: true
-                                                }}
-                                            >
-                                                {currencies.map((option) => (
-                                                    <MenuItem key={option.value} value={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
-                                            {field.error ? 'Error' : ''}
+                                            {field.name == 'State' || field.name == 'City' ?
+                                                <>
+                                                    <Autocomplete
+                                                        options={field.name === 'State' ? state : district}
+                                                        onChange={(e, value) => handleInputChangeInvoice(field.name, value)}
+                                                        value={field.value}
+                                                        renderInput={(params) => (
+                                                            <TextField {...params}
+                                                                label={`${field.label}`}
+                                                                variant="outlined"
+                                                                value={field.value}
+                                                                InputLabelProps={{
+                                                                    className: 'required-label',
+                                                                    required: true
+                                                                }}
+                                                            />
+                                                        )}
+                                                    />
+                                                </>
+                                                :
+                                                <>
+                                                    <TextField
+                                                        label={
+                                                            <span>{`${field.label}`}</span>
+                                                        }
+                                                        type="text"
+                                                        className="form-control-loc"
+                                                        value={field.value}
+                                                        // onChange={(e) => handleInputChange(e, field.name)}
+                                                        // onChange={handleInputChange}
+                                                        // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                        onChange={handleInputChange}
+                                                        name={field.name}
+                                                        id={`input${index + 1}`}
+                                                        select={field.name === 'bussinessType' && true}
+                                                        disabled={field.disabled}
+                                                        labelClassName="required"
+                                                        InputLabelProps={{
+                                                            className: 'required-label',
+                                                            required: true
+                                                        }}
+                                                    >
+                                                        {currencies.map((option) => (
+                                                            <MenuItem key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </TextField>
+                                                    {field.error ? 'Error' : ''}
+                                                </>
+                                            }
 
                                             {/* Add error handling if needed */}
                                         </Box>
@@ -1135,6 +1238,13 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                             </div>
                         )}
 
+                        {!(Positionid_val === 4 || Positionid_val === 5) && (
+                            // <FormControlLabel style={{ userSelect: 'none' }} control={<Checkbox checked={sameAddress} onChange={handleCheckboxChange} />} label="Same - Permenent Address" />
+                            <div style={{ userSelect: 'none' }}>
+                                <Checkbox checked={sameAddress} onChange={handleCheckboxChange} />
+                                <span>Same - Permanent Address</span>
+                            </div>
+                        )}
                         <div className="dsa_row_3 display-flex">
                             {inputFields.slice(18, 23).map((field, index) => (
                                 !(field.isStaff) && (
@@ -1150,34 +1260,62 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                             }}
                                         >
                                             {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                            <TextField
-                                                label={
-                                                    <span>{`${field.label}`}</span>
-                                                }
-                                                type="text"
-                                                className="form-control-loc"
-                                                value={field.value}
-                                                // onChange={(e) => handleInputChange(e, field.name)}
-                                                // onChange={handleInputChange}
-                                                // onChange={(e) => handleInputChange(index, e.target.value)}
-                                                onChange={handleInputChange}
-                                                name={field.name}
-                                                id={`input${index + 1}`}
-                                                select={field.name === 'bussinessType' && true}
-                                                disabled={field.disabled}
-                                                labelClassName="required"
-                                                InputLabelProps={{
-                                                    className: 'required-label',
-                                                    required: true
-                                                }}
-                                            >
-                                                {currencies.map((option) => (
-                                                    <MenuItem key={option.value} value={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
-                                            {field.error ? 'Error' : ''}
+                                            {field.name == 'State2' || field.name == 'City2' ?
+                                                (
+                                                    <>
+                                                        <Autocomplete
+                                                            options={field.name === 'State2' ? state : district}
+                                                            onChange={(e, value) => handleInputChangeInvoice(field.name, value)}
+                                                            value={field.value}
+                                                            disabled={sameAddress}
+                                                            renderInput={(params) => (
+                                                                <TextField {...params}
+                                                                    label={`${field.label}`}
+                                                                    variant="outlined"
+                                                                    InputLabelProps={{
+                                                                        className: 'required-label',
+                                                                        required: true
+                                                                    }}
+                                                                />
+                                                            )}
+                                                        />
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {/* {field.value} */}
+                                                        <TextField
+                                                            label={
+                                                                <span>{`${field.label}`}</span>
+                                                            }
+                                                            type="text"
+                                                            className="form-control-loc"
+                                                            value={field.value}
+                                                            // onChange={(e) => handleInputChange(e, field.name)}
+                                                            // onChange={handleInputChange}
+                                                            // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                            onChange={handleInputChange}
+                                                            name={field.name}
+                                                            id={`input${index + 1}`}
+                                                            select={field.name === 'bussinessType' && true}
+                                                            // disabled={field.disabled}
+                                                            disabled={sameAddress}
+                                                            labelClassName="required"
+                                                            InputLabelProps={{
+                                                                className: 'required-label',
+                                                                required: true
+                                                            }}
+                                                        >
+                                                            {currencies.map((option) => (
+                                                                <MenuItem key={option.value} value={option.value}>
+                                                                    {option.label}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </TextField>
+                                                        {field.error ? 'Error' : ''}
+                                                    </>
+                                                )
+                                            }
+
 
                                             {/* Add error handling if needed */}
                                         </Box>
@@ -1240,7 +1378,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                         }} data-bs-toggle="modal" data-bs-target="#accessControll">
                             {/* <LockClosedIcon /> */}
                             {/* <ErrorOutlineIcon /> */}
-                            <LockPersonOutlinedIcon/>
+                            <LockPersonOutlinedIcon />
                         </Button>
 
                     </div>
