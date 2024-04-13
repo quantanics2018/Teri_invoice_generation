@@ -813,34 +813,19 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         }
     };
 
-    const [sameAddress, setSameAddress] = useState(false);
+    
 
-    const handleCheckboxChange = () => {
-        setSameAddress(!sameAddress);
-    };
-    useEffect(() => {
-        if (sameAddress) {
-            // console.log(postData);
-            setInputValues({
-                ...inputValues,
-                // CommunicationAddress: inputValues.pAddress,
-                StreetAddress2: inputValues.streetAddress,
-                City2: inputValues.City,
-                State2: inputValues.State,
-                PostalCode2: inputValues.pCode,
-            });
-        }
-        // else {
-        //     setInputValues({
-        //         ...inputValues,
-        //         // CommunicationAddress: '',
-        //         StreetAddress2: inputValues.cstreetname,
-        //         City2: '',
-        //         State2: '',
-        //         PostalCode2: '',
-        //     });
-        // }
-    }, [sameAddress])
+    
+    // else {
+    //     setInputValues({
+    //         ...inputValues,
+    //         // CommunicationAddress: '',
+    //         StreetAddress2: inputValues.cstreetname,
+    //         City2: '',
+    //         State2: '',
+    //         PostalCode2: '',
+    //     });
+    // }
     // if (!sameAddress) {
     //     setInputValues({
     //         ...inputValues,
