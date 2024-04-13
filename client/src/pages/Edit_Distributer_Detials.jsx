@@ -836,6 +836,24 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     //         PostalCode2: '',
     //     });
     // }
+    
+    const handleCheckboxChange = () => {
+        setSameAddress(!sameAddress);
+    };
+    const [sameAddress, setSameAddress] = useState(false);
+    useEffect(() => {
+        if (sameAddress) {
+            // console.log(postData);
+            setInputValues({
+                ...inputValues,
+                // CommunicationAddress: inputValues.pAddress,
+                StreetAddress2: inputValues.streetAddress,
+                City2: inputValues.City,
+                State2: inputValues.State,
+                PostalCode2: inputValues.pCode,
+            });
+        }
+    }, [sameAddress])
 
     return (
         <div className='Add_device1 '>
