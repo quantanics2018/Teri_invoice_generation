@@ -157,6 +157,7 @@ const Invoice = ({
     const unitRate = (hsnno, batchno) => {
         const unitRate = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.priceperitem)[0] || '';
         // console.log("unitRate : ",unitRate);
+        // console.log("unitRate : ",formatAmountToIndianCurrency(parseFloat(unitRate)));
         return unitRate;
     }
 
