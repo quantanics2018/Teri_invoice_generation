@@ -578,6 +578,14 @@ const Invoice = ({
         }
     }
 
+    // After round off config
+    const GrandTotalCGST = () =>{
+        return Math.floor(TotalcgstValue() * 100) / 100
+    }
+    const GrandTotalSGST = () =>{
+        return Math.floor(TotalsgstValue() * 100) / 100
+    }
+
 
     return (
         <div className="fullPage">
@@ -846,13 +854,15 @@ const Invoice = ({
                                                 {/* CGST */}
                                                 {/* {formatTotal(TotalcgstPercent())} % */}
                                                 {/* <div className="totalVal1">{formatTotal(TotalcgstValue())}</div> */}
-                                                <div className="totalVal1">{Math.floor(TotalcgstValue() * 100) / 100}</div>
+                                                {/* <div className="totalVal1">{Math.floor(TotalcgstValue() * 100) / 100}</div> */}
+                                                <div className="totalVal1">{GrandTotalCGST()}</div>
                                             </div>
                                             <div className="invoiceRow1 even1">
                                                 {/* SGST */}
                                                 {/* {formatTotal(TotalcgstPercent())} % */}
                                                 {/* <div className="totalVal1">{formatTotal(TotalsgstValue())}</div> */}
-                                                <div className="totalVal1">{Math.floor(TotalsgstValue() * 100) / 100}</div>
+                                                {/* <div className="totalVal1">{Math.floor(TotalsgstValue() * 100) / 100}</div> */}
+                                                <div className="totalVal1">{GrandTotalSGST()}</div>
                                             </div>
                                             <div className="invoiceRow1 even1">
                                                 {/* Round Off */}
@@ -902,6 +912,7 @@ const Invoice = ({
                             <div style={rowStyle}>
                                 <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black', padding: '3px' }}>
                                     {item.hsncode || ''}
+
                                     {index === previewInvoiceprop.length &&
                                         <div>
                                             <b >Total</b>
@@ -910,7 +921,18 @@ const Invoice = ({
                                 </div>
                                 <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
                                     {/* {item.hsncode || ''} */}
-                                    {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''}
+                                    {/* {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''} */}
+                                    {index !== previewInvoiceprop.length && (
+                                        Math.floor(
+                                            (
+                                                (
+                                                    parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)
+                                                ) - (
+                                                    (parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100
+                                                )
+                                            )
+                                            * 100) / 100
+                                    )}
                                     {index === previewInvoiceprop.length &&
                                         <div>
                                             <b>{formatTotal(TaxableValue())}</b>
@@ -930,7 +952,8 @@ const Invoice = ({
                                     }
                                     {index === previewInvoiceprop.length &&
                                         <div>
-                                            <b>{formatTotal(TotalcgstValue())}</b>
+                                            {/* <b>{formatTotal(TotalcgstValue())}</b> */}
+                                            <b>{GrandTotalCGST()}</b>
                                         </div>
                                     }
                                 </div>
@@ -947,7 +970,8 @@ const Invoice = ({
                                     }
                                     {index === previewInvoiceprop.length &&
                                         // <div>
-                                        <b>{formatTotal(TotalsgstValue())}</b>
+                                        // <b>{formatTotal(TotalsgstValue())}</b>
+                                        <b>{GrandTotalSGST()}</b>
                                         // </div>
                                     }
                                 </div>
@@ -956,9 +980,11 @@ const Invoice = ({
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal((((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100)
                                         + (((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100))
                                         : ''}
+
                                     {index === previewInvoiceprop.length &&
                                         <div>
-                                            <b>{Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue())))}</b>
+                                            {/* <b>{Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue())))}</b> */}
+                                            <b>{(formatTotal((GrandTotalCGST()) + (GrandTotalSGST())))}</b>
                                         </div>}
 
                                 </div>
@@ -1003,9 +1029,9 @@ const Invoice = ({
 
                             <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
                                 <div className="pvtName" style={PVTname}>For {SenderInvoiceProp[0].organizationname}</div>
-                                <img src={signSrc} 
-                                style={{ ...Signature, maxHeight: '80px', maxWidth: '300px', width: '70%', height: '90%' }}
-                                alt="Signature Required" 
+                                <img src={signSrc}
+                                    style={{ ...Signature, maxHeight: '80px', maxWidth: '300px', width: '70%', height: '90%' }}
+                                    alt="Signature Required"
                                 // height={10} width={30} 
                                 />
                                 <div className="authSign" style={AuthSign}>Authorized Sign.</div>
