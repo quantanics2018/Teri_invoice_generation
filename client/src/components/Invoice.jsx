@@ -161,17 +161,6 @@ const Invoice = ({
         return unitRate;
     }
 
-    function formatAmountToIndianCurrency(amount) {
-        var formattedAmount;
-        if (amount) {
-            var formattedAmount = amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        } else {
-            var formattedAmount = "";
-        }
-
-        return formattedAmount;
-    }
-
 
 
     function TaxableValue() {
@@ -597,10 +586,10 @@ const Invoice = ({
     }
 
     // After round off config
-    const GrandTotalCGST = () => {
+    const GrandTotalCGST = () =>{
         return Math.floor(TotalcgstValue() * 100) / 100
     }
-    const GrandTotalSGST = () => {
+    const GrandTotalSGST = () =>{
         return Math.floor(TotalsgstValue() * 100) / 100
     }
 
