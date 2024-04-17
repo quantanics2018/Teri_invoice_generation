@@ -225,6 +225,10 @@ const Invoice = ({
         const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
         return formattedTotal;
     }
+
+    // For convert the Number value into Words (Indian Currency)
+    const toWords = new ToWords({ localeCode: 'en-IN', converterOptions: { currency: true } });
+    
     // console.log(Math.round(formatTotal(grandTotal())));
     const number = !isNaN(Math.round(formatTotal(grandTotal()))) ? Math.round(formatTotal(grandTotal())) : 0;
     const integerWords = numberToWords.toWords(number);
