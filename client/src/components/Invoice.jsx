@@ -998,7 +998,7 @@ const Invoice = ({
                     <div className="paymentDetials1" style={paymentDetials}>
                         <div className="bankDetails" style={{ ...df, ...bankDetails, ...padInPx }}>
                             <div className="invoiceName1" style={{ marginRight: '40%' }}>
-                                <QrCode totalSum={formatTotal(grandTotal())} upi={SenderInvoiceProp[0].upiid} />
+                                <QrCode totalSum={formatTotal(Math.round(grandTotal()))} upi={SenderInvoiceProp[0].upiid} />
                             </div>
                             <div className="ditailwithfixedwidth" style={ditailwithfixedwidth}>
                                 <div className="bankName"><b>Bank Details</b></div>
