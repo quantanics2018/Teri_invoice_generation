@@ -216,13 +216,11 @@ const Invoice = ({
     }
     // console.log(Math.round(formatTotal(grandTotal())));
     const number = !isNaN(Math.round(formatTotal(grandTotal()))) ? Math.round(formatTotal(grandTotal())) : 0;
-    // const integerWords = numberToWords.toWords(number);
-    const integerWords = toWords.convert(number);
+    const integerWords = numberToWords.toWords(number);
 
     // console.log(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))));
     const number1 = !isNaN(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue())))) ? Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))) : 0;
-    // const integerWords1 = numberToWords.toWords(number1);
-    const integerWords1 = toWords.convert(number1);
+    const integerWords1 = numberToWords.toWords(number1);
     // consecimalPart = Math.round((number - integerPart) * 100);
     // const integerPart = Math.floor(number);
     // const decimalWords = numberToWords.toWords(decimalPart);
