@@ -13,6 +13,7 @@ import html2canvas from 'html2canvas';
 import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd, even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo, table, tbody, tBorder, rawInput, tdv, tdvDate, textarea, billDetial, bankDetails, tdh, tBorderd, tandc, nowrap, taxInvoiceHead, invoiceDetial, df, gap, gap1, dfc, addressDetials, invoicedetail, rowInvoiceDetail, inputbox, row1Invoice, width50, reciverBill, pad, textwarp, mt, sb, padInPx, bussinessContent, table1, row } from '../assets/style/mailInlineCss';
 import { Button, TextField } from '@mui/material';
 import numberToWords from 'number-to-words';
+import { ToWords } from 'to-words';
 import { gag } from '../pages/InvoiceGenerator';
 import { useNavigate } from 'react-router-dom';
 
@@ -153,6 +154,16 @@ const Invoice = ({
         return getsgst
     }
 
+    function formatAmountToIndianCurrency(amount) {
+        var formattedAmount;
+        if(amount){
+            var formattedAmount = amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }else{
+            var formattedAmount = "";
+        }
+
+        return formattedAmount;
+    }
 
     const unitRate = (hsnno, batchno) => {
         const unitRate = productList.filter((product) => product.productid === String(hsnno) && product.batchno === String(batchno)).map((product) => product.priceperitem)[0] || '';
@@ -160,8 +171,6 @@ const Invoice = ({
         // console.log("unitRate : ",formatAmountToIndianCurrency(parseFloat(unitRate)));
         return unitRate;
     }
-
-
 
     function TaxableValue() {
         // return previewInvoiceprop.reduce((acc, item) => {
@@ -214,13 +223,21 @@ const Invoice = ({
         const formattedTotal = parseFloat(total).toFixed(2); // Ensure there are always two digits after the decimal point
         return formattedTotal;
     }
+    // For convert the Number value into Words (Indian Currency)
+    const toWords = new ToWords({ localeCode: 'en-IN', converterOptions: { currency: true } });
+
     // console.log(Math.round(formatTotal(grandTotal())));
     const number = !isNaN(Math.round(formatTotal(grandTotal()))) ? Math.round(formatTotal(grandTotal())) : 0;
-    const integerWords = numberToWords.toWords(number);
+    // const integerWords = numberToWords.toWords(number);
+    const integerWords = toWords.convert(number)
 
-    // console.log(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))));
+
     const number1 = !isNaN(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue())))) ? Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))) : 0;
-    const integerWords1 = numberToWords.toWords(number1);
+    // const integerWords1 = numberToWords.toWords(number1);
+    const integerWords1 = toWords.convert(number1)
+    
+    
+    
     // consecimalPart = Math.round((number - integerPart) * 100);
     // const integerPart = Math.floor(number);
     // const decimalWords = numberToWords.toWords(decimalPart);
@@ -813,7 +830,7 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{ width: '10%' }}>{unitRate(item.hsncode, item.batchno)}</div>
+                                <div className='invoice_table_header' style={{ width: '10%' }}>{formatAmountToIndianCurrency(parseFloat(unitRate(item.hsncode, item.batchno)))}</div>
                                 <div className='invoice_table_header' style={{ width: '10%' }}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
                                 <div className='invoice_table_header' style={{ width: '7%' }}>{item.Discount || ''}</div>
                                 <div className='invoice_table_header' style={{ width: '10%' }}>
@@ -829,7 +846,7 @@ const Invoice = ({
                                         //  || ''
 
 
-                                        Math.floor(
+                                        formatAmountToIndianCurrency(Math.floor(
                                             (
                                                 (
                                                     parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)
@@ -837,7 +854,7 @@ const Invoice = ({
                                                     (parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100
                                                 )
                                             )
-                                            * 100) / 100
+                                            * 100) / 100)
 
                                         // (
                                         //     (
@@ -855,15 +872,13 @@ const Invoice = ({
                                                 {/* CGST */}
                                                 {/* {formatTotal(TotalcgstPercent())} % */}
                                                 {/* <div className="totalVal1">{formatTotal(TotalcgstValue())}</div> */}
-                                                {/* <div className="totalVal1">{Math.floor(TotalcgstValue() * 100) / 100}</div> */}
-                                                <div className="totalVal1">{GrandTotalCGST()}</div>
+                                                <div className="totalVal1">{formatAmountToIndianCurrency(Math.floor(TotalcgstValue() * 100) / 100)}</div>
                                             </div>
                                             <div className="invoiceRow1 even1">
                                                 {/* SGST */}
                                                 {/* {formatTotal(TotalcgstPercent())} % */}
                                                 {/* <div className="totalVal1">{formatTotal(TotalsgstValue())}</div> */}
-                                                {/* <div className="totalVal1">{Math.floor(TotalsgstValue() * 100) / 100}</div> */}
-                                                <div className="totalVal1">{GrandTotalSGST()}</div>
+                                                <div className="totalVal1">{formatAmountToIndianCurrency(Math.floor(TotalsgstValue() * 100) / 100)}</div>
                                             </div>
                                             <div className="invoiceRow1 even1">
                                                 {/* Round Off */}
@@ -874,7 +889,7 @@ const Invoice = ({
                                     }
                                     {index === previewInvoiceprop.length + 1 &&
                                         <div>
-                                            <b>{Math.round(formatTotal(grandTotal()))}</b>
+                                            <b>{formatAmountToIndianCurrency(Math.round(formatTotal(grandTotal())))}</b>
                                         </div>
                                     }
                                 </div>
@@ -886,7 +901,7 @@ const Invoice = ({
                             <div className="changeablecontent">Amount Changeable (in words)</div>
                             <div className="oe"><b>E & O.E</b></div>
                         </div>
-                        <div className="amountHeading"><b>{capitalizeIntegerWords(integerWords)} Only</b></div>
+                        <div className="amountHeading"><b>{capitalizeIntegerWords(integerWords)}</b></div>
                     </div>
                     <div style={containerStyle}>
                         {/* Table heading row */}
@@ -922,9 +937,9 @@ const Invoice = ({
                                 </div>
                                 <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
                                     {/* {item.hsncode || ''} */}
-                                    {/* {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) || ''} */}
+                                    {/* {formatAmountToIndianCurrency(((unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) || ''} */}
                                     {index !== previewInvoiceprop.length && (
-                                        Math.floor(
+                                        formatAmountToIndianCurrency(Math.floor(
                                             (
                                                 (
                                                     parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)
@@ -932,11 +947,11 @@ const Invoice = ({
                                                     (parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100
                                                 )
                                             )
-                                            * 100) / 100
+                                            * 100) / 100)
                                     )}
                                     {index === previewInvoiceprop.length &&
                                         <div>
-                                            <b>{formatTotal(TaxableValue())}</b>
+                                            <b>{formatAmountToIndianCurrency(parseFloat(formatTotal(TaxableValue())))}</b>
                                         </div>
                                     }
                                 </div>
@@ -948,13 +963,12 @@ const Invoice = ({
                                             <div className="cgstRate" style={{ ...cgstRate, height: '30px', ...df, justifyContent: 'center', alignItems: 'center' }}>
                                                 {parseInt(getcgst(item.hsncode, item.batchno)) ? parseInt(getcgst(item.hsncode, item.batchno)) + '%' : ''}
                                             </div>
-                                            <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100) : ''}</div>
+                                            <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatAmountToIndianCurrency(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100) : ''}</div>
                                         </div>
                                     }
                                     {index === previewInvoiceprop.length &&
                                         <div>
-                                            {/* <b>{formatTotal(TotalcgstValue())}</b> */}
-                                            <b>{GrandTotalCGST()}</b>
+                                            <b>{formatAmountToIndianCurrency(parseFloat(formatTotal(TotalcgstValue())))}</b>
                                         </div>
                                     }
                                 </div>
@@ -965,27 +979,26 @@ const Invoice = ({
                                             <div className="cgstRate" style={{ ...cgstRate, height: '30px', ...df, justifyContent: 'center', alignItems: 'center' }}>
                                                 {parseInt(getsgst(item.hsncode, item.batchno)) ? parseInt(getsgst(item.hsncode, item.batchno)) + '%' : ''}
                                             </div>
-                                            <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100) : ''}</div>
+                                            <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatAmountToIndianCurrency(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100) : ''}</div>
                                         </div>
 
                                     }
                                     {index === previewInvoiceprop.length &&
                                         // <div>
-                                        // <b>{formatTotal(TotalsgstValue())}</b>
-                                        <b>{GrandTotalSGST()}</b>
+                                        <b>{formatAmountToIndianCurrency(parseFloat(formatTotal(TotalsgstValue())))}</b>
                                         // </div>
                                     }
                                 </div>
                                 <div style={{ ...cellStyle, borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
                                     {/* {item.Discount || ''} */}
-                                    {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatTotal((((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100)
+                                    {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatAmountToIndianCurrency((((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100)
                                         + (((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100))
                                         : ''}
 
                                     {index === previewInvoiceprop.length &&
                                         <div>
-                                            {/* <b>{Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue())))}</b> */}
-                                            <b>{(formatTotal((GrandTotalCGST()) + (GrandTotalSGST())))}</b>
+                                            {/* <b>{(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))))}</b> */}
+                                            <b>{formatAmountToIndianCurrency(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))))}</b>
                                         </div>}
 
                                 </div>
@@ -998,7 +1011,7 @@ const Invoice = ({
                     >
                         <div className="amountHeading" style={df}>
                             <div className="changeablecontent">Taxable Amount (in words) : </div>
-                            <div className="amountHeading"><b>{capitalizeIntegerWords(integerWords1)} Only</b></div>
+                            <div className="amountHeading"><b>{capitalizeIntegerWords(integerWords1)}</b></div>
                         </div>
                     </div>
 
@@ -1007,7 +1020,7 @@ const Invoice = ({
                     <div className="paymentDetials1" style={paymentDetials}>
                         <div className="bankDetails" style={{ ...df, ...bankDetails, ...padInPx }}>
                             <div className="invoiceName1" style={{ marginRight: '40%' }}>
-                                <QrCode totalSum={formatTotal(grandTotal())} upi={SenderInvoiceProp[0].upiid} />
+                                <QrCode totalSum={formatTotal(Math.round(grandTotal()))} upi={SenderInvoiceProp[0].upiid} />
                             </div>
                             <div className="ditailwithfixedwidth" style={ditailwithfixedwidth}>
                                 <div className="bankName"><b>Bank Details</b></div>
