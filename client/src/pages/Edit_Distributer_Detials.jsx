@@ -321,6 +321,43 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         navigate(-1);
     }
 
+    // New State to handle the Required field of GST and PAN input fields......
+    const [isRequiredField, setIsRequiredField] = useState(true);
+
+    useEffect(() => {
+        if (inputValues.bussinessType === 'Individual' && Positionid_val === 3) {
+            setIsRequiredField(false);
+            if((inputValues.fName).trim() !="" && (inputValues.lName).trim() != ""){
+                setInputValues((prevData) => ({
+                    ...prevData,
+                    OrganizationName: inputValues.fName + " " + inputValues.lName,
+                }));
+            }
+        }
+    },[inputValues.bussinessType])
+
+    useEffect(() => {
+        if (inputValues.bussinessType === 'Individual' && Positionid_val === 3) {
+            if((inputValues.fName).trim() !="" && (inputValues.lName).trim() != ""){
+                setInputValues((prevData) => ({
+                    ...prevData,
+                    OrganizationName: inputValues.fName + " " + inputValues.lName,
+                }));
+            }
+        }
+    },[inputValues.fName])
+
+    useEffect(() => {
+        if (inputValues.bussinessType === 'Individual' && Positionid_val === 3) {
+            if((inputValues.fName).trim() !="" && (inputValues.lName).trim() != ""){
+                setInputValues((prevData) => ({
+                    ...prevData,
+                    OrganizationName: inputValues.fName + " " + inputValues.lName,
+                }));
+            }
+        }
+    },[inputValues.lName])
+
 
     //redirect to device content page
     const navigate = useNavigate();
@@ -341,10 +378,26 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         // console.log(inputValues, isValidlName);
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
+
+                let isValidgstNumber = true;
+                let isValidpanNumber = true;
+                // To avoid the Validatoin for the Customer...
+                if(Positionid_val === 3 && inputValues.bussinessType === 'Individual'){
+                    if(inputValues.panNumber.trim() != ""){
+                        isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(inputValues.panNumber);
+                    }
+                    if(inputValues.gstNumber.trim() != ""){
+                        isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(inputValues.gstNumber);
+                    }
+                }else{
+                    isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(inputValues.gstNumber);
+                    isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(inputValues.panNumber);
+                }
+
+
                 const isValidbussinessType = (inputValues.bussinessType === 'Organization' || inputValues.bussinessType === 'Individual');
                 const isValidOrgName = typeof inputValues.OrganizationName === 'string' && inputValues.OrganizationName.trim() !== '';
-                const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(inputValues.gstNumber)
-                const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(inputValues.panNumber)
+                
                 // Upi Bank Detials
                 // const isValidupiPaymentNo = inputValues.upiPaymentNo.trim() !== '';
                 // const isValidaccName = inputValues.accName.trim() !== '';
@@ -1072,7 +1125,8 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     name={field.name}
                                                     id={`input${index + 1}`}
                                                     select={field.name === 'bussinessType' && true}
-                                                    disabled={field.disabled}
+                                                    // disabled={field.disabled}
+                                                    disabled = {field.name === 'OrganizationName' && inputValues.bussinessType === 'Individual' && Positionid_val === 3}
                                                     labelClassName="required"
                                                     InputLabelProps={{
                                                         className: 'required-label',
@@ -1127,7 +1181,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     labelClassName="required"
                                                     InputLabelProps={{
                                                         className: 'required-label',
-                                                        required: true
+                                                        required: isRequiredField
                                                     }}
                                                 >
                                                     {currencies.map((option) => (
