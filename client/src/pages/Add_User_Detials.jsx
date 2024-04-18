@@ -163,10 +163,19 @@ const Add_User_Detials = ({ Positionid_val }) => {
         };
         fetchdistrict();
     }, []);
+    
+    useEffect(() => {
+        if (postData.bussinessType === 'Individual') {
+            console.log(postData.fName + " " + postData.lName);
+            setPostData((prevData) => ({
+                ...prevData,
+                OrganizationName: postData.fName + " " + postData.lName,
+            }));
+        }
+    },[postData.bussinessType])
 
     const handleInputChange = (e) => {
         let { name, value, type } = e.target;
-
         // Check if the input is a file input
         if (type === 'file') {
             setPostData({
@@ -1261,7 +1270,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                                 options={field.name === 'State2' ? state : district}
                                                                 onChange={(e, value) => handleInputChangeInvoice(field.name, value)}
                                                                 value={field.value}
-                                                                disabled ={sameAddress}
+                                                                disabled={sameAddress}
                                                                 renderInput={(params) => (
                                                                     <TextField {...params}
                                                                         value={field.value}
