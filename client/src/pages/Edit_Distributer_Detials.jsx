@@ -67,6 +67,9 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     const [selectedOption_user, setSelectedOption_user] = useState('0');
     const [selectedOption_device, setSelectedOption_device] = useState('0');
     const [selectedOption_dashboard, setSelectedOption_dashboard] = useState('0');
+    const [sameAddress, setSameAddress] = useState(false);
+    const [state, setstate] = useState([])
+    const [district, setdistrict] = useState([]);
 
     const handleOptionChange_site = (event) => {
         setSelectedOption_site(event.target.value);
@@ -95,6 +98,46 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         };
         device_user_data();
     }, [userid]);
+
+    useEffect(() => {
+        if (sameAddress) {
+            // console.log(postData);
+            setInputValues({
+                ...inputValues,
+                // CommunicationAddress: inputValues.pAddress,
+                StreetAddress2: inputValues.streetAddress,
+                City2: inputValues.City,
+                State2: inputValues.State,
+                PostalCode2: inputValues.pCode,
+            });
+        }
+    }, [sameAddress])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const dropDownUserResponse = await axios.post(`${API_URL}get/state`);
+                const statedata = (dropDownUserResponse.data.data.map(item => item.statename))
+                // console.log(dropDownUserResponse.data.data.map(item => item.statename));
+                setstate(statedata);
+            } catch (error) {
+                console.error('Error in processing data:', error);
+            }
+        };
+        fetchData();
+        const fetchdistrict = async () => {
+            try {
+                const dropDownUserResponse = await axios.post(`${API_URL}get/district`);
+                // console.log(dropDownUserResponse);
+                const districtdata = (dropDownUserResponse.data.data.map(item => item.districtname))
+                // console.log(dropDownUserResponse.data.data.map(item => item.districtname));
+                setdistrict(districtdata);
+            } catch (error) {
+                console.error('Error in processing data:', error);
+            }
+        };
+        fetchdistrict();
+    }, []);
 
     const all_data_fun = (data) => {
         if (data) {
@@ -760,34 +803,34 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         return <div>Loading...</div>;
     }
 
-    const [state, setstate] = useState([])
-    const [district, setdistrict] = useState([]);
+    // const [state, setstate] = useState([])
+    // const [district, setdistrict] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const dropDownUserResponse = await axios.post(`${API_URL}get/state`);
-                const statedata = (dropDownUserResponse.data.data.map(item => item.statename))
-                // console.log(dropDownUserResponse.data.data.map(item => item.statename));
-                setstate(statedata);
-            } catch (error) {
-                console.error('Error in processing data:', error);
-            }
-        };
-        fetchData();
-        const fetchdistrict = async () => {
-            try {
-                const dropDownUserResponse = await axios.post(`${API_URL}get/district`);
-                // console.log(dropDownUserResponse);
-                const districtdata = (dropDownUserResponse.data.data.map(item => item.districtname))
-                // console.log(dropDownUserResponse.data.data.map(item => item.districtname));
-                setdistrict(districtdata);
-            } catch (error) {
-                console.error('Error in processing data:', error);
-            }
-        };
-        fetchdistrict();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const dropDownUserResponse = await axios.post(`${API_URL}get/state`);
+    //             const statedata = (dropDownUserResponse.data.data.map(item => item.statename))
+    //             // console.log(dropDownUserResponse.data.data.map(item => item.statename));
+    //             setstate(statedata);
+    //         } catch (error) {
+    //             console.error('Error in processing data:', error);
+    //         }
+    //     };
+    //     fetchData();
+    //     const fetchdistrict = async () => {
+    //         try {
+    //             const dropDownUserResponse = await axios.post(`${API_URL}get/district`);
+    //             // console.log(dropDownUserResponse);
+    //             const districtdata = (dropDownUserResponse.data.data.map(item => item.districtname))
+    //             // console.log(dropDownUserResponse.data.data.map(item => item.districtname));
+    //             setdistrict(districtdata);
+    //         } catch (error) {
+    //             console.error('Error in processing data:', error);
+    //         }
+    //     };
+    //     fetchdistrict();
+    // }, []);
 
 
     const handleInputChangeInvoice = (fieldName, value) => {
@@ -796,7 +839,6 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
             [fieldName]: value,
         }));
         if (sameAddress) {
-
             if (fieldName === 'State') {
                 fieldName = 'State2';
                 setInputValues((prevValues) => ({
@@ -840,20 +882,22 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     const handleCheckboxChange = () => {
         setSameAddress(!sameAddress);
     };
-    const [sameAddress, setSameAddress] = useState(false);
-    useEffect(() => {
-        if (sameAddress) {
-            // console.log(postData);
-            setInputValues({
-                ...inputValues,
-                // CommunicationAddress: inputValues.pAddress,
-                StreetAddress2: inputValues.streetAddress,
-                City2: inputValues.City,
-                State2: inputValues.State,
-                PostalCode2: inputValues.pCode,
-            });
-        }
-    }, [sameAddress])
+    // const [sameAddress, setSameAddress] = useState(false);
+    
+    // useEffect(() => {
+    //     if (sameAddress) {
+    //         // console.log(postData);
+    //         setInputValues({
+    //             ...inputValues,
+    //             // CommunicationAddress: inputValues.pAddress,
+    //             StreetAddress2: inputValues.streetAddress,
+    //             City2: inputValues.City,
+    //             State2: inputValues.State,
+    //             PostalCode2: inputValues.pCode,
+    //         });
+    //     }
+    // }, [sameAddress])
+    
 
     return (
         <div className='Add_device1 '>
