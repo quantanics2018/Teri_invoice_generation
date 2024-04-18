@@ -307,5 +307,37 @@ async function getProductDataIndividual(req, res) {
     }
 }
 
+// invoice generation data getting function
+async function getInvoiceData(req,res){
+    try {
+        const InvoiceId = req.body.invoiceId;
 
-module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData,getSignExistance,getDistrictData};
+        // invoice data and product name data
+        const result = await userdbInstance.userdb.query(`SELECT invoice.*,invoiceitem.*,products.productname,products.priceperitem,products.cgst,products.sgst  FROM invoice
+        JOIN invoiceitem ON invoice.invoiceid = invoiceitem.invoiceid JOIN products ON products.productid = invoiceitem.productid AND products.batchno = invoiceitem.batchno where invoice.invoiceid=$1;`,[InvoiceId]);
+
+        console.log("sender id is");
+        const sender_id = result.rows[0].senderid;
+        const receiver_id = result.rows[0].receiverid;
+
+        const sender_data = await userdbInstance.userdb.query('SELECT userid, email, phno, aadhar, pan, positionid, adminid, updatedby,status, userprofile, pstreetname, pdistrictid, pstateid, ppostalcode,organizationname, gstnno, bussinesstype, fname, lname, upiid, bankname, bankaccno, passbookimg, accholdername, ifsccode, signature FROM public."user"  WHERE userid=$1',[sender_id]);
+        const receiver_data = await userdbInstance.userdb.query('SELECT userid, email, phno, aadhar, pan, positionid, adminid, updatedby,status, userprofile, pstreetname, pdistrictid, pstateid, ppostalcode,organizationname, gstnno, bussinesstype, fname, lname, upiid, bankname, bankaccno, passbookimg, accholdername, ifsccode, signature FROM public."user"  WHERE userid=$1',[receiver_id]);
+
+        const output = {
+            invoice_data:result.rows,
+            sender_data:sender_data.rows,
+            receiver_data:receiver_data.rows,
+        };
+        
+
+        res.json({message:"successfully data fetched",data:output});
+
+        
+    } catch (error) {
+        console.error('Error executing database query:', error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+
+module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData,getSignExistance,getDistrictData,getInvoiceData};

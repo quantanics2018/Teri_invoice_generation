@@ -1,14 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { API_URL } from '../config';
 import { Box, Button, Pagination, Skeleton, TableCell, TextField } from '@mui/material';
 import Loader from '../components/Loader';
+import { API_URL } from '../config';
+
+import PDFInvoice from '../pages/common/PDFInvoice';
 
 const TransactionHistory = () => {
     const [data, setData] = useState([])
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
     const [loading, setLoading] = useState(false);
+    const [rawdata,setrawdata] = useState([]);
 
     const fetchData = async () => {
         try {
@@ -138,6 +141,17 @@ const TransactionHistory = () => {
     }
     // console.log(belongsto);
 
+    // invoice generation function
+   
+    const downloadinvoice = async(invoiceid) =>{
+        console.log("clicked invoice id");
+        console.log(invoiceid);
+        const invoice_data = await axios.post(`${API_URL}getinvoice_data`,{invoiceId:invoiceid});
+        console.log("after click voice data");
+        console.log(invoice_data.data.data);
+        setrawdata(invoice_data.data.data);
+    }
+
     return (
         <>
             {/* {loading && <Loader />} */}
@@ -180,7 +194,8 @@ const TransactionHistory = () => {
                                             {data.map((item, index) => (
                                                 <tr key={index} className="align-middle text-center">
                                                     {/* {console.log(item)} */}
-                                                    <td className='text-center'>{item.invoiceid}</td>
+                                                    <td className='text-center'  data-bs-target='#invoice_pdf_generator'  data-bs-toggle='modal' onClick={(e)=>downloadinvoice(e.target.textContent)} data_id=
+                                                        {item.invoiceid}>{item.invoiceid}</td>
                                                     {item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
                                                         <td className='text-center'>
                                                             <TextField variant="standard"
@@ -237,6 +252,29 @@ const TransactionHistory = () => {
                     </div>
                 
             </div>
+
+
+             {/* Preview Modal Start */}
+             <div class="modal fade" id="invoice_pdf_generator" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
+                        <div class="modal-header" style={{ padding: 0 }}>
+                            <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
+                            <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="invoiceContent" class="modal-body pdf-height">
+                            {console.log(Object.keys(rawdata).length)}
+                            {
+                              Object.keys(rawdata).length>0 && 
+                              <PDFInvoice invoice_data={rawdata} />
+                              
+                            }
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Preview Modal End */}
         </>
     );
 };

@@ -82,6 +82,8 @@ app.post('/add/:entity(user|products|invoice|feedback|ProformaInvoice)', upload.
     }
     if (entity === 'invoice') {
         try {
+            console.log("invoice request");
+            console.log(req);
             const addUser = await addData.addInvoice(req, res);
         } catch (error) {
             console.error('Error retrieving products details:', error);
@@ -90,7 +92,10 @@ app.post('/add/:entity(user|products|invoice|feedback|ProformaInvoice)', upload.
     }
     if (entity === 'ProformaInvoice') {
         try {
+            console.log("proforma invoice request");
+            console.log(req);
             const addUser = await addData.ProformaInvoice(req, res);
+
         } catch (error) {
             console.error('Error retrieving products details:', error);
             res.status(500).send('Internal Server Error');
@@ -476,6 +481,19 @@ app.post('/save-pdf-server', upload.single('file'), async (req, res) => {
             });
         }
     });
+});
+
+
+// get invoice data 
+app.post('/getinvoice_data',async(req,res)=>{
+    console.log("invoice id is:\t"+req.body.invoiceId);
+    try {
+        const invoice_data = await getData.getInvoiceData(req,res);
+
+    } catch (error) {
+        console.error('Error Invoice Generation Page:', error);
+        res.status(500).send('Invoice Generation Server  Error');
+    }
 });
 
 app.listen(4000, () => {

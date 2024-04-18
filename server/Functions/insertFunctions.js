@@ -268,8 +268,8 @@ async function addInvoice(req, res) {
 
                 const InvoiceItemTableResult = await userdbInstance.userdb.query(
                     `INSERT INTO public.invoiceitem(
-                    invoiceid,productid,quantity,discountperitem,cost)
-                    VALUES ($1,$2,$3,$4,$5);`, [invoiceid, item.productid, item.Quantity, item.Discount, item.Total]
+                    invoiceid,productid,quantity,discountperitem,cost,batchno)
+                    VALUES ($1,$2,$3,$4,$5,$6);`, [invoiceid, item.hsncode, item.Quantity, item.Discount, item.Total,item.batchno]
                 );
             }
             await userdbInstance.userdb.query('COMMIT');
@@ -368,7 +368,7 @@ async function ProformaInvoice(req, res) {
                 const InvoiceItemTableResult = await userdbInstance.userdb.query(
                     `INSERT INTO public.proformainvoiceitem(
                     invoiceid,productid,quantity,discountperitem,cost,hsncode,lastupdatedby)
-                    VALUES ($1,$2,$3,$4,$5,$6,$7);`, [invoiceid, item.productid, item.Quantity, item.Discount, item.Total,item.hsncode,Currentuser]
+                    VALUES ($1,$2,$3,$4,$5,$6,$7);`, [invoiceid, item.hsncode, item.Quantity, item.Discount, item.Total,item.hsncode,Currentuser]
                 );
             }
             await userdbInstance.userdb.query('COMMIT');
