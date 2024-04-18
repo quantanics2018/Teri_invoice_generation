@@ -18,7 +18,7 @@ import { map } from 'react-icons-kit/fa/map';
 import { ic_mail } from 'react-icons-kit/md/ic_mail';
 import { ic_home_work } from 'react-icons-kit/md/ic_home_work';
 import { ic_domain } from 'react-icons-kit/md/ic_domain';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faL } from '@fortawesome/free-solid-svg-icons';
 import { following } from 'react-icons-kit/ikons/following';
 import { followers } from 'react-icons-kit/ikons/followers';
 import { pen_3 } from 'react-icons-kit/ikons/pen_3';
@@ -163,16 +163,47 @@ const Add_User_Detials = ({ Positionid_val }) => {
         };
         fetchdistrict();
     }, []);
+
+    // New State to handle the Required field of GST and PAN input fields......
+    const [isRequiredField, setIsRequiredField] = useState(true);
     
     useEffect(() => {
-        if (postData.bussinessType === 'Individual') {
-            console.log(postData.fName + " " + postData.lName);
+        if (postData.bussinessType === 'Individual' && Positionid_val === 3) {
+            setIsRequiredField(false);
+            if((postData.fName).trim() !="" && (postData.lName).trim() != ""){
+                setPostData((prevData) => ({
+                    ...prevData,
+                    OrganizationName: postData.fName + " " + postData.lName,
+                }));
+            }
+        }else if(postData.bussinessType === 'Organization' && Positionid_val === 3){
+            setIsRequiredField(true);
             setPostData((prevData) => ({
                 ...prevData,
-                OrganizationName: postData.fName + " " + postData.lName,
+                OrganizationName: '',
             }));
         }
     },[postData.bussinessType])
+    useEffect(() => {
+        if (postData.bussinessType === 'Individual' && Positionid_val === 3) {
+            if((postData.fName).trim() !="" && (postData.lName).trim() != ""){
+                setPostData((prevData) => ({
+                    ...prevData,
+                    OrganizationName: postData.fName + " " + postData.lName,
+                }));
+            }
+        }
+    },[postData.fName])
+    useEffect(() => {
+        if (postData.bussinessType === 'Individual' && Positionid_val === 3) {
+            if((postData.fName).trim() !="" && (postData.lName).trim() != ""){
+                setPostData((prevData) => ({
+                    ...prevData,
+                    OrganizationName: postData.fName + " " + postData.lName,
+                }));
+            }
+        }
+    },[postData.lName])
 
     const handleInputChange = (e) => {
         let { name, value, type } = e.target;
@@ -294,13 +325,26 @@ const Add_User_Detials = ({ Positionid_val }) => {
             // console.log("Hello From Staff");
 
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
+                let isValidgstNumber = true;
+                let isValidpanNumber = true;
+                // To avoid the Validatoin for the Customer...
+                if(Positionid_val === 3 && postData.bussinessType === 'Individual'){
+                    if(postData.panNumber.trim() != ""){
+                        isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber);
+                    }
+                    if(postData.gstNumber.trim() != ""){
+                        isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(postData.gstNumber);
+                    }
+                }else{
+                    isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(postData.gstNumber);
+                    isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber);
+                }
                 // Inner Level
                 const isValidbussinessType = (postData.bussinessType === 'Organization' || postData.bussinessType === 'Individual');
                 // const isValidOrgName = postData.OrganizationName.trim() !== '';
                 const isValidOrgName = Positionid_val !== 3 ? postData.OrganizationName.trim() !== '' : true;
                 // Positionid_val !== 3 ? isImageValid(file) : true;
-                const isValidgstNumber = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(postData.gstNumber);
-                const isValidpanNumber = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(postData.panNumber);
+                
 
                 // Upi Bank Detials
 
@@ -309,12 +353,6 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 const isValidaccHolderName = (postData.accHolderName.trim() === '') ? true : postData.accHolderName.trim() !== '';
                 const isValidaccNo = (postData.accNo.trim() === '') ? true : (/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
                 const isValidifscCode = (postData.ifscCode.trim() === '') ? true : postData.ifscCode.trim() !== '';
-
-                // alert(isValidaccNo)
-                // const isValidpAddress = postData.pAddress.trim() !== '';
-
-                // check for image
-                // const isImagePresent = (file !== null);
 
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
@@ -383,8 +421,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setSubmitted(true);
                     }
                     else if (!isValidgstNumber) {
-                        setresAlert("Enter Valid GST Number");
-                        setSubmitted(true);
+                            setresAlert("Enter Valid GST Number");
+                            setSubmitted(true);
                     }
                     else if (!isValidpanNumber) {
                         setresAlert("Enter Valid PAN Number");
@@ -1020,6 +1058,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         name={field.name}
                                                         id={`input${index + 1}`}
                                                         select={field.name === 'bussinessType' && true}
+                                                        disabled = {field.name === 'OrganizationName' && postData.bussinessType === 'Individual' && Positionid_val === 3}
                                                         InputLabelProps={
                                                             (!((field.name === 'OrganizationName') && (Positionid_val === 3))) && {
                                                                 className: 'required-label',
@@ -1076,7 +1115,8 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                             id={`input${index + 1}`}
                                                             InputLabelProps={{
                                                                 className: 'required-label',
-                                                                required: true
+                                                                required: isRequiredField
+
                                                             }}
                                                         />
                                                         {/* Add error handling if needed */}

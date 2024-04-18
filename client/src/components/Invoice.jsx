@@ -14,7 +14,6 @@ import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, i
 import { Button, TextField } from '@mui/material';
 import numberToWords from 'number-to-words';
 import { ToWords } from 'to-words';
-import { ToWords } from 'to-words';
 import { gag } from '../pages/InvoiceGenerator';
 import { useNavigate } from 'react-router-dom';
 
@@ -187,6 +186,10 @@ const Invoice = ({
             // console.log("hai",Math.floor(totalPrice * 100) / 100);
             // console.log("hai", Math.floor(totalPrice * 100) / 100);
             return acc + (Math.floor(totalPrice * 100) / 100);
+            console.log("Taxable value");
+            console.log(unitPrice);
+            console.log(acc);
+            console.log(totalPrice);
         }, 0);
     }
 
@@ -206,6 +209,9 @@ const Invoice = ({
         return total / previewInvoiceprop.length;
     }
     const TotalcgstValue = () => {
+        console.log("cgst calculation ");
+        console.log(TaxableValue());
+        console.log(TotalcgstPercent())
         return TaxableValue() * TotalcgstPercent() / 100;
     }
     const TotalsgstValue = () => {
