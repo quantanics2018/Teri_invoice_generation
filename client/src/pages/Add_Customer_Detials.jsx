@@ -256,7 +256,7 @@ const Add_Customer_Detials = () => {
             <div className="add_device_container1">
                 <div className="new_device_content scroll_div">
                     <div className="row_one display-flex">
-                        <div className="adding_new_device uppercase bold">Add Customer Detials </div>
+                        <div className="adding_new_device uppercase bold">Add Customer Details </div>
                     </div>
 
                     <div className="row_two display-flex padding-loc">
