@@ -529,7 +529,7 @@ const PDFInvoice = ({
                     >
                         <div className="amountHeading" style={df}>
                             <div className="changeablecontent">Taxable Amount (in words) : </div>
-                            <div className="amountHeading"><b>{toWords.convert(parseInt(parseFloat(invoice_data['invoice_data'][0].cost)+parseFloat(sgst_total)+parseFloat(cgst_total)))}</b></div>
+                            <div className="amountHeading"><b>{toWords.convert(parseInt(Math.round(parseFloat((cgst_total) + (sgst_total)).toFixed(2))))}</b></div>
                         </div>
                     </div>
 

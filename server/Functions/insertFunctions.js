@@ -173,6 +173,8 @@ async function addInvoice(req, res) {
     // const { UserId, senderID, Date } = req.body.invoice;
     const { Buyer, senderID, Date } = req.body.invoice;
     const totalSum = req.body.totalValues;
+    console.log("invoice database side data passing");
+    console.log(req.body);
     // const recivermail = UserId;
     const invoiceItem = req.body.invoiceitem;
     
@@ -220,7 +222,7 @@ async function addInvoice(req, res) {
             );
             // console.log(InvoiceTableResult.rows[0].invoiceid);
             const invoiceid = InvoiceTableResult.rows[0].invoiceid;
-            // console.log(invoiceid);
+            console.log(invoiceid);
             for (const item of invoiceItem) {
                 // console.log(item.id);
                 // console.log(item.hsncode, " : next : " ,item.batchno );
@@ -242,7 +244,7 @@ async function addInvoice(req, res) {
                 const checkProductAlreadyExist = await userdbInstance.userdb.query(
                     `select productid from public.products WHERE belongsto=$1 and productid=$2 and batchno = $3`, [reciverID, item.hsncode, item.batchno]
                 );
-                // console.log(checkProductAlreadyExist.rows);
+                console.log(checkProductAlreadyExist.rows);
                 if (checkProductAlreadyExist.rows.length > 0) {
                     // console.log("Yes");
                     const UpdateToRecieverTable = await userdbInstance.userdb.query(
@@ -266,10 +268,16 @@ async function addInvoice(req, res) {
                     );
                 }
 
+                const product_data = await userdbInstance.userdb.query(`select priceperitem,cgst,sgst from public.products where productid=$1`,[item.hsncode]);
+                const priceperitem = product_data.rows[0].priceperitem;
+                const cgst = product_data.rows[0].cgst;
+                const sgst = product_data.rows[0].sgst;
+                console.log("before invoice item insertion");
+                console.log(priceperitem);
                 const InvoiceItemTableResult = await userdbInstance.userdb.query(
                     `INSERT INTO public.invoiceitem(
-                    invoiceid,productid,quantity,discountperitem,cost,batchno)
-                    VALUES ($1,$2,$3,$4,$5,$6);`, [invoiceid, item.hsncode, item.Quantity, item.Discount, item.Total,item.batchno]
+                    invoiceid,productid,quantity,discountperitem,cost,batchno,priceperitem, cgst, sgst)
+                    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9);`, [invoiceid, item.hsncode, item.Quantity, item.Discount, item.Total,item.batchno,priceperitem,cgst,sgst]
                 );
             }
             await userdbInstance.userdb.query('COMMIT');
@@ -365,10 +373,16 @@ async function ProformaInvoice(req, res) {
                 //     );
                 // }
 
+                const prodcut_data_invoice = await userdbInstance.userdb.query(`SELECT priceperitem,batchno,cgst,sgst  FROM public.products where productid=$1`,[item.hsncode]);
+                let priceperitem = prodcut_data_invoice.rows[0].priceperitem;
+                let batchno = prodcut_data_invoice.rows[0].batchno;
+                let cgst = prodcut_data_invoice.rows[0].cgst;
+                let sgst = prodcut_data_invoice.rows[0].sgst;
+
                 const InvoiceItemTableResult = await userdbInstance.userdb.query(
                     `INSERT INTO public.proformainvoiceitem(
-                    invoiceid,productid,quantity,discountperitem,cost,hsncode,lastupdatedby)
-                    VALUES ($1,$2,$3,$4,$5,$6,$7);`, [invoiceid, item.hsncode, item.Quantity, item.Discount, item.Total,item.hsncode,Currentuser]
+                    invoiceid,productid,quantity,discountperitem,cost,hsncode,lastupdatedby,batchno,priceperitem, cgst, sgst)
+                    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);`, [invoiceid, item.hsncode, item.Quantity, item.Discount, item.Total,item.hsncode,Currentuser,batchno,priceperitem,cgst,sgst]
                 );
             }
             await userdbInstance.userdb.query('COMMIT');
