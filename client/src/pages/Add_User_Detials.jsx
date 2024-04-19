@@ -46,6 +46,7 @@ import Loader from '../components/Loader';
 const Add_User_Detials = ({ Positionid_val }) => {
     const userInfoString = sessionStorage.getItem("UserInfo");
     const userInfo = JSON.parse(userInfoString);
+    
     // for invoice
     // console.log(selectedUser);
     const [postData, setPostData] = useState({
@@ -164,6 +165,17 @@ const Add_User_Detials = ({ Positionid_val }) => {
         fetchdistrict();
     }, []);
 
+
+    // const [isUserChanged, setIsUserChanged] = useState(false);
+    // useEffect(() => {
+    //     if (isUserChanged) {
+    //         setPostData((prevData) => ({
+    //             ...prevData,
+    //             userid: postData.userid,
+    //         }));
+    //     }
+    // },[isUserChanged])
+    
     // New State to handle the Required field of GST and PAN input fields......
     const [isRequiredField, setIsRequiredField] = useState(true);
     
@@ -364,7 +376,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 const isValidCity2 = postData.City2.trim() !== '';
                 const isValidState2 = postData.State2.trim() !== '';
                 const isValidPostalCode2 = /^\d{6}$/.test(postData.PostalCode2);
-                // alert("hai da")
+                
                 if (isValidbussinessType & isValidOrgName & isValidgstNumber & isValidpanNumber
                     & isValidupiPaymentNo & isValidaccName & isValidaccHolderName & isValidaccNo & isValidifscCode
                     // & isValidpAddress 
@@ -373,13 +385,22 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     // & isValidCommunicationAddress 
                     & isValidStreetAddress2 & isValidCity2 & isValidState2 & isValidPostalCode2
                 ) {
+                    // Ulter user ID for Distributor....
+                    let modifiedFormData = { ...postData };
+                    if(Positionid_val === 3){
+                        let temp_id = (userInfo.positionid === '2' ? userInfo.userid : userInfo.adminid)+postData.userid.trim(); 
+                        modifiedFormData = {
+                            ...modifiedFormData,
+                            userid: temp_id,
+                          };
+                    }
 
                     try {
                         setLoading(true);
 
                         const response = await axios.post(`${API_URL}add/user`,
                             // formData
-                            { userDetials: postData, AccessControls: accessValues, Currentuser: userInfo.userid }
+                            { userDetials: modifiedFormData, AccessControls: accessValues, Currentuser: userInfo.userid }
                         );
                         // alert(response.data.message);
                         setresAlert(response.data.message)
