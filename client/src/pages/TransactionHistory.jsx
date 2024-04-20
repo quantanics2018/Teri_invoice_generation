@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Pagination, Skeleton, TableCell, TextField } from '@mui/material';
+import { Box, Button, Pagination, Skeleton, TableCell, TextField ,FormControl,InputLabel,MenuItem,Select} from '@mui/material';
 import Loader from '../components/Loader';
 import { API_URL } from '../config';
 
@@ -20,12 +20,9 @@ const TransactionHistory = () => {
                 userid: userInfo.userid,
             });
             if (response.data.status) {
-                // console.log('Transaction History:', response.data.data);
                 setLoading(false);
                 setData(response.data.data);
-                // console.log(response.data.data);
-                // setInterval(() => {
-                // }, 1000);
+                
             } else {
                 console.error('Invalid response format:', response.data);
             }
@@ -36,6 +33,8 @@ const TransactionHistory = () => {
     useEffect(() => {
 
         fetchData();
+        fetch_drp_data();
+
 
     }, [userInfo.userid]);
 
@@ -113,7 +112,6 @@ const TransactionHistory = () => {
 
     const indexOfLastItem = currentPage * rowsPerPage;
     const indexOfFirstItem = indexOfLastItem - rowsPerPage;
-    // const indexOfFirstItem = Math.max(0, indexOfLastItem - rowsPerPage);
     const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
     const currentPageIndex = currentPage - 1;
 
@@ -128,10 +126,6 @@ const TransactionHistory = () => {
         setTextFieldValues(prevState => ({
             ...prevState,
             [index]: value
-            // [pageIndex]: {
-            //     ...prevState[pageIndex],
-            //     [index]: value
-            // }
         }));
     };
 
@@ -167,6 +161,66 @@ const TransactionHistory = () => {
         setrawdata(invoice_data.data.data);
     }
 
+    const [drp_pname,set_drp_pname] = useState([]);
+    const [drp_val,setdrp_val] = useState({
+        product_id:'',
+        product_price:'',
+        cgst:'',
+        sgst:'',
+        no_of_product:'',
+        total_price_amount:'',
+
+    });
+    const fetch_drp_data = async() =>{
+        const product_Data = await axios.get(`${API_URL}getproduct_data`);
+        console.log("product data is ");
+        console.log(product_Data.data.data);
+        set_drp_pname(product_Data.data.data);
+       
+        
+    }
+
+   
+
+    const handlechange_value = async(productval)=>{
+        console.log("selected product id");
+        console.log(productval);
+        drp_pname.map((item,index)=>{
+            if(productval===item.productid){
+               setdrp_val((prevValues)=>({
+                ...prevValues,
+                cgst:item.cgst,
+                product_id:productval,
+                sgst:item.sgst,
+                product_price:item.priceperitem,
+               }));
+            }
+        });
+    }
+
+    const calculate_gst = (total_amount,gst)=>{
+        let gst_amount = (parseInt(total_amount)*parseInt(gst))/100;
+        return gst_amount;
+    }
+    // onchange in quantity input
+    const calculate_total = async (quantity)=>{
+        console.log("total quantity:\t"+quantity);
+        let total_amount = drp_val.product_price*quantity;
+        let cgst = calculate_gst(total_amount,drp_val.cgst);
+        let sgst = calculate_gst(total_amount,drp_val.sgst);
+        let total_price_amount = parseInt(total_amount)+parseInt(cgst)+parseInt(sgst);
+        console.log("total quantity:\t"+cgst);
+        setdrp_val((prevValues)=>({
+            ...prevValues,
+            no_of_product:quantity,
+            total_price_amount:total_price_amount,
+        }));
+
+    }
+     console.log("final use state result");
+    console.log(drp_pname);
+    console.log("product drp val");
+    console.log(drp_val);
     return (
         <>
             {/* {loading && <Loader />} */}
@@ -174,7 +228,7 @@ const TransactionHistory = () => {
                 <span className='module_tittle'>Transactions Details</span>
             </div>
             <div className="container ">
-                
+                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4' data-bs-target='#order_selection_modal'  data-bs-toggle='modal'>Order Now</button>
                     <br /><br />
                     <div className="row">
                         <div className="col-12 mb-3 mb-lg-5">
@@ -280,7 +334,7 @@ const TransactionHistory = () => {
 
 
              {/* Preview Modal Start */}
-             <div class="modal fade" id="invoice_pdf_generator" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+            <div class="modal fade" id="invoice_pdf_generator" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
                         <div class="modal-header" style={{ padding: 0 }}>
@@ -300,6 +354,57 @@ const TransactionHistory = () => {
                 </div>
             </div>
             {/* Preview Modal End */}
+
+            {/* order now button click open the modal select the refill product */}
+            <div class="modal fade" id="order_selection_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
+                        <div class="modal-header" style={{ padding: 0 }}>
+                            <h5 class="modal-title" id="staticBackdropLabel">Ordering Products</h5>
+                            <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="invoiceContent" class="modal-body pdf-height">
+                            <div className="row">
+                                <div className="col-lg-6 col-md-12 col-sm-12">
+                                    <Box sx={{direction:'row',alignItems:'center',justifyContent:'start'}}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Product</InputLabel>
+                                            <Select labelId="demo-simple-select-label" id="demo-simple-select" label="Product" name='product_name' onChange={(e)=>handlechange_value(e.target.value)}>
+                                                  
+                                                {drp_pname.map((item,index)=>
+                                                    <MenuItem value={item.productid}>{item.productname}</MenuItem>
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                </div>
+                                <div className="col-lg-6 col-md-12 col-sm-6">
+                                    <TextField id="outlined-basic" label="No of Product" name='no_of_product' variant="outlined" onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
+                                </div>
+                            </div>
+                            <div className="row mt-4">
+                                <div className="col-lg-6 d-flex flex-row">
+                                    <span>Product Price : <span>{drp_val.product_price}</span></span>
+                                </div>
+                                <div className="col-lg-6 d-flex flex-row">
+                                    <span>Product CGST : <span>{drp_val.cgst}</span></span>
+                                </div>
+                            </div>
+                            <div className="row mt-4">
+                                <div className="col-lg-6 d-flex flex-row">
+                                    <span>Product SGST : <span>{drp_val.sgst}</span></span>
+                                </div>
+                                <div className="col-lg-6 d-flex flex-row">
+                                    <span>Total Amount : <span>{drp_val.total_price_amount}</span></span>
+                                </div>
+                            </div>
+                          
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* refil product modal end */}
         </>
     );
 };
