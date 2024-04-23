@@ -4,7 +4,7 @@ import '../assets/style/App.css';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import {Container,Typography} from '@mui/material';
+import {Container,Typography,Snackbar} from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import '../assets/style/App.css';
@@ -12,6 +12,9 @@ import { API_URL, SECRET_KEY } from '../config';
 import { UserActionBtn, padding_top } from '../assets/style/cssInlineConfig';
 import EditIcon from '@mui/icons-material/Edit';
 import {TextField} from '@mui/material';
+import '../assets/style/Order_modal.css';
+import MuiAlert from '@mui/material/Alert';
+
 
 const Order_Management = (positionid) =>{
     const userInfoString = sessionStorage.getItem("UserInfo");
@@ -39,6 +42,11 @@ const Order_Management = (positionid) =>{
         {label:'Product Price',fieldname:'product_price'},
         {label:'Receiver UPI ID',fieldname:'upi_id'},
     ];
+
+    const [submitted, setSubmitted] = useState(false);
+    const [warning,setwarning] = useState(false);
+    const [resAlert, setresAlert] = useState(null);
+
     useEffect(()=>{
      
         getOrderData();
@@ -68,20 +76,42 @@ const Order_Management = (positionid) =>{
     // submit order function 
     const submitOrder = async() =>{
         
-        const output_res = await axios.post(`${API_URL}Order_submition`, {order_data:selected_id});
-        console.log('Order Submission');
-        console.log(selected_id);
-        console.log("output response server to client passing");
-        console.log(output_res);
-        if (output_res.data.status===true) {
-            getOrderData();
-            buttonRef.current.click();
+        if (selected_id.transaction_id==='' || selected_id.transaction_id===null) {
+            setresAlert("Enter Valid Transaction ID...");
+            setSubmitted(true);
+            setwarning(true);
+        }else if(selected_id.transaction_id!='' && selected_id.transaction_id!=null){
+            const output_res = await axios.post(`${API_URL}Order_submition`, {order_data:selected_id});
+            console.log('Order Submission');
+            console.log(selected_id);
+            console.log("output response server to client passing");
+            console.log(output_res);
+            if (output_res.data.status===true) {
+                getOrderData();
+                buttonRef.current.click();
+                setresAlert("Successfully Accept Customer Order...");
+                setSubmitted(true);
+                setwarning(false);
+                
+            }
+            
         }
+        
     }
 
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
 
 return(
     <>
+      {/* Snack bar */}
+        <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}>
+            <MuiAlert onClose={handleSnackbarClose} severity={warning?"warning":"success"} sx={{ width: '100%' }}>
+                {resAlert}
+            </MuiAlert>
+        </Snackbar>
+        {/* End  of snack bar */}
         <div className='bar'>
             <div className='status-bar'>
                 <div className="device_mangement_main_content">
@@ -102,6 +132,7 @@ return(
                     </div>
                     <div className="scroll_div" style={padding_top}>
                         {/* {console.log(alldata)} */}
+
                         {getorder_data.map((data, index) => (
                             <div className="datas skeleton-block">
                                 <div className="col-head">{data.order_id}</div>
@@ -114,6 +145,7 @@ return(
                                 <div className="col-head"><EditIcon data-bs-target='#order_submition_modal'  data-bs-toggle='modal' onClick={(e)=>select_order(e.currentTarget.getAttribute('data_id'))}  data_id={data.order_id}/></div>
                             </div>
                         ))}
+                        {getorder_data.length<=0?(<p className='text-secondary text-center font-weight-bold h6 mt-4'>No Records Found....</p>):''}
                     </div>
                 </div>
             </div>
@@ -122,7 +154,7 @@ return(
         {/* edit transaction id modal start */}
         <div class="modal fade" id="order_submition_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
             <div class="modal-dialog modal-md">
-                <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
+                <div class="modal-content order_modal_responsive">
                     <div class="modal-header" style={{ padding: 0 }}>
                         <h5 class="modal-title" id="staticBackdropLabel">Order Acceptance</h5>
                         <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>

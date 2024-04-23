@@ -18,7 +18,8 @@ const TransactionHistory = () => {
     const [rawdata,setrawdata] = useState([]);
 
     const [submitted, setSubmitted] = useState(false);
-    const [resAlert, setresAlert] = useState(null)
+    const [warning,setwarning] = useState(false);
+    const [resAlert, setresAlert] = useState(null);
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -52,12 +53,12 @@ const TransactionHistory = () => {
         // const isValidInput = textVal.trim() !== '';
         if (isTransactionId(textVal)) {
             try {
-                console.log(invoiceId, textVal);
+                // console.log(invoiceId, textVal);
                 const response = await axios.put(`${API_URL}update/reciverStatus`, {
                     invoiceId: invoiceId,
                     textVal: textVal
                 });
-                console.log('Response from server:', response.data.qos);
+                // console.log('Response from server:', response.data.qos);
                 if (response.data.qos === 'success') {
                     fetchData();
                     alert(response.data.message);
@@ -80,7 +81,7 @@ const TransactionHistory = () => {
                 const response = await axios.put(`${API_URL}update/senderStatus`, {
                     invoiceId: invoiceId, belongsto
                 });
-                console.log('Response from server:', response.data.qos);
+                // console.log('Response from server:', response.data.qos);
                 if (response.data.qos === 'success') {
                     fetchData();
                     alert(response.data.message);
@@ -144,11 +145,11 @@ const TransactionHistory = () => {
     // invoice generation function
    
     const downloadinvoice = async(invoiceid) =>{
-        console.log("clicked invoice id");
-        console.log(invoiceid);
+        // console.log("clicked invoice id");
+        // console.log(invoiceid);
         const invoice_data = await axios.post(`${API_URL}getinvoice_data`,{invoiceId:invoiceid});
-        console.log("after click voice data");
-        console.log(invoice_data.data.data);
+        // console.log("after click voice data");
+        // console.log(invoice_data.data.data);
         setrawdata(invoice_data.data.data);
     }
 
@@ -183,11 +184,11 @@ const TransactionHistory = () => {
     ]
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const fetch_drp_data = async() =>{
-        console.log("product data");
-        console.log(userInfo.adminid);
+        // console.log("product data");
+        // console.log(userInfo.adminid);
         const product_Data = await axios.post(`${API_URL}getproduct_data`,{admin_id:userInfo.adminid});
-        console.log("product data is ");
-        console.log(product_Data.data.data);
+        // console.log("product data is ");
+        // console.log(product_Data.data.data);
         set_drp_pname(product_Data.data.data);
        
         
@@ -196,8 +197,8 @@ const TransactionHistory = () => {
    
 
     const handlechange_value = async(productval)=>{
-        console.log("selected product id");
-        console.log(productval);
+        // console.log("selected product id");
+        // console.log(productval);
         drp_pname.map((item,index)=>{
             if(productval===item.productid){
                setdrp_val((prevValues)=>({
@@ -218,13 +219,13 @@ const TransactionHistory = () => {
     }
     // onchange in quantity input
     const calculate_total = async (quantity)=>{
-        console.log("total quantity:\t"+quantity);
+        // console.log("total quantity:\t"+quantity);
         let total_amount = drp_val.product_price*quantity;
         let cgst = calculate_gst(total_amount,drp_val.cgst);
         let sgst = calculate_gst(total_amount,drp_val.sgst);
         let total_price_amount = parseInt(total_amount)+parseInt(cgst)+parseInt(sgst);
         let date = new Date().toISOString().split('T')[0];
-        console.log("total quantity:\t"+cgst);
+        // console.log("total quantity:\t"+cgst);
         setdrp_val((prevValues)=>({
             ...prevValues,
             no_of_product:quantity,
@@ -237,7 +238,7 @@ const TransactionHistory = () => {
 
     }
 
-    console.log("screen width is:\t"+screenWidth);
+    // console.log("screen width is:\t"+screenWidth);
     const [qr_data,setqr_data] = useState({
         upiid:'',
         total_amount:'',
@@ -246,15 +247,32 @@ const TransactionHistory = () => {
     // submit order now button
     const SubmitOrder = async()=>{
         if (drp_val.payment_method==='' && drp_val.no_of_product==='' && drp_val.product_id==='') {
-            alert('field is empty');
             setresAlert("All Input Fields are Empty");
             setSubmitted(true);
-        }else{
+            setwarning(true);
+        }
+        else if(drp_val.payment_method.trim()===''){
+            setresAlert("Please select Payment method Field");
+            setSubmitted(true);
+            setwarning(true);
+        }
+        else if(drp_val.no_of_product.trim()==='' || !(/^[0-9]+$/.test(drp_val.no_of_product.trim()))){
+            setresAlert("Please Enter Valid No of Product Field");
+            setSubmitted(true);
+            setwarning(true);
+        }
+        else if(drp_val.product_id.trim()===''){
+            setresAlert("Please Select Valid Product Field");
+            setSubmitted(true);
+            setwarning(true);
+        }
+        else{
             const response = await axios.post(`${API_URL}Customer/order`,{order_data:drp_val});
             setresAlert(response.data.message);
             setSubmitted(true);
-            console.log("the axios output is show in below");
-            console.log(response);
+            setwarning(false);
+            // console.log("the axios output is show in below");
+            // console.log(response);
             if(response.data.status===true){
                  let payment_method = response.data.data.payment_method;
                  const encodedUpiId = encodeURIComponent(response.data.data.receiver_data.upiid);
@@ -274,34 +292,29 @@ const TransactionHistory = () => {
                          total_amount:amount,
                          display_qr:'inline',
      
-                     }));
-                     const timeoutId = setTimeout(() => {
-                         setqr_data((prevValues)=>({
-                             ...prevValues,
-                             display_qr:'none',
-                         }));
-                     }, 30000);
-     
-                     clearTimeout(timeoutId);
-                     
+                     }));      
                  }
-                
-             alert('Customer order submition successfully.....');
+                setdrp_val({});
+                console.log("after submition empty data");
+                console.log(drp_val);
+                alert('Customer order submition successfully.....');
             }
         }
        
     }
 
-   
+    // error message alert box closing     
     const handleSnackbarClose = () => {
         setSubmitted(false);
     };
+
+   
 
     return (
         <>
             {/* Snack bar */}
             <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}>
-                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                <MuiAlert onClose={handleSnackbarClose} severity={warning?"warning":"success"} sx={{ width: '100%' }}>
                     {resAlert}
                 </MuiAlert>
             </Snackbar>
@@ -312,13 +325,18 @@ const TransactionHistory = () => {
             </div>
             <div className="container ">
                 {userInfo.positionid==="3"&&(
-                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4' data-bs-target='#order_selection_modal'  data-bs-toggle='modal' onclick={(e)=>setqr_data((prevValues)=>({
+                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4' data-bs-target='#order_selection_modal'  data-bs-toggle='modal' onclick={(e)=>{setqr_data((prevValues)=>({
                         ...prevValues,
                         upiid:'',
                         total_amount:'',
                         display_qr:'none',
-                    }))}>Order Now</button>
+                    }));
+                   
+                }}>Order Now</button>
                 )}
+                 {/* {userInfo.positionid==="3"&&(
+                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4' data-bs-target='#order_selection_modal'  data-bs-toggle='modal' onclick={reset_click}>Order Now</button>
+                )} */}
                     <br /><br />
                     <div className="row">
                         <div className="col-12 mb-3 mb-lg-5">
@@ -416,7 +434,7 @@ const TransactionHistory = () => {
              {/* Preview Modal Start */}
             <div class="modal fade" id="invoice_pdf_generator" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
+                    <div class="modal-content order_modal_responsive " >
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
                             <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>

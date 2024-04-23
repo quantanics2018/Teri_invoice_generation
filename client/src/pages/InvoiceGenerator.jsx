@@ -32,6 +32,8 @@ import MailSendingContent from '../components/MailSendingContent';
 import SpringModal, { modalStyle, style } from '../components/BasicModal';
 import BasicModal from '../components/BasicModal';
 
+import '../assets/style/Order_modal.css';
+
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 let gag = 55;
 
@@ -725,7 +727,7 @@ const InvoiceGenerator = () => {
             {/* Preview Modal Start */}
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
+                    <div class="modal-content order_modal_responsive" >
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
                             <button type="button" class="btn-close" disabled={dataFromChild} data-bs-dismiss="modal" aria-label="Close"></button>
@@ -764,7 +766,7 @@ const InvoiceGenerator = () => {
             {/* Generate Modal Start */}
             <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-lg">
-                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
+                    <div class="modal-content order_modal_responsive">
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Preview Invoice</h5>
                             {/* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> */}
