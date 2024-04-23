@@ -55,7 +55,7 @@ const App = () => {
   const userInfoString = sessionStorage.getItem("UserInfo");
   const userInfo = JSON.parse(userInfoString);
   console.log("access controll");
-  // console.log(userInfo.positionid);
+  console.log(userInfo);
   const currentLoc = window.location.href;
 
 
@@ -84,7 +84,6 @@ const App = () => {
                 <Route path='/Distributer_Details' element={<StaffDetails position={2} Positionid_val={2} />} />
                 <Route path='/Distributer_Details/Edit_Distributer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={2} />} />
                 <Route path='/Distributer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={2} />} />
-                <Route path='/Order_Management' element={<Order_Management positionid={2} />} />
               </Routes>
             </div>
           )}
@@ -108,6 +107,7 @@ const App = () => {
                 <Route path='/Customer_Details' element={<StaffDetails position={3} Positionid_val={3} />} />
                 <Route path='/Customer_Details/Edit_Customer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={3} />} />
                 <Route path='/Customer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={3} />} />
+                <Route path='/Order_Management' element={<Order_Management positionid={2} />} />
               </Routes>
             </div>
           )}
