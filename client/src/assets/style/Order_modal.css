@@ -1,0 +1,17 @@
+.order_modal_responsive{
+    padding-left: '1.5rem';
+    padding-top: '1.5rem';
+    padding-right: '1.5rem';
+    margin-left: '-110px';
+}
+
+@media only screen  and(max-width:766px) {
+    .order_modal_responsive{
+        padding-left: 0;
+        padding-top: 0;
+        padding-right: 0;
+        /* margin-left: '-110px'; */
+        min-width: 250px;
+        max-width: 100%;
+    }
+}

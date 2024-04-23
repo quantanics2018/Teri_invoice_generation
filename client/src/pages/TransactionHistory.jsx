@@ -7,6 +7,8 @@ import PDFInvoice from '../pages/common/PDFInvoice';
 import QrCode from '../components/QrCode';
 import MuiAlert from '@mui/material/Alert';
 
+import '../assets/style/Order_modal.css';
+
 
 const TransactionHistory = () => {
     const [data, setData] = useState([])
@@ -435,8 +437,8 @@ const TransactionHistory = () => {
 
             {/* order now button click open the modal select the refill product */}
             <div class="modal fade" id="order_selection_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
-                <div class="modal-dialog modal-md">
-                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content order_modal_responsive" >
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Ordering Products</h5>
                             <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
@@ -444,7 +446,7 @@ const TransactionHistory = () => {
                         <div id="invoiceContent" class="modal-body pdf-height">
                             <div style={{display:qr_data.display_qr==='inline'?'none':'inline'}}>
                                 <div className="row" >
-                                    <div className="col-lg-6 col-md-12 col-sm-12">
+                                    <div className="col-lg-6 col-md-12 col-sm-12 mb-4">
                                         <Box sx={{direction:'row',alignItems:'center',justifyContent:'start'}}>
                                             <FormControl fullWidth>
                                                 <InputLabel id="demo-simple-select-label">Product</InputLabel>
@@ -457,21 +459,21 @@ const TransactionHistory = () => {
                                             </FormControl>
                                         </Box>
                                     </div>
-                                    <div className="col-lg-6 col-md-12 col-sm-6">
+                                    <div className="col-lg-6 col-md-12 col-sm-6 mb-4">
                                         <TextField id="outlined-basic" label="No of Product" name='no_of_product' variant="outlined" onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
                                     </div>
                                 </div>
 
-                                <div className="row mt-4" >
+                                <div className="row " >
                                     {field_names.map((item,index)=>(
-                                        <div className="col-lg-6 d-flex flex-row mb-2">
+                                        <div className="col-lg-6 col-md-6 col-sm-12 d-flex flex-row mb-4">
                                             <span>{item.label} : <span>{drp_val[item.fieldname]}</span></span>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="row mt-4" >
-                                    <div className="col-lg-6 d-flex flex-row">
+                                <div className="row" >
+                                    <div className="col-lg-6 col-md-12 col-sm-12 mb-4 d-flex flex-row">
                                         <Box sx={{direction:'row',alignItems:'center',justifyContent:'start',width:'100%'}}>
                                             <FormControl fullWidth>
                                                 <InputLabel id="demo-simple-select-label">Payment Method</InputLabel>
