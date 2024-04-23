@@ -496,6 +496,55 @@ app.post('/getinvoice_data',async(req,res)=>{
     }
 });
 
+
+// get product list
+app.post('/getproduct_data',async(req,res)=>{
+    // res.json({mesg:"heelo"});
+    try{
+        const product_data = await getData.getproduct_data(req,res);
+    }
+    catch(error){
+        res.status(500).send("Transaction details page product data getting error");
+
+    }
+});
+
+// customer order submition
+app.post('/Customer/order',async(req,res)=>{
+    try {
+        console.log("server data in customer order data");
+        console.log(req.body);
+        const result = await addData.insertCustomerOrder(req,res);
+    } catch (error) {
+        res.status(5000).send("Customer order submission in");
+    }
+});
+
+
+// get order data in order management module
+app.post('/getOrderData',async(req,res)=>{
+    try {
+        console.log("order management module req data is");
+        console.log(req.body);
+        const result = await getData.getOrder_Management_Data(req,res);
+    } catch (error) {
+        res.status(5000).send("Order Management data getting server side issue");
+    }
+});
+
+// order submition in order managment module
+app.post('/Order_submition',async(req,res)=>{
+    console.log("server data ");
+    const order_data  = req.body.order_data
+    console.log(order_data)
+    const actual_product_count = await getData.getparticular_product(req.body.order_data.product_id,req.body.order_data.batch_no,req.body.order_data.receiverid);
+    if (parseInt(req.body.order_data.quantity)<parseInt(actual_product_count)) {
+        const output_res = await updateData.Order_submition(req,res);
+    }else{
+        res.status(6000).send("Kindly check Availability of the products...");
+    }
+});
+
 app.listen(4000, () => {
     console.log("server is running on port 4000");
 });

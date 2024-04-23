@@ -67,6 +67,7 @@ const Sidebar = ({ children, handleLogout }) => {
                     // !(userInfo.position === "customer")
                     { url: '/TransactionHistory', text: 'Transaction Details', condition: userInfo.invoicepayslip > 0 },
                     // { url: '/Invoice', text: 'Invoice', condition: userInfo.invoicegenerator > 0 },
+                    { url:'/Order_Management' , text: 'Order Management', condition: userInfo.invoicepayslip > 0 },
                 ],
                 condition: true
             },

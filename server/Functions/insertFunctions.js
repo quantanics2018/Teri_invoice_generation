@@ -474,4 +474,34 @@ async function addfeedback(req, res) {
     }
 }
 
-module.exports = { addUser, addInvoice,ProformaInvoice, addProduct, addfeedback };
+async function insertCustomerOrder(req,res){
+    try {
+        let receiverid = req.body.order_data.receiverid;
+        console.log("receiver id:\t"+receiverid);
+        const req_data = req.body.order_data;
+
+        const receiver_data = await userdbInstance.userdb.query('SELECT * FROM public."user" WHERE userid=$1',[receiverid]);
+        let upi_id = receiver_data.rows[0].upiid;
+        await userdbInstance.userdb.query('BEGIN');
+        const insertProductResult = await userdbInstance.userdb.query(`INSERT INTO public.order_management(
+	product_id, product_price, cgst, sgst, quantity, total_amount, batch_no, order_date, receiverid, position_id, order_status, sender_id, payment_method, last_updated_by, upi_id)
+	VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)`, [req_data.product_id,req_data.product_price,req_data.cgst,req_data.sgst,req_data.no_of_product,req_data.total_price_amount,req_data.batch_no,req_data.invoice_date,req_data.receiverid,req_data.positionid,0,req_data.sender_id,req_data.payment_method,req_data.sender_id,upi_id]);
+        await userdbInstance.userdb.query('COMMIT');
+
+     
+        console.log(receiver_data);
+       
+        const output = {
+            receiver_data:receiver_data.rows[0],
+            total_amount:req_data.total_price_amount,
+            payment_method:req_data.payment_method,
+        };
+        res.json({message:"successfully insert",data:output,status:true});
+
+    } catch (error) {
+        console.log("Error Customer order insertion error");
+        res.json({message:"Customer order insertion error",status:flase});
+    }
+}
+
+module.exports = { addUser, addInvoice,ProformaInvoice, addProduct, addfeedback ,insertCustomerOrder};

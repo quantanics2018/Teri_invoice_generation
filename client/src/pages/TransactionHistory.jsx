@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Pagination, Skeleton, TableCell, TextField } from '@mui/material';
+import { Box, Button, Snackbar,Pagination, Skeleton, TableCell, TextField ,FormControl,InputLabel,MenuItem,Select} from '@mui/material';
 import Loader from '../components/Loader';
 import { API_URL } from '../config';
-
 import PDFInvoice from '../pages/common/PDFInvoice';
+import QrCode from '../components/QrCode';
+import MuiAlert from '@mui/material/Alert';
+
 
 const TransactionHistory = () => {
     const [data, setData] = useState([])
@@ -13,6 +15,8 @@ const TransactionHistory = () => {
     const [loading, setLoading] = useState(false);
     const [rawdata,setrawdata] = useState([]);
 
+    const [submitted, setSubmitted] = useState(false);
+    const [resAlert, setresAlert] = useState(null)
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -20,12 +24,9 @@ const TransactionHistory = () => {
                 userid: userInfo.userid,
             });
             if (response.data.status) {
-                // console.log('Transaction History:', response.data.data);
                 setLoading(false);
                 setData(response.data.data);
-                // console.log(response.data.data);
-                // setInterval(() => {
-                // }, 1000);
+                
             } else {
                 console.error('Invalid response format:', response.data);
             }
@@ -36,6 +37,8 @@ const TransactionHistory = () => {
     useEffect(() => {
 
         fetchData();
+        fetch_drp_data();
+
 
     }, [userInfo.userid]);
 
@@ -68,24 +71,9 @@ const TransactionHistory = () => {
             alert("Enter The Input  Field")
         }
     }
-    const SenderConformation = async (invoiceId, textVal, belongsto, transactionID) => {
-        let checkState = false;
-        if (transactionID && (userInfo.positionid === '2' || userInfo.positionid === '5')) {
-            try {
-                const response = await axios.put(`${API_URL}update/reciverStatus`, {
-                    invoiceId: invoiceId,
-                    textVal: transactionID
-                })
-                if (response.data.qos === 'success') {
-                    checkState = false;
-                } else {
-                    checkState = true;
-                }
-            } catch (error) {
-                checkState = true;
-            }
-        }
-        if ((textVal || userInfo.positionid === '2' || userInfo.positionid === '5') && checkState === false) {
+    const SenderConformation = async (invoiceId, textVal, belongsto) => {
+        // console.log("hai", invoiceId, textVal)
+        if (textVal) {
             try {
                 const response = await axios.put(`${API_URL}update/senderStatus`, {
                     invoiceId: invoiceId, belongsto
@@ -113,7 +101,6 @@ const TransactionHistory = () => {
 
     const indexOfLastItem = currentPage * rowsPerPage;
     const indexOfFirstItem = indexOfLastItem - rowsPerPage;
-    // const indexOfFirstItem = Math.max(0, indexOfLastItem - rowsPerPage);
     const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
     const currentPageIndex = currentPage - 1;
 
@@ -128,10 +115,6 @@ const TransactionHistory = () => {
         setTextFieldValues(prevState => ({
             ...prevState,
             [index]: value
-            // [pageIndex]: {
-            //     ...prevState[pageIndex],
-            //     [index]: value
-            // }
         }));
     };
 
@@ -167,14 +150,173 @@ const TransactionHistory = () => {
         setrawdata(invoice_data.data.data);
     }
 
+    const [drp_pname,set_drp_pname] = useState([]);
+    const [drp_val,setdrp_val] = useState({
+        product_id:'',
+        product_price:'',
+        cgst:'',
+        sgst:'',
+        no_of_product:'',
+        total_price_amount:'',
+        batch_no:'',
+        invoice_date:'',
+        receiverid:'',
+        positionid:'',
+        sender_id:'',
+        payment_method:'',
+    });
+
+    const field_names = [
+        {label:"Product Price",fieldname:"product_price"},
+        {label:"CGST",fieldname:"cgst"},
+        {label:"SGST",fieldname:"sgst"},
+        {label:"Quantity",fieldname:"no_of_product"},
+        {label:"Grant Total",fieldname:"total_price_amount"},
+        {label:"Batch Number",fieldname:"batch_no"}
+    ];
+
+    const payment_drp = [
+        {label:"Google Pay",fieldname:"gpay"},
+        {label:"Phone Pay",fieldname:"phonepe"}
+    ]
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const fetch_drp_data = async() =>{
+        console.log("product data");
+        console.log(userInfo.adminid);
+        const product_Data = await axios.post(`${API_URL}getproduct_data`,{admin_id:userInfo.adminid});
+        console.log("product data is ");
+        console.log(product_Data.data.data);
+        set_drp_pname(product_Data.data.data);
+       
+        
+    }
+
+   
+
+    const handlechange_value = async(productval)=>{
+        console.log("selected product id");
+        console.log(productval);
+        drp_pname.map((item,index)=>{
+            if(productval===item.productid){
+               setdrp_val((prevValues)=>({
+                ...prevValues,
+                cgst:item.cgst,
+                product_id:productval,
+                sgst:item.sgst,
+                product_price:item.priceperitem,
+                batch_no:item.batchno,
+               }));
+            }
+        });
+    }
+
+    const calculate_gst = (total_amount,gst)=>{
+        let gst_amount = (parseInt(total_amount)*parseInt(gst))/100;
+        return gst_amount;
+    }
+    // onchange in quantity input
+    const calculate_total = async (quantity)=>{
+        console.log("total quantity:\t"+quantity);
+        let total_amount = drp_val.product_price*quantity;
+        let cgst = calculate_gst(total_amount,drp_val.cgst);
+        let sgst = calculate_gst(total_amount,drp_val.sgst);
+        let total_price_amount = parseInt(total_amount)+parseInt(cgst)+parseInt(sgst);
+        let date = new Date().toISOString().split('T')[0];
+        console.log("total quantity:\t"+cgst);
+        setdrp_val((prevValues)=>({
+            ...prevValues,
+            no_of_product:quantity,
+            total_price_amount:total_price_amount,
+            invoice_date:date,
+            receiverid:userInfo.adminid,
+            positionid:userInfo.positionid,
+            sender_id:userInfo.userid,
+        }));
+
+    }
+
+    console.log("screen width is:\t"+screenWidth);
+    const [qr_data,setqr_data] = useState({
+        upiid:'',
+        total_amount:'',
+        display_qr:'none',
+    });
+    // submit order now button
+    const SubmitOrder = async()=>{
+        if (drp_val.payment_method==='' && drp_val.no_of_product==='' && drp_val.product_id==='') {
+            alert('field is empty');
+            setresAlert("All Input Fields are Empty");
+            setSubmitted(true);
+        }else{
+            const response = await axios.post(`${API_URL}Customer/order`,{order_data:drp_val});
+            setresAlert(response.data.message);
+            setSubmitted(true);
+            console.log("the axios output is show in below");
+            console.log(response);
+            if(response.data.status===true){
+                 let payment_method = response.data.data.payment_method;
+                 const encodedUpiId = encodeURIComponent(response.data.data.receiver_data.upiid);
+                 let amount = response.data.data.total_amount;
+                 if(screenWidth<=800){
+                     if(payment_method==="gpay"){
+                     
+                         window.location.href = `upi://pay?pa=${encodedUpiId}&pn=MerchantName&mc=1234&tid=1234&tr=123456&tn=Purchase&am=${amount}&cu=INR`;
+                     }
+                     else if(payment_method==="phonepe"){
+                         window.location.href = `phonepe://upi?pn=${encodedUpiId}&am=${amount}`;
+                     }
+                 }else if(screenWidth > 800){
+                     setqr_data((prevValues)=>({
+                         ...prevValues,
+                         upiid:response.data.data.receiver_data.upiid,
+                         total_amount:amount,
+                         display_qr:'inline',
+     
+                     }));
+                     const timeoutId = setTimeout(() => {
+                         setqr_data((prevValues)=>({
+                             ...prevValues,
+                             display_qr:'none',
+                         }));
+                     }, 30000);
+     
+                     clearTimeout(timeoutId);
+                     
+                 }
+                
+             alert('Customer order submition successfully.....');
+            }
+        }
+       
+    }
+
+   
+    const handleSnackbarClose = () => {
+        setSubmitted(false);
+    };
+
     return (
         <>
+            {/* Snack bar */}
+            <Snackbar open={submitted} autoHideDuration={5000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}>
+                <MuiAlert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    {resAlert}
+                </MuiAlert>
+            </Snackbar>
+            {/* End  of snack bar */}
             {/* {loading && <Loader />} */}
             <div className="row_with_count_status">
                 <span className='module_tittle'>Transactions Details</span>
             </div>
             <div className="container ">
-                
+                {userInfo.positionid==="3"&&(
+                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4' data-bs-target='#order_selection_modal'  data-bs-toggle='modal' onclick={(e)=>setqr_data((prevValues)=>({
+                        ...prevValues,
+                        upiid:'',
+                        total_amount:'',
+                        display_qr:'none',
+                    }))}>Order Now</button>
+                )}
                     <br /><br />
                     <div className="row">
                         <div className="col-12 mb-3 mb-lg-5">
@@ -188,10 +330,7 @@ const TransactionHistory = () => {
                                         <thead className="small text-uppercase bg-body text-muted text-center"style={{ position: 'sticky', top: '-1px',zIndex:'1' }}>
                                             <tr>
                                                 <th>Invoice ID</th>
-                                                {
-                                                    (userInfo.positionid != '3')? <th>Transaction ID</th> : null
-                                                }
-                                                
+                                                <th>Transaction ID</th>
                                                 <th>Date</th>
                                                 <th>Name</th>
                                                 <th>Amount</th>
@@ -214,25 +353,18 @@ const TransactionHistory = () => {
                                                     {/* {console.log(item)} */}
                                                     <td className='text-center'  data-bs-target='#invoice_pdf_generator'  data-bs-toggle='modal' onClick={(e)=>downloadinvoice(e.target.textContent)} data_id=
                                                         {item.invoiceid}>{item.invoiceid}</td>
-                                                    {
-                                                        (userInfo.positionid == '3') ?
-                                                        null :
-                                                        (
-                                                            item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
-                                                                <td className='text-center'>
-                                                                    <TextField variant="standard"
-                                                                        // disabled={belongsto === item.senderid}
-                                                                        disabled = {userInfo.positionid != '2' && userInfo.positionid != '5'}
-                                                                        style={{ marginTop: '10px' }}
-                                                                        id="outlined-size-small"
-                                                                        size="small"
-                                                                        value={textFieldValues[index]}
-                                                                        onChange={(e) => handleTextFieldChange(currentPageIndex, index, e.target.value)}
-                                                                    />
-                                                                </td>
-                                                            )
-                                                        )
-                                                    }
+                                                    {item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
+                                                        <td className='text-center'>
+                                                            <TextField variant="standard"
+                                                                disabled={belongsto === item.senderid}
+                                                                style={{ marginTop: '10px' }}
+                                                                id="outlined-size-small"
+                                                                size="small"
+                                                                value={textFieldValues[index]}
+                                                                onChange={(e) => handleTextFieldChange(currentPageIndex, index, e.target.value)}
+                                                            />
+                                                        </td>
+                                                    )}
                                                     <td className='text-center'>{formatDate(item.invoicedate)}</td>
                                                     <td className='text-center'>{item.email}</td>
                                                     <td className='text-center'>
@@ -253,7 +385,7 @@ const TransactionHistory = () => {
                                                         {/* {console.log("hello", item)} */}
                                                         <Button color="secondary"
                                                             disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)}
-                                                            onClick={() => belongsto === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email, textFieldValues[index]) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
+                                                            onClick={() => belongsto === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
                                                             ✔
                                                         </Button>
                                                     </td>
@@ -264,7 +396,7 @@ const TransactionHistory = () => {
                                 </div>
                                 <div className="card-footer text-end">
                                     <div className="btn btn-gray">
-                                        Recent Transactions
+                                        Recent Transation
                                     </div>
                                 </div>
                             </div>
@@ -280,7 +412,7 @@ const TransactionHistory = () => {
 
 
              {/* Preview Modal Start */}
-             <div class="modal fade" id="invoice_pdf_generator" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+            <div class="modal fade" id="invoice_pdf_generator" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
                         <div class="modal-header" style={{ padding: 0 }}>
@@ -300,6 +432,93 @@ const TransactionHistory = () => {
                 </div>
             </div>
             {/* Preview Modal End */}
+
+            {/* order now button click open the modal select the refill product */}
+            <div class="modal fade" id="order_selection_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content" style={{ paddingLeft: '1.5rem', paddingTop: '1.5rem', paddingRight: '1.5rem', marginLeft: '-110px' }}>
+                        <div class="modal-header" style={{ padding: 0 }}>
+                            <h5 class="modal-title" id="staticBackdropLabel">Ordering Products</h5>
+                            <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="invoiceContent" class="modal-body pdf-height">
+                            <div style={{display:qr_data.display_qr==='inline'?'none':'inline'}}>
+                                <div className="row" >
+                                    <div className="col-lg-6 col-md-12 col-sm-12">
+                                        <Box sx={{direction:'row',alignItems:'center',justifyContent:'start'}}>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Product</InputLabel>
+                                                <Select labelId="demo-simple-select-label" id="demo-simple-select" label="Product" name='product_name' onChange={(e)=>handlechange_value(e.target.value)}>
+                                                    
+                                                    {drp_pname.map((item,index)=>
+                                                        <MenuItem value={item.productid}>{item.productname}</MenuItem>
+                                                    )}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </div>
+                                    <div className="col-lg-6 col-md-12 col-sm-6">
+                                        <TextField id="outlined-basic" label="No of Product" name='no_of_product' variant="outlined" onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
+                                    </div>
+                                </div>
+
+                                <div className="row mt-4" >
+                                    {field_names.map((item,index)=>(
+                                        <div className="col-lg-6 d-flex flex-row mb-2">
+                                            <span>{item.label} : <span>{drp_val[item.fieldname]}</span></span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="row mt-4" >
+                                    <div className="col-lg-6 d-flex flex-row">
+                                        <Box sx={{direction:'row',alignItems:'center',justifyContent:'start',width:'100%'}}>
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">Payment Method</InputLabel>
+                                                <Select labelId="demo-simple-select-label" id="demo-simple-select" label="Payment Method" name='product_name' onChange={(e)=>{setdrp_val((prevValues)=>({
+                                                    ...prevValues,
+                                                    payment_method:e.target.value,
+                                                }))}} fullWidth>
+                                                    {payment_drp.map((item,index)=>
+                                                        <MenuItem value={item.fieldname}>{item.label}</MenuItem>
+                                                    )}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row mt-4" style={{display:qr_data.display_qr==='inline'?'inline':'none'}}>
+                                <Box sx={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+                                    <QrCode totalSum={qr_data.total_amount} upi={qr_data.upiid} />
+                                </Box>
+                            </div>
+
+
+                            <div className="row">
+                                <div className="col-lg-12 d-flex flex-row justify-content-end align-items-center">
+                                    {console.log(qr_data)}
+                                    {qr_data.display_qr==='none' && (
+                                        <button className='btn btn-md border border-2 border-primary text-primary' onClick={SubmitOrder}>Submit</button>        
+                                    )}
+                                    {qr_data.display_qr==='inline' && (
+                                        <button  data-bs-dismiss="modal" aria-label="Close" className='btn btn-md border border-2 border-gray rounded text-gray' onClick={(e)=>setqr_data((prevValues)=>({
+                                            ...prevValues,
+                                            upiid:'',
+                                            display_qr:'none',
+                                            total_amount:'',
+                                        }))}>Close</button>
+
+                                    )}
+                                </div>
+                            </div>
+                          
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* refil product modal end */}
         </>
     );
 };

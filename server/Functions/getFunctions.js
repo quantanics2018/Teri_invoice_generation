@@ -340,4 +340,46 @@ async function getInvoiceData(req,res){
 }
 
 
-module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData,getSignExistance,getDistrictData,getInvoiceData};
+// get product data 
+async function getproduct_data(req,res){
+    try{
+        const product_data = await userdbInstance.userdb.query(`SELECT * FROM products where status='1' and belongsto=$1`,[req.body.admin_id]);
+        res.json({message:"success",data:product_data.rows});
+    }
+    catch(error){
+        console.error("Error in transaction details page  get product server error");
+        res.status(500).json({message:"Internal server"});
+    }
+}
+
+// get order management module data 
+async function getOrder_Management_Data(req,res){
+    try {
+        const order_data = await userdbInstance.userdb.query(`SELECT order_management.*,public."user".fname,public."user".lname,products.productname FROM order_management JOIN public."user" ON public."user".userid=order_management.receiverid JOIN products ON products.productid=order_management.product_id WHERE order_management.receiverid=$1 and products.belongsto=$2 and  order_management.order_status='0' `,[req.body.userid,req.body.userid]);
+        res.json({
+            message:"Success",
+            data:order_data.rows,
+        
+        });
+    } catch (error) {
+        res.status(500).json({message:"Internal server error for getting order management data"});
+    }
+}
+
+
+// get particular product count
+async function getparticular_product(product_id,batch_no,userid){
+  
+    try {
+        console.log(product_id+" " +batch_no+" "+userid);
+        const product_count = await userdbInstance.userdb.query(`SELECT quantity FROM products WHERE productid=$1 AND belongsto=$2 AND batchno=$3`,[product_id,userid,batch_no]);
+        console.log("db data");
+        console.log(product_count.rows);
+        return product_count.rows[0].quantity;
+    } catch (error) {
+        return "error";
+    }
+}
+
+
+module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData,getSignExistance,getDistrictData,getInvoiceData,getproduct_data,getOrder_Management_Data,getparticular_product};

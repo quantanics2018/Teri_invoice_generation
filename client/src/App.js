@@ -29,6 +29,8 @@ import EditProduct from './pages/EditProduct.jsx';
 import FeedbackForm from './pages/FeedbackForm.jsx';
 import { API_URL_CLIENT } from './config.js';
 
+import Order_Management from './pages/Order_Management';
+
 const App = () => {
   const handleLogout = () => {
     sessionStorage.removeItem('userType');
@@ -52,6 +54,7 @@ const App = () => {
   // };
   const userInfoString = sessionStorage.getItem("UserInfo");
   const userInfo = JSON.parse(userInfoString);
+  console.log("access controll");
   // console.log(userInfo.positionid);
   const currentLoc = window.location.href;
 
@@ -81,6 +84,7 @@ const App = () => {
                 <Route path='/Distributer_Details' element={<StaffDetails position={2} Positionid_val={2} />} />
                 <Route path='/Distributer_Details/Edit_Distributer_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={2} />} />
                 <Route path='/Distributer_Details/Add_User_Details' element={<AddUserDetails Positionid_val={2} />} />
+                <Route path='/Order_Management' element={<Order_Management positionid={2} />} />
               </Routes>
             </div>
           )}
@@ -92,6 +96,7 @@ const App = () => {
                 <Route path='/D_Staff_Details' element={<StaffDetails position={5} Positionid_val={5} />} />
                 <Route path='/D_Staff_Details/Edit_D_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={5} />} />
                 <Route path='/D_Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={5} />} />
+                <Route path='/Order_Management' element={<Order_Management positionid={5} />} />
               </Routes>
             </div>
           )}
@@ -139,6 +144,7 @@ const App = () => {
             <Route path='feedback' element={<FeedbackForm />} />
             {/* <Route path='Invoice' element={<Invoice />} /> */}
           </Routes>
+
         </div>
       ) : (
         <Routes>
