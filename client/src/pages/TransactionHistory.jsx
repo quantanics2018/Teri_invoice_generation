@@ -74,9 +74,24 @@ const TransactionHistory = () => {
             alert("Enter The Input  Field")
         }
     }
-    const SenderConformation = async (invoiceId, textVal, belongsto) => {
-        // console.log("hai", invoiceId, textVal)
-        if (textVal) {
+    const SenderConformation = async (invoiceId, textVal, belongsto, transactionID) => {
+        let checkState = false;
+        if (transactionID && (userInfo.positionid === '2' || userInfo.positionid === '5')) {
+            try {
+                const response = await axios.put(`${API_URL}update/reciverStatus`, {
+                    invoiceId: invoiceId,
+                    textVal: transactionID
+                })
+                if (response.data.qos === 'success') {
+                    checkState = false;
+                } else {
+                    checkState = true;
+                }
+            } catch (error) {
+                checkState = true;
+            }
+        }
+        if ((textVal || userInfo.positionid === '2' || userInfo.positionid === '5') && checkState === false) {
             try {
                 const response = await axios.put(`${API_URL}update/senderStatus`, {
                     invoiceId: invoiceId, belongsto
@@ -350,7 +365,9 @@ const TransactionHistory = () => {
                                         <thead className="small text-uppercase bg-body text-muted text-center"style={{ position: 'sticky', top: '-1px',zIndex:'1' }}>
                                             <tr>
                                                 <th>Invoice ID</th>
-                                                <th>Transaction ID</th>
+                                                {
+                                                    (userInfo.positionid != '3')? <th>Transaction ID</th> : null
+                                                }
                                                 <th>Date</th>
                                                 <th>Name</th>
                                                 <th>Amount</th>
@@ -373,18 +390,25 @@ const TransactionHistory = () => {
                                                     {/* {console.log(item)} */}
                                                     <td className='text-center'  data-bs-target='#invoice_pdf_generator'  data-bs-toggle='modal' onClick={(e)=>downloadinvoice(e.target.textContent)} data_id=
                                                         {item.invoiceid}>{item.invoiceid}</td>
-                                                    {item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
-                                                        <td className='text-center'>
-                                                            <TextField variant="standard"
-                                                                disabled={belongsto === item.senderid}
-                                                                style={{ marginTop: '10px' }}
-                                                                id="outlined-size-small"
-                                                                size="small"
-                                                                value={textFieldValues[index]}
-                                                                onChange={(e) => handleTextFieldChange(currentPageIndex, index, e.target.value)}
-                                                            />
-                                                        </td>
-                                                    )}
+                                                    {
+                                                        (userInfo.positionid == '3') ?
+                                                        null :
+                                                        (
+                                                            item.transactionid ? (<td className='text-center'>{item.transactionid}</td>) : (
+                                                                <td className='text-center'>
+                                                                    <TextField variant="standard"
+                                                                        // disabled={belongsto === item.senderid}
+                                                                        disabled = {userInfo.positionid != '2' && userInfo.positionid != '5'}
+                                                                        style={{ marginTop: '10px' }}
+                                                                        id="outlined-size-small"
+                                                                        size="small"
+                                                                        value={textFieldValues[index]}
+                                                                        onChange={(e) => handleTextFieldChange(currentPageIndex, index, e.target.value)}
+                                                                    />
+                                                                </td>
+                                                            )
+                                                        )
+                                                    }
                                                     <td className='text-center'>{formatDate(item.invoicedate)}</td>
                                                     <td className='text-center'>{item.email}</td>
                                                     <td className='text-center'>
@@ -405,7 +429,7 @@ const TransactionHistory = () => {
                                                         {/* {console.log("hello", item)} */}
                                                         <Button color="secondary"
                                                             disabled={item.senderstatus === 1 || (userInfo.userid === item.receiverid && item.transactionid)}
-                                                            onClick={() => belongsto === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
+                                                            onClick={() => belongsto === item.senderid ? SenderConformation(item.invoiceid, item.transactionid, item.email, textFieldValues[index]) : UpdateStatusFromReciver(item.invoiceid, textFieldValues[index])}>
                                                             ✔
                                                         </Button>
                                                     </td>
@@ -416,7 +440,7 @@ const TransactionHistory = () => {
                                 </div>
                                 <div className="card-footer text-end">
                                     <div className="btn btn-gray">
-                                        Recent Transation
+                                        Recent Transactions
                                     </div>
                                 </div>
                             </div>
