@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, Snackbar,Pagination, Skeleton, TableCell, TextField ,FormControl,InputLabel,MenuItem,Select} from '@mui/material';
 import Loader from '../components/Loader';
 import { API_URL } from '../config';
@@ -20,6 +20,8 @@ const TransactionHistory = () => {
     const [submitted, setSubmitted] = useState(false);
     const [warning,setwarning] = useState(false);
     const [resAlert, setresAlert] = useState(null);
+
+    const after_complete_close = useRef(null);
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -163,8 +165,8 @@ const TransactionHistory = () => {
         // console.log("clicked invoice id");
         // console.log(invoiceid);
         const invoice_data = await axios.post(`${API_URL}getinvoice_data`,{invoiceId:invoiceid});
-        // console.log("after click voice data");
-        // console.log(invoice_data.data.data);
+        console.log("after click voice data");
+        console.log(invoice_data.data.data);
         setrawdata(invoice_data.data.data);
     }
 
@@ -300,6 +302,7 @@ const TransactionHistory = () => {
                      else if(payment_method==="phonepe"){
                          window.location.href = `phonepe://upi?pn=${encodedUpiId}&am=${amount}`;
                      }
+                     after_complete_close.current.click();
                  }else if(screenWidth > 800){
                      setqr_data((prevValues)=>({
                          ...prevValues,
@@ -322,7 +325,9 @@ const TransactionHistory = () => {
     const handleSnackbarClose = () => {
         setSubmitted(false);
     };
+  
 
+   
    
 
     return (
@@ -340,18 +345,16 @@ const TransactionHistory = () => {
             </div>
             <div className="container ">
                 {userInfo.positionid==="3"&&(
-                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4' data-bs-target='#order_selection_modal'  data-bs-toggle='modal' onclick={(e)=>{setqr_data((prevValues)=>({
-                        ...prevValues,
-                        upiid:'',
-                        total_amount:'',
-                        display_qr:'none',
-                    }));
-                   
-                }}>Order Now</button>
+                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4'  data-bs-target='#order_selection_modal'  data-bs-toggle='modal' 
+                        onclick={(e)=>{setqr_data((prevValues)=>({
+                            ...prevValues,
+                            upiid:'',
+                            total_amount:'',
+                            display_qr:'none',
+                        }));
+                    }}>Order Now</button>
                 )}
-                 {/* {userInfo.positionid==="3"&&(
-                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4' data-bs-target='#order_selection_modal'  data-bs-toggle='modal' onclick={reset_click}>Order Now</button>
-                )} */}
+               
                     <br /><br />
                     <div className="row">
                         <div className="col-12 mb-3 mb-lg-5">
@@ -483,7 +486,7 @@ const TransactionHistory = () => {
                     <div class="modal-content order_modal_responsive" >
                         <div class="modal-header" style={{ padding: 0 }}>
                             <h5 class="modal-title" id="staticBackdropLabel">Ordering Products</h5>
-                            <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"   ref={after_complete_close}></button>
                         </div>
                         <div id="invoiceContent" class="modal-body pdf-height">
                             <div style={{display:qr_data.display_qr==='inline'?'none':'inline'}}>
@@ -492,7 +495,7 @@ const TransactionHistory = () => {
                                         <Box sx={{direction:'row',alignItems:'center',justifyContent:'start'}}>
                                             <FormControl fullWidth>
                                                 <InputLabel id="demo-simple-select-label">Product</InputLabel>
-                                                <Select labelId="demo-simple-select-label" id="demo-simple-select" label="Product" name='product_name' onChange={(e)=>handlechange_value(e.target.value)}>
+                                                <Select labelId="demo-simple-select-label" id="demo-simple-select"  label="Product" name='product_name' onChange={(e)=>handlechange_value(e.target.value)}>
                                                     
                                                     {drp_pname.map((item,index)=>
                                                         <MenuItem value={item.productid}>{item.productname}</MenuItem>

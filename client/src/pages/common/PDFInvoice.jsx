@@ -50,7 +50,7 @@ const PDFInvoice = ({
 }) => {
 
     console.log("invoice data");
-    console.log(invoice_data['invoice_data']);
+    console.log(invoice_data);
     
    
 
@@ -163,15 +163,8 @@ const PDFInvoice = ({
         const statusApiAction = async () => {
             // console.log(userInfo.userid);
             try {
-                const response = await axios.post(`${API_URL}get/signature`, {
-                    userid: userInfo.userid
-                });
-                // console.log(response.data);
-                // console.log(response.data.src);
-                const blob = new Blob([response.data], { type: 'image/png' });
-                const url = URL.createObjectURL(blob);
-                // console.log(url);
-                setSignSrc(`${API_URL}${response.data.src}`);
+                setSignSrc(`${API_URL}uploads/${invoice_data['sender_data'][0].signature}`);
+
             } catch (error) {
                 console.error('Error fetching signature:', error);
             }
@@ -560,6 +553,8 @@ const PDFInvoice = ({
 
                             <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
                                 <div className="pvtName" style={PVTname}>For {invoice_data['sender_data'][0].organizationname}</div>
+                                {console.log("singature is")}
+                                {console.log(signSrc)}
                                 <img src={signSrc} 
                                 style={{ ...Signature, maxHeight: '80px', maxWidth: '300px', width: '70%', height: '90%' }}
                                 alt="Signature Required" 
