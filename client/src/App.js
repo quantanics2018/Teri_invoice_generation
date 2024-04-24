@@ -95,7 +95,6 @@ const App = () => {
                 <Route path='/D_Staff_Details' element={<StaffDetails position={5} Positionid_val={5} />} />
                 <Route path='/D_Staff_Details/Edit_D_Staff_Details/:useridEnc' element={<EditDistributerDetails Positionid_val={5} />} />
                 <Route path='/D_Staff_Details/Add_User_Details' element={<AddUserDetails Positionid_val={5} />} />
-                <Route path='/Order_Management' element={<Order_Management positionid={5} />} />
               </Routes>
             </div>
           )}

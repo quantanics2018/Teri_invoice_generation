@@ -21,7 +21,9 @@ const TransactionHistory = () => {
     const [warning,setwarning] = useState(false);
     const [resAlert, setresAlert] = useState(null);
 
+
     const after_complete_close = useRef(null);
+    const order_now_btn = useRef(null);
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -327,6 +329,35 @@ const TransactionHistory = () => {
     };
   
 
+    const handlecondition = () => {
+        console.log("order now button click");
+        
+        setqr_data((prevValues)=>({
+            ...prevValues,
+            upiid:'',
+            total_amount:'',
+            display_qr:'none',
+        }));
+
+        setdrp_val(({
+          
+            product_id:'',
+            product_price:'',
+            cgst:'',
+            sgst:'',
+            no_of_product:'',
+            total_price_amount:'',
+            batch_no:'',
+            invoice_date:'',
+            receiverid:'',
+            positionid:'',
+            sender_id:'',
+            payment_method:'',
+        }));
+        order_now_btn.current.click();
+        console.log(drp_val);
+        console.log(qr_data);
+    }
    
    
 
@@ -345,15 +376,18 @@ const TransactionHistory = () => {
             </div>
             <div className="container ">
                 {userInfo.positionid==="3"&&(
-                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4'  data-bs-target='#order_selection_modal'  data-bs-toggle='modal' 
-                        onclick={(e)=>{setqr_data((prevValues)=>({
-                            ...prevValues,
-                            upiid:'',
-                            total_amount:'',
-                            display_qr:'none',
-                        }));
-                    }}>Order Now</button>
+                    // <button className='btn btn-md border border-2 border-success rounded text-success mt-4'  data-bs-target='#order_selection_modal'  data-bs-toggle='modal' 
+                    //     onclick={(e)=>{setqr_data((prevValues)=>({
+                    //         ...prevValues,
+                    //         upiid:'',
+                    //         total_amount:'',
+                    //         display_qr:'none',
+                    //     }));
+                    // }}>Order Now</button>
+                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4'   onClick={handlecondition} >Order Now</button>
                 )}
+                {/* hidden button modal calling */}
+                    <button className='d-none' data-bs-target='#order_selection_modal' data-bs-toggle='modal' ref={order_now_btn}></button>
                
                     <br /><br />
                     <div className="row">
@@ -492,20 +526,14 @@ const TransactionHistory = () => {
                             <div style={{display:qr_data.display_qr==='inline'?'none':'inline'}}>
                                 <div className="row" >
                                     <div className="col-lg-6 col-md-12 col-sm-12 mb-4">
-                                        <Box sx={{direction:'row',alignItems:'center',justifyContent:'start'}}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Product</InputLabel>
-                                                <Select labelId="demo-simple-select-label" id="demo-simple-select"  label="Product" name='product_name' onChange={(e)=>handlechange_value(e.target.value)}>
-                                                    
-                                                    {drp_pname.map((item,index)=>
-                                                        <MenuItem value={item.productid}>{item.productname}</MenuItem>
-                                                    )}
-                                                </Select>
-                                            </FormControl>
-                                        </Box>
+                                        <TextField  select label="Products"  value={drp_val.product_id} onChange={(e) => handlechange_value(e.target.value)} fullWidth  variant="outlined" >
+                                            {drp_pname.map((item,index)=>
+                                                <MenuItem value={item.productid}>{item.productname}</MenuItem>
+                                            )}
+                                        </TextField>
                                     </div>
                                     <div className="col-lg-6 col-md-12 col-sm-6 mb-4">
-                                        <TextField id="outlined-basic" label="No of Product" name='no_of_product' variant="outlined" onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
+                                        <TextField id="outlined-basic" label="No of Product" name='no_of_product' variant="outlined" value={drp_val.no_of_product} onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
                                     </div>
                                 </div>
 
@@ -519,7 +547,7 @@ const TransactionHistory = () => {
 
                                 <div className="row" >
                                     <div className="col-lg-6 col-md-12 col-sm-12 mb-4 d-flex flex-row">
-                                        <Box sx={{direction:'row',alignItems:'center',justifyContent:'start',width:'100%'}}>
+                                        {/* <Box sx={{direction:'row',alignItems:'center',justifyContent:'start',width:'100%'}}>
                                             <FormControl fullWidth>
                                                 <InputLabel id="demo-simple-select-label">Payment Method</InputLabel>
                                                 <Select labelId="demo-simple-select-label" id="demo-simple-select" label="Payment Method" name='product_name' onChange={(e)=>{setdrp_val((prevValues)=>({
@@ -531,7 +559,15 @@ const TransactionHistory = () => {
                                                     )}
                                                 </Select>
                                             </FormControl>
-                                        </Box>
+                                        </Box> */}
+                                        <TextField  select label="Payment Method"  value={drp_val.payment_method} onChange={(e)=>{setdrp_val((prevValues)=>({
+                                            ...prevValues,
+                                            payment_method:e.target.value,
+                                            }))}}    fullWidth  variant="outlined" >
+                                            {payment_drp.map((item,index)=>
+                                                <MenuItem value={item.fieldname}>{item.label}</MenuItem>
+                                            )}
+                                        </TextField>
                                     </div>
                                 </div>
                             </div>
