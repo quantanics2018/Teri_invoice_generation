@@ -194,7 +194,7 @@ const TransactionHistory = () => {
         {label:"SGST",fieldname:"sgst"},
         {label:"Quantity",fieldname:"no_of_product"},
         {label:"Grant Total",fieldname:"total_price_amount"},
-        {label:"Batch Number",fieldname:"batch_no"}
+        // {label:"Batch Number",fieldname:"batch_no"}
     ];
 
     const payment_drp = [
@@ -533,33 +533,21 @@ const TransactionHistory = () => {
                                         </TextField>
                                     </div>
                                     <div className="col-lg-6 col-md-12 col-sm-6 mb-4">
-                                        <TextField id="outlined-basic" label="No of Product" name='no_of_product' variant="outlined" value={drp_val.no_of_product} onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
+                                        <TextField id="outlined-basic" label="Quantity" name='quantity' variant="outlined" value={drp_val.no_of_product} onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
                                     </div>
                                 </div>
 
                                 <div className="row " >
                                     {field_names.map((item,index)=>(
                                         <div className="col-lg-6 col-md-6 col-sm-12 d-flex flex-row mb-4">
-                                            <span>{item.label} : <span>{drp_val[item.fieldname]}</span></span>
+                                            <span>{item.label} : <span>{item.fieldname==="cgst" || item.fieldname==="sgst"? (drp_val[item.fieldname]===''? '0%':drp_val[item.fieldname]+' %'):(drp_val[item.fieldname])}</span></span>
                                         </div>
                                     ))}
                                 </div>
 
                                 <div className="row" >
                                     <div className="col-lg-6 col-md-12 col-sm-12 mb-4 d-flex flex-row">
-                                        {/* <Box sx={{direction:'row',alignItems:'center',justifyContent:'start',width:'100%'}}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Payment Method</InputLabel>
-                                                <Select labelId="demo-simple-select-label" id="demo-simple-select" label="Payment Method" name='product_name' onChange={(e)=>{setdrp_val((prevValues)=>({
-                                                    ...prevValues,
-                                                    payment_method:e.target.value,
-                                                }))}} fullWidth>
-                                                    {payment_drp.map((item,index)=>
-                                                        <MenuItem value={item.fieldname}>{item.label}</MenuItem>
-                                                    )}
-                                                </Select>
-                                            </FormControl>
-                                        </Box> */}
+                                        
                                         <TextField  select label="Payment Method"  value={drp_val.payment_method} onChange={(e)=>{setdrp_val((prevValues)=>({
                                             ...prevValues,
                                             payment_method:e.target.value,

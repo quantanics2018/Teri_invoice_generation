@@ -28,9 +28,8 @@ const Order_Management = (positionid) =>{
     const buttonRef = useRef(null);
     const [selected_id,set_selected] = useState([]);
     const label_map = [
-        {label:'Order ID',fieldname:'order_id'},
-        {label:'Customer Name',fieldname:'fname_lname'},
         {label:'Customer ID',fieldname:'sender_id'},
+        {label:'Customer Name',fieldname:'fname_lname'},
         {label:'Product Name',fieldname:'productname'},
         {label:'Product ID',fieldname:'product_id'},
         {label:'Batch Number',fieldname:'batch_no'},
@@ -121,7 +120,7 @@ return(
                         </span>
                     </div>
                     <div className='col-headings'>
-                        <div className="col-head">Order ID</div>
+                        <div className="col-head">Customer ID</div>
                         <div className="col-head">Customer Name</div>
                         <div className="col-head">Product</div>
                         <div className="col-head">Batch No</div>
@@ -131,11 +130,11 @@ return(
                         <div className='col-head'>Action</div>
                     </div>
                     <div className="scroll_div" style={padding_top}>
-                        {/* {console.log(alldata)} */}
-
+                        {console.log(getorder_data)}
+                        {console.log("user data")}
                         {getorder_data.map((data, index) => (
                             <div className="datas skeleton-block">
-                                <div className="col-head">{data.order_id}</div>
+                                <div className="col-head">{data.sender_id}</div>
                                 <div className="col-head">{data.fname+' '+data.lname}</div>
                                 <div className="col-head">{data.productname}</div>
                                 <div className="col-head">{data.batch_no}</div>
@@ -166,7 +165,7 @@ return(
                             {label_map.map((item,index)=>(
                                 
                                 <div className="col-lg-6 col-md-6 col-sm-12 mt-4">
-                                    <span className='font-weight-bold'>{item.label} : <span>{item.fieldname==='fname_lname'?(selected_id['fname']+''+selected_id['lname']):(selected_id[item.fieldname])}</span></span>
+                                    <span className='font-weight-bold'>{item.label} : <span>{item.fieldname==='fname_lname'?(selected_id['fname']+''+selected_id['lname']):item.fieldname==="cgst" || item.fieldname==="sgst"? (selected_id[item.fieldname]+' %'):selected_id[item.fieldname]}</span></span>
                                 </div>
                             ))}
 
