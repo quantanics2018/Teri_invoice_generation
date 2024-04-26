@@ -32,7 +32,7 @@ const Order_Management = (positionid) =>{
         {label:'Customer Name',fieldname:'fname_lname'},
         {label:'Product Name',fieldname:'productname'},
         {label:'HSN Code',fieldname:'product_id'},
-        {label:'Batch Number',fieldname:'batch_no'},
+        // {label:'Batch Number',fieldname:'batch_no'},
         {label:'Quantity',fieldname:'quantity'},
         {label:'Amount',fieldname:'total_amount'},
         {label:'Payment Mode',fieldname:'payment_method'},
@@ -65,11 +65,16 @@ const Order_Management = (positionid) =>{
         });
     };
     const select_order = async(order_id)=>{
+        console.log("product list");
+        console.log(getorder_data);
         getorder_data.map((item,index)=>{
             if(item.order_id===order_id){
+                
                 set_selected(getorder_data[index]);
             }
         });
+
+        
     }
 
     // submit order function 
@@ -176,6 +181,8 @@ return(
                                     last_updated_by:userInfo.userid,
                                 }))} fullWidth/>
                             </div>
+
+
                         </div>
 
                         <div className="row mt-4">

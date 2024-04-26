@@ -164,11 +164,7 @@ const TransactionHistory = () => {
     // invoice generation function
    
     const downloadinvoice = async(invoiceid) =>{
-        // console.log("clicked invoice id");
-        // console.log(invoiceid);
         const invoice_data = await axios.post(`${API_URL}getinvoice_data`,{invoiceId:invoiceid});
-        console.log("after click voice data");
-        console.log(invoice_data.data.data);
         setrawdata(invoice_data.data.data);
     }
 
@@ -192,9 +188,7 @@ const TransactionHistory = () => {
         {label:"Product Price",fieldname:"product_price"},
         {label:"CGST",fieldname:"cgst"},
         {label:"SGST",fieldname:"sgst"},
-        {label:"Quantity",fieldname:"no_of_product"},
         {label:"Grant Total",fieldname:"total_price_amount"},
-        // {label:"Batch Number",fieldname:"batch_no"}
     ];
 
     const payment_drp = [
@@ -202,35 +196,45 @@ const TransactionHistory = () => {
         {label:"Phone Pay",fieldname:"phonepe"}
     ]
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+    // fetch products data in customer view thw page 
+    // its temporary hide
     const fetch_drp_data = async() =>{
-        // console.log("product data");
-        // console.log(userInfo.adminid);
         const product_Data = await axios.post(`${API_URL}getproduct_data`,{admin_id:userInfo.adminid});
-        // console.log("product data is ");
-        // console.log(product_Data.data.data);
         set_drp_pname(product_Data.data.data);
-       
-        
     }
+ 
 
    
+    // after select dropdown product in customer onchane event
+    // temporaru hide
+    const [checkbox_val,set_checkbox] = useState(false);
+    const handlechange_value = async(event)=>{
+       
+        const productval = event.target.dataset.customAttribute;
+        const productid = document.querySelector('#'+event.target.id);
+        console.log(productid.checked);
+        if (productid.checked===true) {
+            set_checkbox(true);
+            drp_pname.map((item,index)=>{
+                if(productval===item.productid){
+                    setdrp_val((prevValues)=>({
+                        ...prevValues,
+                        cgst:item.cgst,
+                        product_id:productval,
+                        sgst:item.sgst,
+                        product_price:item.priceperitem,
+                        batch_no:item.batchno,
+                    }));
+                }
+            });
+        }else{
+            set_checkbox(false);
+        }
 
-    const handlechange_value = async(productval)=>{
-        // console.log("selected product id");
-        // console.log(productval);
-        drp_pname.map((item,index)=>{
-            if(productval===item.productid){
-               setdrp_val((prevValues)=>({
-                ...prevValues,
-                cgst:item.cgst,
-                product_id:productval,
-                sgst:item.sgst,
-                product_price:item.priceperitem,
-                batch_no:item.batchno,
-               }));
-            }
-        });
+        
     }
+    
 
     const calculate_gst = (total_amount,gst)=>{
         let gst_amount = (parseInt(total_amount)*parseInt(gst))/100;
@@ -290,8 +294,6 @@ const TransactionHistory = () => {
             setresAlert(response.data.message);
             setSubmitted(true);
             setwarning(false);
-            // console.log("the axios output is show in below");
-            // console.log(response);
             if(response.data.status===true){
                  let payment_method = response.data.data.payment_method;
                  const encodedUpiId = encodeURIComponent(response.data.data.receiver_data.upiid);
@@ -315,8 +317,6 @@ const TransactionHistory = () => {
                      }));      
                  }
                 setdrp_val({});
-                console.log("after submition empty data");
-                console.log(drp_val);
                 alert('Customer order submition successfully.....');
             }
         }
@@ -330,7 +330,6 @@ const TransactionHistory = () => {
   
 
     const handlecondition = () => {
-        console.log("order now button click");
         
         setqr_data((prevValues)=>({
             ...prevValues,
@@ -354,9 +353,8 @@ const TransactionHistory = () => {
             sender_id:'',
             payment_method:'',
         }));
-        order_now_btn.current.click();
-        console.log(drp_val);
-        console.log(qr_data);
+        set_checkbox(false);
+        order_now_btn.current.click();        
     }
    
    
@@ -372,19 +370,12 @@ const TransactionHistory = () => {
             {/* End  of snack bar */}
             {/* {loading && <Loader />} */}
             <div className="row_with_count_status">
-                <span className='module_tittle'>Transactions Details</span>
+                <span className='module_tittle'>{userInfo.positionid==="3"?('Order & History'):('Transactions Details')}</span>
             </div>
             <div className="container ">
                 {userInfo.positionid==="3"&&(
-                    // <button className='btn btn-md border border-2 border-success rounded text-success mt-4'  data-bs-target='#order_selection_modal'  data-bs-toggle='modal' 
-                    //     onclick={(e)=>{setqr_data((prevValues)=>({
-                    //         ...prevValues,
-                    //         upiid:'',
-                    //         total_amount:'',
-                    //         display_qr:'none',
-                    //     }));
-                    // }}>Order Now</button>
-                    <button className='btn btn-md border border-2 border-success rounded text-success mt-4'   onClick={handlecondition} >Order Now</button>
+                   
+                    <button className='btn btn-md border text-white bg-primary rounded  mt-4'   onClick={handlecondition} >Order Now</button>
                 )}
                 {/* hidden button modal calling */}
                     <button className='d-none' data-bs-target='#order_selection_modal' data-bs-toggle='modal' ref={order_now_btn}></button>
@@ -481,11 +472,7 @@ const TransactionHistory = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* <Pagination
-                            count={Math.ceil(data.length / rowsPerPage)}
-                            page={currentPage}
-                            onChange={handleChangePage}
-                        /> */}
+                        
                         </div>
                     </div>
                 
@@ -501,7 +488,7 @@ const TransactionHistory = () => {
                             <button type="button" class="btn-close"  data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div id="invoiceContent" class="modal-body pdf-height">
-                            {console.log(Object.keys(rawdata).length)}
+                            {/* {console.log(Object.keys(rawdata).length)} */}
                             {
                               Object.keys(rawdata).length>0 && 
                               <PDFInvoice invoice_data={rawdata} />
@@ -525,29 +512,25 @@ const TransactionHistory = () => {
                         <div id="invoiceContent" class="modal-body pdf-height">
                             <div style={{display:qr_data.display_qr==='inline'?'none':'inline'}}>
                                 <div className="row" >
-                                    <div className="col-lg-6 col-md-12 col-sm-12 mb-4">
-                                        <TextField  select label="Products"  value={drp_val.product_id} onChange={(e) => handlechange_value(e.target.value)} fullWidth  variant="outlined" >
-                                            {drp_pname.map((item,index)=>
-                                                <MenuItem value={item.productid}>{item.productname}</MenuItem>
-                                            )}
-                                        </TextField>
+                                    <div className="col-lg-12 col-md-12 col-sm-12 mb-4">
+                                       
+                                        <div className="d-flex justify-content-start align-items-center">
+                                            <input type="checkbox" name="" className='' id="pname_checkbox" checked={checkbox_val}  data-custom-attribute="220190"  style={{marginRight:'1rem'}}   onClick={(e)=>handlechange_value(e)}/> <span>TERiON iON SOLUTION REFILL </span>
+                                        </div>
                                     </div>
-                                    <div className="col-lg-6 col-md-12 col-sm-6 mb-4">
-                                        <TextField id="outlined-basic" label="Quantity" name='quantity' variant="outlined" value={drp_val.no_of_product} onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
-                                    </div>
+                                  
                                 </div>
 
                                 <div className="row " >
+                                    <div className="col-lg-6 col-md-12 col-sm-6 mb-4">
+                                        <TextField id="outlined-basic" label="Quantity" name='quantity' variant="outlined" value={drp_val.no_of_product} onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
+                                    </div>
                                     {field_names.map((item,index)=>(
                                         <div className="col-lg-6 col-md-6 col-sm-12 d-flex flex-row mb-4">
                                             <span>{item.label} : <span>{item.fieldname==="cgst" || item.fieldname==="sgst"? (drp_val[item.fieldname]===''? '0%':drp_val[item.fieldname]+' %'):(drp_val[item.fieldname])}</span></span>
                                         </div>
                                     ))}
-                                </div>
-
-                                <div className="row" >
                                     <div className="col-lg-6 col-md-12 col-sm-12 mb-4 d-flex flex-row">
-                                        
                                         <TextField  select label="Payment Method"  value={drp_val.payment_method} onChange={(e)=>{setdrp_val((prevValues)=>({
                                             ...prevValues,
                                             payment_method:e.target.value,
@@ -558,6 +541,8 @@ const TransactionHistory = () => {
                                         </TextField>
                                     </div>
                                 </div>
+
+                               
                             </div>
                             <div className="row mt-4" style={{display:qr_data.display_qr==='inline'?'inline':'none'}}>
                                 <Box sx={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
@@ -568,12 +553,12 @@ const TransactionHistory = () => {
 
                             <div className="row">
                                 <div className="col-lg-12 d-flex flex-row justify-content-end align-items-center">
-                                    {console.log(qr_data)}
+                                    
                                     {qr_data.display_qr==='none' && (
-                                        <button className='btn btn-md border border-2 border-primary text-primary' onClick={SubmitOrder}>Submit</button>        
+                                        <button className='btn btn-md border border-2 bg-danger text-white w-40' disabled={!checkbox_val} onClick={SubmitOrder}>Submit</button>        
                                     )}
                                     {qr_data.display_qr==='inline' && (
-                                        <button  data-bs-dismiss="modal" aria-label="Close" className='btn btn-md border border-2 border-gray rounded text-gray' onClick={(e)=>setqr_data((prevValues)=>({
+                                        <button  data-bs-dismiss="modal" aria-label="Close" className='btn btn-md border  bg-grey border-grey rounded text-black w-40' onClick={(e)=>setqr_data((prevValues)=>({
                                             ...prevValues,
                                             upiid:'',
                                             display_qr:'none',
