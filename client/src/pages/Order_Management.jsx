@@ -31,7 +31,7 @@ const Order_Management = (positionid) =>{
         {label:'Customer ID',fieldname:'sender_id'},
         {label:'Customer Name',fieldname:'fname_lname'},
         {label:'Product Name',fieldname:'productname'},
-        {label:'Product ID',fieldname:'product_id'},
+        {label:'HSN Code',fieldname:'product_id'},
         {label:'Batch Number',fieldname:'batch_no'},
         {label:'Quantity',fieldname:'quantity'},
         {label:'Amount',fieldname:'total_amount'},

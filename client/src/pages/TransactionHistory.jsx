@@ -425,7 +425,7 @@ const TransactionHistory = () => {
                                             {data.map((item, index) => (
                                                 <tr key={index} className="align-middle text-center">
                                                     {/* {console.log(item)} */}
-                                                    <td className='text-center'  data-bs-target='#invoice_pdf_generator'  data-bs-toggle='modal' onClick={(e)=>downloadinvoice(e.target.textContent)} data_id=
+                                                    <td className='text-center ' style={{cursor:'pointer'}}  data-bs-target='#invoice_pdf_generator'  data-bs-toggle='modal' onClick={(e)=>downloadinvoice(e.target.textContent)} data_id=
                                                         {item.invoiceid}>{item.invoiceid}</td>
                                                     {
                                                         (userInfo.positionid == '3') ?
