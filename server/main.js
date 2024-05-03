@@ -83,7 +83,7 @@ app.post('/add/:entity(user|products|invoice|feedback|ProformaInvoice)', upload.
     if (entity === 'invoice') {
         try {
             console.log("invoice request");
-            console.log(req);
+            console.log(req.body);
             const addUser = await addData.addInvoice(req, res);
         } catch (error) {
             console.error('Error retrieving products details:', error);

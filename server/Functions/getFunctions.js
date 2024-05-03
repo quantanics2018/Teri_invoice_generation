@@ -313,8 +313,10 @@ async function getInvoiceData(req,res){
         const InvoiceId = req.body.invoiceId;
 
         // invoice data and product name data
-        const result = await userdbInstance.userdb.query(`SELECT invoice.*,invoiceitem.*,products.productname  FROM invoice
-        JOIN invoiceitem ON invoice.invoiceid = invoiceitem.invoiceid JOIN products ON products.productid = invoiceitem.productid AND products.batchno = invoiceitem.batchno where invoice.invoiceid=$1;`,[InvoiceId]);
+        // const result = await userdbInstance.userdb.query(`SELECT invoice.*,invoiceitem.*,products.productname  FROM invoice
+        // JOIN invoiceitem ON invoice.invoiceid = invoiceitem.invoiceid JOIN products ON products.productid = invoiceitem.productid AND products.batchno = invoiceitem.batchno where invoice.invoiceid=$1;`,[InvoiceId]);
+        const result = await userdbInstance.userdb.query(`SELECT invoice.*,invoice_item.*,(select productname from products where productid=invoice_item.productid and batchno=invoice_item.batchno and belongsto=invoice.senderid) as productname  FROM invoice
+        JOIN invoiceitem as invoice_item ON invoice.invoiceid = invoice_item.invoiceid  where invoice.invoiceid=$1;`,[InvoiceId]);
 
         console.log("sender id is");
         const sender_id = result.rows[0].senderid;

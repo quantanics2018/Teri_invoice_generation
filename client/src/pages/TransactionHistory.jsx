@@ -178,7 +178,12 @@ const TransactionHistory = () => {
     // invoice generation function
    
     const downloadinvoice = async(invoiceid) =>{
+
         const invoice_data = await axios.post(`${API_URL}getinvoice_data`,{invoiceId:invoiceid});
+        console.log("get invoice data array is");
+        console.log(invoice_data);
+        console.log("user sesssion data");
+        console.log(userInfo);
         setrawdata(invoice_data.data.data);
     }
 
