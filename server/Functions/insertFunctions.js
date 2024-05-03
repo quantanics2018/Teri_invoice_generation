@@ -1,6 +1,8 @@
 const userdbInstance = require('../instances/dbInstance');
 const { UserAddedMail } = require('../services/emailservice');
 
+const format = require('pg-format');
+
 async function addUser(req, res) {
     const {
         userid,
@@ -482,13 +484,59 @@ async function insertCustomerOrder(req,res){
 
         const receiver_data = await userdbInstance.userdb.query('SELECT * FROM public."user" WHERE userid=$1',[receiverid]);
         let upi_id = receiver_data.rows[0].upiid;
+      
         await userdbInstance.userdb.query('BEGIN');
         const insertProductResult = await userdbInstance.userdb.query(`INSERT INTO public.order_management(
-	product_id, product_price, cgst, sgst, quantity, total_amount, batch_no, order_date, receiverid, position_id, order_status, sender_id, payment_method, last_updated_by, upi_id)
-	VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)`, [req_data.product_id,req_data.product_price,req_data.cgst,req_data.sgst,req_data.no_of_product,req_data.total_price_amount,req_data.batch_no,req_data.invoice_date,req_data.receiverid,req_data.positionid,0,req_data.sender_id,req_data.payment_method,req_data.sender_id,upi_id]);
+            hsncode, cgst, sgst, quantity, grandtotal, order_date, receiverid, position_id, order_status, sender_id, payment_method, last_updated_by, upi_id,cgst_amount, sgst_amount)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,$14,$15) RETURNING order_id `, [req_data.product_id,req_data.cgst,req_data.sgst,req_data.no_of_product,req_data.total_price_amount,req_data.invoice_date,req_data.receiverid,req_data.positionid,0,req_data.sender_id,req_data.payment_method,req_data.sender_id,upi_id,req_data.cgst_amount,req_data.sgst_amount]);
+        
         await userdbInstance.userdb.query('COMMIT');
 
+
+        const order_id =  insertProductResult.rows[0].order_id;
+        console.log("order id is:\t"+order_id);
+        // Collect data for batch insert
+        console.log("order item in customer");
+        console.log(req.body.order_item);
+        const insertData = req.body.order_item.map(item => {
+            return [
+                order_id,
+                item.product_id,
+                item.quantity, 
+                req_data.total_price_amount,
+                item.cgst, 
+                item.sgst, 
+                item.batch_no,
+                req_data.sender_id,
+                item.product_price, 
+            ];
+        });
+       
+        req.body.order_item.map(async(item,index)=>{
+            console.log("product updation batch number is :\t"+item.batch_no+" the product id is :\t"+item.product_id);
+            console.log(item.remaining+" then the poductid is:\t"+item.product_id+"req data is:\t"+req_data.receiverid+" the batch number is:\t"+item.batch_no);
+            var remaining_quantity = 0;
+            if(parseInt(item.remaining)<0){
+                remaining_quantity = 0;
+            }else{
+                remaining_quantity = item.remaining;
+            }
+            await userdbInstance.userdb.query('BEGIN');
+            const product_update_multiple_rows = await userdbInstance.userdb.query(`UPDATE products SET quantity =$1 WHERE productid=$2 and belongsto=$3 and batchno=$4`,[remaining_quantity,item.product_id,req_data.receiverid,item.batch_no]);
+            await userdbInstance.userdb.query('COMMIT');
+        });
+        
+        console.log(insertData);
+        await userdbInstance.userdb.query('BEGIN');
+        const order_item = format(`INSERT INTO public.order_item(
+            order_id, hsncode, product_quantity, total_amount, cgst, sgst, batch_no, last_updated_by, product_price)
+            VALUES %L`,insertData);
+
+        const insertion_result = await userdbInstance.userdb.query(order_item);
+       
      
+       
+        await userdbInstance.userdb.query('COMMIT');
         console.log(receiver_data);
        
         const output = {

@@ -535,14 +535,47 @@ app.post('/getOrderData',async(req,res)=>{
 // order submition in order managment module
 app.post('/Order_submition',async(req,res)=>{
     console.log("server data ");
-    const order_data  = req.body.order_data
-    console.log(order_data)
-    const actual_product_count = await getData.getparticular_product(req.body.order_data.product_id,req.body.order_data.batch_no,req.body.order_data.receiverid);
-    if (parseInt(req.body.order_data.quantity)<parseInt(actual_product_count)) {
+    // console.log(req.body.order_data);
+    // console.log(req.body.order_item);
+    // console.log(req.body.payment_status);
+    if((req.body.payment_status==='payment_failure') && (req.body.order_data.transaction_id===null || req.body.order_data.transaction_id==='')){
+        console.log("only for ordermanagement table");
+        const product_order_submit = await updateData.order_cancel_product(req,res);
+    }else if((req.body.payment_status==='online_payment') && (req.body.order_data.transaction_id!=null || req.body.order_data.transaction_id!='') ){
+        console.log("invoice table and order management table insertion");
+        const product_order_submit = await updateData.Order_submition(req,res);
+    }
+    /*
+    const actual_product_count = await getData.getparticular_product(req.body.order_data.hsncode,req.body.order_data.receiverid);
+    console.log("acctual product count is");
+    console.log(actual_product_count);
+    console.log(actual_product_count.length);
+    var product_total = 0;
+    actual_product_count.map((item,index)=>{
+        product_total = parseInt(product_total) + parseInt(item.quantity);
+    });
+    console.log("total product is:\t"+product_total);
+    // in order item is 1600 < then the db available total products is 1700
+    if (parseInt(req.body.order_data.quantity)<parseInt(product_total)) {
         const output_res = await updateData.Order_submition(req,res);
     }else{
         res.status(6000).send("Kindly check Availability of the products...");
     }
+    */
+});
+
+// order management if i click pencil button it get order item data
+app.post('/get_order_item',async(req,res)=>{
+    try {
+        console.log("order item request records");
+        console.log(req.body);
+        const order_item_data = await getData.getOrder_Item(req,res);
+        
+    } catch (error) {
+        res.status(6000).json({message:"Kindly check the api handling its error root cause"});
+    }
+   
+    
 });
 
 app.listen(4000, () => {

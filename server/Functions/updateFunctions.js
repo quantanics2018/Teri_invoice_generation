@@ -1,5 +1,7 @@
 const userdbInstance = require('../instances/dbInstance');
 const { format } = require('date-fns');
+const format_query = require('pg-format');
+
 
 
 async function updateUserDataIndividual(req, res) {
@@ -371,71 +373,110 @@ async function update_user_profile(req,res){
 // order management module update order management table 
 async function Order_submition(req,res){
   
-    console.log("updation");
-    console.log(req.body.order_data);
-    let transaction_id = req.body.order_data.transaction_id;
-    let last_updated_by = req.body.order_data.last_updated_by;
-    let order_id = req.body.order_data.order_id;
-    let sender_id = req.body.order_data.receiverid;
-    let receiver_id = req.body.order_data.sender_id;
-    let total_amount = req.body.order_data.total_amount;
-
-    let quantity = req.body.order_data.quantity;
-    let product_id = req.body.order_data.product_id;
-    let batch_no = req.body.order_data.batch_no;
-    let product_price = req.body.order_data.product_price;
-    let cgst  = req.body.order_data.cgst;
-    let sgst = req.body.order_data.sgst;
+    
+    
     try {
+        console.log("order submission function ");
+        console.log(req.body.order_data);
+        console.log(req.body.order_item);
+        console.log(req.body.payment_status);
+
+        // invoice parent table adding data
+        const sender_id = req.body.order_data.receiverid;
+        const receiver_id = req.body.order_data.sender_id;
+        const total_amount = req.body.order_data.grandtotal;
+        const last_updated_by = req.body.order_data.last_updated_by;
+        const transaction_id = req.body.order_data.transaction_id;
+        const currentDate = new Date();
+        const current_date = format(currentDate, 'yyyy-MM-dd');
+
+        // invoice item table adding data
+        const order_id = req.body.order_data.order_id;
+
+        // first update order management parent table 
+        await userdbInstance.userdb.query('BEGIN');
+        const InvoiceTableResult = await userdbInstance.userdb.query(
+            `INSERT INTO public.invoice(
+                senderid, receiverid, invoicedate,discount, total, lastupdatedby, senderstatus, date, reciverstatus, transactionid)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING invoiceid;`, [sender_id,receiver_id , current_date,0,total_amount,last_updated_by,1,current_date,1,transaction_id]
+        );
+        // await userdbInstance.userdb.query('COMMIT');
+        // await userdbInstance.userdb.query('BEGIN');
+        const invoiceid = InvoiceTableResult.rows[0].invoiceid;
+        console.log("transaction id is:\t"+invoiceid);
+        const invoice_data_arr = req.body.order_item.map(item => {
+            return [
+                invoiceid,
+                item.hsncode,
+                item.product_quantity,
+                parseFloat(parseFloat(item.product_quantity)*parseFloat(item.product_price)),
+                0,
+                last_updated_by,
+                item.hsncode,
+                item.batch_no,
+                item.product_price,
+                item.cgst,
+                item.sgst,
+            ];
+        });
+        const invoiceitem_insertion = format_query(`INSERT INTO public.invoiceitem(
+            invoiceid, productid, quantity, cost, discountperitem, lastupdatedby, hsncode, batchno, priceperitem, cgst, sgst)
+            VALUES %L`,invoice_data_arr);
+
+        const invoice_item_insert_result = await userdbInstance.userdb.query(invoiceitem_insertion);
+
+
+        const Order_submition_status = await userdbInstance.userdb.query(`UPDATE order_management SET order_status=$1, transaction_id=$2,last_updated_by=$3 payment_status=$4 WHERE order_id=$4`,[1,transaction_id,last_updated_by,order_id,req.body.payment_status]);
+
+        await userdbInstance.userdb.query('COMMIT');
+        res.json({message:"updation successfully",status:true,invoice_id:invoiceid});
+
+        // second 
+
         
-
-        const Order_submition_status = await userdbInstance.userdb.query(`UPDATE order_management SET order_status=$1, transaction_id=$2,last_updated_by=$3 WHERE order_id=$4`,[1,transaction_id,last_updated_by,order_id]);
-        console.log("order management table updation");
-        console.log(typeof Order_submition_status.rowCount);
-        if (parseInt(Order_submition_status.rowCount)===1) {
-            
-            const sender_account_Details = await userdbInstance.userdb.query(`SELECT * FROM PUBLIC."user" WHERE userid=$1`,[sender_id]);
-            console.log(sender_account_Details.rows);
-            const currentDate = new Date(); 
-            const current_date = format(currentDate, 'yyyy-MM-dd');
-
-            // invoice table insertion
-        
-            await userdbInstance.userdb.query('BEGIN');
-
-
-            const InvoiceTableResult = await userdbInstance.userdb.query(
-                `INSERT INTO public.invoice(
-                    senderid, receiverid, invoicedate,discount, total, lastupdatedby, senderstatus, date, reciverstatus, transactionid)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING invoiceid;`, [sender_id,receiver_id , current_date,0,total_amount,last_updated_by,1,current_date,1,transaction_id]
-            );
-            
-            const invoiceid = InvoiceTableResult.rows[0].invoiceid;
-
-            const ReduceFromSenderTable = await userdbInstance.userdb.query(
-                `UPDATE products
-                SET quantity = quantity - $1
-                WHERE belongsto=$2 and productid = $3 and batchno = $4;`, [quantity,sender_id,product_id,batch_no]
-            );
-            
-            const invoiceitem_insertion = await userdbInstance.userdb.query(`INSERT INTO public.invoiceitem(
-                invoiceid, productid, quantity, cost, discountperitem, lastupdatedby, hsncode, batchno, priceperitem, cgst, sgst)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);`,[invoiceid , product_id , quantity , total_amount , 0 , last_updated_by , product_id , batch_no , product_price , cgst , sgst]);
-
-            
-            await userdbInstance.userdb.query('COMMIT');
-          
-            console.log(current_date);
-            console.log("Updated successfully");
-            res.json({message:"updation successfully",status:true,invoice_id:invoiceid});
-        }else{
-            res.status(7000).json({message:'DB error for Order management table updation issue if condition issue'});
-        }
     } catch (error) {
         console.log("db error for order management table updation issue");
         res.status(6000).json({message:'DB error for Order management table updation issue'});
     }
 }
 
+// order cancelling and 
+async function order_cancel_product(req,res){
+    try{
 
-module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword, updatereciverStatus, updatesenderStatus, productQuantity,update_user_profile ,Order_submition};
+        console.log(req.body.order_data);
+        console.log(req.body.order_item);
+        console.log(req.body.payment_status);
+
+        await userdbInstance.userdb.query('BEGIN');
+        const update_order_management  = await userdbInstance.userdb.query(`update order_management SET order_status=$1,payment_status=$2 WHERE order_id=$3`,[1,req.body.payment_status,req.body.order_data.order_id]);
+        await userdbInstance.userdb.query('COMMIT');
+        if (parseInt(update_order_management.rowCount)===1) {
+            console.log("order management updation success");
+          
+            await userdbInstance.userdb.query('BEGIN');
+            const update_values = req.body.order_item.map((item) => `(${Math.max(0, parseInt(item.product_quantity))}, '${item.hsncode}', '${req.body.order_data.receiverid}', '${item.batch_no}')`).join(', ');
+
+            console.log("updateion array");
+            console.log(update_values);
+            const updateQuery = `UPDATE products AS p
+                SET quantity = quantity + v.quantity_val
+                FROM (VALUES ${update_values}) AS v(quantity_val, product_id_val,distributorid,batch_no)
+                WHERE p.productid = v.product_id_val and p.belongsto = v.distributorid and p.batchno=v.batch_no; `;
+            console.log("bulk edit query")
+            console.log(updateQuery);
+
+            await userdbInstance.userdb.query(updateQuery);
+            await userdbInstance.userdb.query('COMMIT');
+            res.json({message:" Order Cancelling updation and product added  successfully",status:true});        
+        }
+
+      
+        
+    }catch(error){
+        console.log("order cancelling db error");
+        res.status(6000).json({message:'DB error for order management table updation issue'});
+    }
+}
+
+module.exports = { updateUserDataIndividual, updateProductDataIndividual, updateStatusToRemove, updateProducts, updateUserPassword, updatereciverStatus, updatesenderStatus, productQuantity,update_user_profile ,Order_submition,order_cancel_product};

@@ -6,8 +6,20 @@ import { API_URL } from '../config';
 import PDFInvoice from '../pages/common/PDFInvoice';
 import QrCode from '../components/QrCode';
 import MuiAlert from '@mui/material/Alert';
-
+import { ToWords } from 'to-words';
 import '../assets/style/Order_modal.css';
+
+ // amount comma seperator function
+
+ function formatAmountToIndianCurrency (amount){
+    var formattedAmount;
+    if(amount){
+        var formattedAmount = amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }else{
+        var formattedAmount = "";
+    }
+    return formattedAmount;
+}
 
 
 const TransactionHistory = () => {
@@ -20,7 +32,8 @@ const TransactionHistory = () => {
     const [submitted, setSubmitted] = useState(false);
     const [warning,setwarning] = useState(false);
     const [resAlert, setresAlert] = useState(null);
-
+    const [total_product_quantity,setTotalquantity] = useState('');
+    const [product_list,setproduct_list]= useState([]);
 
     const after_complete_close = useRef(null);
     const order_now_btn = useRef(null);
@@ -141,6 +154,7 @@ const TransactionHistory = () => {
     };
 
 
+
     // console.log(data);
 
     const formatDate = (timestamp) => {
@@ -182,10 +196,12 @@ const TransactionHistory = () => {
         positionid:'',
         sender_id:'',
         payment_method:'',
+        cgst_amount:'',
+        sgst_amount:'',
     });
 
     const field_names = [
-        {label:"Product Price",fieldname:"product_price"},
+        
         {label:"CGST",fieldname:"cgst"},
         {label:"SGST",fieldname:"sgst"},
         {label:"Grant Total",fieldname:"total_price_amount"},
@@ -200,7 +216,15 @@ const TransactionHistory = () => {
     // fetch products data in customer view thw page 
     // its temporary hide
     const fetch_drp_data = async() =>{
-        const product_Data = await axios.post(`${API_URL}getproduct_data`,{admin_id:userInfo.adminid});
+        const product_Data = await axios.post(`${API_URL}getproduct_data`,{admin_id:userInfo.adminid,hsncode:'220190'});
+        console.log("part data in server ");
+        console.log(product_Data.data.data);
+        let total_quantity = 0;
+        product_Data.data.data.map((item,index)=>{
+            total_quantity = total_quantity + item.quantity;
+        });
+        setTotalquantity(total_quantity);
+        console.log("total quantity is :\t"+total_quantity);
         set_drp_pname(product_Data.data.data);
     }
  
@@ -243,21 +267,63 @@ const TransactionHistory = () => {
     // onchange in quantity input
     const calculate_total = async (quantity)=>{
         // console.log("total quantity:\t"+quantity);
-        let total_amount = drp_val.product_price*quantity;
-        let cgst = calculate_gst(total_amount,drp_val.cgst);
-        let sgst = calculate_gst(total_amount,drp_val.sgst);
-        let total_price_amount = parseInt(total_amount)+parseInt(cgst)+parseInt(sgst);
+        let total_amount = 0;
+       
+       
         let date = new Date().toISOString().split('T')[0];
         // console.log("total quantity:\t"+cgst);
+      
+        var customer_need = quantity;
+        const myarr = [];
+      
+
+        drp_pname.map((item,index)=>{
+            console.log(item.quantity);
+            customer_need = customer_need - item.quantity;
+            console.log(customer_need);
+            if (customer_need>0) {
+                let buying_quantity = customer_need+item.quantity;
+                let demo = {'product_id':item.productid,'batch_no':item.batchno,'product_price':item.priceperitem,'quantity':item.quantity,'index':index,'remaining':(item.quantity - buying_quantity),'cgst':item.cgst,'sgst':item.sgst};   
+                total_amount = total_amount +(parseFloat(item.priceperitem)*parseFloat(item.quantity));
+                myarr.push(demo);
+                
+            }else if(customer_need<=0){
+                let buying_quantity = customer_need+item.quantity;
+                if(buying_quantity>0){
+                    let demo = {'product_id':item.productid,'batch_no':item.batchno,'product_price':item.priceperitem,'quantity':buying_quantity,'index':index,'remaining':(item.quantity - buying_quantity),'cgst':item.cgst,'sgst':item.sgst};
+                    customer_need = 0;
+                    total_amount = total_amount +(parseFloat(item.priceperitem)*parseFloat(buying_quantity))
+                    myarr.push(demo);
+                    return;
+                }
+                
+            }
+            // else if(customer_need<=0){
+            //     let buying_quantity = customer_need+item.quantity;
+            //     let demo = {'product_id':item.productid,'batch_no':item.batchno,'product_price':item.priceperitem,'quantity':buying_quantity,'index':index,'remaining':(item.quantity - buying_quantity)};
+            //     customer_need = 0;
+            //     myarr.push(demo);
+            //     return;
+            // }
+        });
+        var cgst_total_price = calculate_gst(parseFloat(total_amount),drp_pname[0].cgst);
+        var sgst_total_price = calculate_gst(parseFloat(total_amount),parseFloat(drp_pname[0].sgst));
+        total_amount = total_amount + cgst_total_price + sgst_total_price;
         setdrp_val((prevValues)=>({
             ...prevValues,
             no_of_product:quantity,
-            total_price_amount:total_price_amount,
+            total_price_amount:total_amount,
             invoice_date:date,
             receiverid:userInfo.adminid,
             positionid:userInfo.positionid,
             sender_id:userInfo.userid,
+            cgst_amount:cgst_total_price,
+            sgst_amount:sgst_total_price,
         }));
+
+        console.log("after calculation of products");
+        console.log(myarr);
+        setproduct_list(myarr);
 
     }
 
@@ -289,8 +355,23 @@ const TransactionHistory = () => {
             setSubmitted(true);
             setwarning(true);
         }
+        else if(parseInt(drp_val.no_of_product)>parseInt(total_product_quantity)){
+            setresAlert("Lesser than quantity is \t"+total_product_quantity);
+            setSubmitted(true);
+            setwarning(true);
+            alert("Your Product Quantity is more than "+total_product_quantity);
+        }
+        else if(parseInt(drp_val.no_of_product)<0){
+            setresAlert("The product quantity is lesser then zero");
+            setSubmitted(true);
+            setwarning(true);
+            alert("Your Product Quantity is lesser then zero ");
+        }
         else{
-            const response = await axios.post(`${API_URL}Customer/order`,{order_data:drp_val});
+            console.log("order data submission");
+            console.log(drp_val);
+            console.log(product_list);
+            const response = await axios.post(`${API_URL}Customer/order`,{order_data:drp_val,order_item:product_list});
             setresAlert(response.data.message);
             setSubmitted(true);
             setwarning(false);
@@ -316,6 +397,7 @@ const TransactionHistory = () => {
      
                      }));      
                  }
+                // setproduct_list({});
                 setdrp_val({});
                 alert('Customer order submition successfully.....');
             }
@@ -352,11 +434,19 @@ const TransactionHistory = () => {
             positionid:'',
             sender_id:'',
             payment_method:'',
+            cgst_amount:'',
+            sgst_amount:'',
         }));
+
+        setproduct_list({});
+        console.log("product list is");
+        console.log(product_list);
         set_checkbox(false);
+        fetch_drp_data();
         order_now_btn.current.click();        
     }
    
+
    
 
     return (
@@ -513,21 +603,48 @@ const TransactionHistory = () => {
                             <div style={{display:qr_data.display_qr==='inline'?'none':'inline'}}>
                                 <div className="row" >
                                     <div className="col-lg-12 col-md-12 col-sm-12 mb-4">
-                                       
                                         <div className="d-flex justify-content-start align-items-center">
                                             <input type="checkbox" name="" className='' id="pname_checkbox" checked={checkbox_val}  data-custom-attribute="220190"  style={{marginRight:'1rem'}}   onClick={(e)=>handlechange_value(e)}/> <span>TERiON iON SOLUTION REFILL </span>
                                         </div>
                                     </div>
-                                  
                                 </div>
-
-                                <div className="row " >
+                                <div className="row mb-2">
+                                    <div className="col-lg-6 col-md-12 col-sm-12 d-flex flex-column">
+                                        <span>Availble Quantity</span>
+                                        <span>{total_product_quantity}</span>
+                                    </div>
                                     <div className="col-lg-6 col-md-12 col-sm-6 mb-4">
                                         <TextField id="outlined-basic" label="Quantity" name='quantity' variant="outlined" value={drp_val.no_of_product} onChange={(e)=>calculate_total(e.target.value)} fullWidth/>
                                     </div>
+                                </div>
+                                
+                                <div className="row" >
+                                    <div className="d-flex justify-content-start flex-row">
+                                        <div className='d-flex flex-column align-items-center justify-content-start w-25 border-1 border border-gray'>Batch Number</div>
+                                        <div className='d-flex flex-column align-items-center justify-content-start w-25 border-1 border border-gray'>Quantity</div>
+                                        <div className='d-flex flex-column align-items-center justify-content-start w-25 border-1 border border-gray'>Rate</div>
+                                        <div className='d-flex flex-column align-items-center justify-content-start w-25 border-1 border border-gray'>Total Amount</div>
+                                    </div>
+                                    
+                                 
+                                    {product_list.length>0 && product_list.map((item,index)=>(
+                                        (item.quantity>0 && (
+                                            <div className="d-flex flex-row justify-content-start">
+                                            <div className="d-flex flex-column align-items-center justify-content-start w-25 border border-1 border-bottom border-gray">{item.batch_no}</div>
+                                            <div className="d-flex flex-column align-items-center justify-content-start w-25 border-1 border-bottom border border-gray">{item.quantity}</div>
+                                            <div className="d-flex flex-column align-items-center justify-content-start w-25 border-1 border-bottom border border-gray">{formatAmountToIndianCurrency(parseFloat(item.product_price))}</div>
+                                            <div className='d-flex flex-column align-items-center justify-content-start w-25 border-1 border-bottom border border-gray'>{formatAmountToIndianCurrency(parseInt(item.quantity)*parseFloat(item.product_price))}</div> 
+                                            </div>
+                                        ))
+                                       
+                                    ))}
+                                    
+                                </div>
+
+                                <div className="row mt-4" >
                                     {field_names.map((item,index)=>(
                                         <div className="col-lg-6 col-md-6 col-sm-12 d-flex flex-row mb-4">
-                                            <span>{item.label} : <span>{item.fieldname==="cgst" || item.fieldname==="sgst"? (drp_val[item.fieldname]===''? '0%':drp_val[item.fieldname]+' %'):(drp_val[item.fieldname])}</span></span>
+                                            <span>{item.label} : <span>{item.fieldname==="cgst" || item.fieldname==="sgst"? (drp_val[item.fieldname]===''? '0%':drp_val[item.fieldname]+' %'):item.fieldname==="total_price_amount"? (formatAmountToIndianCurrency(drp_val[item.fieldname])):(drp_val[item.fieldname])}</span></span>
                                         </div>
                                     ))}
                                     <div className="col-lg-6 col-md-12 col-sm-12 mb-4 d-flex flex-row">

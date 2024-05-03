@@ -343,7 +343,7 @@ async function getInvoiceData(req,res){
 // get product data 
 async function getproduct_data(req,res){
     try{
-        const product_data = await userdbInstance.userdb.query(`SELECT * FROM products where status='1' and belongsto=$1`,[req.body.admin_id]);
+        const product_data = await userdbInstance.userdb.query(`SELECT * FROM products where status='1' and belongsto=$1 and productid=$2 ORDER BY rno ASC`,[req.body.admin_id,req.body.hsncode]);
         res.json({message:"success",data:product_data.rows});
     }
     catch(error){
@@ -355,7 +355,7 @@ async function getproduct_data(req,res){
 // get order management module data 
 async function getOrder_Management_Data(req,res){
     try {
-        const order_data = await userdbInstance.userdb.query(`SELECT order_management.*,public."user".fname,public."user".lname,products.productname FROM order_management JOIN public."user" ON public."user".userid=order_management.receiverid JOIN products ON products.productid=order_management.product_id WHERE order_management.receiverid=$1 and products.belongsto=$2 and  order_management.order_status='0' `,[req.body.userid,req.body.userid]);
+        const order_data = await userdbInstance.userdb.query(`SELECT om.*,(select fname||' '||lname from public."user" where public."user".userid=om.receiverid) as fullname , (select productname from products where productid=om.hsncode and batchno=$1 and belongsto=om.receiverid )as productname FROM public.order_management as om where om.order_status=$2 and om.receiverid=$3`,[1,0,req.body.userid]);
         res.json({
             message:"Success",
             data:order_data.rows,
@@ -368,18 +368,35 @@ async function getOrder_Management_Data(req,res){
 
 
 // get particular product count
-async function getparticular_product(product_id,batch_no,userid){
+async function getparticular_product(product_id,userid){
   
     try {
-        console.log(product_id+" " +batch_no+" "+userid);
-        const product_count = await userdbInstance.userdb.query(`SELECT quantity FROM products WHERE productid=$1 AND belongsto=$2 AND batchno=$3`,[product_id,userid,batch_no]);
+        console.log(product_id+" "+userid);
+        const product_count = await userdbInstance.userdb.query(`SELECT quantity FROM products WHERE productid=$1 AND belongsto=$2 AND status=$3`,[product_id,userid,1]);
         console.log("db data");
         console.log(product_count.rows);
-        return product_count.rows[0].quantity;
+        
+        
+        return product_count.rows;
     } catch (error) {
         return "error";
     }
 }
 
 
-module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData,getSignExistance,getDistrictData,getInvoiceData,getproduct_data,getOrder_Management_Data,getparticular_product};
+// get order item data getting function
+async function getOrder_Item(req,res){
+    try {
+        const order_item = await userdbInstance.userdb.query(`SELECT * FROM order_item where order_id=$1`,[req.body.order_id]);
+        res.json({
+            message:'Success',
+            data:order_item.rows,
+        });
+    } catch (error) {
+        res.status(5000).json({message:"Internal server error in order item data getting error"});
+    }
+}
+
+
+
+module.exports = { getUserData, getprofileInfo, getProducts, getTransactionHistory, getProductList, getUserList, getUserDataIndividual, getProductDataIndividual, SenderDataInvoiceAddress, GetSignature, ReciverDataInvoiceAddress, getStateData,getSignExistance,getDistrictData,getInvoiceData,getproduct_data,getOrder_Management_Data,getparticular_product,getOrder_Item};
