@@ -535,9 +535,6 @@ app.post('/getOrderData',async(req,res)=>{
 // order submition in order managment module
 app.post('/Order_submition',async(req,res)=>{
     console.log("server data ");
-    // console.log(req.body.order_data);
-    // console.log(req.body.order_item);
-    // console.log(req.body.payment_status);
     if((req.body.payment_status==='payment_failure') && (req.body.order_data.transaction_id===null || req.body.order_data.transaction_id==='')){
         console.log("only for ordermanagement table");
         const product_order_submit = await updateData.order_cancel_product(req,res);
@@ -545,23 +542,7 @@ app.post('/Order_submition',async(req,res)=>{
         console.log("invoice table and order management table insertion");
         const product_order_submit = await updateData.Order_submition(req,res);
     }
-    /*
-    const actual_product_count = await getData.getparticular_product(req.body.order_data.hsncode,req.body.order_data.receiverid);
-    console.log("acctual product count is");
-    console.log(actual_product_count);
-    console.log(actual_product_count.length);
-    var product_total = 0;
-    actual_product_count.map((item,index)=>{
-        product_total = parseInt(product_total) + parseInt(item.quantity);
-    });
-    console.log("total product is:\t"+product_total);
-    // in order item is 1600 < then the db available total products is 1700
-    if (parseInt(req.body.order_data.quantity)<parseInt(product_total)) {
-        const output_res = await updateData.Order_submition(req,res);
-    }else{
-        res.status(6000).send("Kindly check Availability of the products...");
-    }
-    */
+    
 });
 
 // order management if i click pencil button it get order item data

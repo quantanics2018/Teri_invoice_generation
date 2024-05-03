@@ -74,6 +74,10 @@ const Order_Management = (positionid) =>{
         });
     };
     const select_order = async(order_id)=>{
+        set_selected(prevValues => ({
+            ...prevValues,
+            transaction_id: ''
+        }));
         console.log("product list");
         console.log(getorder_data);
         setchild_data([]);
@@ -87,7 +91,11 @@ const Order_Management = (positionid) =>{
                 set_selected(getorder_data[index]);
             }
         });
+
         
+        setpayment_mode('');
+        console.log("selected id is");
+        console.log(selected_id.transaction_id);
     }
 
     // submit order function 
@@ -221,7 +229,7 @@ return(
                             </div>
                             <div className="col-lg-6 col-md-12 col-sm-12 mt-4">
 
-                                <TextField variant="outlined" label="Transaction ID" type="text" onChange={(e)=>set_selected((prevValues)=>({
+                                <TextField variant="outlined" label="Transaction ID" type="text" value={selected_id.transaction_id}  onChange={(e)=>set_selected((prevValues)=>({
                                     ...prevValues,
                                     transaction_id:e.target.value,
                                     last_updated_by:userInfo.userid,

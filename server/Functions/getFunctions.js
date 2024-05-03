@@ -343,7 +343,7 @@ async function getInvoiceData(req,res){
 // get product data 
 async function getproduct_data(req,res){
     try{
-        const product_data = await userdbInstance.userdb.query(`SELECT * FROM products where status='1' and belongsto=$1 and productid=$2 ORDER BY rno ASC`,[req.body.admin_id,req.body.hsncode]);
+        const product_data = await userdbInstance.userdb.query(`SELECT * FROM products where status='1' and belongsto=$1 and productid=$2 and quantity>0 ORDER BY rno ASC`,[req.body.admin_id,req.body.hsncode]);
         res.json({message:"success",data:product_data.rows});
     }
     catch(error){

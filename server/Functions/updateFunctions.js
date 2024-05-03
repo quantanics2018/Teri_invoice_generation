@@ -422,11 +422,11 @@ async function Order_submition(req,res){
         const invoiceitem_insertion = format_query(`INSERT INTO public.invoiceitem(
             invoiceid, productid, quantity, cost, discountperitem, lastupdatedby, hsncode, batchno, priceperitem, cgst, sgst)
             VALUES %L`,invoice_data_arr);
-
+            
         const invoice_item_insert_result = await userdbInstance.userdb.query(invoiceitem_insertion);
+            console.log("invoice item insertion okay")
 
-
-        const Order_submition_status = await userdbInstance.userdb.query(`UPDATE order_management SET order_status=$1, transaction_id=$2,last_updated_by=$3 payment_status=$4 WHERE order_id=$4`,[1,transaction_id,last_updated_by,order_id,req.body.payment_status]);
+        const Order_submition_status = await userdbInstance.userdb.query(`UPDATE order_management SET order_status=$1, transaction_id=$2, last_updated_by=$3, payment_status=$4 WHERE order_id=$5`,[1,transaction_id,last_updated_by,req.body.payment_status,order_id]);
 
         await userdbInstance.userdb.query('COMMIT');
         res.json({message:"updation successfully",status:true,invoice_id:invoiceid});
@@ -435,6 +435,7 @@ async function Order_submition(req,res){
 
         
     } catch (error) {
+        await userdbInstance.userdb.query('ROLLBACK');
         console.log("db error for order management table updation issue");
         res.status(6000).json({message:'DB error for Order management table updation issue'});
     }
@@ -449,7 +450,7 @@ async function order_cancel_product(req,res){
         console.log(req.body.payment_status);
 
         await userdbInstance.userdb.query('BEGIN');
-        const update_order_management  = await userdbInstance.userdb.query(`update order_management SET order_status=$1,payment_status=$2 WHERE order_id=$3`,[1,req.body.payment_status,req.body.order_data.order_id]);
+        const update_order_management  = await userdbInstance.userdb.query(`update order_management SET order_status=$1,payment_status=$2,last_updated_by=$3 WHERE order_id=$4`,[1,req.body.payment_status,req.body.order_data.last_updated_by,req.body.order_data.order_id]);
         await userdbInstance.userdb.query('COMMIT');
         if (parseInt(update_order_management.rowCount)===1) {
             console.log("order management updation success");

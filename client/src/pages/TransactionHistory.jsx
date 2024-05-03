@@ -225,6 +225,7 @@ const TransactionHistory = () => {
         });
         setTotalquantity(total_quantity);
         console.log("total quantity is :\t"+total_quantity);
+        console.log(product_Data.data.data);
         set_drp_pname(product_Data.data.data);
     }
  
@@ -278,9 +279,9 @@ const TransactionHistory = () => {
       
 
         drp_pname.map((item,index)=>{
-            console.log(item.quantity);
+            console.log("loop quantity"+item.quantity);
             customer_need = customer_need - item.quantity;
-            console.log(customer_need);
+            console.log("customer need"+customer_need);
             if (customer_need>0) {
                 let buying_quantity = customer_need+item.quantity;
                 let demo = {'product_id':item.productid,'batch_no':item.batchno,'product_price':item.priceperitem,'quantity':item.quantity,'index':index,'remaining':(item.quantity - buying_quantity),'cgst':item.cgst,'sgst':item.sgst};   
@@ -289,6 +290,7 @@ const TransactionHistory = () => {
                 
             }else if(customer_need<=0){
                 let buying_quantity = customer_need+item.quantity;
+                console.log("customer need is:\t"+customer_need+"\t product quantity is:\t"+item.quantity);
                 if(buying_quantity>0){
                     let demo = {'product_id':item.productid,'batch_no':item.batchno,'product_price':item.priceperitem,'quantity':buying_quantity,'index':index,'remaining':(item.quantity - buying_quantity),'cgst':item.cgst,'sgst':item.sgst};
                     customer_need = 0;
@@ -371,6 +373,7 @@ const TransactionHistory = () => {
             console.log("order data submission");
             console.log(drp_val);
             console.log(product_list);
+
             const response = await axios.post(`${API_URL}Customer/order`,{order_data:drp_val,order_item:product_list});
             setresAlert(response.data.message);
             setSubmitted(true);
@@ -401,6 +404,7 @@ const TransactionHistory = () => {
                 setdrp_val({});
                 alert('Customer order submition successfully.....');
             }
+          
         }
        
     }
