@@ -135,29 +135,33 @@ const PDFInvoice = ({
     const[sgst_total,setsgst] = useState(0);
     const[total_amount,setTotalamount] = useState(0);
     useEffect(() => {
-        let totalcgst = 0;
-        let totalsgst = 0;
-        let total_amount = 0;
-        invoice_data['invoice_data'].map((item,index)=>{
-            let tmp = (item.cost * item.cgst)/100;
-            let tmp1 = (item.cost * item.sgst)/100;
-            total_amount = total_amount+parseFloat(item.cost);
-            
-            totalcgst =totalcgst+tmp; 
-            totalsgst = totalsgst+tmp1;
 
-        });
-        setcgst(totalcgst);
-        setsgst(totalsgst);
-        let value = String(parseFloat(parseFloat(total_amount) + parseFloat(totalcgst) + parseFloat(totalsgst)).toFixed(2)).split('.');
-        let roundoff = 0;
-        if (parseInt(value[1])<50) {
-            roundoff = '-0.'+value[1];
-        }else{
-            roundoff = '0.'+parseInt(100-parseInt(value[1]));
+        const calculate_gst_total_Amount = ()=>{
+            let totalcgst = 0;
+            let totalsgst = 0;
+            let total_amount = 0;
+            invoice_data['invoice_data'].map((item,index)=>{
+                let tmp = (item.cost * item.cgst)/100;
+                let tmp1 = (item.cost * item.sgst)/100;
+                total_amount = total_amount+parseFloat(item.cost);
+                
+                totalcgst =totalcgst+tmp; 
+                totalsgst = totalsgst+tmp1;
+    
+            });
+            setcgst(totalcgst);
+            setsgst(totalsgst);
+            let value = String(parseFloat(parseFloat(total_amount) + parseFloat(totalcgst) + parseFloat(totalsgst)).toFixed(2)).split('.');
+            let roundoff = 0;
+            if (parseInt(value[1])<50) {
+                roundoff = '-0.'+value[1];
+            }else{
+                roundoff = '0.'+parseInt(100-parseInt(value[1]));
+            }
+            console.log("total amount is :\t"+roundoff);
+            setTotalamount(roundoff);
         }
-        console.log("total amount is :\t"+roundoff);
-        setTotalamount(roundoff);
+       
 
 
         const statusApiAction = async () => {
@@ -169,9 +173,9 @@ const PDFInvoice = ({
                 console.error('Error fetching signature:', error);
             }
         };
-
+        calculate_gst_total_Amount();
         statusApiAction();
-    },[signSrc]);
+    },[invoice_data]);
 
     const invoiceRef = useRef(null);
     // generate pdf function
@@ -209,7 +213,7 @@ const PDFInvoice = ({
                 </div>
                 <br />
 
-                <div className="billDetial" style={{ ...billDetial, ...dfc }}>
+                <div className="billDetial" style={{ ...billDetial, ...dfc ,borderBottom:'0px'}}>
                     <div className="addressDetials" style={addressDetials}>
                         <div className="shipTo1" style={billTo}>
                             <div className="invoiceDetial1"
@@ -256,7 +260,7 @@ const PDFInvoice = ({
                                     Date : {invoice_data['invoice_data'][0].date}
                                 </div>
                             </div>
-                            <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df }}>
+                            <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...df,borderBottom:'0px' }}>
                                 <div className="row1Invoice" style={{ ...row1Invoice, ...width50, ...padInPx, ...df, ...gap1 }}>
                                     <div className="termofdelivery">
                                         Delivery Note
@@ -341,7 +345,7 @@ const PDFInvoice = ({
                                     <input type='text' style={rawInput} />
                                 </div>
                             </div>
-                            <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...dfc, ...gap1 }}>
+                            <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...dfc, ...gap1 ,borderBottom:'0px'}}>
                                 <div className="tandc">Terms of Delivery</div>
                                 <div className="tandc"><textarea style={textarea}></textarea></div>
                             </div>
@@ -351,20 +355,20 @@ const PDFInvoice = ({
                 <div className="bodydiv">
                     <div style={containerStyle}>
                         <div style={rowStyle}>
-                            <div className='invoice_table_header' style={{ width: '6%', padding: '3px' }}>S.No.</div>
-                            <div className='invoice_table_header' style={{ width: '34%' }}>Description of Goods</div>
-                            <div className='invoice_table_header' style={{ width: '13%' }}>HSN NO</div>
-                            <div className='invoice_table_header' style={{ width: '10%' }}>Quantity</div>
-                            <div className='invoice_table_header' style={{ width: '10%' }}>Rate</div>
-                            <div className='invoice_table_header' style={{ width: '7%' }}>per</div>
-                            <div className='invoice_table_header' style={{ width: '7%' }}>Disc. %</div>
+                            <div className='invoice_table_header' style={{ width: '6%', padding: '3px' ,borderRight:'0px'}}>S.No.</div>
+                            <div className='invoice_table_header' style={{ width: '34%' ,borderRight:'0px'}}>Description of Goods</div>
+                            <div className='invoice_table_header' style={{ width: '13%' ,borderRight:'0px'}}>HSN NO</div>
+                            <div className='invoice_table_header' style={{ width: '10%' ,borderRight:'0px'}}>Quantity</div>
+                            <div className='invoice_table_header' style={{ width: '10%' ,borderRight:'0px'}}>Rate</div>
+                            <div className='invoice_table_header' style={{ width: '7%' ,borderRight:'0px'}}>per</div>
+                            <div className='invoice_table_header' style={{ width: '7%' ,borderRight:'0px'}}>Disc. %</div>
                             <div className='invoice_table_header' style={{ width: '13%' }}>Amount</div>
                         </div>
                         {invoice_data['invoice_data'].map((item, index) =>
                             
                             <div style={rowStyle}>
-                                <div className='invoice_table_header' style={{ width: '6%', padding: '3px' }}>{(index <= invoice_data['invoice_data'].length - 1) && index + 1}</div>
-                                <div className='invoice_table_header' style={{ width: '34%' }}>
+                                <div className='invoice_table_header' style={{ width: '6%', padding: '3px' ,borderRight:'0px'}}>{(index <= invoice_data['invoice_data'].length - 1) && index + 1}</div>
+                                <div className='invoice_table_header' style={{ width: '34%' ,borderRight:'0px'}}>
                                     {item.productname || ''}
                                     {console.log("index is :\t"+index)}
                                     {console.log("the lenght is:\t"+(parseInt(index+1)===(invoice_data['invoice_data'].length)))}
@@ -387,8 +391,8 @@ const PDFInvoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{ width: '13%' }}>{item.productid}</div>
-                                <div className='invoice_table_header' style={{ width: '10%' }}>
+                                <div className='invoice_table_header' style={{ width: '13%',borderRight:'0px' }}>{item.productid}</div>
+                                <div className='invoice_table_header' style={{ width: '10%',borderRight:'0px' }}>
                                     {item.quantity || ''}
                                     {index === invoice_data['invoice_data'].length + 1 &&
                                         <div>
@@ -396,9 +400,9 @@ const PDFInvoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{ width: '10%' }}>{formatAmountToIndianCurrency(item.priceperitem)}</div>
-                                <div className='invoice_table_header' style={{ width: '7%' }}>{(index <= invoice_data['invoice_data'].length - 1) && ' '}</div>
-                                <div className='invoice_table_header' style={{ width: '7%' }}>{item.discountperitem}</div>
+                                <div className='invoice_table_header' style={{ width: '10%',borderRight:'0px' }}>{formatAmountToIndianCurrency(item.priceperitem)}</div>
+                                <div className='invoice_table_header' style={{ width: '7%',borderRight:'0px' }}>{(index <= invoice_data['invoice_data'].length - 1) && ' '}</div>
+                                <div className='invoice_table_header' style={{ width: '7%',borderRight:'0px' }}>{item.discountperitem}</div>
                                 <div className='invoice_table_header' style={{ width: '13%' }}>
                                     {((index !== invoice_data['invoice_data'].length + 1) && index !== invoice_data['invoice_data'].length) && (
                                        formatAmountToIndianCurrency(parseFloat(item.cost).toFixed(2))
@@ -419,7 +423,8 @@ const PDFInvoice = ({
                                     }
                                     {parseInt(index+1) === invoice_data['invoice_data'].length &&
                                         <div>
-                                            <b>{formatAmountToIndianCurrency(Math.round(parseFloat(item.cost)+parseFloat(cgst_total)+parseFloat(sgst_total)))}</b>
+                                            {console.log("item total cost "+item.cost+" then next cgst total is :\t"+cgst_total+" then sgst total is :\t"+sgst_total+"is:\t"+Math.round(parseFloat(item.cost)+parseFloat(cgst_total)+parseFloat(sgst_total)))}
+                                            <b>{formatAmountToIndianCurrency(Math.round(parseFloat(item.total)))}</b>
                                         </div>
                                     }
                                 </div>
@@ -456,10 +461,10 @@ const PDFInvoice = ({
                         </div>
                         {invoice_data['invoice_data'].map((item, index) =>
                             <div style={{ ...rowStyle}} >
-                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: parseInt(index) !=1? 'none' : '1px solid black',paddingTop: '8px' ,padding:'3px'}}>
+                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: parseInt(index) !=1? 'none' : '1px solid black',paddingTop:'7px',paddingLeft:'0px',paddingRight:'0px',flex:'1 1 1%'}}>
                                     {item.productid}
                                     {parseInt(index+1) === invoice_data['invoice_data'].length &&
-                                        <div style={{borderTop:'1px solid black'}}>
+                                        <div style={{borderTop:'1px solid black',borderBottom:'1px solid black'}}>
                                             <b >Total</b>
                                         </div>
                                     }
@@ -467,12 +472,12 @@ const PDFInvoice = ({
                                 <div style={{ ...cellStyle, borderRight: 'none', borderBottom: parseInt(index) != 1? 'none' : '1px solid black' ,paddingTop:'7px'}}>
                                     {formatAmountToIndianCurrency(parseInt(item.cost))}
                                     {parseInt(index+1) === invoice_data['invoice_data'].length &&
-                                        <div style={{borderTop:'1px solid black'}}>
+                                        <div style={{borderTop:'1px solid black',borderBottom:'1px solid black'}}>
                                             <b>{formatAmountToIndianCurrency(item.cost)}</b>
                                         </div>
                                     }
                                 </div>
-                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: parseInt(index) !=1? 'none' : '1px solid black' ,borderTop:'none' }}>
+                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: parseInt(index) !=1? 'none' : '1px solid black' ,borderTop:'none',paddingTop:'1px' }}>
                                     {parseInt(index) !== invoice_data['invoice_data'].length &&
                                         <div className="subGst" style={{ ...subGst, ...df }}>
                                             <div className="cgstRate" style={{ ...cgstRate, height: '30px', ...df, justifyContent: 'center', alignItems: 'center' }}>
@@ -482,12 +487,12 @@ const PDFInvoice = ({
                                         </div>
                                     }
                                     {parseInt(index+1) === invoice_data['invoice_data'].length &&
-                                        <div style={{borderTop:'1px solid black'}}>
-                                            <b>{formatAmountToIndianCurrency(item.cost)}</b>
+                                        <div style={{borderTop:'1px solid black',borderBottom:'1px solid black'}}>
+                                            <b>{formatAmountToIndianCurrency(parseFloat(cgst_total).toFixed(2))}</b>
                                         </div>
                                     }
                                 </div>
-                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: parseInt(index) != 1? 'none' : '1px solid black' ,borderTop:'none'}}>
+                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: parseInt(index) != 1? 'none' : '1px solid black' ,borderTop:'none',paddingTop:'1px'}}>
                                     {index !== invoice_data['invoice_data'].length &&
                                         <div className="subGst" style={{ ...subGst, ...df }}>
                                             <div className="cgstRate" style={{ ...cgstRate, height: '30px', ...df, justifyContent: 'center', alignItems: 'center' }}>
@@ -499,15 +504,15 @@ const PDFInvoice = ({
                                         </div>
                                     }
                                     {parseInt(index+1) === invoice_data['invoice_data'].length &&
-                                        <div style={{borderTop:'1px solid black'}}>
-                                            <b>{formatAmountToIndianCurrency(item.cost)}</b>
+                                        <div style={{borderTop:'1px solid black',borderBottom:'1px solid black'}}>
+                                            <b>{formatAmountToIndianCurrency(parseFloat(sgst_total).toFixed(2))}</b>
                                         </div>
                                     }
                                 </div>
                                 <div style={{ ...cellStyle, borderBottom: parseInt(index) !=1? 'none' : '1px solid black',paddingTop:'7px'}}>
                                     {formatAmountToIndianCurrency(parseFloat(cgst_total+sgst_total).toFixed(2))}
                                     {parseInt(index+1) === invoice_data['invoice_data'].length &&
-                                        <div style={{borderTop:parseInt(index)!=1?'none':'1px solid black'}}>
+                                        <div style={{borderTop:'1px solid black',borderBottom:'1px solid black'}}>
                                             <b>{formatAmountToIndianCurrency(Math.round(parseFloat((cgst_total) + (sgst_total)).toFixed(2)))}</b>
                                         </div>
                                     }
