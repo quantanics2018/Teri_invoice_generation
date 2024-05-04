@@ -1004,7 +1004,7 @@ const Invoice = ({
                                     {index === previewInvoiceprop.length &&
                                         <div>
                                             {/* <b>{(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))))}</b> */}
-                                            <b>{formatAmountToIndianCurrency(Math.round(formatTotal((TotalcgstValue()) + (TotalsgstValue()))))}</b>
+                                            <b>{formatAmountToIndianCurrency(formatTotal((TotalcgstValue()) + (TotalsgstValue())))}</b>
                                         </div>}
 
                                 </div>
