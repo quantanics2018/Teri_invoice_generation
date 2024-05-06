@@ -625,7 +625,7 @@ const Invoice = ({
                 <br />
 
                 <div className="billDetial" style={{ ...billDetial, ...dfc }}>
-                    <div className="addressDetials" style={addressDetials}>
+                    <div className="addressDetials" style={{ ...addressDetials, borderBottom:'none'}}>
                         <div className="shipTo1" style={billTo}>
                             <div className="invoiceDetial1"
                                 style={{ ...invoiceDetial, ...padInPx }}
@@ -774,7 +774,7 @@ const Invoice = ({
                                     <input type='text' style={rawInput} />
                                 </div>
                             </div>
-                            <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...dfc, ...gap1 }}>
+                            <div className="rowInvoiceDetail" style={{ ...rowInvoiceDetail, ...dfc, ...gap1,borderBottom:'none' }}>
                                 <div className="tandc">Terms of Delivery</div>
                                 <div className="tandc"><textarea style={textarea}></textarea></div>
                             </div>
@@ -786,20 +786,20 @@ const Invoice = ({
                         {/* Table heading row */}
                         <div style={rowStyle}>
                             {/* <div className='invoice_table_header' style={{ width: '6%', }}>S.No.</div> */}
-                            <div className='invoice_table_header' style={{ width: '6%', padding: '3px' }}>S.No.</div>
-                            <div className='invoice_table_header' style={{ width: '34%' }}>Description of Goods</div>
-                            <div className='invoice_table_header' style={{ width: '13%' }}>HSN NO</div>
-                            <div className='invoice_table_header' style={{ width: '10%' }}>Quantity</div>
-                            <div className='invoice_table_header' style={{ width: '10%' }}>Rate</div>
-                            <div className='invoice_table_header' style={{ width: '10%' }}>per</div>
-                            <div className='invoice_table_header' style={{ width: '7%' }}>Disc. %</div>
-                            <div className='invoice_table_header' style={{ width: '10%' }}>Amount</div>
+                            <div className='invoice_table_header' style={{ width: '6%', padding: '3px' ,borderRight:'none'}}>S.No.</div>
+                            <div className='invoice_table_header' style={{ width: '34%' ,borderRight:'none' }}>Description of Goods</div>
+                            <div className='invoice_table_header' style={{ width: '13%' ,borderRight:'none' }}>HSN NO</div>
+                            <div className='invoice_table_header' style={{ width: '10%' ,borderRight:'none' }}>Quantity</div>
+                            <div className='invoice_table_header' style={{ width: '10%' ,borderRight:'none' }}>Rate</div>
+                            <div className='invoice_table_header' style={{ width: '7%'  ,borderRight:'none'}}>per</div>
+                            <div className='invoice_table_header' style={{ width: '7%' ,borderRight:'none'}}>Disc. %</div>
+                            <div className='invoice_table_header' style={{ width: '13%' }}>Amount</div>
                         </div>
                         {/* Table data  */}
                         {[...previewInvoiceprop, {}, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div className='invoice_table_header' style={{ width: '6%', padding: '3px' }}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
-                                <div className='invoice_table_header' style={{ width: '34%' }}>
+                                <div className='invoice_table_header' style={{ width: '6%', padding: '3px',borderRight:'none' }}>{(index <= previewInvoiceprop.length - 1) && index + 1}</div>
+                                <div className='invoice_table_header' style={{ width: '34%' ,borderRight:'none' }}>
                                     {item.productName || ''}
                                     {index === previewInvoiceprop.length &&
                                         <div style={totalgstname}>
@@ -826,9 +826,9 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{ width: '13%' }}>{item.hsncode || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '13%',borderRight:'none' }}>{item.hsncode || ''}</div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div className='invoice_table_header' style={{ width: '10%' }}>
+                                <div className='invoice_table_header' style={{ width: '10%',borderRight:'none' }}>
                                     {item.Quantity || ''}
                                     {index === previewInvoiceprop.length + 1 &&
                                         <div>
@@ -836,10 +836,10 @@ const Invoice = ({
                                         </div>
                                     }
                                 </div>
-                                <div className='invoice_table_header' style={{ width: '10%' }}>{formatAmountToIndianCurrency(parseFloat(unitRate(item.hsncode, item.batchno)))}</div>
-                                <div className='invoice_table_header' style={{ width: '10%' }}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
-                                <div className='invoice_table_header' style={{ width: '7%' }}>{item.Discount || ''}</div>
-                                <div className='invoice_table_header' style={{ width: '10%' }}>
+                                <div className='invoice_table_header' style={{ width: '10%',borderRight:'none' }}>{formatAmountToIndianCurrency(parseFloat(unitRate(item.hsncode, item.batchno)))}</div>
+                                <div className='invoice_table_header' style={{ width: '7%' ,borderRight:'none'}}>{(index <= previewInvoiceprop.length - 1) && ' '}</div>
+                                <div className='invoice_table_header' style={{ width: '7%' ,borderRight:'none'}}>{item.Discount || ''}</div>
+                                <div className='invoice_table_header' style={{ width: '13%' }}>
                                     {/* {((parseFloat(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseFloat(unitRate(item.hsncode, item.batchno)) * parseFloat(item.Quantity)) * parseFloat(item.Discount) / 100)).toFixed(2) || ''} */}
                                     {((index !== previewInvoiceprop.length + 1) && index !== previewInvoiceprop.length) && (
                                         // (
@@ -917,31 +917,31 @@ const Invoice = ({
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>
                                 <div className="cgst" style={{ paddingBottom: '3px' }}>CGST</div>
                                 <div className="subGst" style={{ ...subGst, ...df, borderBottom: 'none' }}>
-                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none', paddingBottom: '3px' }}>Rate</div>
-                                    <div className="cgstAmount" style={{ ...cgstAmount, paddingBottom: '3px' }}>Amount</div>
+                                    <div className="cgstRate" style={{ width:'40%',borderRight: '1px solid #000', borderBottom: 'none', paddingBottom: '3px' }}>Rate</div>
+                                    <div className="cgstAmount" style={{ width:'60%', paddingBottom: '3px' }}>Amount</div>
                                 </div>
                             </div>
                             <div style={{ ...cellStyle, borderRight: 'none', borderBottom: 'none' }}>
                                 <div className="cgst" style={{ paddingBottom: '3px' }}>SGST/UTGST</div>
                                 <div className="subGst" style={{ ...subGst, ...df }}>
-                                    <div className="cgstRate" style={{ ...cgstRate, borderBottom: 'none', paddingBottom: '3px' }}>Rate</div>
-                                    <div className="cgstAmount" style={{ ...cgstAmount, paddingBottom: '3px' }}>Amount</div>
+                                    <div className="cgstRate" style={{ width:'40%', borderRight: '1px solid #000',borderBottom: 'none', paddingBottom: '3px' }}>Rate</div>
+                                    <div className="cgstAmount" style={{ width:'60%', paddingBottom: '3px' }}>Amount</div>
                                 </div>
                             </div>
                             <div style={{ ...cellStyle, borderBottom: 'none' }}>Total Tax Amount</div>
                         </div>
                         {[...previewInvoiceprop, {}].map((item, index) =>
                             <div style={rowStyle}>
-                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black', padding: '3px' }}>
+                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom:index===previewInvoiceprop.length?'1px solid black':'none', padding: '3px' }}>
                                     {item.hsncode || ''}
 
                                     {index === previewInvoiceprop.length &&
-                                        <div>
+                                        <div >
                                             <b >Total</b>
                                         </div>
                                     }
                                 </div>
-                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
+                                <div style={{ ...cellStyle, borderRight: 'none' ,borderBottom:index===previewInvoiceprop.length?'1px solid black':'none'}}>
                                     {/* {item.hsncode || ''} */}
                                     {/* {formatAmountToIndianCurrency(((unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) || ''} */}
                                     {index !== previewInvoiceprop.length && (
@@ -962,40 +962,40 @@ const Invoice = ({
                                     }
                                 </div>
                                 {/* {parseInt(getcgst(item.hsncode, item.batchno)) + parseInt(getsgst(item.hsncode, item.batchno)) || ''} */}
-                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
+                                <div style={{ ...cellStyle, borderRight: 'none' ,borderTop:'none',borderBottom:index===previewInvoiceprop.length?'1px solid black':'none'}}>
                                     {/* {item.Quantity || ''} */}
                                     {index !== previewInvoiceprop.length &&
                                         <div className="subGst" style={{ ...subGst, ...df }}>
-                                            <div className="cgstRate" style={{ ...cgstRate, height: '30px', ...df, justifyContent: 'center', alignItems: 'center' }}>
+                                            <div className="cgstRate" style={{ borderRight: '1px solid #000',width:'40%', height: '30px', ...df, justifyContent: 'center', alignItems: 'center' }}>
                                                 {parseInt(getcgst(item.hsncode, item.batchno)) ? parseInt(getcgst(item.hsncode, item.batchno)) + '%' : ''}
                                             </div>
-                                            <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatAmountToIndianCurrency(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100) : ''}</div>
+                                            <div className="cgstAmount" style={{width:'60%'}}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatAmountToIndianCurrency(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100) : ''}</div>
                                         </div>
                                     }
                                     {index === previewInvoiceprop.length &&
-                                        <div>
+                                        <div style={{borderTop:'1px solid black'}}>
                                             <b>{formatAmountToIndianCurrency(parseFloat(formatTotal(TotalcgstValue())))}</b>
                                         </div>
                                     }
                                 </div>
-                                <div style={{ ...cellStyle, borderRight: 'none', borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
+                                <div style={{ ...cellStyle, borderRight: 'none' ,borderTop:'none',borderBottom:index===previewInvoiceprop.length?'1px solid black':'none'}}>
                                     {/* {unitRate(item.hsncode, item.batchno)} */}
                                     {index !== previewInvoiceprop.length &&
                                         <div className="subGst" style={{ ...subGst, ...df }}>
-                                            <div className="cgstRate" style={{ ...cgstRate, height: '30px', ...df, justifyContent: 'center', alignItems: 'center' }}>
+                                            <div className="cgstRate" style={{ borderRight: '1px solid #000',width:'40%', height: '30px', ...df, justifyContent: 'center', alignItems: 'center' }}>
                                                 {parseInt(getsgst(item.hsncode, item.batchno)) ? parseInt(getsgst(item.hsncode, item.batchno)) + '%' : ''}
                                             </div>
-                                            <div className="cgstAmount" style={cgstAmount}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatAmountToIndianCurrency(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100) : ''}</div>
+                                            <div className="cgstAmount" style={{width:'60%'}}>{(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatAmountToIndianCurrency(((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100) : ''}</div>
                                         </div>
 
                                     }
                                     {index === previewInvoiceprop.length &&
-                                        // <div>
+                                        <div style={{borderTop:'1px solid black'}}>
                                         <b>{formatAmountToIndianCurrency(parseFloat(formatTotal(TotalsgstValue())))}</b>
-                                        // </div>
+                                        </div>
                                     }
                                 </div>
-                                <div style={{ ...cellStyle, borderBottom: index === previewInvoiceprop.length - 1 ? 'none' : '1px solid black' }}>
+                                <div style={{ ...cellStyle,borderBottom:index===previewInvoiceprop.length?'1px solid black':'none'}}>
                                     {/* {item.Discount || ''} */}
                                     {(parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100) ? formatAmountToIndianCurrency((((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getcgst(item.hsncode, item.batchno))) / 100)
                                         + (((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) - ((parseInt(unitRate(item.hsncode, item.batchno)) * parseInt(item.Quantity)) * parseInt(item.Discount) / 100)) * ((getsgst(item.hsncode, item.batchno))) / 100))
@@ -1047,7 +1047,7 @@ const Invoice = ({
                                 described and the all particulars are true and correct.
                             </div>
 
-                            <div className="sign" style={{ ...pad, ...sign, ...dfc }}>
+                            <div className="sign" style={{ ...pad, ...sign, ...dfc ,borderRight:'none'}}>
                                 <div className="pvtName" style={PVTname}>For {SenderInvoiceProp[0].organizationname}</div>
                                 <img src={signSrc}
                                     style={{ ...Signature, maxHeight: '80px', maxWidth: '300px', width: '70%', height: '90%' }}
