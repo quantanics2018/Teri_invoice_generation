@@ -59,7 +59,7 @@ const FeedbackForm = () => {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" align="center" style={{userSelect: "none"}} gutterBottom>
         Feedback Form
       </Typography>
       <form onSubmit={handleSubmit}>

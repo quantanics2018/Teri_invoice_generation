@@ -335,7 +335,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
 
             // console.log("Hello From Staff");
-
+            // distributor and customer insertion condition
             if (!(Positionid_val === 4 || Positionid_val === 5)) {
                 let isValidgstNumber = true;
                 let isValidpanNumber = true;
@@ -359,12 +359,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
                 
 
                 // Upi Bank Detials
-
-                const isValidupiPaymentNo = (postData.upiPaymentNo.trim() === '') ? true : postData.upiPaymentNo.trim() !== '';
-                const isValidaccName = (postData.accName.trim() === '') ? true : postData.accName.trim() !== '';
-                const isValidaccHolderName = (postData.accHolderName.trim() === '') ? true : postData.accHolderName.trim() !== '';
-                const isValidaccNo = (postData.accNo.trim() === '') ? true : (/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
-                const isValidifscCode = (postData.ifscCode.trim() === '') ? true : postData.ifscCode.trim() !== '';
+                const isValidupiPaymentNo = postData.upiPaymentNo.trim() !== '';
+                const isValidaccName = postData.accName.trim() !== '';
+                const isValidaccHolderName = postData.accHolderName.trim() !== '';
+                const isValidaccNo = (/^\d*$/.test(postData.accNo) & postData.accNo.trim() !== '');
+                const isValidifscCode = postData.ifscCode.trim() !== '';
 
                 const isValidstreetAddress = postData.streetAddress.trim() !== '';
                 const isValidCity = postData.City.trim() !== '';
@@ -517,7 +516,9 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setSubmitted(true);
                     }
                 }
-            } else {
+            } 
+            // manufacturer staff and distributor staff insertion condition
+            else {
                 // if (isImagePresent) {
                 try {
                     setLoading(true);
@@ -1179,6 +1180,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         onChange={(e) => handleInputChange(e, field.name, field.inputType)}
                                                         name={field.name}
                                                         id={`input${index + 1}`}
+                                                        InputLabelProps={{
+                                                            className: 'required-label',
+                                                            required: isRequiredField
+
+                                                        }}
                                                     />
                                                     {/* Add error handling if needed */}
                                                 </Box>
@@ -1212,6 +1218,11 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         onChange={(e) => handleInputChange(e, field.name, field.inputType)}
                                                         name={field.name}
                                                         id={`input${index + 1}`}
+                                                        InputLabelProps={{
+                                                            className: 'required-label',
+                                                            required: isRequiredField
+
+                                                        }}
                                                     />
                                                     {/* Add error handling if needed */}
                                                 </Box>
