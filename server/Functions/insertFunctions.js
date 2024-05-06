@@ -270,12 +270,13 @@ async function addInvoice(req, res) {
                     );
                 }
 
-                const product_data = await userdbInstance.userdb.query(`select priceperitem,cgst,sgst from public.products where productid=$1`,[item.hsncode]);
+                const product_data = await userdbInstance.userdb.query(`select priceperitem,cgst,sgst from public.products where productid=$1 and belongsto=$2 and  batchno = $3`,[item.hsncode,belongsto,item.batchno]);
                 const priceperitem = product_data.rows[0].priceperitem;
                 const cgst = product_data.rows[0].cgst;
                 const sgst = product_data.rows[0].sgst;
                 console.log("before invoice item insertion");
                 console.log(priceperitem);
+                console.log(product_data);
                 const InvoiceItemTableResult = await userdbInstance.userdb.query(
                     `INSERT INTO public.invoiceitem(
                     invoiceid,productid,quantity,discountperitem,cost,batchno,priceperitem, cgst, sgst)
@@ -375,7 +376,7 @@ async function ProformaInvoice(req, res) {
                 //     );
                 // }
 
-                const prodcut_data_invoice = await userdbInstance.userdb.query(`SELECT priceperitem,batchno,cgst,sgst  FROM public.products where productid=$1`,[item.hsncode]);
+                const prodcut_data_invoice = await userdbInstance.userdb.query(`SELECT priceperitem,batchno,cgst,sgst  FROM public.products where productid=$1 `,[item.hsncode]);
                 let priceperitem = prodcut_data_invoice.rows[0].priceperitem;
                 let batchno = prodcut_data_invoice.rows[0].batchno;
                 let cgst = prodcut_data_invoice.rows[0].cgst;
