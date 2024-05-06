@@ -545,11 +545,12 @@ const ProfilePage = () => {
 
                                         {isInputchange && userInfoFields.map((field, index) => (
 
-                                            <Grid item xs={12} md={6} key={index} >
+                                            <Grid item xs={12} md={6} key={index} sx={{display:profileInfoRes[field.fieldname]!='' && profileInfoRes[field.fieldname]!=null?'inline':'none'}} >
                                                 {field.fieldType === 'file' ? (
                                                     (ismanufacture || isdistributor) &&
                                                     <Button type="button" variant='outlined' data-bs-toggle="modal" data-bs-target="#SignatureModal" style={{ marginTop: '20px' }}> Update sign</Button>
                                                 ) : (
+                                                    (profileInfoRes[field.fieldname]!='' && profileInfoRes[field.fieldname]!=null)&&
                                                     <TextField
                                                         fullWidth
                                                         variant="outlined"
@@ -564,6 +565,8 @@ const ProfilePage = () => {
                                                         // disabled={!ismanufacture && !isdistributor && field.fieldname== 'fname'}
                                                         disabled={((ismanufacture && (field.fieldname === 'email')) || (isdistributor && (field.fieldname === 'fname' || field.fieldname === 'lname' || field.fieldname === 'orgname' || field.fieldname === 'btype' || field.fieldname === 'gstno' || field.fieldname === 'email' || field.fieldname === 'pannumber' || field.fieldname === 'pcode'))) || (userInfo.positionid === "3" || userInfo.positionid === "4" || userInfo.positionid === "5")}
                                                     />
+                                                    
+                                                    
                                                 )}
 
                                             </Grid>
