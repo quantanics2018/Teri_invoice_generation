@@ -1,33 +1,31 @@
 import { useEffect, useState } from 'react';
-import invoicePic from '../assets/logo/InvoicePic.png'
+import  invoicePic from '../../assets/logo/InvoicePic.png';
 // import QRCode from 'qrcode.react';
-import Qr from '../assets/logo/Qr.png'
+import Qr from '../../assets/logo/Qr.png';
 import axios from 'axios';
 import QrCode from './QrCode';
 import ReactDOMServer from 'react-dom/server';
-import { API_URL } from '../config';
+import { API_URL } from '../../config/config';
 // import { html2pdf } from 'html2pdf.js';
 import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd, even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo, table, tbody, tBorder, rawInput, tdv, tdvDate, textarea, billDetial, bankDetails, tdh, tBorderd, tandc, nowrap, taxInvoiceHead, invoiceDetial, df, gap, gap1, dfc, addressDetials, invoicedetail, rowInvoiceDetail, inputbox, row1Invoice, width50, reciverBill, pad, textwarp, mt, sb, padInPx, bussinessContent, table1, row } from '../assets/style/mailInlineCss';
+import { InvoiceHead, detialAboutPayment, invoiceHead, invoiceImg, invoiceRow, invoicecontent, invoicepic, odd, even, paymentDetials, paymentQrSession, td, th, bussinessQuotes, listData, billTo, invoiceNo, table, tbody, tBorder, rawInput, tdv, tdvDate, textarea, billDetial, bankDetails, tdh, tBorderd, tandc, nowrap, taxInvoiceHead, invoiceDetial, df, gap, gap1, dfc, addressDetials, invoicedetail, rowInvoiceDetail, inputbox, row1Invoice, width50, reciverBill, pad, textwarp, mt, sb, padInPx, bussinessContent, table1, row } from '../../assets/style/mailInlineCss';
 import { Button, TextField } from '@mui/material';
 import numberToWords from 'number-to-words';
 import { ToWords } from 'to-words';
 import { gag } from '../pages/InvoiceGenerator';
 import { useNavigate } from 'react-router-dom';
 
-import { SaveBtn } from '../assets/style/cssInlineConfig';
-import { CancelBtnComp } from './AddUserBtn';
+import { SaveBtn } from '../../assets/style/cssInlineConfig';
+import { CancelBtnComp } from '../common/AddUserBtn';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-// import { df } from '../assets/style/mailInlineCss';
 import { Typography } from '@mui/material';
-// import '/home/quantanics/Desktop/teri/client/src/assets/style/main.css';
-import '../assets/style/main.css'
+import '../../assets/style/main.css'
 import React, { useRef } from 'react';
 import { style } from './BasicModal';
-import Loader from './Loader';
+import Loader from '../common/Loader';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 // import htmlPdf from 'html-pdf';

@@ -1,8 +1,8 @@
 import React from 'react';
-import '../assets/style/App.css';
+import '../../assets/style/App.css';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { API_URL, SECRET_KEY } from '../config'
+import { API_URL, SECRET_KEY } from '../../config/config'
 import axios from 'axios';
 
 //import icons from fontawesome and react icon kit
@@ -26,10 +26,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
-import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
+import { CancelBtnComp, SaveBtnComp } from '../common/AddUserBtn';
 import { Autocomplete, Checkbox, Box, Button, FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Snackbar } from '@mui/material';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
-import { SaveBtn } from '../assets/style/cssInlineConfig';
+import { SaveBtn } from '../../assets/style/cssInlineConfig';
 import MuiAlert from '@mui/material/Alert';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
@@ -275,12 +275,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                 'Invoice Generator': AccessItem['Invoice Generator'],
                 'Invoice PaySlip': AccessItem['Invoice PaySlip']
             }));
-            // setlast_name(item.last_name);
-            // setsiteid(item.site_id);
-            // setroleid(item.role_id);
-            // setcontact(item.contact);
-            // setDesignation(item.designation);
-            // setemail(item.email);
+          
             setSelectedOption_site(item.site_management);
             setSelectedOption_user(item.user_management);
             setSelectedOption_device(item.device_management);
@@ -459,22 +454,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                         setresAlert("Enter Valid PAN Number");
                         setSubmitted(true);
                     }
-                    // else if (!isValidupiPaymentNo) {
-                    //     setresAlert("Enter Valid UPI Payment ID");
-                    //     setSubmitted(true);
-                    // }
-                    // else if (!isValidaccName) {
-                    //     setresAlert("Enter Valid Account Name");
-                    //     setSubmitted(true);
-                    // }
-                    // else if (!isValidaccNo) {
-                    //     setresAlert("Enter Valid Account Number");
-                    //     setSubmitted(true);
-                    // }
-                    // else if (!isValidpAddress) {
-                    //     setresAlert("Enter Valid Permenant Address");
-                    //     setSubmitted(true);
-                    // }
+                   
                     else if (!isValidstreetAddress) {
                         setresAlert("Enter Valid Street Adress");
                         setSubmitted(true);
@@ -491,10 +471,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                         setresAlert("Enter Valid Postal code");
                         setSubmitted(true);
                     }
-                    // else if (!isValidCommunicationAddress) {
-                    //     setresAlert("Enter Valid Communication Address");
-                    //     setSubmitted(true);
-                    // }
+                   
                     else if (!isValidStreetAddress2) {
                         setresAlert("Enter Valid Communication - Street Address");
                         setSubmitted(true);
@@ -803,30 +780,8 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
             }));
         }
     }, []);
-    // if (userInfo.position === 'Manufacturer') {
-    //     updatedAccessHead = [...accessHead];
-    // }
-    // if (userInfo.position === 'staff') {
-    //     const labelsToUpdate = ['Staff', 'Customer'];
-    //     labelsToUpdate.forEach((label) => {
-    //         const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
-    //         if (indexToUpdate !== -1) {
-    //             updatedAccessHead = [...updatedAccessHead];
-    //             updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
-    //         }
-    //     });
 
-    // }
-    // if (userInfo.position === 'distributor') {
-    //     const labelsToUpdate = ['Staff', 'Distributor', 'Customer', 'Products', 'Invoice Generator'];
-    //     labelsToUpdate.forEach((label) => {
-    //         const indexToUpdate = updatedAccessHead.findIndex((item) => item.label === label);
-    //         if (indexToUpdate !== -1) {
-    //             updatedAccessHead = [...updatedAccessHead];
-    //             updatedAccessHead[indexToUpdate] = { ...updatedAccessHead[indexToUpdate], disableHead: true };
-    //         }
-    //     });
-    // }
+
 
     const accessOptions = [
         { label: 'No access', disabled: true },
@@ -856,34 +811,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
         return <div>Loading...</div>;
     }
 
-    // const [state, setstate] = useState([])
-    // const [district, setdistrict] = useState([]);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const dropDownUserResponse = await axios.post(`${API_URL}get/state`);
-    //             const statedata = (dropDownUserResponse.data.data.map(item => item.statename))
-    //             // console.log(dropDownUserResponse.data.data.map(item => item.statename));
-    //             setstate(statedata);
-    //         } catch (error) {
-    //             console.error('Error in processing data:', error);
-    //         }
-    //     };
-    //     fetchData();
-    //     const fetchdistrict = async () => {
-    //         try {
-    //             const dropDownUserResponse = await axios.post(`${API_URL}get/district`);
-    //             // console.log(dropDownUserResponse);
-    //             const districtdata = (dropDownUserResponse.data.data.map(item => item.districtname))
-    //             // console.log(dropDownUserResponse.data.data.map(item => item.districtname));
-    //             setdistrict(districtdata);
-    //         } catch (error) {
-    //             console.error('Error in processing data:', error);
-    //         }
-    //     };
-    //     fetchdistrict();
-    // }, []);
+  
 
 
     const handleInputChangeInvoice = (fieldName, value) => {
@@ -911,45 +839,12 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
     
 
     
-    // else {
-    //     setInputValues({
-    //         ...inputValues,
-    //         // CommunicationAddress: '',
-    //         StreetAddress2: inputValues.cstreetname,
-    //         City2: '',
-    //         State2: '',
-    //         PostalCode2: '',
-    //     });
-    // }
-    // if (!sameAddress) {
-    //     setInputValues({
-    //         ...inputValues,
-    //         // CommunicationAddress: '',
-    //         StreetAddress2: inputValues.cstreetname,
-    //         City2: '',
-    //         State2: '',
-    //         PostalCode2: '',
-    //     });
-    // }
     
     const handleCheckboxChange = () => {
         setSameAddress(!sameAddress);
     };
     // const [sameAddress, setSameAddress] = useState(false);
-    
-    // useEffect(() => {
-    //     if (sameAddress) {
-    //         // console.log(postData);
-    //         setInputValues({
-    //             ...inputValues,
-    //             // CommunicationAddress: inputValues.pAddress,
-    //             StreetAddress2: inputValues.streetAddress,
-    //             City2: inputValues.City,
-    //             State2: inputValues.State,
-    //             PostalCode2: inputValues.pCode,
-    //         });
-    //     }
-    // }, [sameAddress])
+   
     
 
     return (
@@ -1071,9 +966,6 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
-                                                    // onChange={(e) => handleInputChange(e, field.name)}
-                                                    // onChange={handleInputChange}
-                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
                                                     onChange={handleInputChange}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
@@ -1118,9 +1010,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
-                                                    // onChange={(e) => handleInputChange(e, field.name)}
-                                                    // onChange={handleInputChange}
-                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                  
                                                     onChange={handleInputChange}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
@@ -1170,9 +1060,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                     type="text"
                                                     className="form-control-loc"
                                                     value={field.value}
-                                                    // onChange={(e) => handleInputChange(e, field.name)}
-                                                    // onChange={handleInputChange}
-                                                    // onChange={(e) => handleInputChange(index, e.target.value)}
+                                                   
                                                     onChange={handleInputChange}
                                                     name={field.name}
                                                     id={`input${index + 1}`}
@@ -1228,9 +1116,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                                                 type="text"
                                                 className="form-control-loc"
                                                 value={field.value}
-                                                // onChange={(e) => handleInputChange(e, field.name)}
-                                                // onChange={handleInputChange}
-                                                // onChange={(e) => handleInputChange(index, e.target.value)}
+                                        
                                                 onChange={handleInputChange}
                                                 name={field.name}
                                                 id={`input${index + 1}`}
@@ -1489,8 +1375,7 @@ const Edit_Distributer_Detials = ({ Positionid_val }) => {
                     <div className="save_cancel_btn display-flex site_button gap-4">
                         <CancelBtnComp CancelBtnFun={handleCancel} />
                         <SaveBtnComp SaveBtnFun={(e) => handle_save(e)} />
-                        {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={() => handle_save()}>Save</button>
-                            <button className="btn-loc inactive-loc btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">cancel</button> */}
+                       
                     </div>
                 </div>
             </div>

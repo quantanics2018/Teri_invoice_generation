@@ -1,17 +1,17 @@
 import React from 'react';
 import axios from 'axios';
-import '../assets/style/App.css';
+import '../../assets/style/App.css';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import {Container,Typography,Snackbar,MenuItem,TextField} from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-import '../assets/style/App.css';
-import { API_URL, SECRET_KEY } from '../config';
-import { UserActionBtn, padding_top } from '../assets/style/cssInlineConfig';
+import '../../assets/style/App.css';
+import { API_URL, SECRET_KEY } from '../../config/config';
+import { UserActionBtn, padding_top } from '../../assets/style/cssInlineConfig';
 import EditIcon from '@mui/icons-material/Edit';
-import '../assets/style/Order_modal.css';
+import '../../assets/style/Order_modal.css';
 import MuiAlert from '@mui/material/Alert';
 
 

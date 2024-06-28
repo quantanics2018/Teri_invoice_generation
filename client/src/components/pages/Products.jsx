@@ -1,6 +1,6 @@
 import React from 'react';
-import '../assets/style/App.css';
-import { API_URL } from '../config'
+import '../../assets/style/App.css';
+import { API_URL } from '../../config/config'
 
 
 //import icons from fontawesome and react icon kit
@@ -15,10 +15,10 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { AddUserBtn } from '../components/AddUserBtn';
+import { AddUserBtn } from '../common/AddUserBtn';
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
-import { overflow_visible, padding_top, position_initial } from '../assets/style/cssInlineConfig';
+import { overflow_visible, padding_top, position_initial } from '../../assets/style/cssInlineConfig';
 
 const Products = () => {
     const userInfoString = sessionStorage.getItem("UserInfo");
@@ -74,14 +74,7 @@ const Products = () => {
     // //rotate the arrow in the device action
     const handleIconClick = (index) => {
         setRotatedIndex(rotatedIndex === index ? null : index);
-        // const sts = document.getElementsByClassName('device_active');
-        // if (sts === 'Active') {
-        //     setdevice_active('Active')
-        // }
-        // if (sts === 'Inactive') {
-        //     setdevice_active('Inactive')
-        // }
-        // setRotatedIndex(!rotatedIndex);
+      
     };
 
 
@@ -121,20 +114,7 @@ const Products = () => {
     // console.log(userInfo.position);
 
     const Product_edit_page = (data) => {
-        // console.log(data);
-        // const dataString = encodeURIComponent(JSON.stringify(data));
-        // if (props.position === 2) {
-        //     navigate(`Edit_Distributer_Details/${encodedText}`);
-        // }
-        // if (props.position === 3) {
-        //     navigate(`Edit_Customer_Details/${encodedText}`);
-        // }
-        // if (props.position === 4) {
-        //     navigate(`Edit_Staff_Details/${encodedText}`);
-        // }
-        // if (props.position === 5) {
-        //     navigate(`Edit_D_Staff_Details/${encodedText}`);
-        // }
+       
 
         navigate(`Edit_Product_Details/${data.productid}/${data.batchno}`);
     }
@@ -189,11 +169,7 @@ const Products = () => {
                 });
                 console.log(response);
                 if (response.data.qos === "success") {
-                    // setAlldate((prevData) => {
-                    //     const newData = [...prevData];
-                    //     newData[index].status = response.data.resStatus;
-                    //     return newData;
-                    // });
+                  
                     setsubmittedSuccess(true);
                     setresAlert(response.data.resStatus);
                     // alert(response.data.resStatus);
@@ -216,9 +192,7 @@ const Products = () => {
                     console.log(newData[index]);
                     newData[index].quantity = currectQuantity;
                     return newData;
-                    // const newData = [...prevData];
-                    // console.log(newData[index]);
-                    // return newData;
+                  
                 });
             }
         }
@@ -278,123 +252,7 @@ const Products = () => {
                         }
                              {/* <h5 style={{color: 'red'}}>Hello{userInfo.position}</h5> */}
                     </div>
-                    {/* <div className='filters display-flex' >
-                        <div className="pagination_with_filters">
-                            <div class="pagination display-flex" onClick={handleDivClick}>
-                                <div className="focus-page">
-                                    <input
-                                        // ref={inputRef}
-                                        type="number"
-                                        value={text}
-                                        onChange={handleInputChange}
-                                        onBlur={handleInputBlur}
-                                        autoFocus
-                                        className='editable_input_box'
-                                    />
-
-                                </div>
-                                <div className="upcomming-pages">
-                                    of 20 pages
-                                </div>
-                            </div>
-
-                            <div className='move_head'>
-                                <div className='filters1 display-flex'>
-                                    <div class="dropdown-filter"
-                                    // ref={dropdownRef1}
-                                    >
-                                        <div class="device_filters" onClick={dropdown1}>
-                                            <div className="device_name">
-                                                Device Name
-                                            </div>
-                                            <div className="dropdown_icon">
-                                                <FontAwesomeIcon
-                                                    icon={isDropdownOpen1 ? faChevronDown : faChevronUp}
-                                                    className="dropdown-icon"
-                                                />
-                                            </div>
-                                        </div>
-                                        {isOpen1 && (
-                                            <div className="dropdown_menu2 dashboard_dropdown-menu heights dropdown-colors ">
-                                                {deviceName_data.map((data, index) => (
-                                                    <div className='device_scroll' key={index}>
-                                                        <div>
-                                                            <div className='device_dropdown'>
-                                                                <input
-                                                                    className='device_sts_checkbox'
-                                                                    type="checkbox"
-                                                                // checked={data.device_name.trim() === selectedDevice}
-                                                                // onChange={() => handleDeviceChange(data.device_name.trim())}
-                                                                />
-                                                                <div className="div_sts">{data.device_name}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div class="dropdown-filter"
-                                        ref={dropdownRef3}
-                                    >
-                                        <div class="device_filters" onClick={dropdown3}>
-                                            <div className="device_name">
-                                                Category
-                                            </div>
-                                            <div className="dropdown_icon">
-                                                <FontAwesomeIcon
-                                                    icon={isDropdownOpen3 ? faChevronDown : faChevronUp}
-                                                    className="dropdown-icon"
-                                                />
-                                            </div>
-                                        </div>
-                                        {isOpen3 && (
-                                            <div className="dropdown_menu2 dashboard_dropdown-menu dropdown-colors">
-                                                <div>
-                                                    <div className='device_dropdown'>
-                                                        <input
-                                                            className='device_sts_checkbox'
-                                                            type="checkbox"
-                                                            checked={selectedOption === 'All'}
-                                                        // onChange={() => handleOptionChange('All')}
-                                                        />
-                                                        <div className="div_sts">All</div>
-                                                    </div>
-                                                    <div className='device_dropdown'>
-                                                        <input
-                                                            className='device_sts_checkbox'
-                                                            type="checkbox"
-                                                            checked={selectedOption === 'Active'}
-                                                        // onChange={() => handleOptionChange('Active')}
-                                                        />
-                                                        <div className="div_sts">Machine</div>
-                                                    </div>
-                                                    <div className='device_dropdown'>
-                                                        <input
-                                                            className='device_sts_checkbox'
-                                                            type="checkbox"
-                                                            checked={selectedOption === 'Inactive'}
-                                                        // onChange={() => handleOptionChange('Inactive')}
-                                                        />
-                                                        <div className="div_sts">Refill</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        Manufacturer
-                        {console.log("test",((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')))}
-                        {((userInfo.position === 'Manufacturer') || (userInfo.position === 'staff')) &&
-                            <AddUserBtn adduserFun={handleclick} value={"Add Products"} />
-                        }
-
-                        <div className='filters2 display-flex' onClick={handleclick}>
-                            <button className='btn btn-fill'>Add Products</button>
-                        </div>
-                    </div> */}
+                  
                     <div className='col-headings'>
                         <div className="col-head">HSN Code</div>
                         <div className="col-head">Batch No</div>
@@ -468,11 +326,7 @@ const Products = () => {
 
                         ))}
                     </div>
-                    {/* <div className='device_bottom'>
-                        <div className='device_export cursor-pointer'>
-                            <div className='device_exports'>Export</div>
-                        </div>
-                    </div> */}
+                   
                 </div>
             </div>
 

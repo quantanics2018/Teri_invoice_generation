@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { UserActionBtn, CancelBtn, SaveBtn } from '../assets/style/cssInlineConfig';
+import { UserActionBtn, CancelBtn , SaveBtn } from '../../assets/style/cssInlineConfig';
 const AddUserBtn = ({ adduserFun, value }) => {
     return (
         <Button variant="contained"

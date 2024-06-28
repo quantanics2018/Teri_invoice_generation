@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import Icon from "react-icons-kit";
 import { ic_label_important } from "react-icons-kit/md/ic_label_important";
-import {overflow_visible , position_initial} from "../assets/style/cssInlineConfig";
+import { overflow_visible , position_initial } from "../../assets/style/cssInlineConfig";
 
 const ActionButton = ({fun_to_rotate_btn,index,rotatedIndex,data,updateUserStatus,props,StaffDetialsEditPage}) => {
     // const [rotatedIndex, setRotatedIndex] = useState(null);
@@ -59,14 +59,7 @@ const ActionButton = ({fun_to_rotate_btn,index,rotatedIndex,data,updateUserStatu
                                 {props.position === 5 &&
                                     " D_Staff "
                                 }
-                                {/* {inactivateAlert && (
-                                    <Example
-                                        ConformMsg={() => {
-                                            alert("Test")
-                                        }
-                                        }
-                                    />
-                                )} */}
+                               
                             </div>
                         ) : (
                             <div className='device_content_dropdown display-flex'

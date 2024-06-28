@@ -3,9 +3,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { TextField, Button, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
-import invoiceLogo from '../assets/logo/invoiceLogo.png';
-import { API_URL } from '../config';
-import { UserActionBtn } from '../assets/style/cssInlineConfig';
+import invoiceLogo from '../../assets/logo/invoiceLogo.png';
+import { API_URL } from '../../config/config';
+import { UserActionBtn } from '../../assets/style/cssInlineConfig';
 import CryptoJS from 'crypto-js';
 
 const UpdatePassword = () => {
@@ -40,11 +40,7 @@ const UpdatePassword = () => {
         setPassword(event.target.value.trim());
         setpassword_empty(false);
     };
-    // function decryptString(encryptedText, secretKey) {
-    //     const decryptedData = CryptoJS.AES.decrypt(atob(decodeURIComponent(encryptedText)), secretKey);
-    //     const decryptedText = decryptedData.toString(CryptoJS.enc.Utf8);
-    //     return decryptedText;
-    // }
+  
     const params = new URLSearchParams(location.search);
     const encryptedtext = params.get('email');
     useEffect(() => {
@@ -63,10 +59,7 @@ const UpdatePassword = () => {
         }
     }, [location.search, setUsername]);
 
-    // if (!username || !/^$|@gmail\.com$/.test(username)) {
-    //     setresAlert('Enter Valid Username');
-    //     setSubmitted(true);
-    // } else 
+
 
     const validate_login = async () => {
         if (!passwordInputval) {

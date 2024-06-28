@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import '../assets/style/App.css';
+import '../../assets/style/App.css';
 //import icons from fontawesome and react icon kit
 import { Icon } from 'react-icons-kit';
 import { ic_label_important } from 'react-icons-kit/md/ic_label_important';
@@ -11,11 +11,10 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useState, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL, SECRET_KEY } from '../config';
+import { API_URL, SECRET_KEY } from '../../config/config';
 // import { Button } from '@mui/material';
-import { UserActionBtn, padding_top } from '../assets/style/cssInlineConfig';
-import { AddUserBtn } from '../components/AddUserBtn';
-import Example from '../components/Example';
+import { UserActionBtn, padding_top } from '../../assets/style/cssInlineConfig';
+import { AddUserBtn } from '../common/AddUserBtn';
 import EditDistributerDetails from './Edit_Distributer_Detials';
 import {
     Button,
@@ -23,7 +22,7 @@ import {
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import CryptoJS from 'crypto-js';
-import ActionButton from '../components/ActionButton';
+import ActionButton from '../common/ActionButton';
 
 const Staff_Detials = (props) => {
     const { Positionid_val, position } = props;
@@ -56,16 +55,7 @@ const Staff_Detials = (props) => {
     const [alldata, setAlldate] = useState([]);
 
     const userInfo = JSON.parse(sessionStorage.getItem("UserInfo"));
-    // console.log(userInfo);
-    // const handleIconClick = () => {
-    //     // userInfo.staff
-    //     if (userInfo.staff > 2) {
-    //         setRotatedIndex(!rotatedIndex);
-    //     } else {
-    //         alert("Option Disabled for Staff")
-    //     }
 
-    // };
     const handleIconClick = (index) => {
         // if (userInfo.staff > 2) {
         setRotatedIndex(!rotatedIndex);
@@ -242,93 +232,7 @@ const Staff_Detials = (props) => {
                         </Button>
                     </div>
 
-                    {/* <div className='filters display-flex' >
-                        <div className="pagination_with_filters">
-                            <div class="pagination display-flex" onClick={handleDivClick}>
-                                <div className="focus-page">
-                                    <input
-                                        // ref={inputRef}
-                                        type="number"
-                                        value={text}
-                                        onChange={handleInputChange}
-                                        // onBlur={handleInputBlur}
-                                        autoFocus
-                                        className='editable_input_box'
-                                    />
 
-                                </div>
-                                <div className="upcomming-pages">
-                                    of 20 pages
-                                </div>
-                            </div>
-
-                            <div className='move_head'>
-                                <div className='filters1 display-flex'>
-                                    <div class="dropdown-filter"
-                                        ref={dropdownRef3}
-                                    >
-                                        <div class="device_filters" onClick={dropdown3}>
-                                            <div className="device_name">
-                                                Bussiness Type
-                                            </div>
-                                            <div className="dropdown_icon">
-                                                <FontAwesomeIcon
-                                                    icon={isDropdownOpen3 ? faChevronDown : faChevronUp}
-                                                    className="dropdown-icon"
-                                                />
-                                            </div>
-                                        </div>
-                                        {isOpen3 && (
-                                            <div className="dropdown_menu2 dashboard_dropdown-menu dropdown-colors">
-                                                <div>
-                                                    <div className='device_dropdown'>
-                                                        <input
-                                                            className='device_sts_checkbox'
-                                                            type="checkbox"
-                                                            checked={selectedOption === 'All'}
-                                                        // onChange={() => handleOptionChange('All')}
-                                                        />
-                                                        <div className="div_sts">All</div>
-                                                    </div>
-                                                    <div className='device_dropdown'>
-                                                        <input
-                                                            className='device_sts_checkbox'
-                                                            type="checkbox"
-                                                            checked={selectedOption === 'Active'}
-                                                        // onChange={() => handleOptionChange('Active')}
-                                                        />
-                                                        <div className="div_sts">Employed</div>
-                                                    </div>
-                                                    <div className='device_dropdown'>
-                                                        <input
-                                                            className='device_sts_checkbox'
-                                                            type="checkbox"
-                                                            checked={selectedOption === 'Inactive'}
-                                                        // onChange={() => handleOptionChange('Inactive')}
-                                                        />
-                                                        <div className="div_sts">Self Employed</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <Button variant="contained"
-                            onClick={handleclick}
-                            style={UserActionBtn}
-                        >
-                            {(props.position === 2) && "Add Distributor"}
-                            {(props.position === 3) && "Add Customer"}
-                            {(props.position === 4) && "Add Staff"}
-                            {(props.position === 5) && "Add D_Staff"}
-                        </Button>
-
-                        <div className='filters2 display-flex' onClick={handleclick}>
-                            <button className='btn btn-fill'>Add User</button>
-                        </div>
-                    </div> */}
 
                     {(Positionid_val === 4 || Positionid_val === 5) ? (
                         <div className='col-headings'>

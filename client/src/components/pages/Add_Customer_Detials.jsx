@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import '../assets/style/App.css';
+import '../../assets/style/App.css';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ import { followers } from 'react-icons-kit/ikons/followers';
 import { pen_3 } from 'react-icons-kit/ikons/pen_3';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-import { API_URL } from '../config';
+import { API_URL } from '../../config/config';
 
 
 

@@ -12,7 +12,7 @@ import {
   Snackbar,
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
-import { API_URL } from '../config';
+import { API_URL } from '../../config/config';
 import axios from 'axios';
 
 const FeedbackForm = () => {
@@ -73,20 +73,7 @@ const FeedbackForm = () => {
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
         />
-        {/* <FormControl component="fieldset" margin="normal">
-          <Typography variant="subtitle1">Rating</Typography>
-          <RadioGroup
-            row
-            aria-label="rating"
-            name="rating"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
-          >
-            {[1, 2, 3, 4, 5].map((value) => (
-              <FormControlLabel key={value} value={value.toString()} control={<Radio />} label={value.toString()} />
-            ))}
-          </RadioGroup>
-        </FormControl> */}
+      
         <Button type="submit" variant="contained" color="primary">
           Submit Feedback
         </Button>

@@ -1,6 +1,6 @@
 import React from 'react';
-import '../assets/style/App.css'
-import Navbar from '../TopNavbar';
+import '../../assets/style/App.css'
+import Navbar from '../layout/TopNavbar';
 import Distributer_Detials_content from './Distributer_Detials_content';
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import '../assets/style/App.css';
+import '../../assets/style/App.css';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
@@ -24,23 +24,20 @@ import { followers } from 'react-icons-kit/ikons/followers';
 import { pen_3 } from 'react-icons-kit/ikons/pen_3';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-import { API_URL } from '../config';
+import { API_URL } from '../../config/config';
 import TextField from '@mui/material/TextField';
 import { Autocomplete, Box, Button, Checkbox, FormControl, InputAdornment, InputLabel, MenuItem, Select, Snackbar, Typography } from '@mui/material';
-import { CancelBtn, SaveBtn, UserActionBtn } from '../assets/style/cssInlineConfig';
-import { AddUserBtn, SaveBtnComp } from '../components/AddUserBtn';
-import { CancelBtnComp } from '../components/AddUserBtn'
+import { CancelBtn, SaveBtn, UserActionBtn } from '../../assets/style/cssInlineConfig';
+import { AddUserBtn, SaveBtnComp } from '../common/AddUserBtn';
+import { CancelBtnComp } from '../common/AddUserBtn'
 import { FaTh, FaBars, FaUserAlt, FaRegChartBar, FaCommentAlt, FaShoppingBag } from "react-icons/fa";
 import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import MuiAlert from '@mui/material/Alert';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
-import SelectTextFields from '../components/SelectTextFields';
-import InputFileUpload from '../components/SelectTextFields';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import ImageUpload from '../components/ImageUpload';
-import Loader from '../components/Loader';
+import Loader from '../common/Loader';
 
 
 const Add_User_Detials = ({ Positionid_val }) => {
@@ -166,15 +163,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
     }, []);
 
 
-    // const [isUserChanged, setIsUserChanged] = useState(false);
-    // useEffect(() => {
-    //     if (isUserChanged) {
-    //         setPostData((prevData) => ({
-    //             ...prevData,
-    //             userid: postData.userid,
-    //         }));
-    //     }
-    // },[isUserChanged])
+   
     
     // New State to handle the Required field of GST and PAN input fields......
     const [isRequiredField, setIsRequiredField] = useState(true);
@@ -326,11 +315,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         const isValidemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)
         const isValidMobileNo = /^\d{10}$/.test(postData.mobileNo)
 
-        // const isImagePresent = isImageValid(file);
-
-        // const isImagePresent = Positionid_val !== 3 ? isImageValid(file) : true;
-
-        // console.log("isImagePresent : ", isImagePresent);
+      
 
         if (isValiduserid & isValidaadharNo & isValidfName & isValidlName & isValidemail & isValidMobileNo) {
 
@@ -407,22 +392,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         if (response.data.status) {
                             handleClear();
                             navigate(-1);
-                            // if (Positionid_val !== 3) {
-                            //     const response = await axios.post(`${API_URL}upload`,
-                            //         formData
-                            //     );
-                            //     if (response.data.status) {
-                            //         handleClear();
-                            //         navigate(-1);
-                            //         console.log('File uploaded successfully:', response.data);
-                            //     } else {
-                            //         console.error('Failed to upload file:', response.statusText);
-                            //     }
-                            // }
-                            // else {
-                            //     handleClear();
-                            //     navigate(-1);
-                            // }
+                           
 
                         }
 
@@ -469,15 +439,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                         setresAlert("Enter Valid IFSC Name");
                         setSubmitted(true);
                     }
-                    // else if (!isImagePresent) {
-                    //     setresAlert("Only PNG format is allowed & Image size should be less than 10MB.");
-                    //     setSubmitted(true);
-                    // }
-
-                    // else if (!isValidpAddress) {
-                    //     setresAlert("Enter Valid Permenant Address");
-                    //     setSubmitted(true);
-                    // }
+                  
                     // upi end
                     else if (!isValidstreetAddress) {
                         setresAlert("Enter Valid Street Adress");
@@ -529,25 +491,13 @@ const Add_User_Detials = ({ Positionid_val }) => {
                     if (response.data.status) {
                         handleClear();
                         navigate(-1);
-                        // const response = await axios.post(`${API_URL}upload`,
-                        //     formData
-                        // );
-                        // if (response.data.status) {
-                        //     handleClear();
-                        //     navigate(-1);
-                        //     console.log(' staff addingFile uploaded successfully:', response.data);
-                        // } else {
-                        //     console.error('staff adding Failed to upload file:', response.statusText);
-                        // }
+                       
 
                     }
                 } catch (error) {
                     console.error('Error sending data:', error);
                 }
-                // }
-                // else {
-                //     alert("Wrong Image format:Image should be png")
-                // }
+               
                 setLoading(false);
             }
         }
@@ -647,35 +597,10 @@ const Add_User_Detials = ({ Positionid_val }) => {
     }
 
     const [selectedUser, setSelectedUser] = useState(null);
-    // var Positionid_val;
-    // console.log(Positionid_val);
-    // const handleUserChange = async (event) => {
-    //     setSelectedUser(event.target.value);
-    //     if (event.target.value == "select user") {
-    //         Positionid_val = null
-    //     }
-    //     else if (event.target.value === 'Staff') {
-    //         Positionid_val = 4;
-    //     } else if (event.target.value === 'Distributor') {
-    //         Positionid_val = 2;
-    //     }
-    //     else if (event.target.value === 'Customer') {
-    //         Positionid_val = 3;
-    //     }
-    //     // console.log("hello : ",Positionid_val);
-    //     setPostData(prevData => ({
-    //         ...prevData,
-    //         Positionid: Positionid_val,
-    //     }));
-    // };
+   
 
 
-    // useEffect(() => {
-    //     console.log("hai : ", postData.Positionid);
-    // }, [postData.Positionid]);
-    // console.log("haiiii", userInfo.position);
-
-
+ 
 
     const handleRadioChange = (row, value) => {
         setAccessValues((prevValues) => ({
@@ -705,9 +630,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
         if (Positionid_val === 4) {
             labelsToUpdate = ['Staff', 'D_Staff', 'Customer'];
         }
-        // else if (Positionid_val === 5) {
-        //     labelsToUpdate = ['Customer'];
-        // }
+       
         else if (Positionid_val === 2) {
             labelsToUpdate = ['Staff', 'Distributor'];
         }
@@ -786,12 +709,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
             }));
         }
         else if (userInfo.position === 'distributor') {
-            // setAccessValues((prevValues) => ({
-            //     ...prevValues,
-            //     Staff: 'No access',
-            //     Distributor: 'No access',
-            //     D_Staff: 'No access',
-            // }));
+          
             if (Positionid_val === 5) {
                 setAccessValues((prevValues) => ({
                     ...prevValues,
@@ -1019,11 +937,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                                         },
                                                     }}
                                                 >
-                                                    {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
-
-                                                    {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                    {/* signature input */}
-
+                                                   
                                                     <TextField
                                                         label={
                                                             <span>{`${field.label}`}</span>
@@ -1233,13 +1147,7 @@ const Add_User_Detials = ({ Positionid_val }) => {
                                 ))}
                             </div>
                             {/* Sign */}
-                            {/* {(Positionid_val !== 3) && (
-                                <Box sx={{ display: 'flex', direction: 'row', alignItems: 'center', justfiyContent: 'center' }}>
-                                    <Typography sx={{ marginLeft: '0.5rem', marginRight: '1rem' }}>Upload Signature</Typography>
-                                    <input type="file" onChange={handleFileChanges} />
-                                </Box>
-                            )} */}
-                            {/* <button onClick={handleUpload}>Upload Image</button> */}
+                          
 
 
                             {!(Positionid_val === 4 || Positionid_val === 5) && (

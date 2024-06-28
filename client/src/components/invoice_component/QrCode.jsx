@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_URL } from "../config";
+import { API_URL } from "../../config/config";
 
 const QrCode = ({totalSum,upi}) => {
     const [imageSrc, setImageSrc] = useState('');

@@ -7,14 +7,14 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
-import { API_URL } from '../config';
+import { API_URL } from '../../config/config';
 import { Button, Box, Snackbar } from '@mui/material';
-import Loader from '../components/Loader';
+import Loader from '../common/Loader';
 import MuiAlert from '@mui/material/Alert';
 import { useNavigate } from 'react-router-dom';
 import bootstrapMin from 'bootstrap/dist/js/bootstrap.min';
-import { df } from '../assets/style/mailInlineCss';
-import { SaveBtn } from '../assets/style/cssInlineConfig';
+import { df } from '../../assets/style/mailInlineCss';
+import { SaveBtn } from '../../assets/style/cssInlineConfig';
 
 
 
@@ -499,13 +499,7 @@ const ProfilePage = () => {
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                     {/* <Typography variant="h5" style={{ textTransform: 'capitalize' }}>{fixed_data.position}</Typography> */}
                                     <Typography variant="h5" style={{ textTransform: 'capitalize' }}>
-                                        {/* {fixed_data.data.data[0].positionid === '1' && 'Manufacturer'} */}
-                                        {/* {console.log("Test data",fixed_data)}
-                                        {fixed_data.positionid=== '1' && 'Manufacturer'}
-                                        {fixed_data.positionid=== '2' && 'Distributor'}
-                                        {fixed_data.positionid=== '3' && 'Customer'}
-                                        {fixed_data.positionid=== '4' && 'Staff'}
-                                        {fixed_data.positionid=== '5' && 'Distributor Staff'} */}
+                                        
                                         {fixed_data.position}
                                     </Typography>
                                     {/* {console.log("user info data position:\t" + fixed_data.position)} */}
@@ -548,10 +542,7 @@ const ProfilePage = () => {
                                         {isInputchange && userInfoFields.map((field, index) => (
                                             
                                             <Grid item xs={12} md={6} key={index} sx={{display:profileInfoRes[field.fieldname]!='' && profileInfoRes[field.fieldname]!=null?'inline':'none'}} >
-                                                {/* {field.fieldType === 'file' ? (
-                                                    (ismanufacture || isdistributor) &&
-                                                    <Button type="button" variant='outlined' data-bs-toggle="modal" data-bs-target="#SignatureModal" style={{ marginTop: '20px' }}> Update sign</Button>
-                                                ) : ( */}
+                                                
                                                     {(profileInfoRes[field.fieldname]!='' && profileInfoRes[field.fieldname]!=null)&&
                                                     <TextField
                                                         fullWidth
@@ -608,21 +599,13 @@ const ProfilePage = () => {
                                         ))}
 
                                     </Grid>
-                                    {/* {ismanufacture &&
-                                        <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
-                                        </Box>
-                                    } */}
+                                 
                                     {(ismanufacture || isdistributor) &&
                                         <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                             <Button variant="contained" width={'100%'} disabled={disablityUpdate} onClick={(e) => handleSubmit(e)}>Update Data</Button>
                                         </Box>
                                     }
-                                    {/* {isdistributor &&
-                                        <Box width={'100%'} margin={'1rem'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Button variant="contained" width={'100%'} onClick={(e) => handleSubmit(e)}>Update Data</Button>
-                                        </Box>
-                                    } */}
+                                  
 
                                 </form>
                             </CardContent>

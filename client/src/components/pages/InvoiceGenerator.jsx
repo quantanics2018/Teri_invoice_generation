@@ -8,7 +8,7 @@ import html2pdf from 'html2pdf.js';
 import ReactDOMServer from 'react-dom/server';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { df } from '../assets/style/mailInlineCss';
+import { df } from '../../assets/style/mailInlineCss';
 
 import {
     Table,
@@ -18,21 +18,20 @@ import {
     TableHead,
     TableRow,
 } from '@mui/material';
-import { CancelBtnComp } from '../components/AddUserBtn';
+import { CancelBtnComp } from '../common/AddUserBtn';
 import axios from 'axios';
-import { API_URL } from '../config';
-import SplitButton from '../components/SplitButton';
-import Invoice from '../components/Invoice';
-import { CancelBtn, SaveBtn } from '../assets/style/cssInlineConfig';
+import { API_URL } from '../../config/config';
+import SplitButton from '../invoice_component/SplitButton';
+import Invoice from '../invoice_component/Invoice';
+import { CancelBtn, SaveBtn } from '../../assets/style/cssInlineConfig';
 import { useNavigate } from 'react-router-dom';
-import Loader from '../components/Loader';
-import QrCode from '../components/QrCode';
-import { invoicecontent } from '../assets/style/mailInlineCss';
-import MailSendingContent from '../components/MailSendingContent';
-import SpringModal, { modalStyle, style } from '../components/BasicModal';
-import BasicModal from '../components/BasicModal';
+import Loader from '../common/Loader';
+import QrCode from '../invoice_component/QrCode';
+import { invoicecontent } from '../../assets/style/mailInlineCss';
+import SpringModal, { modalStyle, style } from '../invoice_component/BasicModal';
+import BasicModal from '../invoice_component/BasicModal';
 
-import '../assets/style/Order_modal.css';
+import '../../assets/style/Order_modal.css';
 
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 let gag = 55;
@@ -80,19 +79,7 @@ const InvoiceGenerator = () => {
             ...prevValues,
             [fieldName]: value,
         }));
-        // alert(inputValues.UserId)
-        // if (fieldName === "UserId") {
-        //     const getReciverData = async () => {
-        //         const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: inputValues.UserId });
-        //         console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
-        //         const reciveridObj = getReciverDataRequest.data.data;
-        //         console.log("reciveridObj : ",reciveridObj);
-        //         if (getReciverDataRequest.data.status) {
-        //             setReciverIdRes(reciveridObj);
-        //         }
-        //     }
-        //     getReciverData();
-        // }
+       
     };
 
     // content for table
@@ -143,11 +130,7 @@ const InvoiceGenerator = () => {
 
     // const currentRowid = useRef();
 
-    // useEffect(()=>{
-    //     if (currentRowid.current) {
-    //         console.log(currentRowid.current);
-    //     }
-    // },[currentRowid])
+   
     const deleteRow = (id) => {
         const updatedRows = rows.filter((row) => row.id !== id);
         setCurrentRowId((prevRowId) => prevRowId - 1);
@@ -225,45 +208,6 @@ const InvoiceGenerator = () => {
 
 
 
-    // const handleSubmit = async () => {
-    //     // console.log(rows);
-    //     const hasEmptyValue = rows.some(row =>
-    //         Object.values(row).some(value => value === '')
-    //     );
-
-    //     console.log("inputValues :", inputValues);
-    //     const hasEmptyReciverId =
-    //         Object.values(inputValues).some(value => value === '')
-    //     // );
-    //     if (hasEmptyReciverId) {
-    //         alert("Reciver Details can't be Empty");
-    //     } else {
-    //         if (hasEmptyValue) {
-    //             alert('Please fill in all fields in each row before submitting.');
-    //         } else {
-    //             // alert('Success');
-    //             try {
-    //                 setLoading(true);
-    //                 const response = await axios.post(`${API_URL}add/invoice`, { invoice: inputValues, invoiceitem: rows, totalValues: totalSum });
-    //                 if (response.data.status) {
-    //                     // alert(response.data.invoiceid);
-    //                     await sendDataToServer(response.data.invoiceid);
-    //                     alert(response.data.message);
-    //                 } else {
-    //                     alert(response.data.message);
-    //                 }
-    //                 setLoading(false);
-    //                 if (response.data.status) {
-    //                     navigate('/TransactionHistory');
-    //                 }
-    //                 // setPreviewInvoice(response.data.message)
-    //             } catch (error) {
-    //                 console.error('Error sending data:', error);
-    //             }
-    //         }
-    //     }
-    // }
-
     const [senderIdRes, setsenderIdRes] = useState([{}]);
     useEffect(() => {
         const senderid = userInfo.userid;
@@ -274,13 +218,6 @@ const InvoiceGenerator = () => {
             // console.log("senderidObj : ", senderidObj);
             setsenderIdRes(senderidObj);
         }
-        // const getReciverData = async () => {
-        //     const getReciverDataRequest = await axios.post(`${API_URL}get/ReciverDataInvoiceAddress`, { reciverid: reciverid });
-        //     console.log("getReciverDataRequest : ", getReciverDataRequest.data.data);
-        //     const reciveridObj = getReciverDataRequest.data.data;
-        //     console.log("reciveridObj : ", reciveridObj);
-        //     setReciverIdRes(reciveridObj);
-        // }
         getSenderData();
         // getReciverData();
     }, [inputValues.UserId])
@@ -296,8 +233,7 @@ const InvoiceGenerator = () => {
                 const users = dropDownUserResponse.data.data.map(item => item.organizationname);
                 setuserNameoptions(users);
                 // console.log(users);
-                // const checkForUndefined = users.map(item => item === undefined);
-                // console.log(checkForUndefined.includes('quantanics1'));
+               
 
                 const checkForUndefined = users.includes(undefined);
                 if (checkForUndefined) {
@@ -327,10 +263,7 @@ const InvoiceGenerator = () => {
     let productBatchno = productList.map(item => item.batchno);
     productBatchno = [...new Set(productBatchno)];
     const [batchnoOption, setbatchnoOption] = useState(productBatchno);
-    // console.log(productBatchno);
-    // useEffect(()=>{
-    //     console.log(batchnoOption);
-    // },[batchnoOption])
+  
     const handleInputChange = (id, column, value) => {
         // console.log("id, column, value :", id, column, value);
         const updatedRows = rows.map((row) =>
@@ -359,26 +292,9 @@ const InvoiceGenerator = () => {
         setbatchnoOption(productBatchno);
         // console.log(productBatchno);
 
-        // if (column === 'hsncode') {
-        //     // alert(value)
-        //     sethsncodestate(value)
-        // }
-        // if (column === 'batchno') {
-        //     setbatchnostate(value)
-        // }
-        // if (column === 'Quantity') {
-        //     // console.log("yes : ",value)
-        //     setquantitystate(value);
-        //     // setTotalValue(id, hsncodestate, batchnostate,value, discountstate);
-        // }
-        // if (column === 'Discount') {
-        //     setdiscountstate(value)
-        // }
+       
     };
-    // useEffect(() => {
-    //     handleInputChange();
-    // }, [batchnoOption])
-
+ 
     const [totalSum, setTotalSum] = useState();
     const [totalQuantity, settotalQuantity] = useState();
 
@@ -405,10 +321,7 @@ const InvoiceGenerator = () => {
         console.log("columnName : ", columnName);
 
         if (columnName === 'hsncode') {
-            // console.log("Entered hsn", Enteredhsncode)
-            // const updatedRow = rows.map((row) =>
-            //     row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
-            // );
+          
 
             console.log("id, column, value :", id, columnName, Enteredhsncode);
             const updatedRows = rows.map((row) =>
@@ -416,20 +329,13 @@ const InvoiceGenerator = () => {
             );
             setRows(updatedRows);
 
-            // setRows(prevRows => {
-            //     const updatedRow = prevRows.map(row =>
-            //         row.id === id ? { ...row, [columnName]: Enteredhsncode } : row
-            //     );
-            //     return updatedRow;
-            // });
+          
             console.log("updaterow after1 : ", updatedRows);
         }
         if (columnName === 'batchno') {
             console.log("updated rows rich : ", rows);
             console.log("Enetered batch", Enteredbatchno)
-            // const updaterows = rows.map((row) =>
-            //     row.id === id ? { ...row, [columnName]: Enteredbatchno } : row
-            // );
+           
             setRows(prevRows => {
                 const updatedRows = prevRows.map(row =>
                     row.id === id ? { ...row, [columnName]: Enteredbatchno } : row
@@ -452,18 +358,7 @@ const InvoiceGenerator = () => {
             } : row
         );
         setRows(updatedRows);
-        // const value = productList
-        //     .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
-        //     .map((product) => product.productname)[0] || '';
-
-        // // console.log(value);
-
-        // const updatedRows = rows.map((row) =>
-        //     row.id === id ? {
-        //         ...row, productName: value
-        //     } : row
-        // );
-        // setRows(updatedRows);
+       
     }
 
     const setthirdInput1 = (id, Enteredhsncode, Enteredbatchno, columnName) => {
@@ -495,50 +390,13 @@ const InvoiceGenerator = () => {
         );
         setRows(updatedRows);
 
-        // const value = productList
-        //     .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
-        //     .map((product) => product.productname)[0] || '';
-
-        // // console.log(value);
-
-        // const updatedRows = rows.map((row) =>
-        //     row.id === id ? {
-        //         ...row, productName: value
-        //     } : row
-        // );
-        // setRows(updatedRows);
+       
     }
 
-    // const setthirdInput1 = (id, Enteredhsncode, Enteredbatchno) => {
-    //     console.log("hsncodestate : ", hsncodestate);
-    //     console.log("batchnostate : ", batchnostate);
-    //     const value = productList
-    //         .filter((product) => product.productid === Enteredhsncode && product.batchno === Enteredbatchno)
-    //         .map((product) => product.productname)[0] || '';
-    //     const updatedRows = rows.map((row) =>
-    //         row.id === id ? {
-    //             ...row, productName: value
-    //         } : row
-    //     );
-    //     setRows(updatedRows);
-    // }
+  
 
     const setTotalValue = (id, Enteredhsncode, Enteredbatchno, enteredQuantity = 0, enteredDiscount = 0) => {
-        // console.log("productList", id);
-        // console.log("Enteredhsncode : ", Enteredhsncode);
-        // console.log("Enteredbatchno : ", Enteredbatchno);
-        // console.log("enteredQuantity : ", enteredQuantity);
-        // console.log("enteredDiscount : ", enteredDiscount);
-
-        // onsole.log("batchno : ", rows[id - 1].batchno, typeof String(rows[id - 1].batchno));
-
-        // console.log("Quantity : ",rows[id-1].Quantity);
-        // console.log("discount : ",rows[id-1].Discount);
-
-        // const productPrice = productList
-        //     .filter((product) => product.productid === rows[id-1].hsncode && product.batchno === String(rows[id-1].batchno))
-        //     .map((product) => product.priceperitem)[0] || '';
-
+       
         const productPrice = productList
             .filter((product) => product.productid === String(rows[id - 1].hsncode) && product.batchno === String(rows[id - 1].batchno))
             .map((product) => product.priceperitem)[0] || '';
@@ -570,12 +428,7 @@ const InvoiceGenerator = () => {
 
             // console.log("getsgst : ", getsgst);
 
-            // calculate with cgst+sgst
-            // const updatedRows = rows.map((row) =>
-            //     row.id === id ? {
-            //         ...row, Total: ((rows[id - 1].Quantity * productPrice) - ((rows[id - 1].Quantity * productPrice) * rows[id - 1].Discount / 100)) + (productPrice * (getcgst / 100)) + (productPrice * (getsgst / 100))
-            //     } : row
-            // );
+          
             const updatedRows = rows.map((row) =>
                 row.id === id ? {
                     ...row, Total: ((rows[id - 1].Quantity * productPrice) - ((rows[id - 1].Quantity * productPrice) * rows[id - 1].Discount / 100))
@@ -590,10 +443,7 @@ const InvoiceGenerator = () => {
 
 
     // perform a invoice
-    // const generatePDF = () => {
-    //     const invoicecontent = document.getElementById('invoiceContent');
-    //     html2pdf().from(invoicecontent).save();
-    // }
+   
 
     const getuserDetial = (customerName, value) => {
         // console.log(inputValues.UserId);
@@ -750,15 +600,7 @@ const InvoiceGenerator = () => {
 
                         </div>
 
-                        {/* <div class="modal-footer gap-4">
-                            <CancelBtnComp dataBsDismiss="modal" />
-                            <Button variant="outlined" style={SaveBtn} 
-                            // onClick={generatePDF}
-                            >PDF</Button>
-                            <Button data-bs-dismiss="modal" variant="outlined" color="primary" onClick={handleSubmit} >
-                                Generate Invoice
-                            </Button>
-                        </div> */}
+                        
                     </div>
                 </div>
             </div>
@@ -789,15 +631,7 @@ const InvoiceGenerator = () => {
                                 sendDataToParent={handleDataFromChild}
                             />
                         </div>
-                        {/* <div class="modal-footer gap-4">
-                            <CancelBtnComp dataBsDismiss="modal" />
-                            <Button variant="outlined" style={SaveBtn} onClick={generatePDF}>PDF</Button>
-                            <Button data-bs-dismiss="modal" variant="outlined" color="primary"
-                            // onClick={handleSubmit} 
-                            >
-                                Generate Invoice
-                            </Button>
-                        </div> */}
+                       
                     </div>
                 </div>
             </div>
@@ -840,21 +674,7 @@ const InvoiceGenerator = () => {
                                                     getuserDetial(customerName.name, value);
                                                 }}
                                             />
-                                            // quantanics1
-                                            // <TextField
-                                            //     value={inputValues.Buyer}
-                                            //     label={customerName.name}
-                                            //     variant="outlined"
-                                            //     InputLabelProps={{
-                                            //         className: 'required-label',
-                                            //         required: true
-                                            //     }}
-                                            //     onChange={(e, value) => handleInputChangeInvoice(customerName.name, value)}
-                                            //     onBlur={(e) => {
-                                            //         const value = e.target.value; // Accessing the value
-                                            //         getuserDetial(customerName.name, value);
-                                            //     }}
-                                            // />
+                                           
                                         ) : (
                                             <TextField fullWidth
                                                 // label={customerName}
@@ -862,13 +682,7 @@ const InvoiceGenerator = () => {
                                                 onChange={(e) => handleInputChangeInvoice(customerName.name, e.target.value)}
                                                 value={inputValues[customerName.name] || new Date().toISOString().split('T')[0]}
                                             />
-                                            // <GoogleCalendarPicker
-                                            //     onDateSelect={handleDateSelect}
-                                            //     // Pass authentication details as props
-                                            //     clientId="YOUR_CLIENT_ID"
-                                            //     apiKey="YOUR_API_KEY"
-                                            //     scope={['https://www.googleapis.com/auth/calendar.events.readonly']}
-                                            // />
+                                          
                                         )}
                                     </Grid>
                                 </React.Fragment>
@@ -903,18 +717,10 @@ const InvoiceGenerator = () => {
                                     // ref={currentRowid}
                                     >
                                         <TableCell>
-                                            {/* <TextField
-                                                disabled={currentRowId !== null && row.id !== currentRowId}
-                                                list={`suggestions-${row.id}`}
-                                                value={row.hsncode}
-                                                onChange={(e) => handleInputChange(row.id, 'hsncode', e.target.value)}
-                                                onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
-                                            /> */}
+                                           
                                             <Autocomplete
                                                 options={productHsn}
-                                                // onChange={(event, value) => {
-                                                //     setthirdInput(row.id, value, batchnostate, 'hsncode');
-                                                // }}
+                                              
                                                 value={row.hsncode}
                                                 onChange={(e, value) => handleInputChange(row.id, 'hsncode', value)}
                                                 renderInput={(params) => (
@@ -928,25 +734,16 @@ const InvoiceGenerator = () => {
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            {/* <TextField
-                                                disabled={currentRowId !== null && row.id !== currentRowId}
-                                                list={`suggestions-${row.id}`}
-                                                value={row.batchno}
-                                                onChange={(e) => handleInputChange(row.id, 'batchno', e.target.value)}
-                                                onBlur={() => setthirdInput(row.id, hsncodestate, batchnostate)}
-                                            /> */}
+                                           
                                             <Autocomplete
                                                 // options={productBatchno}
                                                 options={batchnoOption}
                                                 value={row.batchno}
                                                 onChange={(e, value) => handleInputChange(row.id, 'batchno', value)}
-                                                // onChange={(event, value) => {
-                                                //     setthirdInput(row.id, hsncodestate, value, 'batchno');
-                                                // }}
+                                               
                                                 renderInput={(params) => (
                                                     <TextField {...params} variant="outlined"
-                                                        // onBlur={() => alert(JSON.stringify(row.hsncode))}
-                                                        // setthirdInput(row.id, hsncodestate, batchnostate)
+                                                       
                                                         disabled={currentRowId !== null && row.id !== currentRowId}
                                                     />
                                                 )}
@@ -954,26 +751,10 @@ const InvoiceGenerator = () => {
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            {/* <Autocomplete
-                                                options={OptionsproductName}
-                                                // getOptionLabel={(option) => option}
-                                                // onChange={(e, value) => handleInputChange(row.id, 'productName', value)}
-                                                value={thirdInputValues[1]}
-                                                // readOnly
-                                                renderInput={(params) => (
-                                                    <TextField {...params}
-                                                        // label="HSN" 
-                                                        variant="outlined"
-                                                        value={"hai"}
-                                                    // error={isEmptyProductName} // Set error prop based on the empty status
-                                                    // helperText={isEmptyProductName ? 'This field is required' : ''}
-                                                    />
-                                                )}
-                                            /> */}
+                                           
                                             <TextField
                                                 disabled={currentRowId !== null && row.id !== currentRowId}
                                                 value={row.productName}
-                                            // onChange={(e) => handleInputChange(row.id, 'productName', e.target.value)}
                                             />
                                         </TableCell>
 
@@ -987,11 +768,7 @@ const InvoiceGenerator = () => {
                                                     handleInputChange(row.id, 'Quantity', e.target.value);
                                                     // setTotalValue(row.id, hsncodestate, batchnostate, e.target.value, discountstate);
                                                 }}
-                                                // onChange={(event, value) => {
-                                                //     // setthirdInput(row.id, hsncodestate, value);
-                                                //     handleInputChange(row.id, 'Quantity', value);
-                                                //     // setTotalValue(row.id, hsncodestate, batchnostate, value, discountstate);
-                                                // }}
+                                               
                                                 onBlur={() => setTotalValue(row.id, hsncodestate, batchnostate, quantitystate, discountstate)}
                                             />
                                         </TableCell>
@@ -1053,15 +830,11 @@ const InvoiceGenerator = () => {
                             <CancelBtnComp />
                             {/* <input type='text' disabled={performInvoiceToggele} /> */}
                             <SplitButton performInvoiceToggele={performInvoiceToggele} diability={diability} />
-                            {/* <Button variant="outlined" color="primary" onClick={handleSubmit}>
-                                Generate Invoice
-                            </Button> */}
+                            
                         </Grid>
                         <Grid item>
                             <div>
-                                {/* <Typography variant="body1" display="inline" style={{ marginRight: theme.spacing(2) }}>
-                                    Total Amount: {totalSum ? formatTotal(totalSum) : 0}
-                                </Typography> */}
+                                
                                 <Typography variant="body1" display="inline">
                                     Total Quantity: {totalQuantity ? totalQuantity : 0}
                                 </Typography>

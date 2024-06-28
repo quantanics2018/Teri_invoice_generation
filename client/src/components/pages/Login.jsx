@@ -1,16 +1,17 @@
-import invoiceLogo from '../assets/logo/invoiceLogo.png';
+import invoiceLogo from '../../assets/logo/invoiceLogo.png';
 import { useState, useEffect } from 'react';
-import { API_URL } from '../config'
+import { API_URL } from '../../config/config'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/system';
 import { Button, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar } from '@mui/material';
-import { UserActionBtn } from '../assets/style/cssInlineConfig';
+import { UserActionBtn } from '../../assets/style/cssInlineConfig';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import MuiAlert from '@mui/material/Alert';
-import Loader from '../components/Loader';
+import Loader from '../common/Loader';
+
 const Login = (props) => {
     const theme = useTheme();
 
@@ -89,13 +90,7 @@ const Login = (props) => {
                 setSubmitted(true);
                 if (response.data.success) {
                     sessionStorage.setItem("UserInfo", JSON.stringify({ ...response.data.data, "isLoggedIn": true }));
-                    // console.log(response.data);
-                    // const expirationTimeInMinutes = 1;
-                    // const expirationMilliseconds = expirationTimeInMinutes * 60 * 1000;
-                    // setTimeout(() => {
-                    //     alert("Session Expired! Please Log in Again.");
-                    //     sessionStorage.removeItem("UserInfo");
-                    // }, expirationMilliseconds);
+                   
                     if (response.data.data.position === "Manufacturer") {
                         navigate("/Staff_Details");
                     }
@@ -202,41 +197,8 @@ const Login = (props) => {
                                     <div className="login_error-message">{password_empty && "Enter Valid Password"}</div>
                                 </div>
                             </FormControl>
-                            {/* <div className='login_input_div'>
-                                <TextField
-                                    label="Password"
-                                    type="password"
-                                    className="form-control-loc"
-                                    value={password} onChange={handlepassword} onBlur={LoginPassword}
-                                />
-                                <div className="login_error-message">{password_empty && "Enter Valid Password"}</div>
-                            </div> */}
-                            {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <FormControl sx={{ m: 1, width: '30ch' }} variant="outlined">
-                                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        value={password}
-                                        onChange={handlepassword}
-                                        onBlur={LoginPassword}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    edge="end"
-                                                >
-                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        label="Password"
-                                    />
-                                </FormControl>
-                                <div className="login_error-message">{password_empty && "Enter Valid Password"}</div>
-                            </div> */}
+                          
+                          
 
                         </div>
                         <div className='error_forgot display-flex'>
@@ -251,16 +213,9 @@ const Login = (props) => {
                                     <span className='display-flex' style={{ justifyContent: "start" }}>Inactive Site</span>
                                 )}
                             </div>
-                            {/* <Button color="secondary">
-                                Forgot Password
-                            </Button> */}
-                            {/* <div className="forget">
-                                <span className='display-flex' style={{ justifyContent: "end" }}>Forgot Password</span>
-                            </div> */}
+                           
                         </div>
-                        {/* <div className="login_btn_div" onClick={validate_login} style={{ textAlign: "center" }}>
-                            <input type="submit" className='login_btn' value={"Login"} />
-                        </div> */}
+                       
                         <Button variant="contained"
                             onClick={validate_login}
                             style={UserActionBtn}

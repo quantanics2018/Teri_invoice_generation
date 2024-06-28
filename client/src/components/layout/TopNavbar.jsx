@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import companyLogo from './assets/logo/invoiceLogo.png'
+import companyLogo from '../../assets/logo/invoiceLogo.png';
 import { Avatar, Badge, Button, Chip, Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu'
 import { deepOrange, red } from '@mui/material/colors';

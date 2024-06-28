@@ -1,9 +1,9 @@
 import React from 'react';
-import '../assets/style/App.css';
+import '../../assets/style/App.css';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import ReactDOMServer from 'react-dom/server';
-import { API_URL } from '../config'
+import { API_URL } from '../../config/config';
 
 //import icons from fontawesome and react icon kit
 import { Icon } from 'react-icons-kit';
@@ -26,7 +26,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
+import { CancelBtnComp, SaveBtnComp } from '../common/AddUserBtn';
 import { Box, InputAdornment, Snackbar, TextField } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 
@@ -135,21 +135,7 @@ const EditProduct = () => {
         { label: "SGCT", name: "SGCT", value: inputValues.SGCT, icon: person }
     ]
 
-    // const handleInputChange = (name, value) => {
-    //     setInputValues((prevValues) => ({
-    //         ...prevValues,
-    //         [name]: value,
-    //     }));
-    //     console.log(name, value);
-    // };
-    //  const handleInputChange = (index, value) => {
-    //     const fieldName = inputFields[index].name;
-    //     setInputValues((prevValues) => ({
-    //         ...prevValues,
-    //         [fieldName]: value,
-    //     }));
-    //     console.log(fieldName, value);
-    // };
+   
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         // alert(name);

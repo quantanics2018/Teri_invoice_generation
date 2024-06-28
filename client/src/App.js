@@ -6,30 +6,30 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 // import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 
 //Managements
-import DistributerDetails from './pages/Distributer_Detials.jsx';
-import Products from './pages/Products.jsx';
-import AddUserDetails from './pages/Add_User_Detials';
-import EditDistributerDetails from './pages/Edit_Distributer_Detials';
-import CustomerDetails from './pages/CustomerDetails';
-import Add_Customer_Detials from './pages/Add_Customer_Detials';
-import Add_site from './pages/Add_Products.jsx';
-import Invoice from "./components/Invoice.jsx";
-import InvoiceGenerator from "./pages/InvoiceGenerator.jsx";
-import ProfilePage from "./pages/ProfilePage.jsx";
-import TransactionHistory from "./pages/TransactionHistory.jsx";
+import DistributerDetails from './components/pages/Distributer_Detials.jsx';
+import Products from './components/pages/Products.jsx';
+import AddUserDetails from './components/pages/Add_User_Detials';
+import EditDistributerDetails from './components/pages/Edit_Distributer_Detials';
+import CustomerDetails from './components/pages/CustomerDetails';
+import Add_Customer_Detials from './components/pages/Add_Customer_Detials';
+import Add_site from './components/pages/Add_Products.jsx';
+import Invoice from "./components/invoice_component/Invoice.jsx";
+import InvoiceGenerator from ".//components/pages/InvoiceGenerator.jsx";
+import ProfilePage from "./components/pages/ProfilePage.jsx";
+import TransactionHistory from "./components/pages/TransactionHistory.jsx";
 
 // Main Content Template
-import Sidebar from './components/Sidebar';
-import Login from './pages/Login';
-import TopNavbar from './TopNavbar';
-import UpdatePassword from './pages/UpdatePassword.jsx';
-import StaffDetails from './pages/Staff_Detials.jsx';
-import AddProducts from './pages/Add_Products.jsx';
-import EditProduct from './pages/EditProduct.jsx';
-import FeedbackForm from './pages/FeedbackForm.jsx';
-import { API_URL_CLIENT } from './config.js';
+import Sidebar from './components/layout/Sidebar.jsx';
+import Login from './components/pages/Login';
+import TopNavbar from './components/layout/TopNavbar.jsx';
+import UpdatePassword from './components/pages/UpdatePassword.jsx';
+import StaffDetails from './components/pages/Staff_Detials.jsx';
+import AddProducts from './components/pages/Add_Products.jsx';
+import EditProduct from './components/pages/EditProduct.jsx';
+import FeedbackForm from './components/pages/FeedbackForm.jsx';
+import { API_URL_CLIENT } from './config/config.js';
 
-import Order_Management from './pages/Order_Management';
+import Order_Management from './components/pages/Order_Management';
 
 const App = () => {
   const handleLogout = () => {

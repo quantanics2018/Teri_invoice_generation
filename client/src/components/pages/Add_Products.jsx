@@ -1,9 +1,9 @@
 import React from 'react';
-import '../assets/style/App.css';
+import '../../assets/style/App.css';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import ReactDOMServer from 'react-dom/server';
-import { API_URL } from '../config'
+import { API_URL } from '../../config/config';
 
 //import icons from fontawesome and react icon kit
 import { Icon } from 'react-icons-kit';
@@ -25,8 +25,8 @@ import { pen_3 } from 'react-icons-kit/ikons/pen_3'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import axios from 'axios';
-import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
-import Example from '../components/Example';
+// import { CancelBtnComp, SaveBtnComp } from '../components/AddUserBtn';
+import { CancelBtnComp,SaveBtnComp } from '../common/AddUserBtn';
 import TextField from '@mui/material/TextField';
 import { Box, InputAdornment, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
@@ -258,14 +258,7 @@ const Add_Products = () => {
                                             {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
                                             <Box className="inputs-group display-flex">
                                                 {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                {/* <input
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={handleInputChange}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                /> */}
+                                           
                                                 <TextField
                                                     label={`${field.label}`}
                                                     type="text"
@@ -292,14 +285,7 @@ const Add_Products = () => {
                                             {/* <label htmlFor={`input${index + 1}`}>{field.label}<span className='required'>*</span></label> */}
                                             <Box className="inputs-group display-flex">
                                                 {/* <span className="input-group-loc"><Icon icon={field.icon} size={20} style={{ color: "lightgray" }} /></span> */}
-                                                {/* <input
-                                                    type="text"
-                                                    className="form-control-loc"
-                                                    value={field.value}
-                                                    onChange={handleInputChange}
-                                                    name={field.name}
-                                                    id={`input${index + 1}`}
-                                                /> */}
+                                               
                                                 <TextField
                                                     label={`${field.label}`}
                                                     type="text"
@@ -334,8 +320,7 @@ const Add_Products = () => {
                         <div className="save_cancel_btn display-flex site_button gap-4">
                             <CancelBtnComp CancelBtnFun={handleCancel} />
                             <SaveBtnComp SaveBtnFun={() => handleClick()} />
-                            {/* <button className="btn-loc active-loc btn btn-outline-success" onClick={() => handleClick()}>Save</button>
-                            <button className="btn-loc inactive-loc btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">cancel</button> */}
+                          
                         </div>
                     </div>
             </div>

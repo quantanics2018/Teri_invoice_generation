@@ -1,13 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, Snackbar,Pagination, Skeleton, TableCell, TextField ,FormControl,InputLabel,MenuItem,Select} from '@mui/material';
-import Loader from '../components/Loader';
-import { API_URL } from '../config';
-import PDFInvoice from '../pages/common/PDFInvoice';
-import QrCode from '../components/QrCode';
+import Loader from '../common/Loader';
+import { API_URL } from '../../config/config';
+import PDFInvoice from '../invoice_component/PDFInvoice';
+import QrCode from '../invoice_component/QrCode';
 import MuiAlert from '@mui/material/Alert';
 import { ToWords } from 'to-words';
-import '../assets/style/Order_modal.css';
+import '../../assets/style/Order_modal.css';
 
  // amount comma seperator function
 
